@@ -1,0 +1,26 @@
+{
+  "name": "teame-prototype",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "prisma generate && tsc -b",
+    "dev": "tsx src/index.ts",
+    "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^7.6.0",
+    "tsx": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "pnpm": "^10.33.0"
+  }
+}

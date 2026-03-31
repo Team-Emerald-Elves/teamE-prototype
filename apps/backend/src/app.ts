@@ -15,7 +15,7 @@ console.log(__dirname);
 //app.use("/public", express.static('public'));
 
 app.get('/', (req, res) => {
-    res.send("root");
+    res.sendStatus(200);
 })
 
 app.get('/employee', employeeRoute);
@@ -25,5 +25,5 @@ app.get('/servicereqs', serviceReqRoute)
 app.get('/assigned', assignedRoute);
 
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}!`);
+    console.log(`Server started on http://localhost:${PORT}!`);
 })

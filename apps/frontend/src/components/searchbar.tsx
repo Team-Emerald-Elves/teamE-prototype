@@ -7,7 +7,7 @@ import {
 export function SearchBar() {
     return (
         <InputGroup className="max-w-xs">
-            <InputGroupInput placeholder="Search" />
+            <InputGroupInput placeholder="Search                                       " />
             <InputGroupAddon>
                 <Search />
             </InputGroupAddon>

@@ -53,7 +53,7 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline">{props.type} Content</Button>} />
+                <DialogTrigger render={<Button variant="outline" className="bg-secondary text-secondary-foreground">{props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <DialogTitle>{props.type} Content</DialogTitle>

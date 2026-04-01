@@ -6,7 +6,7 @@ function Documents() {
         <>
             <h1>Documents</h1>
             <ContentForm
-                type="Add"
+                type="Create"
                 currentName="Name..."
                 currentURL="www.example.com"
                 currentContentOwner="Select Content Owner"

@@ -9,19 +9,20 @@ function App() {
 
 
   return (
-    <BrowserRouter>
-      <nav>
-        <Link to="/"> Home </Link>
-        <Link to="/documents"> Documents </Link>
-        <Link to="/employee-management"> Employee Management </Link>
-      </nav>
+        <BrowserRouter>
+          <nav>
+            <Link to="/"> Home </Link>
+            <Link to="/documents"> Documents </Link>
+            <Link to="/employee-management"> Employee Management </Link>
+          </nav>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/documents" element={<Documents />} />
-        <Route path="/employee-management" element={<EmployeeManagement />} />
-      </Routes>
-    </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/employee-management" element={<EmployeeManagement />} />
+          </Routes>
+        </BrowserRouter>
+
 
   )
 }

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="server" type="BunRunConfiguration">
-    <option name="program" value="src/index.ts" />
-    <option name="workingDirectory" value="$PROJECT_DIR$/server" />
+    <option name="program" value="src/app.ts" />
+    <option name="workingDirectory" value="$PROJECT_DIR$/apps/backend" />
     <method v="2" />
   </configuration>
 </component>

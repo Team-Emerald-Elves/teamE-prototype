@@ -1,0 +1,5 @@
+packages:
+  - frontend-prototype
+  - backend-prototype
+allowBuilds:
+  esbuild: false

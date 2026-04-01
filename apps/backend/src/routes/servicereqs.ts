@@ -1,5 +1,8 @@
 import express from "express";
-import { prisma } from "../lib/prisma";
+
+interface IServiceRequest {
+    //
+}
 
 function serviceReqRoute(req: express.Request, res: express.Response) {
     res.send("service request");

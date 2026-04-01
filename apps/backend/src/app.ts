@@ -12,6 +12,11 @@ let filename = "";
 const __dirname = path.dirname(fileURLToPath(import.meta.url + "/../"));
 console.log(__dirname);
 
+/**
+ * This TypeScript file binds the routes from express to the handlers in the routes directory.
+ */
+
+
 //app.use("/public", express.static('public'));
 
 app.get('/', (req, res) => {

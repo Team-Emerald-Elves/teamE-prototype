@@ -1,6 +1,6 @@
 import express from "express";
 
-interface Employee {
+interface IEmployee {
     id: number;
     firstName: string;
     lastName: string;
@@ -8,9 +8,8 @@ interface Employee {
     email?: string;
     roles?: string[];
 }
-
 function employeeRoute(req: express.Request, res: express.Response) {
-    let employee: Employee = {
+    let employee: IEmployee = {
         id: 0,
         firstName: "fname",
         lastName: "lname",

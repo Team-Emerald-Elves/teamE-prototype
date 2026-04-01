@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/home.tsx';
-import Documents from './components/documents.tsx';
-import EmployeeManagement from "./components/employee.tsx"
+import Home from './pages/home.tsx';
+import Documents from './pages/documents.tsx';
+import EmployeeManagement from "./pages/employee.tsx"
 import Sidebar from './components/sidebar.tsx';
 import './App.css'
 

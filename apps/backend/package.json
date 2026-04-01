@@ -10,6 +10,7 @@
     "db:push": "pnpx prisma db push",
     "db:studio": "pnpx prisma studio",
     "postinstall": "pnpm run db:generate"
+    "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma"
   },
   "devDependencies": {
     "@types/bun": "latest",

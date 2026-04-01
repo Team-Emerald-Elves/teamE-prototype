@@ -5,12 +5,17 @@
   "scripts": {
     "build": "prisma generate && tsc -b",
     "dev": "nodemon",
-    "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma"
+    "db:generate": "pnpx prisma generate",
+    "db:migrate": "pnpx prisma migrate dev",
+    "db:push": "pnpx prisma db push",
+    "db:studio": "pnpx prisma studio",
+    "postinstall": "pnpm run db:generate"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/morgan": "^1.9.10",
     "nodemon": "^3.1.14",
+    "@types/node": "^25.5.0",
     "prisma": "^7.6.0",
     "tsx": "^4.21.0"
   },

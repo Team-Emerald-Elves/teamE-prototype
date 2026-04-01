@@ -1,14 +1,21 @@
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
 }
 
 generator client {
   provider = "prisma-client"
   output   = "./generated/"
 }
-model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
+
+model ServiceRequests {
+  id    Int            @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  assigned_at DateTime @updatedAt
+  assigned_id String   @db.Uuid
+}
+
+model Employee {
+  id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email String     @unique
+  name  String?
 }

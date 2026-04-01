@@ -1,9 +1,9 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import employeeRoute from "../routes/employee.ts";
-import serviceReqRoute from "../routes/servicereqs.ts";
-import assignedRoute from "../routes/assigned.ts";
+import employeeRoute from "./routes/employee.ts";
+import serviceReqRoute from "./routes/servicereqs.ts";
+import assignedRoute from "./routes/assigned.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;

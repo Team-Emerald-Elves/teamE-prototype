@@ -42,6 +42,7 @@ function DocumentCard(props: documentCardProps) {
                                 currentExpirationDate={new Date()}
                                 currentExpirationTime="07:30:00"
                                 currentStatus="In Progress"
+                                size={false}
                             />
 
                     </div>
@@ -50,6 +51,7 @@ function DocumentCard(props: documentCardProps) {
 
 
                </div>
+
 
             </Card>
     )

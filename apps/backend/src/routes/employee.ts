@@ -21,6 +21,7 @@ function employeeRoute(req: express.Request, res: express.Response) {
         res.json(value);
     }, (err) => {
         console.error("[ERROR]", err);
+        res.sendStatus(500);
     });
 
 }

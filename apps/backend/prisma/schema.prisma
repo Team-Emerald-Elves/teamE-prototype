@@ -12,6 +12,8 @@ model ServiceRequests {
   created_at  DateTime  @default(now())
   assigned_at DateTime? @updatedAt
   assigned_id String?   @db.Uuid
+  creator_id  String?   @db.Uuid
+  description String    @default("no description")
 }
 
 model Employee {

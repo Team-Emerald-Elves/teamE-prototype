@@ -15,7 +15,7 @@ function Documents() {
                 currentExpirationTime="10:30:00"
                 currentStatus="Select Status"
             />
-            <DocumentCard />
+            <DocumentCard name="Underwriting Rules" />
 
         </>
     )

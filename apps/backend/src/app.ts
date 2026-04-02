@@ -14,7 +14,6 @@ let filename = "";
 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url + "/../"));
-console.log(__dirname);
 
 /**
  * This TypeScript file binds the routes from express to the handlers in the routes directory.
@@ -40,5 +39,5 @@ app.post('/create-employee', createEmployeeRoute);
 app.post('/create-srvreq', createServiceReqRoute);
 
 app.listen(PORT, () => {
-    console.log(`Server started on http://localhost:${PORT}!`);
+    console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);
 })

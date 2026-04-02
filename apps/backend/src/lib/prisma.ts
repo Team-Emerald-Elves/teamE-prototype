@@ -5,9 +5,6 @@ dotenv.config();
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-console.log("Direct url: ", process.env.DIRECT_URL)
-console.log("DB url: ", process.env.DATABASE_URL)
-
 export const prisma = globalForPrisma.prisma || new PrismaClient({
     adapter: new PrismaPg({
         connectionString: process.env.DIRECT_URL,

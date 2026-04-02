@@ -4,7 +4,7 @@ import ContentForm from '../components/contentForm.tsx'
 function Documents() {
     return (
         <>
-            <div className="text-center">
+            <div className="text-center font-bold text-primary">
                 <h1 className="font-mono">Documents</h1>
             </div>
             <div className="flex flex-col w-full p-4">

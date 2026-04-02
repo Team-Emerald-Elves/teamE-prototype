@@ -26,17 +26,6 @@ import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 
-// i. Name of hyperlink or document - input
-// ii. URL of link - input
-// iii. Content owner - selector (list of employees)
-// iv. Job Position (Persona) that this hyperlink or document is for. We will begin with
-//     two job positions – the underwriter and the business analyst. Personas are
-// provided for both positions. Research on the web to find out more concerning
-// what an insurance writer is and does. - selector (js underwriter and business analyst for now)
-//     v. Last modified date - will just say today
-// vi. Expiration date of the link/document - date input??
-// vii. Whether it is reference content or workflow content - radio buttons
-// viii. Document status – make a guess as to what statuses they might have - selector
 type contentFormProps = {
     type: string,
     currentName: string,
@@ -57,7 +46,7 @@ function ContentForm(props: contentFormProps) {
                 <DialogTrigger render={<Button variant="outline" size={ props.size ? "lg" : "sm"} className="bg-secondary text-secondary-foreground" >{props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-lg text-primary font-mono">{props.type} Content</DialogTitle>
+                        <DialogTitle className="text-lg text-primary font-mono font-bold">{props.type} Content</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <Field>

@@ -1,26 +1,32 @@
-import './docTable.css';
+interface DocRow{
+    docTitle: string,
+    docDate: string,
+    docStatus: string
+}
 
-function DocTable(){
+interface DocTableProps {
+    rows: DocRow[];
+}
+
+
+function DocTable({rows}: DocTableProps){
     return (
-        <table>
-            <thead>
+        <table className="border-collapse">
+            <thead className="text-gray-500">
                 <tr>
-                    <th>NAME</th>
-                    <th>DATE</th>
-                    <th>STATUS</th>
+                    <th className= "p-2 border-b border-gray-300 text-xs">NAME</th>
+                    <th className= "p-2 border-b border-gray-300 text-xs">DATE</th>
+                    <th className= "p-2 border-b border-gray-300 text-xs">STATUS</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Placeholder</td>
-                    <td>MM/DD/YYYY</td>
-                    <td>In Progress</td>
+            {rows.map((row, i) => (
+                <tr key={i}>
+                    <td className="p-2 border-b border-gray-300 text-xs text-[darkolivegreen] font-bold">{row.docTitle}</td>
+                    <td className="p-2 border-b border-gray-300 text-xs text-[darkgray] font-bold">{row.docDate}</td>
+                    <td className="p-2 border-b border-gray-300 text-xs text-[#D98627] font-bold">{row.docStatus}</td>
                 </tr>
-                <tr>
-                    <td>Placeholder</td>
-                    <td>MM/DD/YYYY</td>
-                    <td>In Progress</td>
-                </tr>
+            ))}
             </tbody>
         </table>
     )

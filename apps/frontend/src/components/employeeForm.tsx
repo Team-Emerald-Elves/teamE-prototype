@@ -43,20 +43,22 @@ function EmployeeForm() {
                             <Label htmlFor="contentOwner">Select Roles:</Label>
                             <Select id="contentOwner">
                                 <SelectTrigger>
-                                    <SelectValue placeholder=""/>
+                                    <SelectValue placeholder="Role"/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="analyst">Business Analyst</SelectItem>
-                                        <SelectItem value="underwriter">Underwriter</SelectItem>
+                                        <SelectItem value="Business Analyst">Business Analyst</SelectItem>
+                                        <SelectItem value="Underwriter">Underwriter</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </Field>
                     </FieldGroup>
+                        <div className="mt-3">
+                            <Button type="submit" className="bg-secondary text-background p-3">Submit</Button>
+                        </div>
 
-                        <Button type="submit">Submit</Button>
             </form>
 
     )

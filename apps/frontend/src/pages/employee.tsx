@@ -5,7 +5,7 @@ function EmployeeManagement() {
     return (
         <>
             <div>
-                <h1 className="font-mono">Employee Management</h1>
+                <h1 className="font-mono text-primary text-center font-bold">Employee Management</h1>
             </div>
             <div>
                 <div>

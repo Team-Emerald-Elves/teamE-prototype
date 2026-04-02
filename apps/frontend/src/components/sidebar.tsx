@@ -8,7 +8,7 @@ function Sidebar() {
             <ul className="sidebar-nav">
                 <Link className="nav-page" to="/"> Home </Link>
                 <Link className="nav-page" to="/documents"> Documents </Link>
-                <Link className="nav-page" to="/employee"> Employee Management </Link>
+                <Link className="nav-page" to="/employee-management"> Employee Management </Link>
                 <Link className="nav-link" to="/underwriter-dummy"> Desktop Management Tool </Link>
                 <Link className="nav-link" to="/underwriter-dummy"> States on Hold </Link>
                 <Link className="nav-link" to="/underwriter-dummy"> RiskMeter Online </Link>

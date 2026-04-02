@@ -26,15 +26,15 @@ export default function DateAndTime(props: DateAndTimeProps) {
     const [date, setDate] = React.useState<Date | undefined>(props.date)
 
     return (
-        <FieldGroup className="mx-auto max-w-xs flex-row" id={props.id}>
-            <Field>
+        <FieldGroup className=" max-w-xs flex flex-row " id={props.id}>
+            <Field >
                 <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
                 <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger >
+                    <PopoverTrigger>
                         <Button
                             variant="outline"
                             id="date-picker-optional"
-                            className="w-32 justify-between font-normal"
+                            className="w-50 justify-between bg-background font-normal"
                         >
                             {date ? format(date, "PPP") : "Select Date"}
                             {/*<ChevronDownIcon />*/}

@@ -1,5 +1,8 @@
 packages:
-  - frontend-prototype
-  - backend-prototype
+  - apps/frontend
+  - apps/backend
 allowBuilds:
+  '@prisma/engines': true
   esbuild: false
+  msw: false
+  prisma: true

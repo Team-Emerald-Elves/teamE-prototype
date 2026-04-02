@@ -1,9 +1,9 @@
-import { prisma } from "./lib/prisma";
+import { prisma } from "../lib/prisma.ts";
 
 
 async function main() {
   //Example to count the rows in the Users table.
-  const val = await prisma.user.count()
+  const val = await prisma.employee.count()
   console.log("User row count: ", val);
 }
 

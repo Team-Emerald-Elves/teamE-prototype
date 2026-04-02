@@ -4,7 +4,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -43,22 +42,22 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" size={ props.size ? "lg" : "sm"} className="bg-secondary text-secondary-foreground" >{props.type}</Button>} />
+                <DialogTrigger render={<Button variant="outline" size={ props.size ? "lg" : "sm"} className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-lg text-primary font-mono font-bold">{props.type} Content</DialogTitle>
+                        <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="name" className="">Name of Link or Document</Label>
+                            <Label htmlFor="name" className="text-base">Name of Link or Document</Label>
                             <Input id="name" name="name" placeholder={props.currentName} />
                         </Field>
                         <Field>
-                            <Label htmlFor="url">URL</Label>
+                            <Label htmlFor="url" className="text-base">URL</Label>
                             <Input id="url" name="url" placeholder={props.currentURL} />
                         </Field>
                         <Field>
-                            <Label htmlFor="contentOwner">Select Content Owner</Label>
+                            <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
                             <Select id="contentOwner">
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentContentOwner}/>
@@ -74,7 +73,7 @@ function ContentForm(props: contentFormProps) {
                             </Select>
                         </Field>
                         <Field>
-                            <Label htmlFor="role">Select Role Associated with Content</Label>
+                            <Label htmlFor="role" className="text-base">Select Role Associated with Content</Label>
                             <Select id="role">
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentRole} />
@@ -89,7 +88,7 @@ function ContentForm(props: contentFormProps) {
                             </Select>
                         </Field>
                         <Field>
-                            <Label htmlFor="contentType" >Select Content Type</Label>
+                            <Label htmlFor="contentType" className="text-base">Select Content Type</Label>
                             <RadioGroup className="w-full max-w-48 flex items-center gap-7" id="contentType">
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
@@ -106,11 +105,11 @@ function ContentForm(props: contentFormProps) {
                             </RadioGroup>
                         </Field>
                         <Field>
-                            <Label htmlFor="expiration">Choose Expiration Date</Label>
+                            <Label htmlFor="expiration" className="text-base">Choose Expiration Date</Label>
                             <DateAndTime id="expiration" date={props.currentExpirationDate} time={props.currentExpirationTime}/>
                         </Field>
                         <Field>
-                            <Label htmlFor="status">Select Current Status</Label>
+                            <Label htmlFor="status" className="text-base">Select Current Status</Label>
                             <Select id="status">
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus} />
@@ -131,8 +130,8 @@ function ContentForm(props: contentFormProps) {
                     <p>Last Modified: {formattedDate}</p>
 
                     <DialogFooter>
-                        <DialogClose render={<Button variant="outline">Cancel</Button>} />
-                        <Button type="submit" className=" bg-secondary text-secondary-foreground">Submit</Button>
+                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>

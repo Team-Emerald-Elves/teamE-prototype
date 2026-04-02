@@ -10,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {Field, FieldGroup} from "@/components/ui/field"
+import {FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
@@ -18,29 +18,32 @@ import { Label } from "@/components/ui/label"
 function EmployeeForm() {
     return (
             <form>
-                    <FieldGroup>
-                        <Field>
-                            <Label htmlFor="fname" className="">First Name:</Label>
-                            <Input id="fname" name="fname" placeholder="First Name" />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="lname">Last Name:</Label>
-                            <Input id="lname" name="lname" placeholder="Last Name" />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="user">Username</Label>
-                            <Input id="user" name="user" placeholder="Username" />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="employeeId">Employee ID:</Label>
-                            <Input id="employeeId" name="employeeId" placeholder="Employee ID" />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="email">Email: </Label>
-                            <Input id="email" name="email" placeholder="Email" />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="contentOwner">Select Roles:</Label>
+                <FieldGroup>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="fname" className="w-24 text-right font-bold">First Name:</Label>
+                            <Input id="fname" name="fname" placeholder="First Name"/>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="lname" className="w-24 text-right font-bold">Last Name:</Label>
+                            <Input id="lname" name="lname" placeholder="Last Name"/>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="user"
+                                   className="w-24 text-right font-bold">Username: </Label>
+                            <Input id="user" name="user" placeholder="Username"/>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="employeeId" className="w-24 text-right font-bold">Employee ID:</Label>
+                            <Input id="employeeId" name="employeeId" placeholder="Employee ID"/>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="email"
+                                   className="w-24 text-right font-bold">Email: </Label>
+                            <Input id="email" name="email" placeholder="Email"/>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <Label htmlFor="contentOwner" className="w-22 text-right font-bold">Select
+                                Roles:</Label>
                             <Select id="contentOwner">
                                 <SelectTrigger>
                                     <SelectValue placeholder="Role"/>
@@ -53,10 +56,10 @@ function EmployeeForm() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                        </Field>
-                    </FieldGroup>
-                        <div className="mt-3">
-                            <Button type="submit" className="bg-secondary text-background p-3">Submit</Button>
+                        </div>
+                </FieldGroup>
+                <div className="mt-3">
+                <Button type="submit" className="bg-secondary text-background p-3">Submit</Button>
                         </div>
             </form>
 

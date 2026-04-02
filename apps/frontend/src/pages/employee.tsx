@@ -7,6 +7,7 @@ function EmployeeManagement() {
             <div>
                 <h1 className="font-mono text-primary text-center font-bold">Employee Management</h1>
             </div>
+            <br></br>
             <div>
                 <div>
                     <EmployeeForm />

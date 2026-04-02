@@ -1,4 +1,5 @@
 import express from "express";
+import { prisma } from "../lib/prisma.ts"
 
 interface IServiceRequest {
     id?: number;
@@ -10,7 +11,15 @@ interface IServiceRequest {
 }
 
 function serviceReqRoute(req: express.Request, res: express.Response) {
-    res.send("service request");
+    prisma.serviceRequests.findMany({
+        orderBy: {
+            created_at: "asc"
+        }
+    }).then((data) => {
+        res.json(data)
+    }).catch((err) => {
+        console.log("Error: ", err)
+    })
 }
 
 export default serviceReqRoute;

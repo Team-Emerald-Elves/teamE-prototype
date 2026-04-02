@@ -38,6 +38,16 @@
     padding: 10px 15px;
     display: block;
     border-radius: 5px;
+    font-style: italic;
+}
+
+.nav-page {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 .nav-link:hover {

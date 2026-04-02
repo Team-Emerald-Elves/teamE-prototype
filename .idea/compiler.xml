@@ -4,5 +4,6 @@
     <option name="memoryLimit" value="4096" />
     <option name="recompileOnChanges" value="true" />
     <option name="useServicePoweredTypesEnabledManually" value="true" />
+    <option name="useServicePoweredTypesWasEnabledByExperiment" value="true" />
   </component>
 </project>

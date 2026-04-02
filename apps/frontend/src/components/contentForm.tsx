@@ -42,10 +42,14 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" size={ props.size ? "lg" : "sm"} className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
+                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
+                        <div className="flex items-center justify-between p-2">
+                            <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
+                            <Button variant="outline" size="lg" className="bg-primary text-primary-foreground">Clear</Button>
+                        </div>
+
                     </DialogHeader>
                     <FieldGroup>
                         <Field>

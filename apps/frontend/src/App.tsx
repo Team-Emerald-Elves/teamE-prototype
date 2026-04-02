@@ -8,7 +8,6 @@ import './App.css'
 
 function App() {
 
-
   return (
     <BrowserRouter >
         <div className={"app"}>
@@ -23,6 +22,7 @@ function App() {
             </main>
         </div>
     </BrowserRouter>
+
   )
 }
 

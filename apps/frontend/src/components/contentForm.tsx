@@ -26,17 +26,6 @@ import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 
-// i. Name of hyperlink or document - input
-// ii. URL of link - input
-// iii. Content owner - selector (list of employees)
-// iv. Job Position (Persona) that this hyperlink or document is for. We will begin with
-//     two job positions – the underwriter and the business analyst. Personas are
-// provided for both positions. Research on the web to find out more concerning
-// what an insurance writer is and does. - selector (js underwriter and business analyst for now)
-//     v. Last modified date - will just say today
-// vi. Expiration date of the link/document - date input??
-// vii. Whether it is reference content or workflow content - radio buttons
-// viii. Document status – make a guess as to what statuses they might have - selector
 type contentFormProps = {
     type: string,
     currentName: string,
@@ -46,6 +35,7 @@ type contentFormProps = {
     currentExpirationDate: Date | undefined,
     currentExpirationTime: string,
     currentStatus: string,
+    size: boolean
 }
 function ContentForm(props: contentFormProps) {
     const now = new Date();
@@ -53,17 +43,14 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline">{props.type} Content</Button>} />
+                <DialogTrigger render={<Button variant="outline" size={ props.size ? "lg" : "sm"} className="bg-secondary text-secondary-foreground" >{props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>{props.type} Content</DialogTitle>
-                        <DialogDescription>
-                            Fill in the fields below to {props.type.toLowerCase()} content.
-                        </DialogDescription>
+                        <DialogTitle className="text-lg text-primary font-mono font-bold">{props.type} Content</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="name">Name of Link or Document</Label>
+                            <Label htmlFor="name" className="">Name of Link or Document</Label>
                             <Input id="name" name="name" placeholder={props.currentName} />
                         </Field>
                         <Field>
@@ -103,15 +90,19 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                         <Field>
                             <Label htmlFor="contentType" >Select Content Type</Label>
-                            <RadioGroup className="w-full max-w-48" id="contentType">
-                                <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
-                                <FieldContent>
-                                    <FieldLabel htmlFor="workflow">Workflow</FieldLabel>
-                                </FieldContent>
-                                <RadioGroupItem value="reference" id="reference"></RadioGroupItem>
-                                <FieldContent>
-                                    <FieldLabel htmlFor="reference">Reference</FieldLabel>
-                                </FieldContent>
+                            <RadioGroup className="w-full max-w-48 flex items-center gap-7" id="contentType">
+                                <div className="flex items-center gap-3">
+                                    <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
+                                    <FieldContent>
+                                        <FieldLabel htmlFor="workflow">Workflow</FieldLabel>
+                                    </FieldContent>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <RadioGroupItem value="reference" id="reference"></RadioGroupItem>
+                                    <FieldContent>
+                                        <FieldLabel htmlFor="reference">Reference</FieldLabel>
+                                    </FieldContent>
+                                </div>
                             </RadioGroup>
                         </Field>
                         <Field>
@@ -141,7 +132,7 @@ function ContentForm(props: contentFormProps) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline">Cancel</Button>} />
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" className=" bg-secondary text-secondary-foreground">Submit</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>

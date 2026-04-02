@@ -11,7 +11,7 @@ interface DocTableProps {
 
 function DocTable({rows}: DocTableProps){
     return (
-        <table className="border-collapse">
+        <table className="border-collapse w-full">
             <thead className="text-gray-500">
                 <tr>
                     <th className= "p-2 border-b border-gray-300 text-xs">NAME</th>

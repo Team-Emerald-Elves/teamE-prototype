@@ -58,7 +58,6 @@ function EmployeeForm() {
                         <div className="mt-3">
                             <Button type="submit" className="bg-secondary text-background p-3">Submit</Button>
                         </div>
-
             </form>
 
     )

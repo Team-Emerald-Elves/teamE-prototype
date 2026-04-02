@@ -10,6 +10,7 @@ function App() {
 
   return (
     <BrowserRouter >
+        {/*have a checkbox for underwriter and business analyst if underwriter send true, else false*/}
         <div className={"app"}>
             <Sidebar />
             <main className="main">

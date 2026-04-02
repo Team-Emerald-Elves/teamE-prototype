@@ -4,19 +4,31 @@ import Documents from './pages/documents.tsx';
 import EmployeeManagement from "./pages/employee.tsx"
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import Sidebar from './components/sidebar.tsx';
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useState } from "react";
 import './App.css'
 
 function App() {
-
+    const [role, setRole] = useState("u");
   return (
     <BrowserRouter >
-        {/*have a checkbox for underwriter and business analyst if underwriter send true, else false*/}
+        <RadioGroup value={role} onValueChange={setRole}>
+            <div className="flex items-center gap-3">
+                <RadioGroupItem value="u" id="u" />
+                <Label htmlFor="u">Underwriter</Label>
+            </div>
+            <div className="flex items-center gap-3">
+                <RadioGroupItem value="b" id="b" />
+                <Label htmlFor="b">Business Analyst</Label>
+            </div>
+        </RadioGroup>
         <div className={"app"}>
-            <Sidebar />
+            <Sidebar role={role}/>
             <main className="main">
                 <Routes >
-                    <Route path="/" element={<Home />} />
-                    <Route path="/documents" element={<Documents />} />
+                    <Route path="/" element={<Home role={role}/>} />
+                    <Route path="/documents" element={<Documents role={role} />} />
                     <Route path="/employee-management" element={<EmployeeManagement />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                 </Routes>

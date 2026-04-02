@@ -1,5 +1,5 @@
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 generator client {
@@ -8,14 +8,19 @@ generator client {
 }
 
 model ServiceRequests {
-  id    Int            @id @default(autoincrement())
-  created_at DateTime  @default(now())
-  assigned_at DateTime @updatedAt
-  assigned_id String   @db.Uuid
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  assigned_at DateTime? @updatedAt
+  assigned_id String?   @db.Uuid
+  creator_id  String?   @db.Uuid
+  description String    @default("no description")
 }
 
 model Employee {
-  id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email String     @unique
-  name  String?
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uname      String   @unique @default("uname")
+  first_name String   @default("fname")
+  last_name  String   @default("lname")
+  roles      String[]
+  email      String?  @unique
 }

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home.tsx';
 import Documents from './pages/documents.tsx';
-import EmployeeManagement from "./pages/employee.tsx"
+import EmployeeForm from "./pages/employee.tsx"
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import Sidebar from './components/sidebar.tsx';
 import './App.css'
@@ -16,7 +16,7 @@ function App() {
                 <Routes >
                     <Route path="/" element={<Home />} />
                     <Route path="/documents" element={<Documents />} />
-                    <Route path="/employee-management" element={<EmployeeManagement />} />
+                    <Route path="/employee-form" element={<EmployeeForm />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                 </Routes>
             </main>

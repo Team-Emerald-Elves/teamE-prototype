@@ -14,6 +14,7 @@ function App() {
     const [role, setRole] = useState("u");
   return (
     <BrowserRouter >
+        <div className="radio">
         <RadioGroup value={role} onValueChange={setRole}>
             <div className="flex items-center gap-3">
                 <RadioGroupItem value="u" id="u" />
@@ -24,6 +25,7 @@ function App() {
                 <Label htmlFor="b">Business Analyst</Label>
             </div>
         </RadioGroup>
+        </div>
         <div className={"app"}>
             <Sidebar role={role}/>
             <main className="main">

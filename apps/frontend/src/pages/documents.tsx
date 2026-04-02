@@ -1,5 +1,6 @@
 import DocumentCard from '../components/docCard.tsx'
 import ContentForm from '../components/contentForm.tsx'
+import {SearchBar} from '../components/searchbar.tsx'
 type docProps = {
     role: string;
 }
@@ -10,7 +11,12 @@ function Documents(props: docProps) {
                 <div className="text-center font-bold text-primary">
                     <h1 className="font-mono">Documents</h1>
                 </div>
-                <div className="flex flex-col w-full p-4">
+                <div className="flex items-center w-full p-4">
+                    <div className="flex-1 flex ">
+                        <SearchBar />
+                    </div>
+
+
                     <div className="ml-auto  p-4">
                         <ContentForm
                             type="Create"
@@ -27,13 +33,11 @@ function Documents(props: docProps) {
 
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    <DocumentCard name="Business Requirements" type="Workflow" />
-                    <DocumentCard name="System Requirements" type="Workflow"/>
-                    <DocumentCard name="Process Flow Diagrams" type="Workflow"/>
-                    <DocumentCard name="Use Cases" type="Workflow"/>
-                    {/*<DocumentCard name="Traceability Matrix" type="Workflow"/>*/}
-
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <DocumentCard name="Underwriting Rules" type="Reference" />
+                    <DocumentCard name="Approved Filings" type="Reference" />
+                    <DocumentCard name="State Guidelines" type="Reference"/>
+                    <DocumentCard name="Use Cases" type="Reference"/>
 
                 </div>
 
@@ -47,7 +51,10 @@ function Documents(props: docProps) {
                 <div className="text-center font-bold text-primary">
                     <h1 className="font-mono">Documents</h1>
                 </div>
-                <div className="flex flex-col w-full p-4">
+                <div className="flex items-center w-full p-4">
+                    <div className="flex-1 flex ">
+                        <SearchBar />
+                    </div>
                     <div className="ml-auto  p-4">
                         <ContentForm
                             type="Create"
@@ -64,11 +71,11 @@ function Documents(props: docProps) {
 
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <DocumentCard name="Business Requirements" type="Workflow" />
                     <DocumentCard name="System Requirements" type="Workflow"/>
                     <DocumentCard name="Process Flow Diagrams" type="Workflow"/>
-                    <DocumentCard name="Use Cases" type="Workflow"/>
+                    <DocumentCard name="ACT Guide" type="Workflow"/>
                     <DocumentCard name="Traceability Matrix" type="Workflow"/>
 
 

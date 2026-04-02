@@ -4,7 +4,7 @@ import EmployeeForm from "@/components/employeeForm.tsx";
 function EmployeeManagement() {
     return (
         <>
-            <div>
+            <div className="text-center font-bold text-primary">
                 <h1 className="font-mono">Employee Management</h1>
             </div>
             <div>

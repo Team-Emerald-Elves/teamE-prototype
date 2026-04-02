@@ -48,15 +48,15 @@ function EmployeeForm() {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="analyst">Business Analyst</SelectItem>
-                                        <SelectItem value="underwriter">Underwriter</SelectItem>
+                                        <SelectItem value="Business Analyst">Business Analyst</SelectItem>
+                                        <SelectItem value="Underwriter">Underwriter</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </Field>
                     </FieldGroup>
-
-                        <Button type="submit">Submit</Button>
+                <br></br>
+                <Button type="submit">Submit</Button>
             </form>
 
     )

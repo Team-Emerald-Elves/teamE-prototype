@@ -16,7 +16,7 @@ function App() {
                 <Routes >
                     <Route path="/" element={<Home />} />
                     <Route path="/documents" element={<Documents />} />
-                    <Route path="/employee-form" element={<EmployeeForm />} />
+                    <Route path="/employee" element={<EmployeeForm />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                 </Routes>
             </main>

@@ -12,13 +12,14 @@ import {cn} from "@/lib/utils.ts";
 
 type documentCardProps = {
     name: string
+    type: string
 }
 
 function DocumentCard(props: documentCardProps) {
     const now = new Date();
     const formattedDate = now.toLocaleString();
     return (
-            <Card className= "m-4 h-40 w-60 bg-background rounded-x1 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer p-3" >
+            <Card className= "m-4 h-41 w-60 bg-background rounded-x1 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer p-3" >
 
                 <div className="flex items p-1">
 
@@ -31,6 +32,10 @@ function DocumentCard(props: documentCardProps) {
                             <div className="text-xs text-gray-500">
                                 <p>Last Modified: {formattedDate}</p>
                             </div>
+                            <div className="text-xs text-gray-500">
+                                <p>{props.type}</p>
+                            </div>
+
 
                         <div className="flex justify-end">
                             <ContactForm

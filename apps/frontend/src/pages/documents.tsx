@@ -24,7 +24,16 @@ function Documents() {
 
             </div>
 
-            <DocumentCard name="Underwriting Rules" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <DocumentCard name="Business Requirements" type="Workflow" />
+                <DocumentCard name="System Requirements" type="Workflow"/>
+                <DocumentCard name="Process Flow Diagrams" type="Workflow"/>
+                <DocumentCard name="Use Cases" type="Workflow"/>
+                <DocumentCard name="Traceability Matrix" type="Workflow"/>
+
+
+            </div>
+
 
         </>
     )

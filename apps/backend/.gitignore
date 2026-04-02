@@ -29,6 +29,11 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Prisma generated
 prisma/generated
+prisma/migrations
+
+# Package locks
+package-lock.json
+pnpm-lock.yaml
 
 # Finder (MacOS) folder config
 .DS_Store

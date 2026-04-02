@@ -1,13 +1,16 @@
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button";
-
-
-export function Searchbar() {
+import { Search } from "lucide-react"
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from "@/components/ui/input-group"
+export function SearchBar() {
     return (
-        <div className="flex flex-wrap items-center gap-2 md:flex-row">
-            <Input placeholder="Search" />
-            <Button variant="outline" size="icon" aria-label="Submit">
-            </Button>
-        </div>
+        <InputGroup className="max-w-xs">
+            <InputGroupInput placeholder="Search                                       " />
+            <InputGroupAddon>
+                <Search />
+            </InputGroupAddon>
+        </InputGroup>
     )
 }

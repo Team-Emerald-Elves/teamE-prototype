@@ -1,6 +1,6 @@
 import Card from "../components/card.tsx";
 import "./home.css";
-import {Searchbar} from "@/components/searchbar.tsx";
+import {SearchBar} from "@/components/searchbar.tsx";
 import DocTable from "@/components/docTable.tsx";
 
 const rows = [
@@ -12,10 +12,15 @@ const rows = [
 function Home() {
     return (
         <>
-        <div className="p-10">
-            <h1 className="text-4xl font-bold font-sans mb-4"> Home </h1>
-            <div className="mb-6">
-                <Searchbar />
+        <div className="home-container">
+            <div className={ "hero-container"}>
+                <div className = "home-header-container text-background">
+                    <h1> Home </h1>
+                </div>
+                <div className="search-container">
+                    <SearchBar />
+                </div>
+                <img src = "/hanoverinsurence.webp" alt = "hanoverPic" style={{ width: "100%" }}/>
             </div>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] gap-[50px]">
                 <Card title={"Upcoming Expirations"} content={<DocTable rows={rows} />} />

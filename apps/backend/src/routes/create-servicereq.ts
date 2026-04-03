@@ -16,7 +16,7 @@ function createServiceReqRoute(req: express.Request, res: express.Response) {
         console.log("Successfully created service request");
         res.sendStatus(200); // Success
     }, (err) => {
-        console.error(`[ERROR] Failed to creat employee with error: ${err}`);
+        console.error(`[ERROR] Failed to create employee with error: ${err}`);
         res.sendStatus(500); // Failed
     })
 }

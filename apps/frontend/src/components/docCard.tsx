@@ -26,10 +26,10 @@ function DocumentCard(props: documentCardProps) {
                         <div className="flex flex-col">
                             <div className="w-50 h-15 bg-gray-300 rounded-md" />
 
-                            <div className="text-lg font-semibold text-primary truncate">
+                            <div className="text-lg font-semibold font-serif text-primary truncate">
                                 {props.name}
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-gray-500 font-serif">
                                 <p>Last Modified: {formattedDate}</p>
                             </div>
                             <div className="text-xs text-gray-500">

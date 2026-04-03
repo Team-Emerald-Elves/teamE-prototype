@@ -1,4 +1,4 @@
-import '../app.css'
+import '../App.css'
 import EmployeeForm from "@/components/employeeForm.tsx";
 
 function EmployeeManagement() {

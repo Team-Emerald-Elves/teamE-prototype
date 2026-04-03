@@ -17,10 +17,32 @@ model ServiceRequests {
 }
 
 model Employee {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  uname      String   @unique @default("uname")
-  first_name String   @default("fname")
-  last_name  String   @default("lname")
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uname      String    @unique @default("uname")
+  first_name String    @default("fname")
+  last_name  String    @default("lname")
   roles      String[]
-  email      String?  @unique
+  email      String?   @unique
+  contents   Content[]
+}
+
+model Content {
+  id              Int      @id @default(autoincrement())
+  name            String
+  URL             String
+  content_owner   Employee @relation(fields: [employeeId], references: [id])
+  job_position    String
+  last_modified   DateTime @updatedAt
+  expiration_date DateTime
+  content_type    String   @default("Form")
+  document_status Status   @default(not_started)
+  employeeId      String   @db.Uuid
+}
+
+enum Status {
+  not_started
+  in_progress
+  needs_review
+  done
+  expired
 }

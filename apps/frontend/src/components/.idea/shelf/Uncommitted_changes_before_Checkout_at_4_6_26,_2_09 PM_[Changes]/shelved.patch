@@ -1,0 +1,262 @@
+Index: ../pages/user-management-page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../pages/user-management-page.tsx b/../pages/user-management-page.tsx
+new file mode 100644
+--- /dev/null	(date 1775498673333)
++++ b/../pages/user-management-page.tsx	(date 1775498673333)
+@@ -0,0 +1,19 @@
++import '../App.css'
++import UserManagementTable from "@/components/user-management-table.tsx";
++
++function UserManagementPage(){
++    return (
++        <>
++            <div className="items-center gap-3 py-[15px] px-[30px] content-center">
++                <h1 className="text-2xl font-semibold text-center">User Management</h1>
++                <div className="py-15 px-30">
++                    <UserManagementTable />
++                </div>
++
++            </div>
++
++        </>
++    )
++}
++
++export default UserManagementPage;
+\ No newline at end of file
+Index: user-management-table.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/user-management-table.tsx b/user-management-table.tsx
+new file mode 100644
+--- /dev/null	(date 1775498846482)
++++ b/user-management-table.tsx	(date 1775498846482)
+@@ -0,0 +1,71 @@
++import '../App.css'
++import { HugeiconsIcon } from '@hugeicons/react';
++import { Edit03Icon } from '@hugeicons-pro/core-stroke-rounded';
++
++import {
++    Table,
++    TableBody,
++    TableCell,
++    TableHead,
++    TableCaption,
++    TableHeader,
++    TableRow,
++} from "@/components/ui/table"
++
++
++const users = [
++    {
++        name: "John Doe",
++        username: "joDoe2842",
++        email: "jodoe@gmail.com",
++        role: "Business Analyst",
++
++    },
++    {
++        name: "Jane Doe",
++        username: "jaDoe3848",
++        email: "jadoe@gmail.com",
++        role: "Underwriter",
++    }
++
++
++]
++
++//table with employees. Include edit/update and delete button.
++export function UserManagementTable(){
++    return(
++        <>
++            <Table>
++                <TableCaption></TableCaption>
++                <TableHeader>
++                    <TableRow className="text-[#00355FFF] text-lg">
++                        <TableHead className="w-[100px]">Name</TableHead>
++                        <TableHead>Role</TableHead>
++                        <TableHead>Email</TableHead>
++                        <TableHead>Username</TableHead>
++                        <TableHead className="text-right">Actions</TableHead>
++                    </TableRow>
++                </TableHeader>
++                <TableBody className="p-3">
++                    {users.map((user) => (
++                        <TableRow key={user.name} >
++                            <TableCell className="font-medium">{user.name}</TableCell>
++                            <TableCell className="font-medium">{user.role}</TableCell>
++                            <TableCell className="font-medium">{user.email}</TableCell>
++                            <TableCell className="font-medium">{user.username}</TableCell>
++
++                            <TableCell className="text-right">
++                                <HugeiconsIcon icon={Edit03Icon} />
++
++                            </TableCell>
++                        </TableRow>
++                    ))}
++                </TableBody>
++            </Table>
++
++        </>
++    )
++
++}
++
++export default UserManagementTable;
+Index: ui/table.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ui/table.tsx b/ui/table.tsx
+new file mode 100644
+--- /dev/null	(date 1775498303180)
++++ b/ui/table.tsx	(date 1775498303180)
+@@ -0,0 +1,115 @@
++import * as React from "react"
++
++
++import { cn } from "@/lib/utils"
++
++function Table({ className, ...props }: React.ComponentProps<"table">) {
++  return (
++    <div
++      data-slot="table-container"
++      className="relative w-full overflow-x-auto"
++    >
++      <table
++        data-slot="table"
++        className={cn("w-full caption-top text-xs", className)}
++        {...props}
++      />
++    </div>
++  )
++}
++
++function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
++  return (
++    <thead
++      data-slot="table-header"
++      className={cn("[&_tr]:border-b", className)}
++      {...props}
++    />
++  )
++}
++
++function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
++  return (
++    <tbody
++      data-slot="table-body"
++      className={cn("[&_tr:last-child]:border-0", className)}
++      {...props}
++    />
++  )
++}
++
++function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
++  return (
++    <tfoot
++      data-slot="table-footer"
++      className={cn(
++        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
++        className
++      )}
++      {...props}
++    />
++  )
++}
++
++function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
++  return (
++    <tr
++      data-slot="table-row"
++      className={cn(
++        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
++        className
++      )}
++      {...props}
++    />
++  )
++}
++
++function TableHead({ className, ...props }: React.ComponentProps<"th">) {
++  return (
++    <th
++      data-slot="table-head"
++      className={cn(
++        "h-10 px-3 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
++        className
++      )}
++      {...props}
++    />
++  )
++}
++
++function TableCell({ className, ...props }: React.ComponentProps<"td">) {
++  return (
++    <td
++      data-slot="table-cell"
++      className={cn(
++        "p-4 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
++        className
++      )}
++      {...props}
++    />
++  )
++}
++
++function TableCaption({
++  className,
++  ...props
++}: React.ComponentProps<"caption">) {
++  return (
++    <caption
++      data-slot="table-caption"
++      className={cn("mt-4 text-xs text-muted-foreground", className)}
++      {...props}
++    />
++  )
++}
++
++export {
++  Table,
++  TableHeader,
++  TableBody,
++  TableFooter,
++  TableHead,
++  TableRow,
++  TableCell,
++  TableCaption,
++}
+Index: ../App.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { BrowserRouter, Routes, Route } from 'react-router-dom';\nimport Home from './pages/home.tsx';\nimport Documents from './pages/documents.tsx';\nimport EmployeeManagement from \"./pages/employee.tsx\"\nimport UnderwriterDummy from './pages/underwriterdummypage.tsx'\nimport BusinessDummy from './pages/buisnessanalystdummy.tsx'\nimport Sidebar from './components/sidebar.tsx';\nimport { Label } from \"@/components/ui/label\"\nimport { RadioGroup, RadioGroupItem } from \"@/components/ui/radio-group\"\nimport { useState } from \"react\";\nimport './App.css'\n\nfunction App() {\n    const [role, setRole] = useState(\"u\");\n  return (\n    <BrowserRouter >\n        <div className=\"radio\">\n        <RadioGroup value={role} onValueChange={setRole}>\n            <div className=\"flex items-center gap-3\">\n                <RadioGroupItem value=\"u\" id=\"u\" />\n                <Label htmlFor=\"u\">Underwriter</Label>\n            </div>\n            <div className=\"flex items-center gap-3\">\n                <RadioGroupItem value=\"b\" id=\"b\" />\n                <Label htmlFor=\"b\">Business Analyst</Label>\n            </div>\n        </RadioGroup>\n        </div>\n        <div className={\"app\"}>\n            <Sidebar role={role}/>\n            <main className=\"main\">\n                <Routes >\n                    <Route path=\"/\" element={<Home role={role}/>} />\n                    <Route path=\"/documents\" element={<Documents role={role} />} />\n                    <Route path=\"/employee-management\" element={<EmployeeManagement />} />\n                    <Route path =\"/underwriter-dummy\" element = {<UnderwriterDummy />} />\n                    <Route path =\"/business-dummy\" element = {<BusinessDummy />} />\n                </Routes>\n            </main>\n        </div>\n    </BrowserRouter>\n\n  )\n}\n\nexport default App\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../App.tsx b/../App.tsx
+--- a/../App.tsx	(revision 74869ce258868da11b0b8530508388ef65a22eb0)
++++ b/../App.tsx	(date 1775494984063)
+@@ -9,6 +9,7 @@
+ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+ import { useState } from "react";
+ import './App.css'
++import UserManagementPage from "@/pages/user-management-page.tsx";
+ 
+ function App() {
+     const [role, setRole] = useState("u");
+@@ -35,6 +36,7 @@
+                     <Route path="/employee-management" element={<EmployeeManagement />} />
+                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
+                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
++                    <Route path = "/user-management" element = {<UserManagementPage />} />
+                 </Routes>
+             </main>
+         </div>

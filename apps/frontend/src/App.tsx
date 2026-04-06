@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useState } from "react";
 import './App.css'
+import UserManagementPage from "@/pages/user-management-page.tsx";
 
 function App() {
     const [role, setRole] = useState("u");
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/employee-management" element={<EmployeeManagement />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
+                    <Route path ="/user-management-page" element = {<UserManagementPage />} />
                 </Routes>
             </main>
         </div>

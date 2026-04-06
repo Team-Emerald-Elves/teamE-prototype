@@ -5,8 +5,11 @@ import employeeRoute from "./routes/employee.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createEmployeeRoute from "./routes/create-employee.ts";
+import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
+import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
+
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -19,24 +22,40 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url + "/../"));
  * This TypeScript file binds the routes from express to the handlers in the routes directory.
  */
 
-
 //app.use("/public", express.static('public'));
 
+// Middleware.
 app.use(bodyParser.json());
+app.use(clerkMiddleware());
+
+// Router-level middleware.
+app.use('/api/supabase', supaBaseRouter);
+
+// Test for clark authentication.
+app.get('/me', requireAuth(), async (req, res) => {
+  // Use `getAuth()` to get the user's `userId`
+  const { userId } = getAuth(req)
+
+  // Use Clerk's JavaScript Backend SDK to get the user's User object
+  const user = await clerkClient.users.getUser(userId as string)
+
+  return res.json({ user })
+})
 
 app.get('/', (req, res) => {
     res.sendStatus(200);
 })
 
-app.get('/employee', employeeRoute);
+app.get('/employee', requireAuth(), employeeRoute);
 
-app.get('/servicereqs', serviceReqRoute)
+app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
-app.get('/assigned', assignedRoute);
+app.get('/assigned', requireAuth(), assignedRoute);
 
-app.post('/create-employee', createEmployeeRoute);
+app.post('/create-employee', requireAuth(), createEmployeeRoute);
 
-app.post('/create-srvreq', createServiceReqRoute);
+app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
+
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);

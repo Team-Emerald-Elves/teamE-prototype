@@ -7,6 +7,7 @@ import assignedRoute from "./routes/assigned.ts";
 import createEmployeeRoute from "./routes/create-employee.ts";
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
+import editEmployeeRoute from "./routes/edit-employee.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -35,6 +36,8 @@ app.get('/servicereqs', serviceReqRoute)
 app.get('/assigned', assignedRoute);
 
 app.post('/create-employee', createEmployeeRoute);
+
+app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 

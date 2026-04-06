@@ -1,12 +1,9 @@
-.app {
-    display: flex;
-}
+
 
 .main {
-    margin-left: 200px;
-    padding: 20px;
     flex-grow: 1;
 }
+
 
 .sidebar {
     width: 200px;

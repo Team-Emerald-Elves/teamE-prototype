@@ -64,12 +64,9 @@ app.post('/create-employee', requireAuth(), createEmployeeRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 
-<<<<<<< HEAD
-=======
 app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
->>>>>>> 05ea62e (progress)
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);

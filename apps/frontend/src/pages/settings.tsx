@@ -7,6 +7,8 @@ function Settings() {
             <div className="text-center font-bold text-primary">
                 <h1 className="font-mono">Settings</h1>
             </div>
+
+
             <div className="flex justify-center items-center">
                 <div className="flex font-bold text-center items-center">
                     <h2>Edit Links</h2>

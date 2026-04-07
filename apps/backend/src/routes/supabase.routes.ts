@@ -10,7 +10,11 @@ import type { Employee } from '../../prisma/generated/client'
 const supaBaseRouter = Router()
 const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
 
-supaBaseRouter.get("/create-file", requireAuth(), async (req: Request, res: Response) => {
+supaBaseRouter.get(
+    "/create-file",
+    requireAuth(),
+    async (req: Request, res: Response) => {
+
     const { userId } = getAuth(req)
     const { fileName, fileData } = req.body
     try {
@@ -38,6 +42,21 @@ supaBaseRouter.get("/create-file", requireAuth(), async (req: Request, res: Resp
     }
 })
 
+supaBaseRouter.get(
+    'delete-file',
+    requireAuth(),
+    async (req: Request, res: Response) => {
+        
+    }
 
+)
+
+supaBaseRouter.get(
+    'modify-file',
+    requireAuth(),
+    async (req: Request, res: Response) => {
+        
+    }
+)
 
 export default supaBaseRouter

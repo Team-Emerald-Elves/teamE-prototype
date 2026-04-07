@@ -13,6 +13,7 @@ import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/expre
 
 import cors from 'cors';
 
+import editEmployeeRoute from "./routes/edit-employee.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -64,6 +65,12 @@ app.post('/create-employee', requireAuth(), createEmployeeRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 
+<<<<<<< HEAD
+=======
+app.post('/edit-employee', editEmployeeRoute);
+
+app.post('/create-srvreq', createServiceReqRoute);
+>>>>>>> 05ea62e (progress)
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);

@@ -67,7 +67,7 @@ function Navbar({ role }: NavbarProps) {
                         </NavigationMenuItem>
 
                         <NavigationMenuItem>
-                            <NavigationMenuLink render={<Link to="/employee-management">Employees</Link>} className={navigationMenuTriggerStyle()}>
+                            <NavigationMenuLink render={<Link to="/employee-management">User Management</Link>} className={navigationMenuTriggerStyle()}>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 

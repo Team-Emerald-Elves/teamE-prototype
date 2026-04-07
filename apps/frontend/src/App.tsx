@@ -38,12 +38,9 @@ function App() {
                     <Route path="/employee-management" element={<EmployeeManagement />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
-<<<<<<< linkspage
                     <Route path="/settings" element = {<Settings />} />
-=======
                     <Route path ="/user-management-page" element = {<UserManagementPage />} />
                     <Route path ="/profile" element = {<Profile />} />
->>>>>>> main
                 </Routes>
             </main>
         </div>

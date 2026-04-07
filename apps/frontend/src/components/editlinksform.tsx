@@ -12,7 +12,7 @@ import {Field, FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-type editlinksformProps ={
+type addlinksformProps ={
     type: string,
     name: string,
     link: string,
@@ -20,7 +20,7 @@ type editlinksformProps ={
     size: boolean
 
 }
-function EditLinksForm(props: editlinksformProps){
+function AddLinksForm(props: addlinksformProps){
     return (
         <Dialog>
             <form>
@@ -57,4 +57,4 @@ function EditLinksForm(props: editlinksformProps){
     )
 }
 
-export default EditLinksForm;
+export default AddLinksForm;

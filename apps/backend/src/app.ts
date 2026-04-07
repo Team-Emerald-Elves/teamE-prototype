@@ -2,6 +2,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
+import linkRoute from "./routes/links.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createEmployeeRoute from "./routes/create-employee.ts";
@@ -36,7 +37,8 @@ app.get('/', (req, res) => {
     res.sendStatus(200);
 })
 
-app.get('/employee', employeeRoute);
+app.use('/employee', employeeRoute);
+app.use('/links', linkRoute)
 
 app.get('/servicereqs', serviceReqRoute)
 

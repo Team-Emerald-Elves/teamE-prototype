@@ -51,7 +51,6 @@ function LinksTable(){
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

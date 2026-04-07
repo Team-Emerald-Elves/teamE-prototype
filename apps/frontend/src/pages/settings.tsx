@@ -23,13 +23,9 @@ function Settings() {
                         size ={true}
                     />
                 </div>
-                <div className="px-10 py-20 ">
-                    <Linkstable />
-
-                </div>
             </div>
-            <div className="flex items-center w-full p-4">
-                <LinkCard name={"Alex Link"} description={"Fake description"}></LinkCard>
+            <div className="px-10 py-20 ">
+                <Linkstable />
             </div>
         </>
     )

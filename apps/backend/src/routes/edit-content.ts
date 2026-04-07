@@ -12,15 +12,14 @@ interface IContentEditor {
     document_status?: string;
     employeeId?: string;
 }
-function updatecontentRoute(req: express.Request, res: express.Response) {
-    let content: IContentEditor = req.body
+/*function updatecontentRoute(req: express.Request, res: express.Response) {
+    const content: IContentEditor = req.body as IContentEditor;
     prisma.content.update({
         where: {
             id: content.id,
         },
-        data: {
-        ...(content.URL && {URL: content.URL})
-
-        },
+        data:
+            content,
     });
 }
+export default updatecontentRoute;*/

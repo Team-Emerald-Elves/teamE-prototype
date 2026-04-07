@@ -9,7 +9,7 @@ import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import createContentRoute from "./routes/create-content.ts";
 import contentRoute from "./routes/content.ts";
-import contentEmployeeRoute from "./routes/content-emplyoee-route.ts";
+import contentEmployeeRoute from "./routes/content-employee-route.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;

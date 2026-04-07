@@ -12,7 +12,7 @@ interface IContentCreator {
 }
 
 function createContentRoute(req: express.Request, res: express.Response) {
-    let content: IContentCreator = req.body;
+    const content: IContentCreator = req.body as IContentCreator;
     prisma.content
         .create({
             data: {

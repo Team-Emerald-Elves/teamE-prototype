@@ -11,12 +11,11 @@ interface IEmployeeID {
 }
 
 function contentEmployeeRoute(req: express.Request, res: express.Response) {
-    let employee: IEmployeeID = req.body
-    prisma.content.findFirst({where: {employeeId: employee.id}}).then((data) => {
+    const employee: IEmployeeID = req.body as IEmployeeID;
+    prisma.content.findMany({where: {employeeId: employee.id}}).then((data) => {
         res.json(data)
     }).catch((err) => {
         console.log("Error: ", err)
-    })
-
+    });
 }
 export default contentEmployeeRoute

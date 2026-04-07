@@ -19,12 +19,3 @@ function contentRoute(req: express.Request, res: express.Response) {
         );
 }
 export default contentRoute;
-function contentEmployee(req: express.Request, res: express.Response) {
-    let employee: IEmployeeID = req.body
-    prisma.content.findFirst({where: {employeeId: employee.id}}).then((data) => {
-        res.json(data)
-    }).catch((err) => {
-        console.log("Error: ", err)
-    })
-
-}

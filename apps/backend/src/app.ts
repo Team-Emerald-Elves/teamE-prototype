@@ -9,7 +9,6 @@ import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
-import { prisma } from './lib/prisma.ts';
 
 
 import cors from 'cors';

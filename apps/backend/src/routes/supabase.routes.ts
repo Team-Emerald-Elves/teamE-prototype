@@ -13,7 +13,7 @@ import { type IFile,
 const supaBaseRouter = Router()
 const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
 
-supaBaseRouter.get(
+supaBaseRouter.post(
     "/create-file",
     requireAuth(),
     async (req: Request, res: Response) => {
@@ -94,7 +94,7 @@ supaBaseRouter.delete(
     }
 })
 
-supaBaseRouter.get(
+supaBaseRouter.put(
     '/update-file',
     requireAuth(),
     async (req: Request, res: Response) => {

@@ -4,6 +4,7 @@ import Documents from './pages/documents.tsx';
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
+import Settings from './pages/settings.tsx'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useState } from "react";
@@ -36,6 +37,7 @@ function App() {
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
                     <Route path ="/user-management-page" element = {<UserManagementPage />} />
+                    <Route path="/settings" element = {<Settings />} />
                 </Routes>
             </main>
         </div>

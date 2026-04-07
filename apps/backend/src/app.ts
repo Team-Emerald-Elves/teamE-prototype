@@ -1,6 +1,6 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
-import path from 'path';
+import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
@@ -17,10 +17,9 @@ import editEmployeeRoute from "./routes/edit-employee.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
-let filename = "";
 
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url + "/../"));
+const __filename = fileURLToPath(`${import.meta.url}/../`);
+const __dirname = dirname(__filename);
 
 /**
  * This TypeScript file binds the routes from express to the handlers in the routes directory.
@@ -73,5 +72,5 @@ app.post('/create-srvreq', createServiceReqRoute);
 >>>>>>> 05ea62e (progress)
 
 app.listen(PORT, () => {
-    console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);
+    console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);
 })

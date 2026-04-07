@@ -1,5 +1,5 @@
 {
-  "exec": "node --trace-warnings --trace-deprecation --loader ts-node/esm ./src/app.ts",
+  "exec": "node --trace-warnings --trace-deprecation ./src/app.ts",
   "watch" : ["src"],
   "ext": "ts"
 }

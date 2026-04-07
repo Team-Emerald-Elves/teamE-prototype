@@ -4,11 +4,12 @@ import Documents from './pages/documents.tsx';
 import EmployeeManagement from "./pages/employee.tsx"
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
-import Sidebar from './components/sidebar.tsx';
+import Navbar from './components/navbar.tsx'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useState } from "react";
 import './App.css'
+import UserManagementPage from "@/pages/user-management-page.tsx";
 
 function App() {
     const [role, setRole] = useState("u");
@@ -27,7 +28,7 @@ function App() {
         </RadioGroup>
         </div>
         <div className={"app"}>
-            <Sidebar role={role}/>
+            <Navbar role={role}/>
             <main className="main">
                 <Routes >
                     <Route path="/" element={<Home role={role}/>} />
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/employee-management" element={<EmployeeManagement />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
+                    <Route path ="/user-management-page" element = {<UserManagementPage />} />
                 </Routes>
             </main>
         </div>

@@ -15,6 +15,9 @@ import cors from 'cors';
 import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
 
 
+import cors from 'cors';
+
+
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
 

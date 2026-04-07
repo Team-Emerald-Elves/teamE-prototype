@@ -8,6 +8,9 @@ import createEmployeeRoute from "./routes/create-employee.ts";
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 
+import cors from 'cors';
+
+
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
 let filename = "";
@@ -21,6 +24,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url + "/../"));
 
 
 //app.use("/public", express.static('public'));
+// Source - https://stackoverflow.com/a/73921588
+// Posted by KrystianKasp98
+// Retrieved 2026-04-07, License - CC BY-SA 4.0
+
+app.use(cors());
 
 app.use(bodyParser.json());
 

@@ -6,9 +6,12 @@ order: 3000
 headers:
   - key: Content-Type
     value: application/json
+  - key: Authorization
+    value: 'Bearer {{authToken}}'
 body:
   type: json
   content: |-
     {
-      "description": "Sample service request description"
+      "description": "Sample service request description",
+      "uname": "johndoe"
     }

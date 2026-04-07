@@ -1,7 +1,7 @@
 $kind: http-request
-name: Create Employee
-method: POST
-url: '{{baseUrl}}/create-employee'
+name: Delete File
+method: DELETE
+url: '{{baseUrl}}/api/supabase/delete-file'
 order: 2000
 headers:
   - key: Content-Type
@@ -12,8 +12,5 @@ body:
   type: json
   content: |-
     {
-      "first_name": "John",
-      "last_name": "Doe",
-      "uname": "johndoe",
-      "email": "john.doe@example.com"
+      "fileName": "example.txt"
     }

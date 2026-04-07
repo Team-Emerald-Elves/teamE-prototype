@@ -1,18 +1,20 @@
-import { Button } from './ui/button.tsx'
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {Field, FieldGroup} from "@/components/ui/field"
+import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Edit03Icon } from 'hugeicons-react';
 
-type addlinksformProps ={
+type editlinksformProps ={
     type: string,
     name: string,
     link: string,
@@ -20,41 +22,44 @@ type addlinksformProps ={
     size: boolean
 
 }
-function AddLinksForm(props: addlinksformProps){
+
+export function Editlinksform(props: editlinksformProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
-                <DialogContent className="lg:max-w-lg">
+                <DialogTrigger asChild>
+                    <Button variant = "outline" size = "icon">
+                        <Edit03Icon size={20} />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-sm">
                     <DialogHeader>
-                        <div className="flex items-center justify-between p-2">
-                            <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
-                            <Button variant="outline" size="lg" className="bg-primary text-primary-foreground">Clear</Button>
-                        </div>
+                        <DialogTitle>Edit Link</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <Field>
-                            <Label htmlFor="name" className="text-base">Name</Label>
-                            <Input id="name" name="name" placeholder={props.name} />
+                            <Label htmlFor="name-1">Name</Label>
+                            <Input id="name-1" name="name" defaultValue={props.name} />
                         </Field>
                         <Field>
-                            <Label htmlFor="link" className="text-base">URL</Label>
-                            <Input id="link" name="link" placeholder={props.link} />
+                            <Label htmlFor="URL">Username</Label>
+                            <Input id="URL" name="URL" defaultValue={props.link} />
                         </Field>
                         <Field>
-                            <Label htmlFor="description" className="text-base">Description</Label>
-                            <Input id="description" name="description" placeholder={props.description} />
+                            <Label htmlFor="description">Description</Label>
+                            <Input id="description" name="description" defaultValue={props.description} />
                         </Field>
                     </FieldGroup>
                     <DialogFooter>
-                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button type="submit" className=" bg-secondary text-secondary-foreground">Save changes</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>
         </Dialog>
-
     )
 }
 
-export default AddLinksForm;
+export default Editlinksform

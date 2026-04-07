@@ -9,33 +9,39 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
+import EditLinksForm from '@/components/editlinksform.tsx'
 
 const users = [
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
     {
         name: "John Doe",
+        link: "https://example.com",
         description: "JohnDoe"
     },
 
@@ -60,9 +66,13 @@ function LinksTable(){
                                 <TableCell>{users.description}</TableCell>
 
                                 <TableCell className="flex items-center gap-3">
-                                    <Button variant = "outline" size = "icon">
-                                        <Edit03Icon size={20} />
-                                    </Button>
+                                    <EditLinksForm
+                                        type= "add link"
+                                        name = {users.name}
+                                        link = {users.link}
+                                        description={users.description}
+                                        size={true}
+                                    />
                                     <Button variant = "destructive" size = "icon">
                                         <Delete02Icon size={20} />
                                     </Button>

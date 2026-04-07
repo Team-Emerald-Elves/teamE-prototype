@@ -9,11 +9,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
 import { UserCircleIcon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
-
+import EmployeeForm from "@/components/employeeForm.tsx";
 const users = [
     {
         name: "John Doe",
@@ -83,9 +82,10 @@ function UserManagementTable(){
                             <TableCell>{users.role}</TableCell>
 
                             <TableCell className="flex items-center gap-3">
-                                <Button variant = "outline" size = "icon">
-                                    <Edit03Icon size={20} />
-                                </Button>
+                                <div className="flex justify-end">
+                                    <EmployeeForm/>
+
+                                </div>
                                 <Button variant = "destructive" size = "icon">
                                     <Delete02Icon size={20} />
                                 </Button>

@@ -42,7 +42,7 @@ export function Editlinksform(props: editlinksformProps) {
                             <Input id="name-1" name="name" defaultValue={props.name} />
                         </Field>
                         <Field>
-                            <Label htmlFor="URL">Username</Label>
+                            <Label htmlFor="URL">URL</Label>
                             <Input id="URL" name="URL" defaultValue={props.link} />
                         </Field>
                         <Field>

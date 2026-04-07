@@ -9,6 +9,7 @@ import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
+import { prisma } from './lib/prisma.ts';
 
 
 import cors from 'cors';
@@ -41,7 +42,8 @@ app.use('/api/supabase', supaBaseRouter);
 
 // Test for clark authentication.
 app.get('/me', requireAuth(), async (req, res) => {
-  // Use `getAuth()` to get the user's `userId`
+  
+    // Use `getAuth()` to get the user's `userId`
   const { userId } = getAuth(req)
 
   // Use Clerk's JavaScript Backend SDK to get the user's User object

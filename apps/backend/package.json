@@ -10,7 +10,7 @@
     "db:push": "pnpx prisma db push",
     "db:studio": "pnpx prisma studio",
     "postinstall": "pnpm run db:generate",
-    "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma"
+    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

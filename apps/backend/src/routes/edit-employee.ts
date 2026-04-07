@@ -4,11 +4,11 @@ import {type Employee} from "../lib/prismadefs.ts"
 
 interface IEditEmployeeRequest {
     id: string;
-    uname?: string;
-    firstName?: string;
-    lastName?: string;
-    roles?: string[];
-    email?: string;
+    uname: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    roles: string[] | undefined;
+    email: string | undefined;
 }
 
 async function editEmployeeRoute(req: express.Request, res: express.Response) {
@@ -18,9 +18,7 @@ async function editEmployeeRoute(req: express.Request, res: express.Response) {
         where: {
             id: ereq.id,
         },
-        data: {
-            last_name: ereq.lastName!
-        }
+        data: ereq,
     });
 
     res.status(200).send(employee);

@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import EditLinksForm from "@/components/editlinksform.tsx";
+import EditLinksForm from "@/components/addlinksform.tsx";
 import { Button } from './ui/button.tsx'
 
 type documentCardProps = {

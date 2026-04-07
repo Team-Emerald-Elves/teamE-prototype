@@ -1,4 +1,4 @@
-import AddLinksForm from '@/components/editlinksform.tsx'
+import AddLinksForm from '@/components/addlinksform.tsx'
 import Linkstable from "@/components/linkstable.tsx";
 
 function Settings() {
@@ -9,22 +9,23 @@ function Settings() {
             </div>
 
 
-            <div className="flex justify-center items-center">
-                <div className="flex font-bold text-center items-center">
-                    <h2>Edit Links</h2>
-                </div>
-                <div className=" p-4 items-center">
+            <div className="relative w-full flex items-center">
+                <h2 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold">
+                    Edit Links
+                </h2>
+
+                <div className="ml-auto pr-6">
                     <AddLinksForm
-                        type = "Add Link"
-                        name = "Name"
+                        type="Add Link"
+                        name="Name"
                         link="www.example.com"
                         description="What is the link used for"
-                        size ={true}
+                        size={true}
                     />
                 </div>
             </div>
             <div className="px-10 py-20 ">
-                <Linkstable />
+                <Linkstable/>
             </div>
         </>
     )

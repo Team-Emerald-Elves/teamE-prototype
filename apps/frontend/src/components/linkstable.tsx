@@ -11,7 +11,6 @@ import {
 
 import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
-import { UserCircleIcon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
 
 const users = [
@@ -56,12 +55,6 @@ function LinksTable(){
                     <TableBody>
                         {users.map((users) => (
                             <TableRow key={users.name}>
-                                <TableCell className="font-medium">
-                                    <div className="flex gap-3 items-center">
-                                        <UserCircleIcon size={25} strokeWidth={1.5}/>
-                                        {users.name}
-                                    </div>
-                                </TableCell>
 
                                 <TableCell>{users.name}</TableCell>
                                 <TableCell>{users.description}</TableCell>

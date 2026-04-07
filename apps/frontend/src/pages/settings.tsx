@@ -1,5 +1,4 @@
-import EditLinksForm from '@/components/editlinksform.tsx'
-import LinkCard from "@/components/linkCard.tsx";
+import AddLinksForm from '@/components/editlinksform.tsx'
 import Linkstable from "@/components/linkstable.tsx";
 
 function Settings() {
@@ -15,7 +14,7 @@ function Settings() {
                     <h2>Edit Links</h2>
                 </div>
                 <div className=" p-4 items-center">
-                    <EditLinksForm
+                    <AddLinksForm
                         type = "Add Link"
                         name = "Name"
                         link="www.example.com"

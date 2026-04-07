@@ -13,6 +13,7 @@ import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
 import { UserCircleIcon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
+import {useEffect, useState} from "react";
 
 const users = [
     {
@@ -54,7 +55,38 @@ const users = [
 
 ]
 
+type Employee = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email?: string;
+    roles?: string[];
+};
+
+async function getEmployees() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch employees");
+    }
+    const data = await res.json();
+    console.log(data)
+
+    return data;
+}
+
+
 function UserManagementTable(){
+
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
+    useEffect(() => {
+        getEmployees()
+            .then(setEmployees)
+            .catch(console.error);
+    }, []);
+
     return (
         <>
             <div className="shadow-md">
@@ -69,18 +101,18 @@ function UserManagementTable(){
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.map((users) => (
-                        <TableRow key={users.name}>
+                    {employees.map((emp) => (
+                        <TableRow key={emp.id}>
                             <TableCell className="font-medium">
                                 <div className="flex gap-3 items-center">
                                     <UserCircleIcon size={25} strokeWidth={1.5}/>
-                                    {users.name}
+                                    {emp.firstName} {emp.lastName}
                                 </div>
                             </TableCell>
 
-                            <TableCell>{users.username}</TableCell>
-                            <TableCell>{users.email}</TableCell>
-                            <TableCell>{users.role}</TableCell>
+                            <TableCell>{emp.username}</TableCell>
+                            <TableCell>{emp.email}</TableCell>
+                            <TableCell>{emp.roles?.[0] ?? "No Roles"}</TableCell>
 
                             <TableCell className="flex items-center gap-3">
                                 <Button variant = "outline" size = "icon">

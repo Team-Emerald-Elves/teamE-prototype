@@ -1,5 +1,6 @@
 
 import { Button } from './ui/button.tsx'
+import { useEffect, useState } from "react";
 import {
     Dialog,
     DialogClose,
@@ -36,9 +37,42 @@ type contentFormProps = {
     currentStatus: string,
     size: boolean
 }
+
+type Employee = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email?: string;
+    roles?: string[];
+};
+
+async function getEmployees() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch employees");
+    }
+    const data = await res.json();
+    console.log(data)
+
+    return data;
+}
+
 function ContentForm(props: contentFormProps) {
     const now = new Date();
     const formattedDate = now.toLocaleString();
+
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
+    useEffect(() => {
+        getEmployees()
+            .then(setEmployees)
+            .catch(console.error);
+    }, []);
+
+
+
     return (
         <Dialog>
             <form>
@@ -69,9 +103,11 @@ function ContentForm(props: contentFormProps) {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Employees</SelectLabel>
-                                        <SelectItem value="userID1">Bob Tanner</SelectItem>
-                                        <SelectItem value="userID2">Aimee Tally</SelectItem>
-                                        <SelectItem value="userID3">Dolly Readner</SelectItem>
+                                        {employees.map((emp) => (
+                                            <SelectItem key={emp.id} value={emp.id}>
+                                                {emp.firstName} {emp.lastName}
+                                            </SelectItem>
+                                        ))}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

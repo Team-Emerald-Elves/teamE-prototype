@@ -17,7 +17,7 @@ model ServiceRequests {
 }
 
 model Employee {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @unique
   clerkUserId  String        @db.Uuid
   uname        String        @unique @default("uname")
   first_name   String        @default("fname")
@@ -28,7 +28,7 @@ model Employee {
 }
 
 model BucketMeta {
-  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @unique
   public             Boolean       @default(false)
   type               String        @default("STANDARD")
   file_size_limit    Int           @default(10485760)
@@ -42,7 +42,7 @@ model BucketMeta {
 
 model FileContent {
   id              Int        @id @default(autoincrement())
-  name            String
+  name            String     @unique
   bucketId        String     @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])
   last_modified   DateTime   @updatedAt

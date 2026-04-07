@@ -40,18 +40,6 @@ app.use(clerkMiddleware());
 // Router-level middleware.
 app.use('/api/supabase', supaBaseRouter);
 
-// Test for clark authentication.
-app.get('/me', requireAuth(), async (req, res) => {
-  
-    // Use `getAuth()` to get the user's `userId`
-  const { userId } = getAuth(req)
-
-  // Use Clerk's JavaScript Backend SDK to get the user's User object
-  const user = await clerkClient.users.getUser(userId as string)
-
-  return res.json({ user })
-})
-
 app.get('/', (req, res) => {
     res.sendStatus(200);
 })

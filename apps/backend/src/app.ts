@@ -7,6 +7,8 @@ import assignedRoute from "./routes/assigned.ts";
 import createEmployeeRoute from "./routes/create-employee.ts";
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
+import createContentRoute from "./routes/create-content.ts";
+import contentRoute from "./routes/content.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -38,6 +40,8 @@ app.post('/create-employee', createEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 
+app.post('/create-content', createContentRoute);
+app.post('/content', contentRoute);
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);
 })

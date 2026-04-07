@@ -39,6 +39,12 @@ model Content {
   employeeId      String   @db.Uuid
 }
 
+enum roleType {
+  underwriter
+  admin
+  data_analyst
+}
+
 enum Status {
   not_started
   in_progress

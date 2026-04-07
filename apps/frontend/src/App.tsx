@@ -35,7 +35,7 @@ function App() {
                 <Routes >
                     <Route path="/" element={<Home role={role}/>} />
                     <Route path="/documents" element={<Documents role={role} />} />
-                    <Route path="/employee-management" element={<EmployeeManagement />} />
+                    <Route path="/employee-management" element={<UserManagementPage />} />
                     <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
                     <Route path ="/business-dummy" element = {<BusinessDummy />} />
                     <Route path="/settings" element = {<Settings />} />

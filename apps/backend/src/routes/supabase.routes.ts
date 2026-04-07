@@ -13,67 +13,6 @@ import { type IFile,
 const supaBaseRouter = Router()
 const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
 
-/*
-
-model Employee {
-  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId String      @db.Uuid
-  uname       String      @unique @default("uname")
-  first_name  String      @default("fname")
-  last_name   String      @default("lname")
-  roles       String[]
-  email       String?     @unique
-  contents    FileContent[]
-  bucket     BucketMeta?
-}
-
-model BucketMeta {
-  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  public             Boolean   @default(false)
-  type               String    @default("STANDARD")
-  file_size_limit    Int       @default(10485760)
-  allowed_mime_types String[]  @default([])
-  created_at         DateTime  @default(now())
-  updated_at         DateTime  @updatedAt
-
-  employeeId         String    @unique @db.Uuid
-  employee           Employee  @relation(fields: [employeeId], references: [id])
-}
-
-model FileContent {
-  id              Int      @id @default(autoincrement())
-  name            String
-  employeeId      String   @db.Uuid
-  content_owner   Employee @relation(fields: [employeeId], references: [id])
-  last_modified   DateTime @updatedAt
-  expiration_date DateTime
-  mime_type    String   @default("text/plain")
-  document_status Status   @default(not_started)
-}
-
-*/
-
-// type documentStatus = 'not_started' |
-//                       'started' |
-//                       'in_progress' |
-//                       'needs_review' |
-//                       'done' |
-//                       'expired'
-
-// type IFile = {
-//     fileName: string
-//     fileContent: {
-//         name: string
-//         URL?: string
-//         content_owner: string
-//         job_position: string
-//         expiration_date?: Date
-//         content_type?: string
-//         documment_status?: documentStatus
-//     }
-//     filePayload: File
-// }
-
 supaBaseRouter.get(
     "/create-file",
     requireAuth(),
@@ -117,12 +56,12 @@ supaBaseRouter.get(
     }
 })
 
-supaBaseRouter.get(
+supaBaseRouter.delete(
     '/delete-file',
     requireAuth(),
     async (req: Request, res: Response) => {
         const { userId } = getAuth(req)
-        const {fileName} = req.body
+        const { fileName } = req.body
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
@@ -132,6 +71,17 @@ supaBaseRouter.get(
                 bucket: true
             }
         })
+
+        // Find existing content for file.
+        prisma.fileContent.delete({
+            where: {
+                bucketId: employee.bucket?.id,
+                name: fileName
+            },
+        }).catch((error) => {
+            throw new Error("Couldn't delete file meta infomation.")
+        })
+
         const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id).remove([(fileName as string).trim()])
 
@@ -149,7 +99,8 @@ supaBaseRouter.get(
     requireAuth(),
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
-        const {fileName, fileData} = req.body
+        const file: IFile = req.body
+        
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
@@ -159,11 +110,31 @@ supaBaseRouter.get(
                     bucket: true
                 }
             })
+
+            // Find existing content for file.
+            const existingFileContent = await prisma.fileContent.findFirstOrThrow({
+                where: {
+                    bucketId: employee.bucket?.id,
+                    name: file.fileName
+                },
+            })
+
+            // Update contents for file.
+            await prisma.fileContent.update({
+                where: {
+                    id: existingFileContent?.id,
+                },
+                data: {
+                    ...file,
+                    bucketId: employee.bucket?.id,
+                },
+            })
+
             const {data, error} = await supabaseClient.storage
-                .from(employee.bucket!.id).update((fileName as string).trim(), fileData)
+                .from(employee.bucket!.id).update((file.fileName as string).trim(), file.filePayload)
 
             if (!data || error) {
-                throw new Error(`Failed to modify file '${fileName}' for user '${employee.uname}'.`)
+                throw new Error(`Failed to modify file '${file.fileName}' for user '${employee.uname}'.`)
             }
 
         } catch (error) {
@@ -171,6 +142,5 @@ supaBaseRouter.get(
         }
     }
 )
-
 
 export default supaBaseRouter

@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import createContentRoute from "./routes/create-content.ts";
 import contentRoute from "./routes/content.ts";
+import contentEmployeeRoute from "./routes/content-emplyoee-route.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -35,13 +36,14 @@ app.get('/employee', employeeRoute);
 app.get('/servicereqs', serviceReqRoute)
 
 app.get('/assigned', assignedRoute);
-
+app.get('/content', contentRoute);
 app.post('/create-employee', createEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 
 app.post('/create-content', createContentRoute);
-app.post('/content', contentRoute);
+app.post('/employee-content', contentEmployeeRoute);
+
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);
 })

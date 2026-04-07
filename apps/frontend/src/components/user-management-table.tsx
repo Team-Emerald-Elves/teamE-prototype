@@ -89,7 +89,7 @@ function UserManagementTable(){
                                 <Button variant = "destructive" size = "icon">
                                     <Delete02Icon size={20} />
                                 </Button>
-                                
+
                             </TableCell>
                         </TableRow>
                     ))}

@@ -37,12 +37,13 @@ app.get('/servicereqs', serviceReqRoute)
 
 app.get('/assigned', assignedRoute);
 app.get('/content', contentRoute);
+app.get('/employee-content', contentEmployeeRoute);
 app.post('/create-employee', createEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 
 app.post('/create-content', createContentRoute);
-app.post('/employee-content', contentEmployeeRoute);
+
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on http://localhost:${PORT}!\x1b[0m`);

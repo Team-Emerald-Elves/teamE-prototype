@@ -18,7 +18,7 @@ model ServiceRequests {
 
 model Employee {
   id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId String?     @db.Uuid
+  clerkUserId String?
   uname       String      @unique @default("uname")
   first_name  String      @default("fname")
   last_name   String      @default("lname")

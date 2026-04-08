@@ -33,14 +33,12 @@ async function getDocuments() {
 }
 
 function Documents(props: docProps) {
-    const [documents, setDocuments] = useState<Document[]>([]);
+    const [documents, setDocuments] = useState([]);
 
-    useEffect(() => {
-        getDocuments()
-            .then((docs) => {
-                console.log("Docs received in useEffect:", docs);
-                setDocuments(docs);
-            }).catch(console.error);
+    useEffect(() => { const fetchData = async () => {
+        const docsData = await getDocuments();
+        setDocuments(docsData)
+    }
     }, []);
 
 
@@ -74,7 +72,7 @@ function Documents(props: docProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {documents.map((doc:Document) => (
+                    {documents.map((doc: Document) => (
                         <DocumentCard key={doc.name} name={doc.name} type="Reference" />
                     ))}
                     {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}

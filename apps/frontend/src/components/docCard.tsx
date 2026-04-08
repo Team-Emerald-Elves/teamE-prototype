@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import ContactForm from './contentForm.tsx'
 import {cn} from "@/lib/utils.ts";
+import { Trash } from "lucide-react";
 
 type documentCardProps = {
     name: string
@@ -38,6 +39,8 @@ function DocumentCard(props: documentCardProps) {
 
 
                             <div className="flex justify-end">
+
+
                                 <ContactForm
                                     type="Edit"
                                     currentName="Document Name"
@@ -49,6 +52,10 @@ function DocumentCard(props: documentCardProps) {
                                     currentStatus="In Progress"
                                     size={false}
                                 />
+
+                                <button className="text-red-700 text-sm hover:text-red-900 transition">
+                                    <Trash size={18} />
+                                </button>
 
                             </div>
 

@@ -6,8 +6,11 @@ import linkRoute from "./routes/links.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createEmployeeRoute from "./routes/create-employee.ts";
+import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
+import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
+
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
@@ -23,7 +26,6 @@ const __dirname = dirname(__filename);
  * This TypeScript file binds the routes from express to the handlers in the routes directory.
  */
 
-
 //app.use("/public", express.static('public'));
 // Source - https://stackoverflow.com/a/73921588
 // Posted by KrystianKasp98
@@ -31,7 +33,12 @@ const __dirname = dirname(__filename);
 
 app.use(cors());
 
+// Middleware.
 app.use(bodyParser.json());
+app.use(clerkMiddleware());
+
+// Router-level middleware.
+app.use('/api/supabase', supaBaseRouter);
 
 app.get('/', (req, res) => {
     res.sendStatus(200);
@@ -40,19 +47,23 @@ app.get('/', (req, res) => {
 app.use('/employee', employeeRoute);
 app.use('/links', linkRoute)
 
-app.get('/servicereqs', serviceReqRoute)
+app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
-app.get('/assigned', assignedRoute);
-app.get('/content', contentRoute);
-app.get('/employee-content', contentEmployeeRoute);
-app.post('/create-employee', createEmployeeRoute);
+app.get('/assigned', requireAuth(), assignedRoute);
+
+app.post('/create-employee', requireAuth(), createEmployeeRoute);
+
+app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
+
+app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 
-app.post('/create-content', createContentRoute);
+app.post('/edit-employee', editEmployeeRoute);
 
+app.post('/create-srvreq', createServiceReqRoute);
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);

@@ -80,7 +80,7 @@ function UserManagementTable(){
 
                             <TableCell className="flex items-center gap-3">
                                 <div className="flex justify-end">
-                                    <EmployeeForm/>
+                                    <EmployeeForm employee={emp}/>
                                 </div>
 
                                 <Button variant = "destructive" size = "icon">

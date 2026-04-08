@@ -7,7 +7,7 @@ const testPrisma = new UnitTest( async (testvar) => {
 })
 
 const testSupabaseBackend = new UnitTest( async (testvar) => {
-    const supabase = createSupabaseForRequest()
+    const supabase = await createSupabaseForRequest()
     const { data, error } = await supabase.storage.listBuckets();
     
     if (error) {

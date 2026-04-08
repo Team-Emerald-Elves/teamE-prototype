@@ -1,5 +1,6 @@
 import '../App.css'
-import { Edit03Icon } from 'hugeicons-react';
+import {HugeiconsIcon} from "@hugeicons/react"
+import { Edit03Icon } from "@hugeicons/core-free-icons";
 
 import { Button } from './ui/button.tsx'
 import {
@@ -23,17 +24,32 @@ import {
 import {FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useState} from "react";
+import {JSX, useState} from "react";
+
 type EditEmployeeRequest = {
     id: string,
-    uname?: string,
-    firstName?: string,
-    lastName?: string,
+    uname?: string ,
+    first_name?: string,
+    last_name?: string,
     email?: string,
-    role?: string,
+    role?: string[],
+}
+
+type Employee = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    uname: string;
+    email?: string;
+    roles?: string[];
+};
+
+type empProps = {
+    employee: Employee;
 }
 
 async function updateEmployee(body: EditEmployeeRequest) {
+    console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/edit-employee`, {
         method: 'POST',
         headers: {
@@ -49,15 +65,15 @@ async function updateEmployee(body: EditEmployeeRequest) {
     }
     return res.json();
 }
-function EmployeeForm() {
-
+function EmployeeForm(props: empProps) {
+    const employee = props.employee;
     const [user, setUser] = useState({
-        firstname: "John",
-        lastname: "Doe",
-        username: "johndoe",
-        password: "password",
-        email: "johndoe@example.com",
-        role: "Underwriter",
+        firstname: employee.first_name,
+        lastname: employee.last_name,
+        username: employee.uname,
+        // password: "password",
+        email: employee.email,
+        role: employee.roles ? employee.roles.at(0) : "None",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +86,7 @@ function EmployeeForm() {
         <Dialog>
             <form>
                 <div className="flex justify-end">
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><Edit03Icon size={20} /></Button>} />
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 </div>
                 <DialogContent className="lg:max-w-3xl">
                     <DialogHeader>
@@ -121,7 +137,7 @@ function EmployeeForm() {
                             <Label htmlFor="contentOwner" className="w-22 text-right font-bold">Select Roles:</Label>
                             <Select id="contentOwner">
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Role" />
+                                    <SelectValue placeholder={user.role} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
@@ -138,13 +154,14 @@ function EmployeeForm() {
                         <DialogClose render={<Button variant="secondary">Cancel</Button>} />
                         <DialogClose render={
                         <Button onClick={async () => {
+                            const array: string[] | undefined = user.role ? [user.role] : undefined
                             const bodyData: EditEmployeeRequest = {
-                                id: "dummyIDfromAuth",
+                                id: employee.id,
                                 uname: user.username,
-                                email: user.email,
-                                firstName: user.firstname,
-                                lastName: user.lastname,
-                                role: user.role,
+                                email: user.email ? user.email : undefined,
+                                first_name: user.firstname,
+                                last_name: user.lastname,
+                                role: array,
                             };
                             try {
                                 await updateEmployee(bodyData);

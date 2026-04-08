@@ -7,7 +7,7 @@ interface IServiceRequestCreator {
 }
 
 function createServiceReqRoute(req: express.Request, res: express.Response) {
-    let svReq: IServiceRequestCreator = req.body
+    const svReq: IServiceRequestCreator = req.body as IServiceRequestCreator;
     prisma.serviceRequests.create({
         data: {
             description: svReq.description,

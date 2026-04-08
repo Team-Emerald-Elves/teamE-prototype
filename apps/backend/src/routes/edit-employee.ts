@@ -5,8 +5,8 @@ import {type Employee} from "../lib/prismadefs.ts"
 interface IEditEmployeeRequest {
     id: string;
     uname: string | undefined;
-    firstName: string | undefined;
-    lastName: string | undefined;
+    first_name: string | undefined;
+    last_name: string | undefined;
     roles: string[] | undefined;
     email: string | undefined;
 }

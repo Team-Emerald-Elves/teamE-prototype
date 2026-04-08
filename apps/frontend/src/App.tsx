@@ -14,6 +14,7 @@ import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
 
 import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/react'
+import CenterDiv from "./components/center-div.tsx";
 
 function App() {
     const [role, setRole] = useState("u");
@@ -24,10 +25,15 @@ function App() {
 
         <BrowserRouter >
             <Show when="signed-out">
-
-                <SignInButton/>
-                <SignUpButton />
                 <Home role="none"/>
+                <CenterDiv>
+                    <SignInButton>
+                        <button className="clerk-button">Sign in</button>
+                    </SignInButton>
+                    <SignUpButton>
+                        <button className="clerk-button">Sign up</button>
+                    </SignUpButton>
+                </CenterDiv>
             </Show>
             <Show when="signed-in">
                 <div className="radio">

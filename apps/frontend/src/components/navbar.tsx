@@ -12,6 +12,7 @@ import {HugeiconsIcon} from "@hugeicons/react";
 import { Settings02FreeIcons } from "@hugeicons/core-free-icons";
 import { UserSquareIcon } from "@hugeicons/core-free-icons";
 import type {ReactNode} from "react";
+import CenterDiv from "./center-div.tsx";
 
 
 interface NavbarProps {
@@ -109,7 +110,9 @@ function Navbar(props: NavbarProps) {
                             <NavigationMenuLink
                                 render={<Link to="/settings"><HugeiconsIcon icon = {Settings02FreeIcons} className = "size-6 hover:rotate-180 transition duration-300" /> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
                         <NavigationMenuItem>
-                            {props.children}
+                            <CenterDiv>
+                                {props.children}
+                            </CenterDiv>
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>

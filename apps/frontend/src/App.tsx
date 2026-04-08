@@ -1,10 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home.tsx';
 import Documents from './pages/documents.tsx';
-<<<<<<< HEAD
-import EmployeeManagement from "./pages/employee.tsx"
-=======
->>>>>>> 0b91a57 ((Patch): clerk-auth; rebae)
 import Profile from './pages/profile.tsx';
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'

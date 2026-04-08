@@ -44,8 +44,9 @@ function App() {
                 </div>
                 <div className={"app"}>
 
-                    <Navbar role={role}/>
-                    <UserButton />
+                    <Navbar role={role}>
+                        <UserButton />
+                    </Navbar>
                     <main className="main">
                         <Routes >
                             <Route path="/" element={<Home role={role}/>} />

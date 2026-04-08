@@ -9,9 +9,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
+import { UserCircleIcon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
-import EditLinksForm from '@/components/editlinksform.tsx'
 
 const users = [
     {
@@ -56,24 +57,26 @@ function LinksTable(){
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead></TableHead>
+                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users.map((users) => (
                             <TableRow key={users.name}>
+                                <TableCell className="font-medium">
+                                    <div className="flex gap-3 items-center">
+                                        <UserCircleIcon size={25} strokeWidth={1.5}/>
+                                        {users.name}
+                                    </div>
+                                </TableCell>
 
                                 <TableCell>{users.name}</TableCell>
                                 <TableCell>{users.description}</TableCell>
 
                                 <TableCell className="flex items-center gap-3">
-                                    <EditLinksForm
-                                        type= "add link"
-                                        name = {users.name}
-                                        link = {users.link}
-                                        description={users.description}
-                                        size={true}
-                                    />
+                                    <Button variant = "outline" size = "icon">
+                                        <Edit03Icon size={20} />
+                                    </Button>
                                     <Button variant = "destructive" size = "icon">
                                         <Delete02Icon size={20} />
                                     </Button>

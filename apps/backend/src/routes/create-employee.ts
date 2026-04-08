@@ -15,8 +15,15 @@ const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY 
 
 async function createEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: IEmployee = req.body
+    const user = await clerkClient.users.createUser({
+        emailAddress: [employee.email!],
+        password: "password",
+        firstName: employee.first_name,
+        lastName: employee.last_name,
+    })
     prisma.employee.create({
         data: {
+            clerkUserId: user.id,
             first_name: employee.first_name,
             last_name: employee.last_name,
             uname: employee.uname,
@@ -24,12 +31,6 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
             roles: employee.roles,
         }
     }).then((result) => {
-        clerkClient.users.createUser({
-            emailAddress: [result.email!],
-            password: "password",
-            firstName: result.first_name,
-            lastName: result.last_name,
-        })
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);
         res.sendStatus(200); // Success
     }, (err) => {

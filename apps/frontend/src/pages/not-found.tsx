@@ -1,25 +1,6 @@
 import {useEffect, type ReactNode, type CSSProperties, useMemo} from "react";
 import frown from "../assets/frown.svg"
-
-interface NfProps {
-    children?: ReactNode
-    style?: CSSProperties
-}
-
-function CenterDiv(props: NfProps) {
-    const centerStyle: CSSProperties = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
-
-    const style = useMemo(() => ({
-        ...centerStyle, ...props.style
-    }), [props.style])
-    return (
-        <div style={{...style, ...props.style}}>{props.children}</div>
-    )
-}
+import CenterDiv from "../components/center-div.tsx"
 
 function NotFound() {
     useEffect(() => {

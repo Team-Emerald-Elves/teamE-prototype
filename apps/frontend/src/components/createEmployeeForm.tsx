@@ -155,7 +155,7 @@ type CreateEmployeeRequest = {
     first_name?: string,
     last_name?: string,
     email?: string,
-    role?: string[],
+    roles?: string[],
 }
 
 async function createEmployee(body: CreateEmployeeRequest) {
@@ -184,7 +184,7 @@ function CreateEmployeeForm() {
         lname: "",
         username: "",
         email: "",
-        role: "",
+        roles: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,7 +273,7 @@ function CreateEmployeeForm() {
                             </Label>
                             <Select
                                 onValueChange={(value: string | null) =>
-                                    setUser({ ...user, role: value ?? "" })
+                                    setUser({ ...user, roles: value ?? "" })
                                 }
                             >
                                 <SelectTrigger>
@@ -306,7 +306,7 @@ function CreateEmployeeForm() {
                                     first_name: user.fname,
                                     last_name: user.lname,
                                     email: user.email || undefined,
-                                    role: user.role ? [user.role] : undefined,
+                                    roles: user.roles ? [user.roles] : undefined,
                                 };
 
                                 try {
@@ -319,7 +319,7 @@ function CreateEmployeeForm() {
                                         lname: "",
                                         username: "",
                                         email: "",
-                                        role: "",
+                                        roles: "",
                                     });
 
                                 } catch (err) {

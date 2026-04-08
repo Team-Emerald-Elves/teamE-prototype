@@ -14,6 +14,8 @@ import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/expre
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
+import contentRoute from "./routes/content.ts";
+import contentEmployeeRoute from "./routes/content-employee-route.ts";
 
 
 const app = express();
@@ -50,6 +52,8 @@ app.use('/links', linkRoute)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
+app.get('/content',contentRoute)
+app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', requireAuth(), createEmployeeRoute);
 

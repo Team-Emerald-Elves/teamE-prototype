@@ -9,51 +9,15 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { Edit03Icon } from 'hugeicons-react';
 import { Delete02Icon } from 'hugeicons-react';
 import { UserCircleIcon } from 'hugeicons-react';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+
 import {useEffect, useState} from "react";
 
-const users = [
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Business Analyst",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Business Analyst",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Admin",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
 
-]
+import EmployeeForm from "@/components/employeeForm.tsx";
+
 
 type Employee = {
     id: string;
@@ -115,13 +79,13 @@ function UserManagementTable(){
                             <TableCell>{emp.roles?.[0] ?? "No Roles"}</TableCell>
 
                             <TableCell className="flex items-center gap-3">
-                                <Button variant = "outline" size = "icon">
-                                    <Edit03Icon size={20} />
-                                </Button>
+                                <div className="flex justify-end">
+                                    <EmployeeForm/>
+                                </div>
+
                                 <Button variant = "destructive" size = "icon">
                                     <Delete02Icon size={20} />
                                 </Button>
-
 
                             </TableCell>
                         </TableRow>

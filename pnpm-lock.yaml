@@ -369,11 +369,30 @@ packages:
     resolution: {integrity: sha512-zEK0xE47dVZl1AAovMbiG95kxXjEt9A2RKNEmIJveuXoNdX5AK5yV6vdCEFTblhymlFAYvTr+NHIe6iJAtp50g==}
     engines: {node: '>=20.9.0'}
 
+  '@clerk/clerk-react@5.61.4':
+    resolution: {integrity: sha512-xGvQvzfc5pQEuqCW8CNUgnlR+9nt6gSSMGMYx3l972utIJrFKByQJFCRZpwYBvAHiveuK11Wgy3J39p904jb+w==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+
   '@clerk/express@2.0.8':
     resolution: {integrity: sha512-P+M+Z8wl1NvfN7q4neJp0p0k5nm/bVEkxFDSJ66WERBmuvZ3cBmc3UXlsN+z5lprmfOuT/Sb/+idJFkCLgV64Q==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       express: ^4.17.0 || ^5.0.0
+
+  '@clerk/shared@3.47.3':
+    resolution: {integrity: sha512-jG0wMIZuuc8zaKieg9Os8ocTphG+llluRukUUdyVnu4+ZI1syVf+dkpDP3ZK69yLavTX3D0KAmkmQqTPzQV/Nw==}
+    engines: {node: '>=18.17.0'}
+    peerDependencies:
+      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@clerk/shared@4.4.0':
     resolution: {integrity: sha512-3iBX7Svp2XrSIgFk4VtyVq5OZsGStkMGqVfTBbbiFCbSKQ745OfM8j/c2wgpq5QdyavesoeDA6YiMWlpZM9/ng==}
@@ -674,8 +693,11 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@hugeicons/core-free-icons@3.3.0':
-    resolution: {integrity: sha512-qYyr4JQ2eQIHTSTbITvnJvs6ERNK64D9gpwZnf2IyuG0exzqfyABLO/oTB71FB3RZPfu1GbwycdiGSo46apjMQ==}
+  '@hono/node-server@1.19.12':
+    resolution: {integrity: sha512-txsUW4SQ1iilgE0l9/e9VQWmELXifEFvmdA1j6WFh/aFPj99hIntrSsq/if0UWyGVkmrRPKA1wCeP+UCr1B9Uw==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
 
   '@hugeicons/core-free-icons@4.1.1':
     resolution: {integrity: sha512-teqIBvPHl90ygIwKyJwTxOH8aNp1X1PjDTcMvLkEwdPxPD+8mssrZ5kXKIAJJFYPsz69a8LYQY0UPid4PAdavg==}
@@ -2169,11 +2191,6 @@ packages:
   https-proxy-agent@7.0.6:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
-
-  hugeicons-react@0.4.0:
-    resolution: {integrity: sha512-HA2UI3VkDd1dNi9P4JGjaMODdGEs4QVMwQcc34W0aoGHptdsIex/756Jik4GFYN/023jGFKNVvQKhx2IpZtV+g==}
-    peerDependencies:
-      react: '>=16.0.0'
 
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
@@ -3679,6 +3696,13 @@ snapshots:
       - react
       - react-dom
 
+  '@clerk/clerk-react@5.61.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@clerk/shared': 3.47.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+      tslib: 2.8.1
+
   '@clerk/express@2.0.8(express@5.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@clerk/backend': 3.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3689,6 +3713,18 @@ snapshots:
       - react
       - react-dom
 
+  '@clerk/shared@3.47.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      csstype: 3.1.3
+      dequal: 2.0.3
+      glob-to-regexp: 0.4.1
+      js-cookie: 3.0.5
+      std-env: 3.10.0
+      swr: 2.3.4(react@19.2.4)
+    optionalDependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
   '@clerk/shared@4.4.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@tanstack/query-core': 5.90.16
@@ -3696,7 +3732,6 @@ snapshots:
       glob-to-regexp: 0.4.1
       js-cookie: 3.0.5
       std-env: 3.10.0
-      swr: 2.3.4(react@19.2.4)
     optionalDependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
@@ -3932,8 +3967,6 @@ snapshots:
   '@hono/node-server@1.19.12(hono@4.12.11)':
     dependencies:
       hono: 4.12.11
-
-  '@hugeicons/core-free-icons@3.3.0': {}
 
   '@hugeicons/core-free-icons@4.1.1': {}
 
@@ -5514,12 +5547,6 @@ snapshots:
       debug: 4.4.3(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
-
-  hugeicons-react@0.4.0(react@19.2.4):
-    dependencies:
-      '@hugeicons/core-free-icons': 3.3.0
-      '@hugeicons/react': 1.1.6(react@19.2.4)
-      react: 19.2.4
 
   human-signals@2.1.0: {}
 

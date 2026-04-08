@@ -12,7 +12,8 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Edit03Icon } from 'hugeicons-react';
+import {HugeiconsIcon} from "@hugeicons/react";
+import { Edit03Icon } from "@hugeicons/core-free-icons";
 
 type editlinksformProps ={
     type: string,

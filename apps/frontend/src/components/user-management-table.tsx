@@ -9,8 +9,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import { Delete02Icon } from 'hugeicons-react';
-import { UserCircleIcon } from 'hugeicons-react';
+import {HugeiconsIcon} from "@hugeicons/react";
+import { Delete02Icon } from '@hugeicons/core-free-icons';
+import { UserCircleIcon } from '@hugeicons/core-free-icons';
 import { Button } from "@/components/ui/button";
 
 import {useEffect, useState} from "react";
@@ -69,7 +70,7 @@ function UserManagementTable(){
                         <TableRow key={emp.id}>
                             <TableCell className="font-medium">
                                 <div className="flex gap-3 items-center">
-                                    <UserCircleIcon size={25} strokeWidth={1.5}/>
+                                    <HugeiconsIcon icon={UserCircleIcon} size={25} strokeWidth={1.5}/>
                                     {emp.first_name} {emp.last_name}
                                 </div>
                             </TableCell>
@@ -84,7 +85,7 @@ function UserManagementTable(){
                                 </div>
 
                                 <Button variant = "destructive" size = "icon">
-                                    <Delete02Icon size={20} />
+                                    <HugeiconsIcon icon={Delete02Icon} size={20} />
                                 </Button>
 
                             </TableCell>

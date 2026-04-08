@@ -1,5 +1,6 @@
 import '../App.css'
-import { Edit03Icon } from 'hugeicons-react';
+import {HugeiconsIcon} from "@hugeicons/react"
+import { Edit03Icon } from "@hugeicons/core-free-icons";
 
 import { Button } from './ui/button.tsx'
 import {
@@ -24,6 +25,7 @@ import {FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {JSX, useState} from "react";
+
 type EditEmployeeRequest = {
     id: string,
     uname?: string,
@@ -84,7 +86,7 @@ function EmployeeForm(props: empProps) {
         <Dialog>
             <form>
                 <div className="flex justify-end">
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><Edit03Icon size={20} /></Button>} />
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 </div>
                 <DialogContent className="lg:max-w-3xl">
                     <DialogHeader>

@@ -11,13 +11,14 @@ interface IEmployee {
 }
 
 function createEmployeeRoute(req: express.Request, res: express.Response) {
-    const employee: IEmployee = req.body as IEmployee;
+    const employee: IEmployee = req.body
     prisma.employee.create({
         data: {
             first_name: employee.first_name,
             last_name: employee.last_name,
             uname: employee.uname,
             email: employee.email,
+            roles: employee.roles,
         }
     }).then((result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);

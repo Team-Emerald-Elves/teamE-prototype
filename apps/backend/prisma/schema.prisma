@@ -17,18 +17,19 @@ model ServiceRequests {
 }
 
 model Employee {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @unique
-  clerkUserId  String        @db.Uuid
-  uname        String        @unique @default("uname")
-  first_name   String        @default("fname")
-  last_name    String        @default("lname")
-  roles        String[]
-  email        String?       @unique
-  bucket       BucketMeta?
+  id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkUserId String      @db.Uuid
+  uname       String      @unique @default("uname")
+  first_name  String      @default("fname")
+  last_name   String      @default("lname")
+  roles       String[]
+  email       String?     @unique
+  bucket      BucketMeta?
+  contents    Content[]
 }
 
 model BucketMeta {
-  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @unique
+  id                 String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   public             Boolean       @default(false)
   type               String        @default("STANDARD")
   file_size_limit    Int           @default(10485760)

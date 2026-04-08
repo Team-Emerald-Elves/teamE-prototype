@@ -39,6 +39,13 @@ model Content {
   employeeId      String   @db.Uuid
 }
 
+model Links {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_name String
+  url       String
+  owner     String?
+}
+
 enum Status {
   not_started
   in_progress

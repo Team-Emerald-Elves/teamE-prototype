@@ -11,9 +11,6 @@ import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
 
-
-import cors from 'cors';
-
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
@@ -57,6 +54,8 @@ app.get('/assigned', requireAuth(), assignedRoute);
 app.post('/create-employee', requireAuth(), createEmployeeRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
+
+app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/edit-employee', editEmployeeRoute);
 

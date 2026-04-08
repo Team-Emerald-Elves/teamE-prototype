@@ -9,14 +9,12 @@ import createEmployeeRoute from "./routes/create-employee.ts";
 import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
-import editEmployeeRoute from "./routes/edit-employee.ts";
-
-import cors from 'cors';
 import { clerkMiddleware, clerkClient, requireAuth, getAuth } from '@clerk/express'
 
 
 import cors from 'cors';
 
+import editEmployeeRoute from "./routes/edit-employee.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -57,12 +55,8 @@ app.get('/', (req, res) => {
     res.sendStatus(200);
 })
 
-<<<<<<< HEAD
 app.use('/employee', employeeRoute);
 app.use('/links', linkRoute)
-=======
-app.get('/employee', requireAuth(), employeeRoute);
->>>>>>> b3562a5 ((routes): supabase file creation.)
 
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
@@ -72,12 +66,13 @@ app.post('/create-employee', requireAuth(), createEmployeeRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 
-<<<<<<< HEAD
 app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
-=======
->>>>>>> b3562a5 ((routes): supabase file creation.)
+
+app.post('/edit-employee', editEmployeeRoute);
+
+app.post('/create-srvreq', createServiceReqRoute);
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);

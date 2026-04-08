@@ -1,19 +1,33 @@
+<<<<<<< HEAD
 import { Router,
          type Request,
          type Response
+=======
+import e, { Router,
+         type Request,
+         type Response 
+>>>>>>> 8e998fe ((routes): supabase file creation.)
         } from 'express'
 import { requireAuth, getAuth } from '@clerk/express'
 import { prisma } from '../lib/prisma'
 import { createSupabaseForRequest } from '../lib/supabase'
+<<<<<<< HEAD
+=======
+import type { Employee } from '../../prisma/generated/client'
+>>>>>>> 8e998fe ((routes): supabase file creation.)
 
 const supaBaseRouter = Router()
 const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
 
+<<<<<<< HEAD
 supaBaseRouter.get(
     "/create-file",
     requireAuth(),
     async (req: Request, res: Response) => {
 
+=======
+supaBaseRouter.get("/create-file", requireAuth(), async (req: Request, res: Response) => {
+>>>>>>> 8e998fe ((routes): supabase file creation.)
     const { userId } = getAuth(req)
     const { fileName, fileData } = req.body
     try {
@@ -41,6 +55,7 @@ supaBaseRouter.get(
     }
 })
 
+<<<<<<< HEAD
 supaBaseRouter.get(
     '/delete-file',
     requireAuth(),
@@ -95,6 +110,8 @@ supaBaseRouter.get(
         }
     }
 )
+=======
+>>>>>>> 8e998fe ((routes): supabase file creation.)
 
 
 export default supaBaseRouter

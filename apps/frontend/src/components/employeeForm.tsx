@@ -134,8 +134,10 @@ function EmployeeForm(props: empProps) {
                             />
                         </div>
                         <div className="flex items-center gap-4">
-                            <Label htmlFor="contentOwner" className="w-22 text-right font-bold">Select Roles:</Label>
-                            <Select id="contentOwner">
+                            <Label htmlFor="role" className="w-22 text-right font-bold">Select Roles:</Label>
+                            <Select id="role" onValueChange={(value: string | null) =>
+                                setUser({ ...user, role: value ?? "" })
+                            }>
                                 <SelectTrigger>
                                     <SelectValue placeholder={user.role} />
                                 </SelectTrigger>

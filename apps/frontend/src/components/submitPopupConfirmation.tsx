@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dialog"
 import { getToken } from "@clerk/react"
 import { FieldContent } from "./ui/field"
+import {useEffect, useState} from "react";
 
 type SubmitConfirmationPopupProps = {
+    type: string,
     formData: {
         name: string,
         url: string,
@@ -20,12 +22,14 @@ type SubmitConfirmationPopupProps = {
         contentType: string,
         expirationDate: Date | undefined,
         expirationTime: string,
-        status: string
+        status: string,
+        id: number
     }
 }
 
 export type IFile = {
     fileName: string
+    fileID: number
     fileContent: {
         name: string
         URL?: string
@@ -38,9 +42,11 @@ export type IFile = {
 }
 
 async function createDocument(fileData: SubmitConfirmationPopupProps, token: string) {
+    console.log("TOKEN SENT:", token)
 
     const data: IFile  = {
         fileName: fileData.formData.name,
+        fileID: fileData.formData.id,
         fileContent: {
             name: fileData.formData.name,
             URL: fileData.formData.url,
@@ -50,29 +56,50 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
         },
         filePayload: "test"
     }
+    if (fileData.type === "Create") {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/create-file`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+    }
+    else if (fileData.type === "Edit") {
+        console.log(data)
+        console.log(token)
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-file`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+    }
 
-    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/create-file`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(data)
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
+
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
 
-    let sessionToken: string = ''
+    const [sessionToken, setSessionToken] = useState("")
 
-    getToken().then(token => {
-        sessionToken = token as string
-    })
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [])
+
 
     return (
         <Dialog>

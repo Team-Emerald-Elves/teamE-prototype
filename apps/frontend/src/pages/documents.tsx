@@ -23,11 +23,12 @@ type Document = {
 
 async function getDocuments() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
+
     if (!res.ok) {
         throw new Error("Failed to fetch docs");
     }
     const docs = await res.json();
-    console.log(docs);
+     console.log(docs);
     return docs;
 }
 
@@ -36,11 +37,12 @@ function Documents(props: docProps) {
 
     useEffect(() => {
         getDocuments()
-            .then(setDocuments)
-            .catch(console.error);
+            .then((docs) => {
+                console.log("Docs received in useEffect:", docs);
+                setDocuments(docs);
+            }).catch(console.error);
     }, []);
 
-    console.log(documents);
 
 
     if (props.role === "u") {
@@ -73,7 +75,7 @@ function Documents(props: docProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {documents.map((doc:Document) => (
-                        <DocumentCard name={doc.name} type="Reference" />
+                        <DocumentCard key={doc.name} name={doc.name} type="Reference" />
                     ))}
                     {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}
                     {/*<DocumentCard name="Approved Filings" type="Reference" />*/}

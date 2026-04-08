@@ -40,8 +40,8 @@ type contentFormProps = {
 
 type Employee = {
     id: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     username: string;
     email?: string;
     roles?: string[];
@@ -54,7 +54,6 @@ async function getEmployees() {
         throw new Error("Failed to fetch employees");
     }
     const data = await res.json();
-    console.log(data)
 
     return data;
 }
@@ -105,7 +104,7 @@ function ContentForm(props: contentFormProps) {
                                         <SelectLabel>Employees</SelectLabel>
                                         {employees.map((emp) => (
                                             <SelectItem key={emp.id} value={emp.id}>
-                                                {emp.firstName} {emp.lastName}
+                                                {emp.first_name} {emp.last_name}
                                             </SelectItem>
                                         ))}
                                     </SelectGroup>

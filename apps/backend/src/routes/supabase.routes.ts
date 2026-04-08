@@ -155,7 +155,7 @@ supaBaseRouter.get(
     requireAuth(),
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
-        
+        console.log(userId)
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
@@ -171,7 +171,7 @@ supaBaseRouter.get(
                 }
             })
 
-            res.status(200).json(files)
+            res.status(200).json(`{"message":"it worked"}`)
 
         } catch(error) {
             res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)

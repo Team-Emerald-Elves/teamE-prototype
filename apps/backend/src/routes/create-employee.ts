@@ -45,8 +45,8 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
         }
     }).then(async (result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);
-        
-        await prisma.bucketMeta.create({
+
+        const bucketData = await prisma.bucketMeta.create({
             data: {
                 employeeId: result.id
             }
@@ -54,7 +54,7 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
 
         const { data, error } = await supabaseClient
         .storage
-        .createBucket('avatars', {
+        .createBucket(bucketData.id, {
         public: false, // Set to true for a public bucket
         fileSizeLimit: 1024 * 1024 * 10 // Optional: limit size (e.g., 1MB)
         })

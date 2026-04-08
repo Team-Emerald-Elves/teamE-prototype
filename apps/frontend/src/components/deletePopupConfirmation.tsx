@@ -8,7 +8,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {Delete02Icon} from "hugeicons-react";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Delete02Icon} from "@hugeicons/core-free-icons";
 
 
 export function DeleteConfirmationPopup() {
@@ -16,7 +17,7 @@ export function DeleteConfirmationPopup() {
         <Dialog>
             <DialogTrigger >
                 <Button variant = "destructive" size = "icon">
-                    <Delete02Icon size={20} />
+                    <HugeiconsIcon icon={Delete02Icon} size={20} />
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">

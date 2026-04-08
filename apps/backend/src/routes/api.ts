@@ -23,7 +23,7 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
 //           }
 //   })
 
-  return res.json({ user })
+  return res.status(200).json( user )
 })
 
 export default APIRouter

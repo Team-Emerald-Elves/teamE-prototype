@@ -4,7 +4,29 @@ import {SearchBar} from '../components/searchbar.tsx'
 type docProps = {
     role: string;
 }
-function Documents(props: docProps) {
+
+type Document = {
+    name: string,
+    url: string,
+    id: number,
+    bucketID: string,
+    lastModified: string,
+    expirationDate: string,
+    mimeType: string,
+    documentStatus: number,
+
+}
+
+async function Documents(props: docProps) {
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
+    if (!res.ok) {
+        throw new Error("Failed to fetch docs");
+    }
+    const docs = await res.json();
+
+    console.log(docs)
+
     if (props.role === "u") {
         return (
             <>
@@ -34,10 +56,13 @@ function Documents(props: docProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    <DocumentCard name="Underwriting Rules" type="Reference" />
-                    <DocumentCard name="Approved Filings" type="Reference" />
-                    <DocumentCard name="State Guidelines" type="Reference"/>
-                    <DocumentCard name="Use Cases" type="Reference"/>
+                    {docs.map((doc:Document) => {
+                        <DocumentCard name={doc.name} type="Reference" />
+                })}
+                    {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}
+                    {/*<DocumentCard name="Approved Filings" type="Reference" />*/}
+                    {/*<DocumentCard name="State Guidelines" type="Reference"/>*/}
+                    {/*<DocumentCard name="Use Cases" type="Reference"/>*/}
 
                 </div>
 

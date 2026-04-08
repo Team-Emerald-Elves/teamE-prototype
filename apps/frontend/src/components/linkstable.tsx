@@ -12,6 +12,7 @@ import {
 import { Delete02Icon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
 import EditLinksForm from '@/components/editlinksform.tsx'
+import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 
 const users = [
     {
@@ -74,9 +75,7 @@ function LinksTable(){
                                         description={users.description}
                                         size={true}
                                     />
-                                    <Button variant = "destructive" size = "icon">
-                                        <Delete02Icon size={20} />
-                                    </Button>
+                                    <ConfirmationPopup />
                                 </TableCell>
                             </TableRow>
                         ))}

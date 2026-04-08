@@ -13,6 +13,7 @@ import { Delete02Icon } from 'hugeicons-react';
 import { UserCircleIcon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
 import EmployeeForm from "@/components/employeeForm.tsx";
+import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 const users = [
     {
         name: "John Doe",
@@ -86,9 +87,7 @@ function UserManagementTable(){
                                     <EmployeeForm/>
                                 </div>
 
-                                <Button variant = "destructive" size = "icon">
-                                    <Delete02Icon size={20} />
-                                </Button>
+                                <ConfirmationPopup />
 
                             </TableCell>
                         </TableRow>

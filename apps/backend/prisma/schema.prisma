@@ -42,6 +42,7 @@ model BucketMeta {
 
 model FileContent {
   id              Int        @id @default(autoincrement())
+  url             String?
   name            String     @unique
   bucketId        String     @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])

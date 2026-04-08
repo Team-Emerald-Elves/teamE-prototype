@@ -32,22 +32,29 @@ supaBaseRouter.post(
         })
 
         // Create content for file
-        await prisma.fileContent.create({
+        const fileContents = await prisma.fileContent.create({
             data: {
                 name: file.fileName,
+                url: file.fileContent.URL ?? "Local upload",
                 bucketId: employee.bucket!.id,
                 mime_type: file.fileContent.mime_type ?? "text/plain",
                 expiration_date: file.fileContent.expiration_date ?? new Date().setDate(Date.now() + 1).toString()
             }
         })
 
-        // Upload file to authenticated employee with supabase bucket association.
-        const { data, error } = await supabaseClient.storage
-        .from(employee.bucket!.id)
-        .upload((file.fileName as string).trim(), file.filePayload)
+        if (fileContents.url === "Local upload")
+        {
+            // Upload file to authenticated employee with supabase bucket association.
+            const { data, error } = await supabaseClient.storage
+            .from(employee.bucket!.id)
+            .upload((file.fileName as string).trim(), file.filePayload)
 
-        if (!data || error) {
-            throw new Error(`Failed to upload file '${file.fileName}' for user '${employee.uname}'.`)
+            if (!data || error) {
+                throw new Error(`Failed to upload file '${file.fileName}' for user '${employee.uname}'.`)
+            }
+
+        } else {
+            // Implement downloading a file from the URL passed.
         }
 
     } catch (error)
@@ -139,6 +146,35 @@ supaBaseRouter.put(
 
         } catch (error) {
             res.status(401).json(`{"message":"Error modifying file in bucket: ${error}"}`)
+        }
+    }
+)
+
+supaBaseRouter.get(
+    '/list-files',
+    requireAuth(),
+    async (req: Request, res: Response) => {
+        const {userId} = getAuth(req)
+        
+        try {
+            const employee = await prisma.employee.findFirstOrThrow({
+                where: {
+                    clerkUserId: userId as string
+                },
+                include: {
+                    bucket: true
+                }
+            })
+            const files = prisma.fileContent.findMany({
+                where: {
+                    bucketId: employee.bucket?.id
+                }
+            })
+
+            res.status(200).json(files)
+
+        } catch(error) {
+            res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)
         }
     }
 )

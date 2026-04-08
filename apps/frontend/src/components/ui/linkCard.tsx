@@ -7,8 +7,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import EditLinksForm from "@/components/addlinksform.tsx";
-import Button  from "@/components/ui/button";
+import EditLinksForm from "@/components/editlinksform.tsx";
+import { Button } from "@/components/ui/button";
 
 type documentCardProps = {
     name: string

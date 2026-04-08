@@ -7,11 +7,12 @@ const supabaseKey = process.env.SUPABASE_SECRET_KEY as string
 
 // Create a single supabase client for interacting with your database
 // server/api route: per request
-export function createSupabaseForRequest() {
+export async function createSupabaseForRequest() {
     return createClient(supabaseURL, supabaseKey)
 }
 
-export function createSupabaseForRequestJWT(jwt: string) {
+// To be used when a JWToken is passed by the frontend. (future implementation.)
+export async function createSupabaseForRequestJWT(jwt: string) {
   return createClient(supabaseURL, supabaseKey, {
     accessToken: async () => jwt,
   })

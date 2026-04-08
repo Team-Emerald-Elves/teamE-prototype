@@ -14,7 +14,6 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
             {...props}
         />
       </div>
-
   )
 }
 

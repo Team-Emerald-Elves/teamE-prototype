@@ -18,14 +18,13 @@ model ServiceRequests {
 
 model Employee {
   id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId String      @db.Uuid
+  clerkUserId String?
   uname       String      @unique @default("uname")
   first_name  String      @default("fname")
   last_name   String      @default("lname")
   roles       String[]
   email       String?     @unique
   bucket      BucketMeta?
-  contents    Content[]
 }
 
 model BucketMeta {
@@ -42,15 +41,15 @@ model BucketMeta {
 }
 
 model FileContent {
-  id              Int        @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   url             String?
-  name            String     @unique
-  bucketId        String     @db.Uuid
+  name            String   @unique
+  bucketId        String   @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])
-  last_modified   DateTime   @updatedAt
+  last_modified   DateTime @updatedAt
   expiration_date DateTime
-  mime_type       String     @default("text/plain")
-  document_status Status     @default(not_started)
+  mime_type       String   @default("text/plain")
+  document_status Status   @default(not_started)
 }
 
 model Links {

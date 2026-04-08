@@ -42,6 +42,12 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
         }
     }).then((result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);
+        prisma.bucketMeta.create({
+            data: {
+                employeeId: result.id
+            }
+        })
+        
         res.sendStatus(200); // Success
     }, (err) => {
         console.error(`[ERROR] Failed to create employee with error: ${err}`);

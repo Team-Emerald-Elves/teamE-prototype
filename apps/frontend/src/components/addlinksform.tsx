@@ -11,44 +11,118 @@ import {
 import {Field, FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {useState} from "react";
 
-type addlinksformProps ={
-    type: string,
-    name: string,
-    link: string,
-    description: string,
-    size: boolean
+type Links ={
+    id: number
+    link_name: string,
+    url: string,
+    owner: string
 
 }
-function AddLinksForm(props: addlinksformProps){
+
+
+type editlinksRequest ={
+    action: string,
+    linkData: Links,
+
+}
+
+type linkProp = {
+    id: number,
+    url: string,
+    owner: string
+    name: string,
+}
+
+async function updateLinks(body: editlinksRequest) {
+    console.log(body)
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+    }
+    return res.json();
+}
+
+function AddLinksForm(props: linkProp){
+    const [link, setLink] = useState({
+        link_name: props.name,
+        url: props.url,
+        owner: props.owner,
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLink({
+            ...link,
+            [e.target.name]: e.target.value,
+        });
+    };
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
+                <DialogTrigger render={<Button variant="outline" className={"px-6 py-3.5 text-lg bg-secondary text-secondary-foreground"} >Add Link</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
-                            <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
+                            <DialogTitle className="text-2xl text-primary font-mono font-bold">Add Content</DialogTitle>
                             <Button variant="outline" size="lg" className="bg-primary text-primary-foreground">Clear</Button>
                         </div>
                     </DialogHeader>
                     <FieldGroup>
                         <Field>
                             <Label htmlFor="name" className="text-base">Name</Label>
-                            <Input id="name" name="name" placeholder={props.name} />
+                            <Input
+                                name="link_name"
+                                value={link.link_name}
+                                onChange={handleChange}
+                                disabled={false}
+                                className="mt-1"
+                            />
                         </Field>
                         <Field>
                             <Label htmlFor="link" className="text-base">URL</Label>
-                            <Input id="link" name="link" placeholder={props.link} />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="description" className="text-base">Description</Label>
-                            <Input id="description" name="description" placeholder={props.description} />
+                            <Input
+                                name="url"
+                                value={link.url}
+                                onChange={handleChange}
+                                disabled={false}
+                                className="mt-1"
+                            />
                         </Field>
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+                        <DialogClose render={
+                            <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
+                                const bodyData: editlinksRequest = {
+                                    action: "create",
+                                    linkData: {
+                                        id: props.id,
+                                        link_name: link.link_name,
+                                        url: link.url,
+                                        owner: "Underwriter",
+                                    }
+
+                                };
+                                try {
+                                    await updateLinks(bodyData);
+                                    console.log("link updated successfully");
+                                } catch (err) {
+                                    console.error(err);
+                                    console.log("Failed to update links");
+                                }
+                            }}>
+                                Submit
+                            </Button> }/>
                     </DialogFooter>
                 </DialogContent>
             </form>

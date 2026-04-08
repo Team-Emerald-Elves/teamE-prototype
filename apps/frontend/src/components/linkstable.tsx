@@ -14,6 +14,8 @@ import { Edit03Icon } from "@hugeicons/core-free-icons";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { UserCircleIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button"
+import EditLinksForm from '@/components/editlinksform.tsx'
+import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 
 const users = [
     {

@@ -18,7 +18,7 @@ import {useEffect, useState} from "react";
 
 
 import EmployeeForm from "@/components/employeeForm.tsx";
-
+import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 
 type Employee = {
     id: string;
@@ -84,9 +84,7 @@ function UserManagementTable(){
                                     <EmployeeForm employee={emp}/>
                                 </div>
 
-                                <Button variant = "destructive" size = "icon">
-                                    <HugeiconsIcon icon={Delete02Icon} size={20} />
-                                </Button>
+                                <ConfirmationPopup />
 
                             </TableCell>
                         </TableRow>

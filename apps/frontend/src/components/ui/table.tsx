@@ -40,6 +40,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
+<<<<<<< HEAD
       <tfoot
           data-slot="table-footer"
           className={cn(
@@ -48,6 +49,16 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
           )}
           {...props}
       />
+=======
+    <tfoot
+      data-slot="table-footer"
+      className={cn(
+        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+        className
+      )}
+      {...props}
+    />
+>>>>>>> 3ce7b6b (links table)
   )
 }
 
@@ -91,9 +102,15 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
 }
 
 function TableCaption({
+<<<<<<< HEAD
                         className,
                         ...props
                       }: React.ComponentProps<"caption">) {
+=======
+  className,
+  ...props
+}: React.ComponentProps<"caption">) {
+>>>>>>> 3ce7b6b (links table)
   return (
       <caption
           data-slot="table-caption"

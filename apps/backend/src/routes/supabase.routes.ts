@@ -24,7 +24,7 @@ supaBaseRouter.post(
         // Get the authenticated employee.
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
+                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
             },
             include: {
                 bucket: true
@@ -73,7 +73,7 @@ supaBaseRouter.delete(
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
+                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
             },
             include: {
                 bucket: true
@@ -113,7 +113,7 @@ supaBaseRouter.put(
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
+                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
                 },
                 include: {
                     bucket: true
@@ -160,7 +160,7 @@ supaBaseRouter.get(
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
+                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
                 },
                 include: {
                     bucket: true

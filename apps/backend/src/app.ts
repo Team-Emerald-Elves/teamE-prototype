@@ -5,11 +5,11 @@ import employeeRoute from "./routes/employee.ts";
 import linkRoute from "./routes/links.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
-import createEmployeeRoute from "./routes/create-employee.ts";
+import createOldEmployeeRoute from "./routes/create-employee.ts";
 import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
-import { clerkMiddleware, clerkClient, requireAuth, getAuth, APIKey } from '@clerk/express'
+import { clerkMiddleware, requireAuth} from '@clerk/express'
 
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
@@ -53,7 +53,7 @@ app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
 
-app.post('/create-employee', requireAuth(), createEmployeeRoute);
+app.post('/create-employee', createOldEmployeeRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 

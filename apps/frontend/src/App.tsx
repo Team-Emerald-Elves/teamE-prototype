@@ -6,6 +6,7 @@ import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Settings from './pages/settings.tsx'
+import NotFound from './pages/not-found.tsx'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useState } from "react";
@@ -24,7 +25,7 @@ function App() {
         <BrowserRouter >
             <Show when="signed-out">
 
-                <SignInButton />
+                <SignInButton/>
                 <SignUpButton />
                 <Home role="none"/>
             </Show>
@@ -55,6 +56,7 @@ function App() {
                             <Route path="/settings" element = {<Settings />} />
                             <Route path ="/user-management-page" element = {<UserManagementPage />} />
                             <Route path ="/profile" element = {<Profile />} />
+                            <Route path="*" element={<NotFound />} />
                         </Routes>
                     </main>
                 </div>

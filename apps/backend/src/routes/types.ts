@@ -17,5 +17,5 @@ export type IFile = {
         mime_type?: string
         documment_status?: Status
     }
-    filePayload: File
+    filePayload: File | string
 }

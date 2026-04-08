@@ -3,28 +3,28 @@ import { Router,
          type Request,
          type Response
 } from 'express'
-import { requireAuth, getAuth } from '@clerk/express'
+import { requireAuth, getAuth, clerkMiddleware } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import { type IFile,
          type Status
 } from './types.ts'
 
-const supaBaseRouter = Router()
-const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
+const supaBaseRouter = Router() // Create one instance of supabase client to be used for user requests.
 
 supaBaseRouter.post(
     "/create-file",
-    requireAuth(),
+    //requireAuth(),
     async (req: Request, res: Response) => {
-    const { userId } = getAuth(req)
+    const auth = getAuth(req)
     const file: IFile = req.body
-    try {
+    const supabaseClient = await createSupabaseForRequest()
 
+    try {
         // Get the authenticated employee.
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: userId as string
+                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
             },
             include: {
                 bucket: true
@@ -38,7 +38,7 @@ supaBaseRouter.post(
                 url: file.fileContent.URL ?? "Local upload",
                 bucketId: employee.bucket!.id,
                 mime_type: file.fileContent.mime_type ?? "text/plain",
-                expiration_date: file.fileContent.expiration_date ?? new Date().setDate(Date.now() + 1).toString()
+                expiration_date: "2026-04-18T00:00:00.000Z"
             }
         })
 
@@ -65,14 +65,15 @@ supaBaseRouter.post(
 
 supaBaseRouter.delete(
     '/delete-file',
-    requireAuth(),
+    // requireAuth(),
     async (req: Request, res: Response) => {
         const { userId } = getAuth(req)
         const { fileName } = req.body
+        const supabaseClient = await createSupabaseForRequest()
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: userId as string
+                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
             },
             include: {
                 bucket: true
@@ -103,15 +104,16 @@ supaBaseRouter.delete(
 
 supaBaseRouter.put(
     '/update-file',
-    requireAuth(),
+    // requireAuth(),
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
         const file: IFile = req.body
-        
+        const supabaseClient = await createSupabaseForRequest()
+
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: userId as string
+                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
                 },
                 include: {
                     bucket: true
@@ -152,20 +154,19 @@ supaBaseRouter.put(
 
 supaBaseRouter.get(
     '/list-files',
-    requireAuth(),
+    //requireAuth(),
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
-        
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: userId as string
+                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
                 },
                 include: {
                     bucket: true
                 }
             })
-            const files = prisma.fileContent.findMany({
+            const files = await prisma.fileContent.findMany({
                 where: {
                     bucketId: employee.bucket?.id
                 }

@@ -101,10 +101,10 @@ function Navbar({ role }: NavbarProps) {
                 <NavigationMenu>
                     <NavigationMenuList className = "flex gap-4">
 
-                        <NavigationMenuItem>
-                            <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
+                        {/*<NavigationMenuItem>*/}
+                        {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
 
-                        </NavigationMenuItem>
+                        {/*</NavigationMenuItem>*/}
                             <NavigationMenuLink
                                 render={<Link to="/settings"><HugeiconsIcon icon = {Settings02FreeIcons} className = "size-6 hover:rotate-180 transition duration-300" /> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
                         <NavigationMenuItem>

@@ -32,9 +32,10 @@ type contentFormProps = {
     currentURL: string,
     currentContentOwner: string,
     currentRole: string,
-    currentExpirationDate: Date | undefined,
+    currentExpirationDate: string
     currentExpirationTime: string,
     currentStatus: string,
+    currentID: number,
     size: boolean
 }
 
@@ -55,7 +56,8 @@ type FormDataType = {
     contentType: string,
     expirationDate: Date | undefined,
     expirationTime: string,
-    status: string
+    status: string,
+    id: number,
 };
 
 async function getEmployees(sessionToken: string) {
@@ -91,12 +93,13 @@ function ContentForm(props: contentFormProps) {
         expirationDate: undefined,
         expirationTime: props.currentExpirationTime ?? "",
         status: props.currentStatus ?? "",
+        id: props.currentID,
     });
 
     useEffect(() => {
 
         getToken().then( token => {
-
+            console.log(token);
         getEmployees(token as string)
             .then(setEmployees)
             .catch(console.error)
@@ -233,7 +236,7 @@ function ContentForm(props: contentFormProps) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} />
+                        <SubmitConfirmationPopup formData={formData} type={props.type}/>
                     </DialogFooter>
                 </DialogContent>
             </form>

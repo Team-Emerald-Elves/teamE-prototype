@@ -1,10 +1,21 @@
 import {
     Card,
 } from "@/components/ui/card"
-import ContactForm from './contentForm.tsx'
+import ContentForm from './contentForm.tsx'
 import DeleteConfirmationPopup from "./deletePopupConfirmation.tsx";
+type Document = {
+    name: string,
+    url: string,
+    id: number,
+    bucketID: string,
+    lastModified: string,
+    expirationDate: string,
+    mimeType: string,
+    documentStatus: number,
 
+}
 type documentCardProps = {
+    document: Document
     name: string
     type: string
 }
@@ -21,7 +32,7 @@ function DocumentCard(props: documentCardProps) {
                             <div className="w-50 h-15 bg-gray-300 rounded-md" />
 
                             <div className="text-lg font-semibold font-serif text-primary truncate">
-                                {props.name}
+                                {props.document.name}
                             </div>
                             <div className="text-xs text-gray-500 font-serif">
                                 <p>Last Modified: {formattedDate}</p>
@@ -34,15 +45,16 @@ function DocumentCard(props: documentCardProps) {
                             <div className="flex justify-end">
 
 
-                                <ContactForm
+                                <ContentForm
                                     type="Edit"
-                                    currentName="Document Name"
-                                    currentURL="www.something.com"
+                                    currentName={props.document.name}
+                                    currentURL={props.document.url}
                                     currentContentOwner="Bobby Tanner"
-                                    currentRole="Business Analyst"
-                                    currentExpirationDate={new Date()}
+                                    currentRole="Underwriter"
+                                    currentExpirationDate={props.document.expirationDate}
                                     currentExpirationTime="07:30:00"
                                     currentStatus="In Progress"
+                                    currentID={props.document.id}
                                     size={false}
                                 />
 

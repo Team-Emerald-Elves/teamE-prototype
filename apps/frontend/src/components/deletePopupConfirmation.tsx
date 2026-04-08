@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dialog"
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Delete02Icon} from "@hugeicons/core-free-icons";
-import { useAuth } from '@clerk/react'
+import {getToken, useAuth} from '@clerk/react'
+import {useEffect, useState} from "react";
 
 type deleteConfirmationPopupProps = {
     target: string
@@ -23,7 +24,7 @@ async function removeDocument(fileName: string, token: string) {
     }
 
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/delete-file`, {
-          method: 'DELETE', // 1. Set method to DELETE
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -39,7 +40,11 @@ async function removeDocument(fileName: string, token: string) {
 
 export function DeleteConfirmationPopup(props: deleteConfirmationPopupProps) {
 
-    const { getToken } = useAuth();
+    const [sessionToken, setSessionToken] = useState("")
+
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [])
 
     return (
         <Dialog>
@@ -57,7 +62,7 @@ export function DeleteConfirmationPopup(props: deleteConfirmationPopupProps) {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => getToken().then(token => removeDocument(props.target, token as string))}>Confirm</Button>
+                        <Button type="submit" onClick={() => removeDocument(props.target, sessionToken)}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

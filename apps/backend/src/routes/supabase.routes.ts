@@ -18,6 +18,8 @@ supaBaseRouter.post(
     async (req: Request, res: Response) => {
     const { userId } = getAuth(req)
     const file: IFile = req.body
+    const supabaseClient = await createSupabaseForRequest()
+
     try {
 
         // Get the authenticated employee.
@@ -68,6 +70,7 @@ supaBaseRouter.delete(
     async (req: Request, res: Response) => {
         const { userId } = getAuth(req)
         const { fileName } = req.body
+        const supabaseClient = await createSupabaseForRequest()
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
@@ -106,6 +109,7 @@ supaBaseRouter.put(
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
         const file: IFile = req.body
+        const supabaseClient = await createSupabaseForRequest()
         
         try {
             const employee = await prisma.employee.findFirstOrThrow({

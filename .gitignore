@@ -32,3 +32,8 @@ prisma/generated
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Package Locks
+package-lock.json
+apps/package-lock.json
+pnpm-lock.yaml

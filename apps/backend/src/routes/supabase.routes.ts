@@ -10,8 +10,7 @@ import { type IFile,
          type Status
 } from './types.ts'
 
-const supaBaseRouter = Router()
-const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
+const supaBaseRouter = Router() // Create one instance of supabase client to be used for user requests.
 
 supaBaseRouter.post(
     "/create-file",
@@ -154,6 +153,7 @@ supaBaseRouter.get(
     '/list-files',
     requireAuth(),
     async (req: Request, res: Response) => {
+        const supabaseClient = await createSupabaseForRequest()
         const {userId} = getAuth(req)
         console.log(userId)
         try {

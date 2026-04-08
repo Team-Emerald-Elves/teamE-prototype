@@ -1,6 +1,9 @@
 import express from "express";
 import {prisma} from "../lib/prisma.ts";
 import { createClerkClient } from '@clerk/express';
+import { createSupabaseForRequest } from '../lib/supabase.ts'
+
+const supabaseClient = await createSupabaseForRequest()
 
 interface IEmployee {
     id?: string;
@@ -48,6 +51,19 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
                 employeeId: result.id
             }
         })
+
+        const { data, error } = await supabaseClient
+        .storage
+        .createBucket('avatars', {
+        public: false, // Set to true for a public bucket
+        fileSizeLimit: 1024 * 1024 * 10 // Optional: limit size (e.g., 1MB)
+        })
+
+        if(!data || error) {
+            throw new Error("Cannot create bucket.")
+        }
+
+
         
         res.sendStatus(200); // Success
     }, (err) => {

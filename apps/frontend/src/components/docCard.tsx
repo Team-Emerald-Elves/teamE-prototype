@@ -1,15 +1,8 @@
 import {
     Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
 import ContactForm from './contentForm.tsx'
-import {cn} from "@/lib/utils.ts";
-import { Trash } from "lucide-react";
+import DeleteConfirmationPopup from "./deletePopupConfirmation.tsx";
 
 type documentCardProps = {
     name: string
@@ -53,9 +46,8 @@ function DocumentCard(props: documentCardProps) {
                                     size={false}
                                 />
 
-                                <button className="text-red-700 text-sm hover:text-red-900 transition">
-                                    <Trash size={18} />
-                                </button>
+                                <DeleteConfirmationPopup target={props.name} />
+
 
                             </div>
 

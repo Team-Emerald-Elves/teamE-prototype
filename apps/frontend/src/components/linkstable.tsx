@@ -12,6 +12,7 @@ import {
 import { Delete02Icon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
 import EditLinksForm from '@/components/editlinksform.tsx'
+import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 
 const users = [
     {
@@ -57,11 +58,13 @@ function LinksTable(){
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
                             <TableHead></TableHead>
+                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users.map((users) => (
                             <TableRow key={users.name}>
+
 
                                 <TableCell>{users.name}</TableCell>
                                 <TableCell>{users.description}</TableCell>

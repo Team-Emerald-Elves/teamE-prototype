@@ -28,7 +28,7 @@ import {JSX, useState} from "react";
 
 type EditEmployeeRequest = {
     id: string,
-    uname?: string,
+    uname?: string ,
     first_name?: string,
     last_name?: string,
     email?: string,

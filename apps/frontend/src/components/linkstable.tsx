@@ -10,46 +10,37 @@ import {
 } from "@/components/ui/table"
 
 import {HugeiconsIcon} from "@hugeicons/react";
-import { Edit03Icon } from "@hugeicons/core-free-icons";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
-import { UserCircleIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button"
+import {useEffect, useState} from "react";
+import Editlinksform from "@/components/editlinksform.tsx";
 
-const users = [
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
-    {
-        name: "John Doe",
-        link: "https://example.com",
-        description: "JohnDoe"
-    },
 
-]
+type Links= {
+    id: number;
+    link_name: string,
+    url: string,
+    owner: string
+}
+async function getLinks() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
 
+    if (!res.ok) {
+        throw new Error("Failed to fetch links");
+    }
+    const data = await res.json();
+    console.log(data)
+
+    return data;
+}
 function LinksTable(){
+    const [links, setLinks] = useState<Links[]>([]);
+
+    useEffect(() => {
+        getLinks()
+            .then(setLinks)
+            .catch(console.error);
+    }, []);
     return (
         <>
             <div className="shadow-md">
@@ -57,23 +48,25 @@ function LinksTable(){
                     <TableHeader>
                         <TableRow>
                             <TableHead>Name</TableHead>
-                            <TableHead>Description</TableHead>
+                            <TableHead>URL</TableHead>
                             <TableHead></TableHead>
                             <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {users.map((users) => (
-                            <TableRow key={users.name}>
-
-
-                                <TableCell>{users.name}</TableCell>
-                                <TableCell>{users.description}</TableCell>
+                        {links.map((l) => (
+                            <TableRow key={l.link_name}>
+                                <TableCell>{l.link_name}</TableCell>
+                                <TableCell>{l.url}</TableCell>
+                                <TableCell></TableCell>
 
                                 <TableCell className="flex items-center gap-3">
-                                    <Button variant = "outline" size = "icon">
-                                        <HugeiconsIcon icon={Edit03Icon} size={20} />
-                                    </Button>
+                                    <Editlinksform
+                                        id={l.id}
+                                        name ={l.link_name}
+                                        url ={l.url}
+                                        owner= "Underwriter"
+                                    />
                                     <Button variant = "destructive" size = "icon">
                                         <HugeiconsIcon icon={Delete02Icon} size={20} />
                                     </Button>

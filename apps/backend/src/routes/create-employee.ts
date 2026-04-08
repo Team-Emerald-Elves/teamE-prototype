@@ -1,6 +1,6 @@
 import express from "express";
 import {prisma} from "../lib/prisma.ts";
-import { createClerkClient } from '@clerk/backend';
+import { clerkClient } from '@clerk/express';
 
 interface IEmployee {
     id?: string;
@@ -11,19 +11,27 @@ interface IEmployee {
     roles?: string[];
 }
 
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-
-async function createEmployeeRoute(req: express.Request, res: express.Response) {
+async function createOldEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: IEmployee = req.body
-    const user = await clerkClient.users.createUser({
-        emailAddress: [employee.email!],
-        password: "password",
-        firstName: employee.first_name,
-        lastName: employee.last_name,
-    })
+    console.log("Employee: ", employee)
+    let user
+    try {
+        user = await clerkClient.users.createUser({
+            firstName: employee.first_name,
+            lastName: employee.last_name,
+            emailAddress: [employee.email!],
+            username: employee.uname,
+            password: "YQkxpzdR4P&HRzcQ3$!",
+        })
+    } catch (error) {
+        console.error("Logged Error: ", error)
+        return;
+    }
+
+    console.log("Clerk User: ", user);
     prisma.employee.create({
         data: {
-            clerkUserId: user.id,
+            clerkUserId: user!.id,
             first_name: employee.first_name,
             last_name: employee.last_name,
             uname: employee.uname,
@@ -39,4 +47,4 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
     })
 }
 
-export default createEmployeeRoute;
+export default createOldEmployeeRoute;

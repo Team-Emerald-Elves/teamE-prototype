@@ -1,13 +1,8 @@
-import { type Request,
-         type Response,
+import {
          Router
 } from "express"
 import { requireAuth, getAuth, clerkClient } from '@clerk/express'
-import { prisma } from '../lib/prisma'
-import { createSupabaseForRequest } from '../lib/supabase'
-import { type IFile,
-         Status
-} from './types.ts'
+
 
 const APIRouter = Router()
 

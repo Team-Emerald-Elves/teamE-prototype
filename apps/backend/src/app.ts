@@ -16,6 +16,9 @@ import cors from 'cors';
 
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
+import cors from 'cors';
+
+
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
 

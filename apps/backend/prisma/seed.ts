@@ -1,4 +1,5 @@
 import { prisma } from '../src/lib/prisma.ts';
+import { type Employee } from '../prisma/generated/client.ts'
 
 const IDS = {
     e1: "00000000-0000-0000-0000-000000000001",
@@ -13,22 +14,22 @@ async function main() {
     await prisma.employee.createMany({
         skipDuplicates: true,
         data: [
-            { id: IDS.e1, uname: "akurtiqi",    first_name: "Andi",   last_name: "Kurtiqi",   roles: ["administrator"],             email: "akurtiqi@wpi.edu" },
-            { id: IDS.e2, uname: "jsmith",     first_name: "Jane",    last_name: "Smith",     roles: ["underwriter"],               email: "jsmith@wpi.edu" },
-            { id: IDS.e3, uname: "mreyes",     first_name: "Miguel",  last_name: "Reyes",     roles: ["underwriter"],               email: "mreyes@wpi.edu" },
-            { id: IDS.e4, uname: "lpatel",     first_name: "Laura",   last_name: "Patel",     roles: ["business analyst"],               email: "lpatel@wpi.edu" },
-            { id: IDS.e5, uname: "tchen",      first_name: "Thomas",  last_name: "Chen",      roles: ["administrator", "business analyst"], email: "tchen@wpi.edu" },
+            {clerkUserId: "", id: IDS.e1, uname: "akurtiqi",    first_name: "Andi",   last_name: "Kurtiqi",   roles: ["administrator"],             email: "akurtiqi@wpi.edu" },
+            {clerkUserId: "", id: IDS.e2, uname: "jsmith",     first_name: "Jane",    last_name: "Smith",     roles: ["underwriter"],               email: "jsmith@wpi.edu" },
+            {clerkUserId: "", id: IDS.e3, uname: "mreyes",     first_name: "Miguel",  last_name: "Reyes",     roles: ["underwriter"],               email: "mreyes@wpi.edu" },
+            {clerkUserId: "", id: IDS.e4, uname: "lpatel",     first_name: "Laura",   last_name: "Patel",     roles: ["business analyst"],               email: "lpatel@wpi.edu" },
+            {clerkUserId: "", id: IDS.e5, uname: "tchen",      first_name: "Thomas",  last_name: "Chen",      roles: ["administrator", "business analyst"], email: "tchen@wpi.edu" },
         ]
-    });
+    })
 
-    await prisma.content.createMany({
+    await prisma.fileContent.createMany({
         skipDuplicates: true,
         data: [
-            { name: "Admin Rules",         URL: "https://company.com/admin-rules",   job_position: "Administrator", expiration_date: new Date("2030-10-10"), content_type: "Instructions", document_status: "in_progress", employeeId: IDS.e1 },
-            { name: "Onboarding Guide",    URL: "https://company.com/onboarding",    job_position: "HR Specialist", expiration_date: new Date("2027-06-01"), content_type: "Form",         document_status: "not_started", employeeId: IDS.e2 },
-            { name: "Safety Handbook",     URL: "https://company.com/safety",        job_position: "Compliance",    expiration_date: new Date("2026-01-15"), content_type: "Document",     document_status: "needs_review", employeeId: IDS.e3 },
-            { name: "Q2 Performance Report", URL: "https://company.com/q2-report",   job_position: "Analyst",       expiration_date: new Date("2025-09-30"), content_type: "Report",       document_status: "done",        employeeId: IDS.e4 },
-            { name: "IT Security Policy",  URL: "https://company.com/it-security",   job_position: "IT Manager",    expiration_date: new Date("2025-03-01"), content_type: "Policy",       document_status: "expired",     employeeId: IDS.e5 },
+            { name: "Admin Rules",         url: "https://company.com/admin-rules", expiration_date: new Date("2030-10-10"), mime_type: "Instructions", document_status: "in_progress", bucketId: crypto.randomUUID()},
+            { name: "Onboarding Guide",    url: "https://company.com/onboarding",  expiration_date: new Date("2027-06-01"), mime_type: "Form",         document_status: "not_started", bucketId: crypto.randomUUID()},
+            { name: "Safety Handbook",     url: "https://company.com/safety", expiration_date: new Date("2026-01-15"), mime_type: "Document",     document_status: "needs_review", bucketId: crypto.randomUUID()},
+            { name: "Q2 Performance Report", url: "https://company.com/q2-report", expiration_date: new Date("2025-09-30"), mime_type: "Report",       document_status: "done",        bucketId: crypto.randomUUID()},
+            { name: "IT Security Policy",  url: "https://company.com/it-security", expiration_date: new Date("2025-03-01"), mime_type: "Policy",       document_status: "expired",     bucketId: crypto.randomUUID()},
         ]
     });
     await prisma.serviceRequests.createMany({

@@ -11,49 +11,46 @@ import {
 
 import { Delete02Icon } from 'hugeicons-react';
 import { UserCircleIcon } from 'hugeicons-react';
-import { Button } from "@/components/ui/button"
-import EmployeeForm from "@/components/employeeForm.tsx";
-const users = [
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Business Analyst",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Business Analyst",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Admin",
-    },
-    {
-        name: "John Doe",
-        username: "JohnDoe",
-        email: "jodoe@gmail.com",
-        role: "Underwriter",
-    },
+import { Button } from "@/components/ui/button";
 
-]
+import {useEffect, useState} from "react";
+
+
+import EmployeeForm from "@/components/employeeForm.tsx";
+
+
+type Employee = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    uname: string;
+    email?: string;
+    roles?: string[];
+};
+
+async function getEmployees() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch employees");
+    }
+    const data = await res.json();
+    console.log(data)
+
+    return data;
+}
+
 
 function UserManagementTable(){
+
+    const [employees, setEmployees] = useState<Employee[]>([]);
+
+    useEffect(() => {
+        getEmployees()
+            .then(setEmployees)
+            .catch(console.error);
+    }, []);
+
     return (
         <>
             <div className="shadow-md">
@@ -68,18 +65,18 @@ function UserManagementTable(){
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {users.map((users) => (
-                        <TableRow key={users.name}>
+                    {employees.map((emp) => (
+                        <TableRow key={emp.id}>
                             <TableCell className="font-medium">
                                 <div className="flex gap-3 items-center">
                                     <UserCircleIcon size={25} strokeWidth={1.5}/>
-                                    {users.name}
+                                    {emp.first_name} {emp.last_name}
                                 </div>
                             </TableCell>
 
-                            <TableCell>{users.username}</TableCell>
-                            <TableCell>{users.email}</TableCell>
-                            <TableCell>{users.role}</TableCell>
+                            <TableCell>{emp.uname}</TableCell>
+                            <TableCell>{emp.email}</TableCell>
+                            <TableCell>{emp.roles?.[0] ?? "No Roles"}</TableCell>
 
                             <TableCell className="flex items-center gap-3">
                                 <div className="flex justify-end">

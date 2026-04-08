@@ -1,8 +1,11 @@
 import DocumentCard from '../components/docCard.tsx'
 import ContentForm from '../components/contentForm.tsx'
 import {SearchBar} from '../components/searchbar.tsx'
+import {useState, useEffect} from "react";
+
 type docProps = {
     role: string;
+    doc: Document[]
 }
 
 type Document = {
@@ -17,15 +20,28 @@ type Document = {
 
 }
 
-async function Documents(props: docProps) {
 
+async function getDocuments() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
     if (!res.ok) {
         throw new Error("Failed to fetch docs");
     }
     const docs = await res.json();
+    console.log(docs);
+    return docs;
+}
 
-    console.log(docs)
+function Documents(props: docProps) {
+    const [documents, setDocuments] = useState<Document[]>([]);
+
+    useEffect(() => {
+        getDocuments()
+            .then(setDocuments)
+            .catch(console.error);
+    }, []);
+
+    console.log(documents);
+
 
     if (props.role === "u") {
         return (
@@ -56,9 +72,9 @@ async function Documents(props: docProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {docs.map((doc:Document) => {
+                    {documents.map((doc:Document) => (
                         <DocumentCard name={doc.name} type="Reference" />
-                })}
+                    ))}
                     {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}
                     {/*<DocumentCard name="Approved Filings" type="Reference" />*/}
                     {/*<DocumentCard name="State Guidelines" type="Reference"/>*/}
@@ -97,11 +113,14 @@ async function Documents(props: docProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    <DocumentCard name="Business Requirements" type="Workflow" />
-                    <DocumentCard name="System Requirements" type="Workflow"/>
-                    <DocumentCard name="Process Flow Diagrams" type="Workflow"/>
-                    <DocumentCard name="ACT Guide" type="Workflow"/>
-                    <DocumentCard name="Traceability Matrix" type="Workflow"/>
+                    {documents.map((doc:Document) => (
+                        <DocumentCard name={doc.name} type="Reference" />
+                    ))}
+                    {/*<DocumentCard name="Business Requirements" type="Workflow" />*/}
+                    {/*<DocumentCard name="System Requirements" type="Workflow"/>*/}
+                    {/*<DocumentCard name="Process Flow Diagrams" type="Workflow"/>*/}
+                    {/*<DocumentCard name="ACT Guide" type="Workflow"/>*/}
+                    {/*<DocumentCard name="Traceability Matrix" type="Workflow"/>*/}
 
 
                 </div>

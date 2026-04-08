@@ -11,10 +11,13 @@ import {
 import {HugeiconsIcon} from "@hugeicons/react";
 import { Settings02FreeIcons } from "@hugeicons/core-free-icons";
 import { UserSquareIcon } from "@hugeicons/core-free-icons";
+import type {ReactNode} from "react";
+import CenterDiv from "./center-div.tsx";
 
 
 interface NavbarProps {
     role: string;
+    children?: ReactNode
 }
 
 const underwriterLinks = [
@@ -46,8 +49,8 @@ const businessLinks = [
 
 
 
-function Navbar({ role }: NavbarProps) {
-    const links = role === "u" ? underwriterLinks : role === "b" ? businessLinks : [];
+function Navbar(props: NavbarProps) {
+    const links = props.role === "u" ? underwriterLinks : props.role === "b" ? businessLinks : [];
     return (
         <header className="w-full bg-[#00355f] text-white">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-2">
@@ -55,7 +58,6 @@ function Navbar({ role }: NavbarProps) {
                 {/*Left side*/}
                 <NavigationMenu>
                     <NavigationMenuList className = "flex gap-10">
-
                         <NavigationMenuItem >
                             <NavigationMenuLink render={<Link to="/">Home</Link>} className={navigationMenuTriggerStyle()}>
                             </NavigationMenuLink>
@@ -75,7 +77,7 @@ function Navbar({ role }: NavbarProps) {
                             <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>Links</NavigationMenuTrigger>
 
                             <NavigationMenuContent>
-                                {role === "u" ? (
+                                {props.role === "u" ? (
                                     <>
                                         {links.map((link) => (
                                             <li key={link.to}>
@@ -83,7 +85,7 @@ function Navbar({ role }: NavbarProps) {
                                             </li>
                                         ))}
                                     </>
-                                ) : role === "b" ? (
+                                ) : props.role === "b" ? (
                                     <>
                                         {links.map((link) => (
                                             <li key={link.to}>
@@ -108,8 +110,9 @@ function Navbar({ role }: NavbarProps) {
                             <NavigationMenuLink
                                 render={<Link to="/settings"><HugeiconsIcon icon = {Settings02FreeIcons} className = "size-6 hover:rotate-180 transition duration-300" /> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
                         <NavigationMenuItem>
-
-
+                            <CenterDiv>
+                                {props.children}
+                            </CenterDiv>
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>

@@ -3,7 +3,7 @@ import { Router,
          type Request,
          type Response
 } from 'express'
-import { requireAuth, getAuth } from '@clerk/express'
+import { requireAuth, getAuth, clerkMiddleware } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import { type IFile,
@@ -11,6 +11,8 @@ import { type IFile,
 } from './types.ts'
 
 const supaBaseRouter = Router() // Create one instance of supabase client to be used for user requests.
+
+supaBaseRouter.use(clerkMiddleware())
 
 supaBaseRouter.post(
     "/create-file",
@@ -157,7 +159,8 @@ supaBaseRouter.get(
     '/list-files',
     requireAuth(),
     async (req: Request, res: Response) => {
-        const {userId} = getAuth(req)
+        //const {userId} = getAuth(req)
+        const userId = "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
         console.log(userId)
         try {
             const employee = await prisma.employee.findFirstOrThrow({
@@ -168,13 +171,13 @@ supaBaseRouter.get(
                     bucket: true
                 }
             })
-            const files = prisma.fileContent.findMany({
+            const files = await prisma.fileContent.findMany({
                 where: {
                     bucketId: employee.bucket?.id
                 }
             })
 
-            res.status(200).json(`{"message":"it worked"}`)
+            res.status(200).json(files)
 
         } catch(error) {
             res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)

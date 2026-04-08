@@ -22,6 +22,7 @@ type Document = {
 
 
 async function getDocuments() {
+    console.log("adwdwaddwdawdadwdadawdda")
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
 
     if (!res.ok) {
@@ -72,8 +73,12 @@ function Documents(props: docProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {documents.map((doc: Document) => (
-                        <DocumentCard key={doc.name} name={doc.name} type="Reference" />
+
+                    {documents.map((doc:Document) => (
+                        <div key={doc.id}>
+                            <DocumentCard name={doc.name} type="Reference" />
+                        </div>
+
                     ))}
                     {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}
                     {/*<DocumentCard name="Approved Filings" type="Reference" />*/}
@@ -81,7 +86,6 @@ function Documents(props: docProps) {
                     {/*<DocumentCard name="Use Cases" type="Reference"/>*/}
 
                 </div>
-
 
             </>
         )

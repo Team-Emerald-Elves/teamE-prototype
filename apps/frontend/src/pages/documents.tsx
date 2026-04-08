@@ -22,15 +22,11 @@ type Document = {
 
 
 async function getDocuments() {
-    console.log("adwdwaddwdawdadwdadawdda")
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
-
     if (!res.ok) {
         throw new Error("Failed to fetch docs");
     }
-    const docs = await res.json();
-     console.log(docs);
-    return docs;
+    return await res.json();
 }
 
 function Documents(props: docProps) {
@@ -40,6 +36,8 @@ function Documents(props: docProps) {
         const docsData = await getDocuments();
         setDocuments(docsData)
     }
+
+        fetchData()
     }, []);
 
 

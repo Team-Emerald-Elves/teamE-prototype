@@ -1,5 +1,4 @@
-import EditLinksForm from '@/components/editlinksform.tsx'
-import LinkCard from "@/components/linkCard.tsx";
+import AddLinksForm from '@/components/addlinksform.tsx'
 import Linkstable from "@/components/linkstable.tsx";
 
 function Settings() {
@@ -23,10 +22,6 @@ function Settings() {
                         description="What is the link used for"
                         size={true}
                     />
-                </div>
-                <div className="px-10 py-20 ">
-                    <Linkstable />
-
                 </div>
             </div>
             <div className="px-10 py-20 ">

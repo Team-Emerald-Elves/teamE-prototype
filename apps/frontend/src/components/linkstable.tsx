@@ -9,11 +9,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import {HugeiconsIcon} from "@hugeicons/react";
-import { Edit03Icon } from "@hugeicons/core-free-icons";
-import { Delete02Icon } from "@hugeicons/core-free-icons";
-import { UserCircleIcon } from "@hugeicons/core-free-icons";
+import { Delete02Icon } from 'hugeicons-react';
 import { Button } from "@/components/ui/button"
+import EditLinksForm from '@/components/editlinksform.tsx'
 
 const users = [
     {
@@ -58,28 +56,26 @@ function LinksTable(){
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
+                            <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users.map((users) => (
                             <TableRow key={users.name}>
-                                <TableCell className="font-medium">
-                                    <div className="flex gap-3 items-center">
-                                        <HugeiconsIcon icon={UserCircleIcon} size={25} strokeWidth={1.5}/>
-                                        {users.name}
-                                    </div>
-                                </TableCell>
 
                                 <TableCell>{users.name}</TableCell>
                                 <TableCell>{users.description}</TableCell>
 
                                 <TableCell className="flex items-center gap-3">
-                                    <Button variant = "outline" size = "icon">
-                                        <HugeiconsIcon icon={Edit03Icon} size={20} />
-                                    </Button>
+                                    <EditLinksForm
+                                        type= "add link"
+                                        name = {users.name}
+                                        link = {users.link}
+                                        description={users.description}
+                                        size={true}
+                                    />
                                     <Button variant = "destructive" size = "icon">
-                                        <HugeiconsIcon icon={Delete02Icon} size={20} />
+                                        <Delete02Icon size={20} />
                                     </Button>
                                 </TableCell>
                             </TableRow>

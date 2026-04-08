@@ -1,10 +1,10 @@
-export enum Status {
-    not_started,
-    started,
-    in_progress,
-    needs_review,
-    done,
-    expired
+export type Status = {
+    not_started: 0,
+    started: 1,
+    in_progress: 2,
+    needs_review: 3,
+    done: 4,
+    expired: 5
 }
 
 export type IFile = {

@@ -4,10 +4,10 @@ import { Router,
          type Response
 } from 'express'
 import { requireAuth, getAuth } from '@clerk/express'
-import { prisma } from '../lib/prisma'
-import { createSupabaseForRequest } from '../lib/supabase'
+import { prisma } from '../lib/prisma.ts'
+import { createSupabaseForRequest } from '../lib/supabase.ts'
 import { type IFile,
-         Status
+         type Status
 } from './types.ts'
 
 const supaBaseRouter = Router()

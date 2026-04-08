@@ -110,7 +110,7 @@ supaBaseRouter.put(
         const {userId} = getAuth(req)
         const file: IFile = req.body
         const supabaseClient = await createSupabaseForRequest()
-        
+
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
@@ -157,7 +157,6 @@ supaBaseRouter.get(
     '/list-files',
     requireAuth(),
     async (req: Request, res: Response) => {
-        const supabaseClient = await createSupabaseForRequest()
         const {userId} = getAuth(req)
         console.log(userId)
         try {

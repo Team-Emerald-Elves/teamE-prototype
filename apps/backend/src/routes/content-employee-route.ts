@@ -12,7 +12,14 @@ interface IEmployeeID {
 
 function contentEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: IEmployeeID = req.body as IEmployeeID;
-    prisma.content.findMany({where: {employeeId: employee.id}}).then((data) => {
+    prisma.fileContent.findMany({
+        where: {
+            bucket: {
+                employeeId: employee.id
+            }
+        }
+    })
+        .then((data) => {
         res.json(data)
     }).catch((err) => {
         console.log("Error: ", err)

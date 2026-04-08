@@ -52,6 +52,8 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
+app.get('/content',contentRoute)
+app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
 

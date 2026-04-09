@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
 import linkRoute from "./routes/links.ts";
-import contentRoute from "./routes/content.ts";
 import contentEmployeeRoute from "./routes/content-employee-route.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";

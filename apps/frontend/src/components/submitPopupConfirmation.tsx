@@ -8,9 +8,99 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { getToken } from "@clerk/react"
+import { FieldContent } from "./ui/field"
+import {useEffect, useState} from "react";
+
+type SubmitConfirmationPopupProps = {
+    type: string,
+    formData: {
+        name: string,
+        url: string,
+        contentOwner: string,
+        role: string,
+        contentType: string,
+        expirationDate: Date | undefined,
+        expirationTime: string,
+        status: string,
+        id: number
+    }
+}
+
+export type IFile = {
+    fileName: string
+    fileID: number
+    fileContent: {
+        name: string
+        URL?: string
+        content_owner: string
+        expiration_date?: Date | string
+        mime_type?: string
+        documment_status?: number
+    }
+    filePayload: File | string
+}
+
+async function createDocument(fileData: SubmitConfirmationPopupProps, token: string) {
+    console.log("TOKEN SENT:", token)
+
+    const data: IFile  = {
+        fileName: fileData.formData.name,
+        fileID: fileData.formData.id,
+        fileContent: {
+            name: fileData.formData.name,
+            URL: fileData.formData.url,
+            content_owner: fileData.formData.contentOwner,
+            expiration_date: undefined,
+            mime_type: fileData.formData.contentType
+        },
+        filePayload: "test"
+    }
+    if (fileData.type === "Create") {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/create-file`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+    }
+    else if (fileData.type === "Edit") {
+        console.log(data)
+        console.log(token)
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-file`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+    }
 
 
-export function SubmitConfirmationPopup() {
+}
+
+export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
+
+    const [sessionToken, setSessionToken] = useState("")
+
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [])
+
+
     return (
         <Dialog>
             <DialogTrigger >
@@ -25,7 +115,7 @@ export function SubmitConfirmationPopup() {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit">Confirm</Button>
+                        <Button type="submit" onClick={() => {createDocument(info, sessionToken)}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

@@ -55,7 +55,6 @@ function UserManagementTable(){
             .then(setEmployees)
             .catch(console.error);
     }, []);
-
     return (
         <>
             <div className="shadow-md">
@@ -81,7 +80,7 @@ function UserManagementTable(){
 
                             <TableCell>{emp.uname}</TableCell>
                             <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.roles?.[0] ?? "No Roles"}</TableCell>
+                            <TableCell>{emp.roles?.at(0) ?? "No Roles" }</TableCell>
 
                             <TableCell className="flex items-center gap-3">
                                 <div className="flex justify-end">

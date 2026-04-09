@@ -1,4 +1,3 @@
-
 import { Button } from './ui/button.tsx'
 import { useEffect, useState } from "react";
 import {
@@ -25,7 +24,7 @@ import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-
+import { useAuth } from '@clerk/react'
 
 type contentFormProps = {
     type: string,
@@ -33,9 +32,10 @@ type contentFormProps = {
     currentURL: string,
     currentContentOwner: string,
     currentRole: string,
-    currentExpirationDate: Date | undefined,
+    currentExpirationDate: string
     currentExpirationTime: string,
     currentStatus: string,
+    currentID: number,
     size: boolean
 }
 
@@ -48,8 +48,25 @@ type Employee = {
     roles?: string[];
 };
 
-async function getEmployees() {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
+type FormDataType = {
+    name: string,
+    url: string,
+    contentOwner: string,
+    role: string,
+    contentType: string,
+    expirationDate: Date | undefined,
+    expirationTime: string,
+    status: string,
+    id: number,
+};
+
+async function getEmployees(sessionToken: string) {
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+        }
+    });
 
     if (!res.ok) {
         throw new Error("Failed to fetch employees");
@@ -60,15 +77,33 @@ async function getEmployees() {
 }
 
 function ContentForm(props: contentFormProps) {
+
+    const { getToken } = useAuth();
+
     const now = new Date();
     const formattedDate = now.toLocaleString();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
+    const [formData, setFormData] = useState<FormDataType>({
+        name: props.currentName ?? "",
+        url: props.currentURL ?? "",
+        contentOwner: props.currentContentOwner ?? "",
+        role: props.currentRole ?? "",
+        contentType: "",
+        expirationDate: undefined,
+        expirationTime: props.currentExpirationTime ?? "",
+        status: props.currentStatus ?? "",
+        id: props.currentID,
+    });
 
     useEffect(() => {
-        getEmployees()
+
+        getToken().then( token => {
+            console.log(token);
+        getEmployees(token as string)
             .then(setEmployees)
-            .catch(console.error);
+            .catch(console.error)
+        })
     }, []);
 
 
@@ -88,15 +123,30 @@ function ContentForm(props: contentFormProps) {
                     <FieldGroup>
                         <Field>
                             <Label htmlFor="name" className="text-base">Name of Link or Document</Label>
-                            <Input id="name" name="name" placeholder={props.currentName} />
+                            <Input
+                                id="name"
+                                name="name"
+                                placeholder={props.currentName}
+                                value={formData.name}
+                                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                            />
                         </Field>
                         <Field>
                             <Label htmlFor="url" className="text-base">URL</Label>
-                            <Input id="url" name="url" placeholder={props.currentURL} />
+                            <Input
+                                id="url"
+                                name="url"
+                                placeholder={props.currentURL}
+                                value={formData.url}
+                                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                            />
                         </Field>
                         <Field>
                             <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
-                            <Select id="contentOwner">
+                            <Select
+                                value={formData.contentOwner}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, contentOwner: value }))}
+                            >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentContentOwner}/>
                                 </SelectTrigger>
@@ -114,7 +164,10 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                         <Field>
                             <Label htmlFor="role" className="text-base">Select Role Associated with Content</Label>
-                            <Select id="role">
+                            <Select
+                                value={formData.role}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
+                            >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentRole} />
                                 </SelectTrigger>
@@ -129,7 +182,12 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                         <Field>
                             <Label htmlFor="contentType" className="text-base">Select Content Type</Label>
-                            <RadioGroup className="w-full max-w-48 flex items-center gap-7" id="contentType">
+                            <RadioGroup
+                                className="w-full max-w-48 flex items-center gap-7"
+                                id="contentType"
+                                value={formData.contentType}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, contentType: value }))}
+                            >
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
                                     <FieldContent>
@@ -146,11 +204,18 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                         <Field>
                             <Label htmlFor="expiration" className="text-base">Choose Expiration Date</Label>
-                            <DateAndTime id="expiration" date={props.currentExpirationDate} time={props.currentExpirationTime}/>
+                            <DateAndTime
+                                id="expiration"
+                                date={formData.expirationDate}
+                                time={formData.expirationTime}
+                            />
                         </Field>
                         <Field>
                             <Label htmlFor="status" className="text-base">Select Current Status</Label>
-                            <Select id="status">
+                            <Select
+                                value={formData.status}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+                            >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus} />
                                 </SelectTrigger>
@@ -171,7 +236,7 @@ function ContentForm(props: contentFormProps) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup />
+                        <SubmitConfirmationPopup formData={formData} type={props.type}/>
                     </DialogFooter>
                 </DialogContent>
             </form>

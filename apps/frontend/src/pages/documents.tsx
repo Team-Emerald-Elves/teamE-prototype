@@ -2,6 +2,7 @@ import DocumentCard from '../components/docCard.tsx'
 import ContentForm from '../components/contentForm.tsx'
 import {SearchBar} from '../components/searchbar.tsx'
 import {useState, useEffect} from "react";
+import { getToken } from "@clerk/react"
 
 type docProps = {
     role: string;
@@ -21,26 +22,44 @@ type Document = {
 }
 
 
-async function getDocuments() {
-    console.log("adwdwaddwdawdadwdadawdda")
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`)
+async function getDocuments(token: string) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`,
+        {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
+    )
 
     if (!res.ok) {
-        throw new Error("Failed to fetch docs");
+        throw new Error("Failed to fetch docs")
     }
-    const docs = await res.json();
-     console.log(docs);
-    return docs;
+
+    return await res.json()
 }
+
 
 function Documents(props: docProps) {
     const [documents, setDocuments] = useState([]);
+    const [sessionToken, setSessionToken] = useState("")
 
-    useEffect(() => { const fetchData = async () => {
-        const docsData = await getDocuments();
-        setDocuments(docsData)
-    }
-    }, []);
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [])
+
+
+    useEffect(() => {
+        if (!sessionToken) return
+
+        const fetchData = async () => {
+            const docsData = await getDocuments(sessionToken)
+            setDocuments(docsData)
+        }
+
+        fetchData()
+    }, [sessionToken])
+
 
 
 
@@ -76,7 +95,7 @@ function Documents(props: docProps) {
 
                     {documents.map((doc:Document) => (
                         <div key={doc.id}>
-                            <DocumentCard name={doc.name} type="Reference" />
+                            <DocumentCard document={doc} name={doc.name} type="Reference" />
                         </div>
 
                     ))}

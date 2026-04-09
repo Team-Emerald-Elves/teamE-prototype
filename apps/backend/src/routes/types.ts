@@ -9,6 +9,7 @@ export type Status = {
 
 export type IFile = {
     fileName: string
+    fileID: number
     fileContent: {
         name: string
         URL?: string
@@ -17,5 +18,5 @@ export type IFile = {
         mime_type?: string
         documment_status?: Status
     }
-    filePayload: File
+    filePayload: File | string
 }

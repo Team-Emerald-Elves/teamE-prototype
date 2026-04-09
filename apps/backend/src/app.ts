@@ -16,6 +16,7 @@ import editEmployeeRoute from "./routes/edit-employee.ts";
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
 import contentRoute from "./routes/content.ts";
+import linkRoleRoute from "./routes/get-link-role.ts";
 
 
 const app = express();
@@ -57,6 +58,7 @@ app.get('/content', contentRoute)
 //app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
+app.post('/get-link-role', linkRoleRoute)
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 

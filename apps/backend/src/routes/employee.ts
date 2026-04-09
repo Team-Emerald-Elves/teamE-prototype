@@ -5,7 +5,7 @@ import {type Employee} from "../lib/prismadefs.ts";
 const employeeRoute = express()
 
 interface EmployeeRequest{
-    action: 'list' | 'create' | 'edit';
+    action: 'list' | 'create' | 'edit' | 'delete';
     employeeData: Partial<Employee> | undefined;
 }
 
@@ -44,6 +44,11 @@ employeeRoute.post('/', (req: express.Request, res: express.Response) => {
 
     if (eReq.action == "edit") {
         editEmployee(eReq.employeeData, res);
+        return;
+    }
+
+    if (eReq.action == "delete") {
+        deleteEmployee(eReq.employeeData, res);
         return;
     }
 
@@ -102,6 +107,33 @@ async function editEmployee(eData: Partial<Employee>, res: express.Response) {
         res.status(400).send(error);
     }
 }
+
+async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
+    console.log(eData)
+
+    if (!eData.id) {
+        res.status(400).send("INVALID_EMPLOYEE_DATA");
+    }
+
+    try {
+        const employee: Employee = await prisma.employee.delete({
+            where: {
+                id: eData.id,
+            },
+        });
+
+        if (!employee) {
+            res.status(400).send({
+                error: "Employee not found",
+            })
+        }
+
+        res.status(200).send(employee);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
 function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
 
 

@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
 import linkRoute from "./routes/links.ts";
+import contentRoute from "./routes/content.ts";
+import contentEmployeeRoute from "./routes/content-employee-route.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createOldEmployeeRoute from "./routes/create-employee.ts";
@@ -15,6 +17,8 @@ import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
+import contentRoute from "./routes/content.ts";
+import linkRoleRoute from "./routes/get-link-role.ts";
 
 
 const app = express();
@@ -52,10 +56,11 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/content',contentRoute)
-app.get('/content-employee',contentEmployeeRoute)
+app.get('/content', contentRoute)
+//app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
+app.post('/get-link-role', linkRoleRoute)
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 

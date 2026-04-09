@@ -90,7 +90,7 @@ function EmployeeForm(props: empProps) {
                 </div>
                 <DialogContent className="lg:max-w-3xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-mono font-bold">Edit Employee</DialogTitle>
+                        <DialogTitle className="text-2xl text-primary font-sans font-bold">Edit Employee</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <div className="flex items-center gap-4">

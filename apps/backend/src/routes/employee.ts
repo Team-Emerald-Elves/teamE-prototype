@@ -116,12 +116,21 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 
     try {
+        const bucket = await prisma.bucketMeta.delete({
+            where: {
+                employeeId : eData.id,
+            },
+        });
         const employee: Employee = await prisma.employee.delete({
             where: {
                 id: eData.id,
             },
         });
-
+        if (!bucket) {
+            res.status(400).send({
+                error: "Employee not found",
+            })
+        }
         if (!employee) {
             res.status(400).send({
                 error: "Employee not found",

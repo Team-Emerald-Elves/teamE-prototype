@@ -34,37 +34,11 @@ async function getCurrentUserData() {
 
 }
 
-const underwriterLinks = [
-    { to: "/underwriter-dummy", label: "Desktop Management Tool" },
-    { to: "/underwriter-dummy", label: "States on Hold" },
-    { to: "/underwriter-dummy", label: "Desktop Management Tool" },
-    { to: "/underwriter-dummy", label: "RiskMeter Online" },
-    { to: "/underwriter-dummy", label: "ISOnet Website" },
-    { to: "/underwriter-dummy", label: "Forms Knowledge Base" },
-    { to: "/underwriter-dummy", label: "Experience & Schedule Rating Plans" },
-    { to: "/underwriter-dummy", label: "Coastal Guidelines" },
-    { to: "/underwriter-dummy", label: "IPS (Image & Processing System)" },
-    { to: "/underwriter-dummy", label: "Underwriting Workstation" },
-];
 
-const businessLinks = [
-    { to: "/buisnessanalystdummy", label: "States on Hold" },
-    { to: "/buisnessanalystdummy", label: "Forms Knowledge Base" },
-    { to: "/buisnessanalystdummy", label: "IPS (Image & Processing System)" },
-    { to: "/buisnessanalystdummy", label: "Underwriting Workstation" },
-    { to: "/buisnessanalystdummy", label: "CPP Rater Resource Site" },
-    { to: "/buisnessanalystdummy", label: "PMS URG" },
-    { to: "/buisnessanalystdummy", label: "Kentucky Tax and Tax Exemption Aid" },
-    { to: "/buisnessanalystdummy", label: "Experience & Schedule Rating Plans" },
-    { to: "/buisnessanalystdummy", label: "Error Lookup Tool" },
-    { to: "/buisnessanalystdummy", label: "CPP Rater Resource Site" },
-
-];
 
 
 
 function Navbar(props: NavbarProps) {
-    const links = props.role === "u" ? underwriterLinks : props.role === "b" ? businessLinks : [];
    // getCurrentUserData();
    //  const { getToken } = useAuth()
    //  const [me, setMe] = useState()
@@ -119,32 +93,11 @@ function Navbar(props: NavbarProps) {
                                 />
                             </NavigationMenuItem>
                         )}
-
-
                         <NavigationMenuItem>
-                            <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>Links</NavigationMenuTrigger>
-
-                            <NavigationMenuContent>
-                                {props.role === "u" ? (
-                                    <>
-                                        {links.map((link) => (
-                                            <li key={link.to}>
-                                                <NavigationMenuLink render={<Link to={link.to}>{link.label}</Link>} className={navigationMenuTriggerStyle()} />
-                                            </li>
-                                        ))}
-                                    </>
-                                ) : props.role === "b" ? (
-                                    <>
-                                        {links.map((link) => (
-                                            <li key={link.to}>
-                                                <NavigationMenuLink render={<Link to={link.to}>{link.label}</Link>} className={navigationMenuTriggerStyle()} />
-                                            </li>
-                                        ))}
-                                    </>
-
-                                    ) : null}
-                            </NavigationMenuContent>
+                            <NavigationMenuLink
+                                render={<Link to="/settings">Links </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
                         </NavigationMenuItem>
+
                     </NavigationMenuList>
                 </NavigationMenu>
 
@@ -155,8 +108,7 @@ function Navbar(props: NavbarProps) {
                         {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
 
                         {/*</NavigationMenuItem>*/}
-                            <NavigationMenuLink
-                                render={<Link to="/settings"><HugeiconsIcon icon = {Settings02FreeIcons} className = "size-6 hover:rotate-180 transition duration-300" /> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
+
                         <NavigationMenuItem>
                             <CenterDiv>
                                 {props.children}

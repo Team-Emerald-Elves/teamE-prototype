@@ -7,6 +7,7 @@ import { getToken } from "@clerk/react"
 type docProps = {
     role: string;
     doc: Document[]
+    me: any
 }
 
 type Document = {
@@ -39,6 +40,17 @@ async function getDocuments(token: string) {
     return await res.json()
 }
 
+async function getDocumentsAdmin(token: string) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/content`)
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch docs")
+    }
+    const data = await res.json()
+    console.log(data)
+    return data
+}
+
 
 function Documents(props: docProps) {
     const [documents, setDocuments] = useState([]);
@@ -53,7 +65,14 @@ function Documents(props: docProps) {
         if (!sessionToken) return
 
         const fetchData = async () => {
-            const docsData = await getDocuments(sessionToken)
+            let docsData
+            if (["admin", "administrator"].includes(props.me.roles.at(0).toLowerCase())) {
+                docsData = await getDocumentsAdmin(sessionToken)
+            }
+            else {
+                docsData = await getDocuments(sessionToken)
+            }
+
             setDocuments(docsData)
         }
 

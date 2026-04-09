@@ -16,6 +16,7 @@ type homeProps = {
     me: any
 }
 function Home(props: homeProps) {
+    console.log(props.me)
     if ( !props.me) {
         return (
             <div className="hero-container">
@@ -40,8 +41,8 @@ function Home(props: homeProps) {
 
                 <div className="home-content-container">
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">
-                        <Card title={"Upcoming Expirations"} content={<DocTable rows={rows} />} />
-                        <Card title={"Reports and Analytics"} content={<img src="/bar_chart.png" className="w-75 py-[15px] mx-auto block"/>}/>
+                        <Card title={"Reviews and Testimonies"} content={<DocTable rows={rows} />} />
+                        <Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
             </>
@@ -60,8 +61,14 @@ function Home(props: homeProps) {
 
                 <div className="home-content-container">
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">
-                        <Card title={"Upcoming Expirations"} content={<DocTable rows={rows} />} />
-                        <Card title={"Reports and Analytics"} content={<img src="/pie-chart.png" className="w-75 py-[15px] mx-auto block"/>}/>
+                        <Card title={"Reviews and Testimonies"}
+                              content={
+                            <p>
+                                I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker
+                            </p>
+                            }
+                            />
+                        <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
             </>

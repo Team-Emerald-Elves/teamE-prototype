@@ -13,9 +13,10 @@ const rows = [
 
 type homeProps = {
     role: string;
+    me: any
 }
 function Home(props: homeProps) {
-    if (props.role === "none") {
+    if ( ["admin", "administrator"].includes(props.me.roles.at(0).toLowerCase())) {
         return (
             <div className="hero-container">
                 <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
@@ -25,7 +26,7 @@ function Home(props: homeProps) {
             </div>
         )
     }
-    if (props.role === "u") {
+    if (["underwriter"].includes(props.me.roles.at(0).toLowerCase())) {
         return(
             <>
                 <div className="hero-container">

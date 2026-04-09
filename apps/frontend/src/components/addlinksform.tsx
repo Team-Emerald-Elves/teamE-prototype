@@ -110,7 +110,7 @@ function AddLinksForm(props: linkProp){
                                         id: props.id,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: {props.me.roles.at(0)},
+                                        owner: props.me.roles.at(0),
                                     }
 
                                 };

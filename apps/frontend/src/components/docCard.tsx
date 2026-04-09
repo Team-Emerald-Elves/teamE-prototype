@@ -28,10 +28,10 @@ function DocumentCard(props: documentCardProps) {
 
                 <div className="flex items p-1">
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col min-w-0">
                             <div className="w-50 h-15 bg-gray-300 rounded-md" />
 
-                            <div className="text-lg font-semibold font-serif text-primary truncate">
+                            <div className="text-lg font-semibold font-serif text-primary truncate w-full">
                                 {props.document.name}
                             </div>
                             <div className="text-xs text-gray-500 font-serif">

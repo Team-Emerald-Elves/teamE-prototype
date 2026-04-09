@@ -93,6 +93,10 @@ function Navbar(props: NavbarProps) {
                                 />
                             </NavigationMenuItem>
                         )}
+                        <NavigationMenuItem>
+                            <NavigationMenuLink
+                                render={<Link to="/settings">Links </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
+                        </NavigationMenuItem>
 
                     </NavigationMenuList>
                 </NavigationMenu>
@@ -104,8 +108,7 @@ function Navbar(props: NavbarProps) {
                         {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
 
                         {/*</NavigationMenuItem>*/}
-                            <NavigationMenuLink
-                                render={<Link to="/settings"><HugeiconsIcon icon = {Settings02FreeIcons} className = "size-6 hover:rotate-180 transition duration-300" /> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
+
                         <NavigationMenuItem>
                             <CenterDiv>
                                 {props.children}

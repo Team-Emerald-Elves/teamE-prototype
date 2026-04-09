@@ -1,19 +1,19 @@
 
 import { Router, type Request, type Response } from 'express'
-import { getAuth, createClerkClient } from '@clerk/express'
+import { getAuth } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
-import { type IFile } from './types.ts'
+import type { documentContent, Roles, UserRoles } from './types.d.ts'
 
 const supaBaseRouter = Router()
 
-const clerkClient = createClerkClient({
-    secretKey: process.env.CLERK_SECRET_KEY
-})
+// const clerkClient = createClerkClient({
+//     secretKey: process.env.CLERK_SECRET_KEY
+// })
 
 
 supaBaseRouter.post(
-    "/create-file",
+    "/create-document",
     //requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)
@@ -21,7 +21,7 @@ supaBaseRouter.post(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-    const file: IFile = req.body
+    const document: documentContent = req.body
     const supabaseClient = await createSupabaseForRequest()
 
     try {
@@ -35,49 +35,56 @@ supaBaseRouter.post(
             }
         })
 
-        // Create content for file
-        const fileContents = await prisma.fileContent.create({
+        // Create contents for document.
+
+        const expirationDate = new Date(document.documentContent.expiration_date as string)
+
+        const documentContents = await prisma.documentContent.create({
             data: {
-                name: file.fileName,
-                url: file.fileContent.URL ?? "Local upload",
+                name: document.documentContent.name,
+                url: document.documentContent.URL ?? "Local upload",
+                content_owner: document.documentContent.content_owner,
+                assigned_role: document.documentContent.assigned_role,
                 bucketId: employee.bucket!.id,
-                mime_type: file.fileContent.mime_type ?? "text/plain",
-                expiration_date: "2026-04-18T00:00:00.000Z"
+                mime_type: document.documentContent.mime_type ?? "text/plain",
+                expiration_date: !isNaN(expirationDate.getTime()) ? expirationDate.toISOString() : new Date(Date.now() + 1)
             }
         })
 
-        if (fileContents.url === "Local upload")
+        if (documentContents.url === "Local upload")
         {
-            // Upload file to authenticated employee with supabase bucket association.
+            // Upload document to authenticated employee with supabase bucket association.
             const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id)
-            .upload((file.fileName as string).trim(), file.filePayload)
+            .upload((document.documentContent.name as string).trim(), document.filePayload as File)
 
             if (!data || error) {
-                throw new Error(`Failed to upload file '${file.fileName}' for user '${employee.uname}'.`)
+                throw new Error(`Failed to upload document '${document.documentContent.name}' for user '${employee.uname}'.`)
             }
 
         } else {
-            // Implement downloading a file from the URL passed.
+            // Implement downloading a document from the URL passed.
         }
 
     } catch (error)
     {
-        res.status(401).json(`{"message":"Error creating file in bucket: ${error}"}`)
+        res.status(401).json(`{"message":"Error creating document in bucket: ${error}"}`)
     }
 })
 
 supaBaseRouter.delete(
-    '/delete-file',
+    '/delete-document',
     // requireAuth(),
     async (req: Request, res: Response) => {
+        
         const { userId, isAuthenticated } = getAuth(req)
-        console.log(userId)
+        const document: documentContent = req.body
+        const supabaseClient = await createSupabaseForRequest()
+
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-        const { fileName } = req.body
-        const supabaseClient = await createSupabaseForRequest()
+
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
@@ -88,30 +95,29 @@ supaBaseRouter.delete(
             }
         })
         //"user_3C3ncrap2QXGCwsShh9R0TCTVTF"
-        // Find existing content for file.
-        prisma.fileContent.delete({
+        // Find existing content for document.
+        prisma.documentContent.delete({
             where: {
-                bucketId: employee.bucket?.id,
-                name: fileName
+                id: document.documentID
             },
         }).catch((error) => {
-            throw new Error("Couldn't delete file meta infomation.")
+            throw new Error("Couldn't delete document meta infomation.")
         })
 
         const { data, error } = await supabaseClient.storage
-            .from(employee.bucket!.id).remove([(fileName as string).trim()])
+            .from(employee.bucket!.id).remove([(document.documentContent.name as string).trim()])
 
         if (!data || error) {
-            throw new Error(`Failed to delete file '${fileName}' for user '${employee.uname}'.`)
+            throw new Error(`Failed to delete document '${document.documentContent.name}' for user '${employee.uname}'.`)
         }
 
     } catch (error) {
-        res.status(401).json(`{"message":"Error deleting file in bucket: ${error}"}`)
+        res.status(401).json(`{"message":"Error deleting document in bucket: ${error}"}`)
     }
 })
 
 supaBaseRouter.put(
-    '/update-file',
+    '/update-document',
     // requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)
@@ -120,7 +126,7 @@ supaBaseRouter.put(
             return res.status(401).json({ error: "Not authenticated" })
         }
         console.log(userId)
-        const file: IFile = req.body
+        const document: documentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
 
         try {
@@ -133,40 +139,42 @@ supaBaseRouter.put(
                 }
             })
 
-            // // Find existing content for file.
-            // const existingFileContent = await prisma.fileContent.findFirstOrThrow({
+            // // Find existing content for document.
+            // const existingdocumentContent = await prisma.documentContent.findFirstOrThrow({
             //     where: {
             //         bucketId: employee.bucket?.id,
-            //         name: file.fileName
+            //         name: document.documentContent.name
             //     },
             // })
 
-            // Update contents for file.
-            await prisma.fileContent.update({
+            // Update contents for document.
+            await prisma.documentContent.update({
                 where: {
-                    id: file.fileID,
+                    id: document.documentID,
                 },
                 data: {
-                        name: file.fileName,
-                        mime_type: file.fileContent.mime_type ?? "text/plain",
-                        url: file.fileContent.URL ?? "Local upload",
-                        expiration_date: new Date(file.fileContent.expiration_date ?? "2026-04-18"),
-                        bucketId: employee.bucket!.id,
-                },
+                    name: document.documentContent.name,
+                    url: document.documentContent.URL ?? "Local upload",
+                    content_owner: document.documentContent.content_owner,
+                    assigned_role: document.documentContent.assigned_role,
+                    bucketId: employee.bucket!.id,
+                    mime_type: document.documentContent.mime_type ?? "text/plain",
+                    expiration_date: document.documentContent.expiration_date
+                }
             })
 
             const {data, error} = await supabaseClient.storage
-                .from(employee.bucket!.id).update((file.fileName as string).trim(), file.filePayload)
+                .from(employee.bucket!.id).update((document.documentContent.name as string).trim(), document.filePayload as File)
 
             if (!data || error) {
-                throw new Error(`Failed to modify file '${file.fileName}' for user '${employee.uname}'.`)
+                throw new Error(`Failed to modify document '${document.documentContent.name}' for user '${employee.uname}'.`)
             }
 
         } catch (error) {
-            console.error("Update file error:", error);
+            console.error("Update document error:", error);
 
             res.status(500).json({
-                message: "Error modifying file",
+                message: "Error modifying document",
                 error: String(error),
             });
         }
@@ -174,7 +182,7 @@ supaBaseRouter.put(
 )
 
 supaBaseRouter.get(
-    '/list-files',
+    '/list-documents',
     //requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)
@@ -192,14 +200,15 @@ supaBaseRouter.get(
                     bucket: true
                 }
             })
-            const files = await prisma.fileContent.findMany({
+
+            const documents = await prisma.documentContent.findMany({
                 where: {
-                    bucketId: employee.bucket?.id
+                    assigned_role: {
+                        in: employee.roles
+                    }
                 }
             })
-
-            res.status(200).json(files)
-
+            res.status(200).json(documents)
         } catch(error) {
             res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)
         }

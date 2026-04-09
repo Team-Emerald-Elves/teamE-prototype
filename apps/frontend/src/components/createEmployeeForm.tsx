@@ -146,7 +146,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { FieldGroup } from "@/components/ui/field"
+import {Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
@@ -200,23 +200,24 @@ function CreateEmployeeForm() {
                 <div className="flex justify-end w-full">
                     <DialogTrigger
                         render={
-                            <Button className="ml-auto px-4 py-3 text-base bg-secondary text-secondary-foreground">
+                            <Button variant="outline" className="relative right-300 top-15 text-base bg-secondary text-secondary-foreground">
                                 Create Employee
                             </Button>
                         }
                     />
                 </div>
 
-                <DialogContent className="lg:max-w-3xl">
+                <DialogContent className="lg:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-mono font-bold">
+                        <DialogTitle className="text-2xl text-primary font-sans font-bold">
                             Create Employee
                         </DialogTitle>
                     </DialogHeader>
 
                     <FieldGroup>
-                        <div className="flex items-center gap-4">
-                            <Label htmlFor="fname" className="w-24 text-right font-bold">
+                        <div className="grid grid-cols-2 gap-4">
+                        <Field>
+                            <Label htmlFor="fname" className="text-base">
                                 First Name:
                             </Label>
                             <Input
@@ -226,10 +227,10 @@ function CreateEmployeeForm() {
                                 onChange={handleChange}
                                 placeholder="First Name"
                             />
-                        </div>
+                        </Field>
 
-                        <div className="flex items-center gap-4">
-                            <Label htmlFor="lname" className="w-24 text-right font-bold">
+                        <Field >
+                            <Label htmlFor="lname" className="text-base">
                                 Last Name:
                             </Label>
                             <Input
@@ -239,10 +240,11 @@ function CreateEmployeeForm() {
                                 onChange={handleChange}
                                 placeholder="Last Name"
                             />
+                        </Field>
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <Label htmlFor="username" className="w-24 text-right font-bold">
+                        <div className="grid grid-cols-2 gap-4">
+                        <Field>
+                            <Label htmlFor="username" className="text-base">
                                 Username:
                             </Label>
                             <Input
@@ -252,10 +254,10 @@ function CreateEmployeeForm() {
                                 onChange={handleChange}
                                 placeholder="Username"
                             />
-                        </div>
+                        </Field>
 
-                        <div className="flex items-center gap-4">
-                            <Label htmlFor="email" className="w-24 text-right font-bold">
+                        <Field >
+                            <Label htmlFor="email" className="text-base">
                                 Email:
                             </Label>
                             <Input
@@ -265,10 +267,10 @@ function CreateEmployeeForm() {
                                 onChange={handleChange}
                                 placeholder="Email"
                             />
+                        </Field>
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <Label className="w-24 text-right font-bold">
+                        <Field>
+                            <Label className="text-base">
                                 Role:
                             </Label>
                             <Select
@@ -288,7 +290,7 @@ function CreateEmployeeForm() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </Field>
                     </FieldGroup>
 
                     <DialogFooter className="mt-4 justify-end gap-2">

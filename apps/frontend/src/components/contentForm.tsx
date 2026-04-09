@@ -115,122 +115,127 @@ function ContentForm(props: contentFormProps) {
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
-                            <DialogTitle className="text-2xl text-primary font-mono font-bold">{props.type} Content</DialogTitle>
-                            <Button variant="outline" size="lg" className="bg-primary text-primary-foreground">Clear</Button>
+                            <DialogTitle className="text-2xl text-primary font-sans font-bold">{props.type} Content</DialogTitle>
+                            <Button variant="outline" size="lg" className=" relative right-103 top-121 bg-primary text-primary-foreground">Clear</Button>
                         </div>
 
                     </DialogHeader>
                     <FieldGroup>
-                        <Field>
-                            <Label htmlFor="name" className="text-base">Name of Link or Document</Label>
-                            <Input
-                                id="name"
-                                name="name"
-                                placeholder={props.currentName}
-                                value={formData.name}
-                                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                            />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="url" className="text-base">URL</Label>
-                            <Input
-                                id="url"
-                                name="url"
-                                placeholder={props.currentURL}
-                                value={formData.url}
-                                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
-                            />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
-                            <Select
-                                value={formData.contentOwner}
-                                onValueChange={(value) => setFormData(prev => ({ ...prev, contentOwner: value }))}
-                            >
-                                <SelectTrigger className="w-full max-w-48">
-                                    <SelectValue placeholder={props.currentContentOwner}/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Employees</SelectLabel>
-                                        {employees.map((emp) => (
-                                            <SelectItem key={emp.id} value={emp.id}>
-                                                {emp.first_name} {emp.last_name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </Field>
-                        <Field>
-                            <Label htmlFor="role" className="text-base">Select Role Associated with Content</Label>
-                            <Select
-                                value={formData.role}
-                                onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
-                            >
-                                <SelectTrigger className="w-full max-w-48">
-                                    <SelectValue placeholder={props.currentRole} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="Underwriter">Underwriter</SelectItem>
-                                        <SelectItem value="BusinessAnalyst">BusinessAnalyst</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </Field>
-                        <Field>
-                            <Label htmlFor="contentType" className="text-base">Select Content Type</Label>
-                            <RadioGroup
-                                className="w-full max-w-48 flex items-center gap-7"
-                                id="contentType"
-                                value={formData.contentType}
-                                onValueChange={(value) => setFormData(prev => ({ ...prev, contentType: value }))}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
-                                    <FieldContent>
-                                        <FieldLabel htmlFor="workflow">Workflow</FieldLabel>
-                                    </FieldContent>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <RadioGroupItem value="reference" id="reference"></RadioGroupItem>
-                                    <FieldContent>
-                                        <FieldLabel htmlFor="reference">Reference</FieldLabel>
-                                    </FieldContent>
-                                </div>
-                            </RadioGroup>
-                        </Field>
-                        <Field>
-                            <Label htmlFor="expiration" className="text-base">Choose Expiration Date</Label>
-                            <DateAndTime
-                                id="expiration"
-                                date={formData.expirationDate}
-                                time={formData.expirationTime}
-                            />
-                        </Field>
-                        <Field>
-                            <Label htmlFor="status" className="text-base">Select Current Status</Label>
-                            <Select
-                                value={formData.status}
-                                onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
-                            >
-                                <SelectTrigger className="w-full max-w-48">
-                                    <SelectValue placeholder={props.currentStatus} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Status</SelectLabel>
-                                        <SelectItem value="NotStarted">Not Started</SelectItem>
-                                        <SelectItem value="InProgress">In Progress</SelectItem>
-                                        <SelectItem value="Needs Review">Needs Review</SelectItem>
-                                        <SelectItem value="Done">Done</SelectItem>
-                                        <SelectItem value="Expired">Expired</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </Field>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <Label htmlFor="name" className="text-base">Name of Link or Document</Label>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    placeholder={props.currentName}
+                                    value={formData.name}
+                                    onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
+                                />
+                            </Field>
+                            <Field>
+                                <Label htmlFor="url" className="text-base">URL</Label>
+                                <Input
+                                    id="url"
+                                    name="url"
+                                    placeholder={props.currentURL}
+                                    value={formData.url}
+                                    onChange={(e) => setFormData(prev => ({...prev, url: e.target.value}))}
+                                />
+                            </Field>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+
+                            <Field>
+                                <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
+                                <Select
+                                    value={formData.contentOwner}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value}))}
+                                >
+                                    <SelectTrigger className="w-full max-w-48">
+                                        <SelectValue placeholder={props.currentContentOwner}/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Employees</SelectLabel>
+                                            {employees.map((emp) => (
+                                                <SelectItem key={emp.id} value={emp.id}>
+                                                    {emp.first_name} {emp.last_name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                            <Field>
+                                <Label htmlFor="role" className="text-base">Select Role For Content</Label>
+                                <Select
+                                    value={formData.role}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, role: value}))}
+                                >
+                                    <SelectTrigger className="w-full max-w-48">
+                                        <SelectValue placeholder={props.currentRole}/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Roles</SelectLabel>
+                                            <SelectItem value="Underwriter">Underwriter</SelectItem>
+                                            <SelectItem value="BusinessAnalyst">BusinessAnalyst</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                        </div>
+                            <Field>
+                                <Label htmlFor="contentType" className="text-base">Select Content Type</Label>
+                                <RadioGroup
+                                    className="w-full max-w-48 flex items-center gap-7"
+                                    id="contentType"
+                                    value={formData.contentType}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, contentType: value}))}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
+                                        <FieldContent>
+                                            <FieldLabel htmlFor="workflow">Workflow</FieldLabel>
+                                        </FieldContent>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <RadioGroupItem value="reference" id="reference"></RadioGroupItem>
+                                        <FieldContent>
+                                            <FieldLabel htmlFor="reference">Reference</FieldLabel>
+                                        </FieldContent>
+                                    </div>
+                                </RadioGroup>
+                            </Field>
+                            <Field>
+                                <Label htmlFor="expiration" className="text-base">Choose Expiration Date</Label>
+                                <DateAndTime
+                                    id="expiration"
+                                    date={formData.expirationDate}
+                                    time={formData.expirationTime}
+                                />
+                            </Field>
+                            <Field>
+                                <Label htmlFor="status" className="text-base">Select Current Status</Label>
+                                <Select
+                                    value={formData.status}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, status: value}))}
+                                >
+                                    <SelectTrigger className="w-full max-w-48">
+                                        <SelectValue placeholder={props.currentStatus}/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Status</SelectLabel>
+                                            <SelectItem value="NotStarted">Not Started</SelectItem>
+                                            <SelectItem value="InProgress">In Progress</SelectItem>
+                                            <SelectItem value="Needs Review">Needs Review</SelectItem>
+                                            <SelectItem value="Done">Done</SelectItem>
+                                            <SelectItem value="Expired">Expired</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </Field>
                     </FieldGroup>
                     <p>Last Modified: {formattedDate}</p>
 

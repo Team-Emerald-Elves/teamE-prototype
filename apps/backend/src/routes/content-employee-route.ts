@@ -25,4 +25,4 @@ function contentEmployeeRoute(req: express.Request, res: express.Response) {
         console.log("Error: ", err)
     });
 }
-export default contentEmployeeRoute
+export default contentEmployeeRoute;

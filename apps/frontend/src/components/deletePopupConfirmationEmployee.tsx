@@ -22,15 +22,16 @@ type Employee = {
     roles?: string[];
 };
 type deleteConfirmationPopupProps = {
-    target: Employee
+    target: string
 }
 
-async function removeEmployee(employee: Employee,token: string) {
+async function removeEmployee(employeeID: string,token: string) {
 
     const data = {
-         id: employee.id
+        action: "delete",
+         employeeData: {id :employeeID}
     }
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/delete-employee`, {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
@@ -38,8 +39,12 @@ async function removeEmployee(employee: Employee,token: string) {
         },
         body: JSON.stringify(data),
     });
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to delete employee (status ${res.status}): ${errorText}`);
+    }
+    return res.json();
 }
-
 export function EmployeeConfirmationPopup(props: deleteConfirmationPopupProps) {
 
     const [sessionToken, setSessionToken] = useState("")

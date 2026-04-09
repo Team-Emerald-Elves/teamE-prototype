@@ -16,6 +16,7 @@ type homeProps = {
     me: any
 }
 function Home(props: homeProps) {
+    console.log(props.me)
     if ( !props.me) {
         return (
             <div className="hero-container">

@@ -7,6 +7,17 @@ generator client {
   output   = "./generated/"
 }
 
+enum Roles {
+  UnderWriter
+  BusinessAnalyst
+}
+
+enum UserRoles {
+  Admin
+  UnderWriter
+  BusinessAnalyst
+}
+
 model ServiceRequests {
   id          Int       @id @default(autoincrement())
   created_at  DateTime  @default(now())
@@ -22,7 +33,7 @@ model Employee {
   uname       String      @unique @default("uname")
   first_name  String      @default("fname")
   last_name   String      @default("lname")
-  roles       String[]
+  roles       UserRoles[]
   email       String?     @unique
   bucket      BucketMeta?
 }
@@ -37,13 +48,15 @@ model BucketMeta {
   updated_at         DateTime      @updatedAt
   employeeId         String        @unique @db.Uuid
   employee           Employee      @relation(fields: [employeeId], references: [id])
-  fileContents       FileContent[]
+  documentContents       documentContent[]
 }
 
-model FileContent {
-  id              Int      @id @default(autoincrement())
+model documentContent { // Must match creation details of document content.
+  id              Int      @id @unique @default(autoincrement())
+  name            String
   url             String?
-  name            String   @unique
+  content_owner   String
+  assigned_role   UserRoles
   bucketId        String   @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])
   last_modified   DateTime @updatedAt

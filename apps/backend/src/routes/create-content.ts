@@ -11,7 +11,7 @@ interface IContentCreator {
     employeeId: string;
     mime_type?: string;
 }
-
+/*
 function createContentRoute(req: express.Request, res: express.Response) {
     const content: IContentCreator = req.body as IContentCreator;
     prisma.fileContent
@@ -41,3 +41,5 @@ function createContentRoute(req: express.Request, res: express.Response) {
 }
 
 export default createContentRoute;
+
+ */

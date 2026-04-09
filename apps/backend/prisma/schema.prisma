@@ -13,7 +13,7 @@ enum Roles {
 }
 
 enum UserRoles {
-  Admin
+  Administrator
   UnderWriter
   BusinessAnalyst
 }

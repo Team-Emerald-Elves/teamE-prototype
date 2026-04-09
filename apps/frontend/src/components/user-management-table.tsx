@@ -18,7 +18,7 @@ import {useEffect, useState} from "react";
 
 
 import EmployeeForm from "@/components/employeeForm.tsx";
-import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
+
 
 type Employee = {
     id: string;
@@ -31,10 +31,6 @@ type Employee = {
 
 async function getEmployees() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
-
-    if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
-        window.location.replace("/");
-    }
 
     if (!res.ok) {
         throw new Error("Failed to fetch employees");
@@ -88,7 +84,9 @@ function UserManagementTable(){
                                     <EmployeeForm employee={emp}/>
                                 </div>
 
-                                <ConfirmationPopup />
+                                <Button variant = "destructive" size = "icon">
+                                    <HugeiconsIcon icon={Delete02Icon} size={20} />
+                                </Button>
 
                             </TableCell>
                         </TableRow>

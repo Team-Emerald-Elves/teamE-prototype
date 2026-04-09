@@ -3,16 +3,15 @@ import { Router,
          type Request,
          type Response
 } from 'express'
-import { requireAuth, getAuth, clerkMiddleware } from '@clerk/express'
+import { requireAuth, getAuth } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import { type IFile,
          type Status
 } from './types.ts'
 
-const supaBaseRouter = Router() // Create one instance of supabase client to be used for user requests.
-
-supaBaseRouter.use(clerkMiddleware())
+const supaBaseRouter = Router()
+const supabaseClient = await createSupabaseForRequest() // Create one instance of supabase client to be used for user requests.
 
 supaBaseRouter.post(
     "/create-file",
@@ -20,8 +19,6 @@ supaBaseRouter.post(
     async (req: Request, res: Response) => {
     const { userId } = getAuth(req)
     const file: IFile = req.body
-    const supabaseClient = await createSupabaseForRequest()
-
     try {
 
         // Get the authenticated employee.
@@ -72,7 +69,6 @@ supaBaseRouter.delete(
     async (req: Request, res: Response) => {
         const { userId } = getAuth(req)
         const { fileName } = req.body
-        const supabaseClient = await createSupabaseForRequest()
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
@@ -111,8 +107,7 @@ supaBaseRouter.put(
     async (req: Request, res: Response) => {
         const {userId} = getAuth(req)
         const file: IFile = req.body
-        const supabaseClient = await createSupabaseForRequest()
-
+        
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
@@ -159,9 +154,8 @@ supaBaseRouter.get(
     '/list-files',
     requireAuth(),
     async (req: Request, res: Response) => {
-        //const {userId} = getAuth(req)
-        const userId = "user_3C3urqXvjMfpzrZZnqYWr0z37WQ"
-        console.log(userId)
+        const {userId} = getAuth(req)
+        
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
@@ -171,7 +165,7 @@ supaBaseRouter.get(
                     bucket: true
                 }
             })
-            const files = await prisma.fileContent.findMany({
+            const files = prisma.fileContent.findMany({
                 where: {
                     bucketId: employee.bucket?.id
                 }

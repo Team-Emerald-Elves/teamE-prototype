@@ -24,7 +24,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 
 
 type contentFormProps = {
@@ -171,7 +170,7 @@ function ContentForm(props: contentFormProps) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup />
+                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
                     </DialogFooter>
                 </DialogContent>
             </form>

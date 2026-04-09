@@ -15,16 +15,6 @@ type homeProps = {
     role: string;
 }
 function Home(props: homeProps) {
-    if (props.role === "none") {
-        return (
-            <div className="hero-container">
-                <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
-                <div className="hero-body">
-                    <h1 className="text-shadow-lg/40">Home</h1>
-                </div>
-            </div>
-        )
-    }
     if (props.role === "u") {
         return(
             <>

@@ -27,7 +27,7 @@ function Home(props: homeProps) {
             </div>
         )
     }
-    if ( ["business analyst"].includes(props.me.roles.at(0).toLowerCase())) {
+    if ( ["businessanalyst"].includes(props.me.roles.at(0).toLowerCase())) {
         return (
 
             <>

@@ -64,7 +64,7 @@ function LinksTable(props: linksProps){
     const [links, setLinks] = useState<Links[]>([]);
 
     useEffect(() => {
-        if (["underwriter","business analyst"].includes(props.me.roles.at(0).toLowerCase())) {
+        if (["underwriter","businessanalyst"].includes(props.me.roles.at(0).toLowerCase())) {
             getRoleLinks(props.me.roles.at(0)).then(setLinks)
                 .catch(console.error);
         }

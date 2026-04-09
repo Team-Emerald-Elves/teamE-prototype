@@ -32,7 +32,7 @@ type EditEmployeeRequest = {
     first_name?: string,
     last_name?: string,
     email?: string,
-    role?: string[],
+    roles?: string[],
 }
 
 type Employee = {
@@ -90,7 +90,7 @@ function EmployeeForm(props: empProps) {
                 </div>
                 <DialogContent className="lg:max-w-3xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-mono font-bold">Edit Employee</DialogTitle>
+                        <DialogTitle className="text-2xl text-primary font-sans font-bold">Edit Employee</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
                         <div className="flex items-center gap-4">
@@ -163,7 +163,7 @@ function EmployeeForm(props: empProps) {
                                 email: user.email ? user.email : undefined,
                                 first_name: user.firstname,
                                 last_name: user.lastname,
-                                role: array,
+                                roles: array,
                             };
                             try {
                                 await updateEmployee(bodyData);

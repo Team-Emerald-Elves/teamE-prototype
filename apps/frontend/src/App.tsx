@@ -9,23 +9,44 @@ import Settings from './pages/settings.tsx'
 import NotFound from './pages/not-found.tsx'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
 
-import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/react'
+import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
     const [role, setRole] = useState("u");
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
 
-  return (
-      <>
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
 
+        async function load() {
+            const token = await getToken();
 
-        <BrowserRouter >
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+        }
+
+        load();
+    }, [isSignedIn]);
+
+    return (
+        <BrowserRouter>
             <Show when="signed-out">
-                <Home role="none"/>
+                <Home me={null} role="none" />
                 <CenterDiv>
                     <SignInButton>
                         <button className="clerk-button">Sign in</button>
@@ -35,42 +56,33 @@ function App() {
                     </SignUpButton>
                 </CenterDiv>
             </Show>
-            <Show when="signed-in">
-                <div className="radio">
-                <RadioGroup value={role} onValueChange={setRole}>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="u" id="u" />
-                        <Label htmlFor="u">Underwriter</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="b" id="b" />
-                        <Label htmlFor="b">Business Analyst</Label>
-                    </div>
-                </RadioGroup>
-                </div>
-                <div className={"app"}>
 
-                    <Navbar role={role}>
-                        <UserButton />
-                    </Navbar>
-                    <main className="main">
-                        <Routes >
-                            <Route path="/" element={<Home role={role}/>} />
-                            <Route path="/documents" element={<Documents role={role} />} />
-                            <Route path="/employee-management" element={<UserManagementPage />} />
-                            <Route path ="/underwriter-dummy" element = {<UnderwriterDummy />} />
-                            <Route path ="/business-dummy" element = {<BusinessDummy />} />
-                            <Route path="/settings" element = {<Settings />} />
-                            <Route path ="/user-management-page" element = {<UserManagementPage />} />
-                            <Route path ="/profile" element = {<Profile />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </main>
-                </div>
+            <Show when="signed-in">
+                {/* Wait for me to load */}
+                {!me ? null : (
+                    <div className="app">
+                        <Navbar role={role} me={me}>
+                            <UserButton />
+                        </Navbar>
+
+                        <main className="main">
+                            <Routes>
+                                <Route path="/" element={<Home me={me} role={role} />} />
+                                <Route path="/documents" element={<Documents me={me} role={role} />} />
+                                <Route path="/employee-management" element={<UserManagementPage />} />
+                                <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
+                                <Route path="/business-dummy" element={<BusinessDummy />} />
+                                <Route path="/settings" element={<Settings me={me} />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </main>
+                    </div>
+                )}
             </Show>
         </BrowserRouter>
-      </>
-  )
+    );
 }
+
 
 export default App

@@ -18,7 +18,6 @@ type Links ={
     link_name: string,
     url: string,
     owner: string
-
 }
 
 
@@ -29,7 +28,7 @@ type editlinksRequest ={
 }
 
 type linkProp = {
-    id: number,
+    id: string,
     url: string,
     owner: string
     name: string,
@@ -108,7 +107,7 @@ function EditLinksForm(props: linkProp){
                                         id: props.id,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: "Underwriter",
+                                        owner: props.owner,
                                     }
 
                                 };

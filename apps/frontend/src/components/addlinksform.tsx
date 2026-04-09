@@ -33,6 +33,7 @@ type linkProp = {
     url: string,
     owner: string
     name: string,
+    me: any
 }
 
 async function updateLinks(body: editlinksRequest) {
@@ -109,7 +110,7 @@ function AddLinksForm(props: linkProp){
                                         id: props.id,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: "Underwriter",
+                                        owner: props.me.roles.at(0),
                                     }
 
                                 };

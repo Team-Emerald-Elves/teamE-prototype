@@ -13,6 +13,7 @@ import { Button } from './ui/button.tsx'
 type documentCardProps = {
     name: string
     description: string
+    me: any
 }
 
 function LinkCard(props: documentCardProps) {
@@ -38,6 +39,7 @@ function LinkCard(props: documentCardProps) {
                             link="www.something.com"
                             description="Bobby Tanner"
                             size={false}
+                            me={props.me}
                         />
                     </div>
                     <div className="text-base bg-destructive text-secondary-foreground">

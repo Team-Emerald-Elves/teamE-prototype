@@ -3,25 +3,26 @@ import { prisma } from "../lib/prisma.ts";
 
 interface IContentCreator {
     name: string;
-    URL: string;
-    job_position: string;
+    url: string;
+    bucket: string;
     expiration_date: string;
     content_type?: string;
     document_status?: string;
     employeeId: string;
+    mime_type?: string;
 }
-
+/*
 function createContentRoute(req: express.Request, res: express.Response) {
     const content: IContentCreator = req.body as IContentCreator;
-    prisma.content
+    prisma.fileContent
         .create({
             data: {
                 name: content.name,
-                URL: content.URL,
-                job_position: content.job_position,
+                url: content.url,
+                bucket: content.bucket,
                 expiration_date: new Date(content.expiration_date),
                 content_type: content.content_type,
-                document_status: content.document_status,
+                mime_type: content.mime_type,
                 content_owner: {
                     connect: { id: content.employeeId },
                 },
@@ -40,3 +41,5 @@ function createContentRoute(req: express.Request, res: express.Response) {
 }
 
 export default createContentRoute;
+
+ */

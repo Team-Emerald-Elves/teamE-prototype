@@ -18,7 +18,7 @@ import {useEffect, useState} from "react";
 
 
 import EmployeeForm from "@/components/employeeForm.tsx";
-import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
+import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
 
 type Employee = {
     id: string;
@@ -87,7 +87,7 @@ function UserManagementTable(){
                                     <EmployeeForm employee={emp}/>
                                 </div>
 
-                                <ConfirmationPopup />
+                                <EmployeeConfirmationPopup employee={emp} />
 
                             </TableCell>
                         </TableRow>

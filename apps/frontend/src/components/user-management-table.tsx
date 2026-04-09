@@ -18,8 +18,8 @@ import {useEffect, useState} from "react";
 
 
 import EmployeeForm from "@/components/employeeForm.tsx";
-import ConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
-
+import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
+import removeEmployee from "@/components/deletePopupConfirmationEmployee.tsx";
 type Employee = {
     id: string;
     first_name: string;
@@ -87,7 +87,7 @@ function UserManagementTable(){
                                     <EmployeeForm employee={emp}/>
                                 </div>
 
-                                <ConfirmationPopup />
+                                <EmployeeConfirmationPopup target={emp.id} />
 
                             </TableCell>
                         </TableRow>

@@ -32,7 +32,7 @@ type EditEmployeeRequest = {
     first_name?: string,
     last_name?: string,
     email?: string,
-    role?: string[],
+    roles?: string[],
 }
 
 type Employee = {
@@ -163,7 +163,7 @@ function EmployeeForm(props: empProps) {
                                 email: user.email ? user.email : undefined,
                                 first_name: user.firstname,
                                 last_name: user.lastname,
-                                role: array,
+                                roles: array,
                             };
                             try {
                                 await updateEmployee(bodyData);

@@ -17,7 +17,7 @@ import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
-import contentRoute from "./routes/content.ts";
+
 import linkRoleRoute from "./routes/get-link-role.ts";
 
 

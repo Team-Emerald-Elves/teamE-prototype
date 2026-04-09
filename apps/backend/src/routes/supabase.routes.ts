@@ -1,22 +1,26 @@
 
-import { Router,
-         type Request,
-         type Response
-} from 'express'
-import { requireAuth, getAuth, clerkMiddleware } from '@clerk/express'
+import { Router, type Request, type Response } from 'express'
+import { getAuth, createClerkClient } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
-import { type IFile,
-         type Status
-} from './types.ts'
+import { type IFile } from './types.ts'
 
-const supaBaseRouter = Router() // Create one instance of supabase client to be used for user requests.
+const supaBaseRouter = Router()
+
+const clerkClient = createClerkClient({
+    secretKey: process.env.CLERK_SECRET_KEY
+})
+
 
 supaBaseRouter.post(
     "/create-file",
     //requireAuth(),
     async (req: Request, res: Response) => {
-    const auth = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req)
+        console.log(userId)
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
     const file: IFile = req.body
     const supabaseClient = await createSupabaseForRequest()
 
@@ -24,7 +28,7 @@ supaBaseRouter.post(
         // Get the authenticated employee.
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
+                clerkUserId: userId
             },
             include: {
                 bucket: true
@@ -67,19 +71,23 @@ supaBaseRouter.delete(
     '/delete-file',
     // requireAuth(),
     async (req: Request, res: Response) => {
-        const { userId } = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req)
+        console.log(userId)
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
         const { fileName } = req.body
         const supabaseClient = await createSupabaseForRequest()
     try {
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
+                clerkUserId: userId
             },
             include: {
                 bucket: true
             }
         })
-
+        //"user_3C3ncrap2QXGCwsShh9R0TCTVTF"
         // Find existing content for file.
         prisma.fileContent.delete({
             where: {
@@ -106,36 +114,44 @@ supaBaseRouter.put(
     '/update-file',
     // requireAuth(),
     async (req: Request, res: Response) => {
-        const {userId} = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req)
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
+        console.log(userId)
         const file: IFile = req.body
         const supabaseClient = await createSupabaseForRequest()
 
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
+                    clerkUserId: userId
                 },
                 include: {
                     bucket: true
                 }
             })
 
-            // Find existing content for file.
-            const existingFileContent = await prisma.fileContent.findFirstOrThrow({
-                where: {
-                    bucketId: employee.bucket?.id,
-                    name: file.fileName
-                },
-            })
+            // // Find existing content for file.
+            // const existingFileContent = await prisma.fileContent.findFirstOrThrow({
+            //     where: {
+            //         bucketId: employee.bucket?.id,
+            //         name: file.fileName
+            //     },
+            // })
 
             // Update contents for file.
             await prisma.fileContent.update({
                 where: {
-                    id: existingFileContent?.id,
+                    id: file.fileID,
                 },
                 data: {
-                    ...file,
-                    bucketId: employee.bucket?.id,
+                        name: file.fileName,
+                        mime_type: file.fileContent.mime_type ?? "text/plain",
+                        url: file.fileContent.URL ?? "Local upload",
+                        expiration_date: new Date(file.fileContent.expiration_date ?? "2026-04-18"),
+                        bucketId: employee.bucket!.id,
                 },
             })
 
@@ -147,7 +163,12 @@ supaBaseRouter.put(
             }
 
         } catch (error) {
-            res.status(401).json(`{"message":"Error modifying file in bucket: ${error}"}`)
+            console.error("Update file error:", error);
+
+            res.status(500).json({
+                message: "Error modifying file",
+                error: String(error),
+            });
         }
     }
 )
@@ -156,11 +177,16 @@ supaBaseRouter.get(
     '/list-files',
     //requireAuth(),
     async (req: Request, res: Response) => {
-        const {userId} = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req)
+        console.log(userId)
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
+
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: "user_3C3oCZUKchv41eX5fubLU5kxOrH"
+                    clerkUserId: userId
                 },
                 include: {
                     bucket: true

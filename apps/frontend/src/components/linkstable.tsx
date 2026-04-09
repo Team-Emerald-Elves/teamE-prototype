@@ -34,7 +34,12 @@ async function getLinks() {
 
     return data;
 }
-function LinksTable(){
+
+type linksProps = {
+    me: any
+}
+
+function LinksTable(props: linksProps){
     const [links, setLinks] = useState<Links[]>([]);
 
     useEffect(() => {
@@ -66,7 +71,7 @@ function LinksTable(){
                                         id={l.id}
                                         name ={l.link_name}
                                         url ={l.url}
-                                        owner= "Underwriter"
+                                        owner={props.me.roles.at(0)}
                                     />
                                     <Button variant = "destructive" size = "icon">
                                         <HugeiconsIcon icon={Delete02Icon} size={20} />

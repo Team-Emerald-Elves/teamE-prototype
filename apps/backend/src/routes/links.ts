@@ -58,6 +58,11 @@ linkRoute.post('/', (req: express.Request, res: express.Response) => {
         return;
     }
 
+    if (lReq.action == "delete" && lReq.linkData.id) {
+        deleteLink(lReq.linkData, res);
+        return;
+    }
+
     // No/invalid action
     res.status(400).json({
         error: "INVALID_ACTION"
@@ -119,6 +124,22 @@ async function editLink(lData: Partial<Links>, res: express.Response) {
         console.log(error);
         res.status(400).json({
             error: "INVALID_LINKS_EDIT"
+        })
+    }
+}
+
+async function deleteLink(lData: Partial<Links>, res: express.Response) {
+    try {
+        const link: Links = await prisma.links.delete({
+            where: {
+                id: lData.id!
+            }
+        })
+        res.status(200).json(link)
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            error: "INVALID_LINKS_Delete"
         })
     }
 }

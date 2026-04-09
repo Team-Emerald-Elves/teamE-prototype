@@ -9,6 +9,7 @@ export type Status = {
 
 export type IFile = {
     fileName: string
+    fileID: number
     fileContent: {
         name: string
         URL?: string

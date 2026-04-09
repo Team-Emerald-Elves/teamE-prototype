@@ -24,7 +24,7 @@ function DocumentCard(props: documentCardProps) {
     const now = new Date();
     const formattedDate = now.toLocaleString();
     return (
-            <Card className= "m-4 h-45 w-62 bg-background rounded-x1 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer p-4" >
+            <Card className= "m-4 h-45 w-68 bg-background rounded-x1 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer p-4" >
 
                 <div className="flex items p-1">
 

@@ -68,7 +68,7 @@ function App() {
                         <main className="main">
                             <Routes>
                                 <Route path="/" element={<Home me={me} role={role} />} />
-                                <Route path="/documents" element={<Documents role={role} />} />
+                                <Route path="/documents" element={<Documents me={me} role={role} />} />
                                 <Route path="/employee-management" element={<UserManagementPage />} />
                                 <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
                                 <Route path="/business-dummy" element={<BusinessDummy />} />

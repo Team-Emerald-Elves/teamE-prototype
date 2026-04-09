@@ -15,6 +15,7 @@ import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
+import contentRoute from "./routes/content.ts";
 
 
 const app = express();
@@ -52,8 +53,8 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/content',contentRoute)
-app.get('/content-employee',contentEmployeeRoute)
+app.get('/content', contentRoute)
+//app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
 

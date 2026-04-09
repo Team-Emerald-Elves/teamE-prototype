@@ -66,11 +66,7 @@ app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 
 app.post('/edit-employee', editEmployeeRoute);
 
-app.post('/edit-employee', editEmployeeRoute);
-
 app.post('/create-srvreq', createServiceReqRoute);
-
-app.post('/edit-employee', editEmployeeRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 

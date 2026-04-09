@@ -6,6 +6,12 @@ settings:
 
 importers:
 
+  .:
+    dependencies:
+      postman:
+        specifier: ^0.2.0
+        version: 0.2.0
+
   apps/backend:
     dependencies:
       '@clerk/backend':
@@ -2847,6 +2853,10 @@ packages:
   postgres@3.4.7:
     resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
     engines: {node: '>=12'}
+
+  postman@0.2.0:
+    resolution: {integrity: sha512-TE9BLol6uq04hJXecymLbQK7POs0M+otJUuQ4T6L8aMdva0A0NVuFYzcmExZ07CdBTJhFUtTVsbYFrf9NOQ5qQ==}
+    engines: {'0': node}
 
   powershell-utils@0.1.0:
     resolution: {integrity: sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A==}
@@ -6117,6 +6127,8 @@ snapshots:
       xtend: 4.0.2
 
   postgres@3.4.7: {}
+
+  postman@0.2.0: {}
 
   powershell-utils@0.1.0: {}
 

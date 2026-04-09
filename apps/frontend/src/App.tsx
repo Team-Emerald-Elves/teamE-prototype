@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+import OutagePage from "@/pages/outage.tsx"
 
 import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
@@ -30,14 +31,18 @@ function App() {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            try {
+                const res = await fetch("http://localhost:3000/api/tests/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-            const data = await res.json();
-            setMe(data);
+                const data = await res.json();
+                setMe(data);
+            } catch (err) {
+                console.log(err);
+            }
         }
 
         load();
@@ -59,7 +64,7 @@ function App() {
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
-                {!me ? null : (
+                {!me ? <OutagePage /> : (
                     <div className="app">
                         <Navbar role={role} me={me}>
                             <UserButton />

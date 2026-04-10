@@ -4,6 +4,12 @@ interface OutageProps {
     contact?: string;
 }
 
+
+/**
+ * Page that shows when the website fails to reach the backend
+ * @param props (optional) Contact information to reach out to when the website is down
+ * @constructor
+ */
 function OutagePage(props: OutageProps): ReactElement {
     return (
         <>

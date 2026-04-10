@@ -49,7 +49,7 @@ function Home(props: homeProps) {
             </>
         )
     }
-    if (["underwriter"].includes(props.me.roles.at(0).toLowerCase())) {
+    if (["underwriter"].includes(props.roles.at(0)!.toLowerCase())) {
         return(
             <>
                 <div className="hero-container">

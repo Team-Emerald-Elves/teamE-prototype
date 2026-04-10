@@ -15,7 +15,7 @@ import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/reac
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
-    const [roles, setRoles] = useState<string[]>([]);
+    const [roles, setRoles] = useState<string[]>(["BusinessAnalyst"]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
 
@@ -35,11 +35,15 @@ function App() {
             });
 
             const data = await res.json();
+
+            console.log(data)
+
             setMe(data);
             setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
         load();
+
     }, [isSignedIn, roles]);
 
     return (

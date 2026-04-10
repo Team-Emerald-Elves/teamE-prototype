@@ -60,7 +60,7 @@ model Links {
 }
 
 enum Status {
-  not_started
+  not_startedgit 
   in_progress
   needs_review
   done

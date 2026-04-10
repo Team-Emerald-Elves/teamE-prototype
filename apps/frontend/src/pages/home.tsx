@@ -12,10 +12,11 @@ const rows = [
 ];
 
 type homeProps = {
-    role: string;
+    roles: string[];
     me: any
 }
 function Home(props: homeProps) {
+
     console.log(props.me)
     if ( !props.me) {
         return (
@@ -27,7 +28,7 @@ function Home(props: homeProps) {
             </div>
         )
     }
-    if ( ["businessanalyst"].includes(props.me.roles.at(0).toLowerCase())) {
+    if (props.roles.includes("businessanalyst")) {
         return (
 
             <>

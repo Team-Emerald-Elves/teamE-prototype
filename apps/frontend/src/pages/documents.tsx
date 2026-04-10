@@ -5,8 +5,8 @@ import {useState, useEffect} from "react";
 import { getToken } from "@clerk/react"
 
 type docProps = {
-    role: string;
-    doc: Document[]
+    roles: string[]
+    doc?: Document[]
     me: any
 }
 
@@ -41,7 +41,13 @@ async function getDocuments(token: string) {
 }
 
 async function getDocumentsAdmin(token: string) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/content`)
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/content`,
+        {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
+    )
 
     if (!res.ok) {
         throw new Error("Failed to fetch docs")
@@ -65,14 +71,10 @@ function Documents(props: docProps) {
         if (!sessionToken) return
 
         const fetchData = async () => {
-            let docsData
-            if (["admin", "administrator"].includes(props.me.roles.at(0).toLowerCase())) {
-                docsData = await getDocumentsAdmin(sessionToken)
-            }
-            else {
-                docsData = await getDocuments(sessionToken)
-            }
-
+            let docsData =
+            props.roles.filter(role => role.toLowerCase().startsWith("admin")).length ?
+            await getDocumentsAdmin(sessionToken) :
+            await getDocuments(sessionToken)
             setDocuments(docsData)
         }
 
@@ -82,7 +84,7 @@ function Documents(props: docProps) {
 
 
 
-    if (props.role === "u") {
+    if (props.roles.includes("u")) {
         return (
             <>
                 <div className="text-center font-bold text-primary">
@@ -97,11 +99,12 @@ function Documents(props: docProps) {
                     <div className="ml-auto  p-4">
                         <ContentForm
                             type="Create"
+                            currentID={Math.trunc((Math.random() * 10000) % 10000)}
                             currentName="Name..."
                             currentURL="www.example.com"
                             currentContentOwner="Select Content Owner"
                             currentRole="Select Role"
-                            currentExpirationDate={undefined}
+                            currentExpirationDate={(new Date(Date.now() + 1)).toISOString()}
                             currentExpirationTime="10:30:00"
                             currentStatus="Select Status"
                             size={true}
@@ -141,11 +144,12 @@ function Documents(props: docProps) {
                     <div className="ml-auto  p-4">
                         <ContentForm
                             type="Create"
+                            currentID={Math.trunc((Math.random() * 10000) % 10000)}
                             currentName="Name..."
                             currentURL="www.example.com"
                             currentContentOwner="Select Content Owner"
                             currentRole="Select Role"
-                            currentExpirationDate={undefined}
+                            currentExpirationDate="Tomorrow"
                             currentExpirationTime="10:30:00"
                             currentStatus="Select Status"
                             size={true}
@@ -156,7 +160,7 @@ function Documents(props: docProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {documents.map((doc:Document) => (
-                        <DocumentCard name={doc.name} type="Reference" />
+                        <DocumentCard document={doc} name={doc.name} type="Reference" />
                     ))}
                     {/*<DocumentCard name="Business Requirements" type="Workflow" />*/}
                     {/*<DocumentCard name="System Requirements" type="Workflow"/>*/}

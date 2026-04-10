@@ -18,7 +18,7 @@ function Settings(props: settingsProps) {
                     <AddLinksForm
                         type="Add Link"
                         name="Name"
-                        link="www.example.com"
+                        url="www.example.com"
                         description="What is the link used for"
                         size={true}
                         me={props.me}

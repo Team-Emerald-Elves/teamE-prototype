@@ -9,7 +9,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { getToken } from "@clerk/react"
-import { FieldContent } from "./ui/field"
 import {useEffect, useState} from "react";
 
 type SubmitConfirmationPopupProps = {

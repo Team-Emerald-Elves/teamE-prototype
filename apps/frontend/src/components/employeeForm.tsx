@@ -24,7 +24,7 @@ import {
 import {FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {JSX, useState} from "react";
+import { type JSX, useState} from "react";
 
 type EditEmployeeRequest = {
     id: string,
@@ -45,7 +45,7 @@ type Employee = {
 };
 
 type empProps = {
-    employee: Employee;
+    employee?: Employee;
 }
 
 async function updateEmployee(body: EditEmployeeRequest) {
@@ -65,15 +65,15 @@ async function updateEmployee(body: EditEmployeeRequest) {
     }
     return res.json();
 }
-function EmployeeForm(props: empProps) {
+function EmployeeForm(props: empProps): JSX.Element {
     const employee = props.employee;
     const [user, setUser] = useState({
-        firstname: employee.first_name,
-        lastname: employee.last_name,
-        username: employee.uname,
+        firstname: employee!.first_name,
+        lastname: employee!.last_name,
+        username: employee!.uname,
         // password: "password",
-        email: employee.email,
-        role: employee.roles ? employee.roles.at(0) : "None",
+        email: employee!.email,
+        role: employee!.roles ? employee!.roles.at(0) : "None",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +158,7 @@ function EmployeeForm(props: empProps) {
                         <Button onClick={async () => {
                             const array: string[] | undefined = user.role ? [user.role] : undefined
                             const bodyData: EditEmployeeRequest = {
-                                id: employee.id,
+                                id: employee!.id,
                                 uname: user.username,
                                 email: user.email ? user.email : undefined,
                                 first_name: user.firstname,

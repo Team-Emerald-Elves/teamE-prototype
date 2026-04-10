@@ -32,7 +32,7 @@ type contentFormProps = {
     currentURL: string,
     currentContentOwner: string,
     currentRole: string,
-    currentExpirationDate: string
+    currentExpirationDate: string,
     currentExpirationTime: string,
     currentStatus: string,
     currentID: number,
@@ -149,7 +149,7 @@ function ContentForm(props: contentFormProps) {
                                 <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
                                 <Select
                                     value={formData.contentOwner}
-                                    onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value}))}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value!}))}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue placeholder={props.currentContentOwner}/>
@@ -170,7 +170,7 @@ function ContentForm(props: contentFormProps) {
                                 <Label htmlFor="role" className="text-base">Select Role For Content</Label>
                                 <Select
                                     value={formData.role}
-                                    onValueChange={(value) => setFormData(prev => ({...prev, role: value}))}
+                                    onValueChange={(value) => setFormData(prev => ({...prev, role: value!}))}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue placeholder={props.currentRole}/>
@@ -219,7 +219,7 @@ function ContentForm(props: contentFormProps) {
                             <Label htmlFor="status" className="text-base">Select Current Status</Label>
                             <Select
                                 value={formData.status}
-                                onValueChange={(value) => setFormData(prev => ({...prev, status: value}))}
+                                onValueChange={(value) => setFormData(prev => ({...prev, status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus}/>

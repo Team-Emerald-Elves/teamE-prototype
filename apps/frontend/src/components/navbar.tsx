@@ -4,35 +4,29 @@ import {
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuContent,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {HugeiconsIcon} from "@hugeicons/react";
-import { Settings02FreeIcons } from "@hugeicons/core-free-icons";
-import { UserSquareIcon } from "@hugeicons/core-free-icons";
-import {type ReactNode, useEffect, useState} from "react";
+import { type ReactNode } from "react";
 import CenterDiv from "./center-div.tsx";
-import {useAuth} from "@clerk/react";
 
 
 interface NavbarProps {
-    role: string;
+    roles: string[];
     children?: ReactNode
     me: any
 }
 
-async function getCurrentUserData() {
-    const res = await fetch(`${import.meta.env.BACKEND_URL}/me`);
+// async function getCurrentUserData() {
+//     const res = await fetch(`${import.meta.env.BACKEND_URL}/me`);
 
-    if (!res.ok) {
-        throw new Error("Failed to fetch user data");
-    }
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch user data");
+//     }
 
-    const data = res.json();
-    console.log(data)
+//     const data = res.json();
+//     console.log(data)
 
-}
+// }
 
 
 

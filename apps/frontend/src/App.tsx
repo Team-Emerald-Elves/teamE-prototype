@@ -7,8 +7,6 @@ import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Settings from './pages/settings.tsx'
 import NotFound from './pages/not-found.tsx'
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
@@ -17,7 +15,7 @@ import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/reac
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
-    const [role, setRole] = useState("u");
+    const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
 
@@ -38,15 +36,16 @@ function App() {
 
             const data = await res.json();
             setMe(data);
+            setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
         load();
-    }, [isSignedIn]);
+    }, [isSignedIn, roles]);
 
     return (
         <BrowserRouter>
             <Show when="signed-out">
-                <Home me={null} role="none" />
+                <Home me={null} roles={[]} />
                 <CenterDiv>
                     <SignInButton>
                         <button className="clerk-button">Sign in</button>
@@ -61,14 +60,14 @@ function App() {
                 {/* Wait for me to load */}
                 {!me ? null : (
                     <div className="app">
-                        <Navbar role={role} me={me}>
+                        <Navbar roles={roles} me={me}>
                             <UserButton />
                         </Navbar>
 
                         <main className="main">
                             <Routes>
-                                <Route path="/" element={<Home me={me} role={role} />} />
-                                <Route path="/documents" element={<Documents me={me} role={role} />} />
+                                <Route path="/" element={<Home me={me} roles={roles} />} />
+                                <Route path="/documents" element={<Documents me={me} roles={roles} />} />
                                 <Route path="/employee-management" element={<UserManagementPage />} />
                                 <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
                                 <Route path="/business-dummy" element={<BusinessDummy />} />

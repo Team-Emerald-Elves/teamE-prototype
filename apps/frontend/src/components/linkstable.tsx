@@ -9,21 +9,14 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-import {HugeiconsIcon} from "@hugeicons/react";
-import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button"
-
 import {useEffect, useState} from "react";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
+import type { Links,
+              linksProps
+} from './types/linkstable.d.ts';
 
-
-type Links= {
-    id: string;
-    link_name: string,
-    url: string,
-    owner: string
-}
 async function getLinks() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
 
@@ -54,10 +47,6 @@ async function getRoleLinks(linkOwner: string) {
     console.log(data)
 
     return data;
-}
-
-type linksProps = {
-    me: any
 }
 
 function LinksTable(props: linksProps){

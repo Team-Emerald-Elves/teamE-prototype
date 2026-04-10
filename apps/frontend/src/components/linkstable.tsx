@@ -16,6 +16,7 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import type { Links,
               linksProps
 } from './types/linkstable.d.ts';
+import {useAuth} from "@clerk/react";
 
 async function getLinks() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
@@ -24,12 +25,11 @@ async function getLinks() {
         throw new Error("Failed to fetch links");
     }
     const data = await res.json();
-    console.log(data)
-
     return data;
 }
 
 async function getRoleLinks(linkOwner: string) {
+
     const reqData ={
         owner: linkOwner
     }
@@ -44,25 +44,53 @@ async function getRoleLinks(linkOwner: string) {
         throw new Error("Failed to fetch links");
     }
     const data = await res.json();
-    console.log(data)
 
     return data;
 }
 
-function LinksTable(props: linksProps){
+function LinksTable(){
+    const [roles, setRoles] = useState<string[]>([]);
+    const { getToken, isSignedIn } = useAuth();
     const [links, setLinks] = useState<Links[]>([]);
+    const [me, setMe] = useState(null);
 
     useEffect(() => {
-        if (["underwriter","businessanalyst"].includes(props.me.roles.at(0).toLowerCase())) {
-            getRoleLinks(props.me.roles.at(0)).then(setLinks)
-                .catch(console.error);
-        }
-        else {
-            getLinks().then(setLinks)
-                .catch(console.error);
+        if (!isSignedIn) {
+            setMe(null);
+            return;
         }
 
-    }, []);
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+        }
+
+        load();
+    }, [isSignedIn, roles]);
+
+    useEffect(() => {
+        if (roles.length === 0) return; // wait until roles are loaded
+
+        if (roles.includes("administrator")) {
+            getLinks()
+                .then(setLinks)
+                .catch(console.error);
+        } else {
+            getRoleLinks(me.roles.at(0))
+                .then(setLinks)
+                .catch(console.error);
+        }
+    }, [roles]);
+
     return (
         <>
             <div className="shadow-md">
@@ -87,7 +115,7 @@ function LinksTable(props: linksProps){
                                         id={l.id}
                                         name ={l.link_name}
                                         url ={l.url}
-                                        owner={props.me.roles.at(0)}
+                                        owner={roles.at(0)}
                                     />
                                     <Button variant = "destructive" size = "icon">
                                        <DeletePopupConfirmationLinks link={l} />

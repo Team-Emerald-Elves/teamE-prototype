@@ -2,13 +2,8 @@ import DocumentCard from '../components/docCard.tsx'
 import ContentForm from '../components/contentForm.tsx'
 import {SearchBar} from '../components/searchbar.tsx'
 import {useState, useEffect} from "react";
-import { getToken } from "@clerk/react"
+import {getToken, useAuth} from "@clerk/react"
 
-type docProps = {
-    roles: string[]
-    doc?: Document[]
-    me: any
-}
 
 type Document = {
     name: string,
@@ -53,12 +48,38 @@ async function getDocumentsAdmin(token: string) {
         throw new Error("Failed to fetch docs")
     }
     const data = await res.json()
-    console.log(data)
     return data
 }
 
 
-function Documents(props: docProps) {
+function Documents() {
+    const [roles, setRoles] = useState<string[]>([]);
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+        }
+
+        load();
+    }, [isSignedIn, roles]);
+
     const [documents, setDocuments] = useState([]);
     const [sessionToken, setSessionToken] = useState("")
 
@@ -68,23 +89,26 @@ function Documents(props: docProps) {
 
 
     useEffect(() => {
-        if (!sessionToken) return
+        if (!sessionToken || roles.length === 0) return;
 
         const fetchData = async () => {
-            let docsData =
-            props.roles.filter(role => role.toLowerCase().startsWith("admin")).length ?
-            await getDocumentsAdmin(sessionToken) :
-            await getDocuments(sessionToken)
-            setDocuments(docsData)
-        }
+            const isAdmin = roles.some(role =>
+                role.toLowerCase().startsWith("admin")
+            );
 
-        fetchData()
-    }, [sessionToken])
+            const docsData = isAdmin
+                ? await getDocumentsAdmin(sessionToken)
+                : await getDocuments(sessionToken);
+
+            setDocuments(docsData);
+        };
+
+        fetchData();
+    }, [sessionToken, roles]);
 
 
 
-
-    if (props.roles.includes("u")) {
+    if (roles.includes("u")) {
         return (
             <>
                 <div className="text-center font-bold text-primary">

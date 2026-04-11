@@ -10,6 +10,7 @@ import NotFound from './pages/not-found.tsx'
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+import OutagePage from "@/pages/outage.tsx"
 
 import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
@@ -58,10 +59,12 @@ function App() {
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
+                {!me ? <OutagePage /> : (
                     <div className="app">
                         <Navbar >
                             <UserButton />
                         </Navbar>
+
 
                         <main className="main">
                             <Routes>

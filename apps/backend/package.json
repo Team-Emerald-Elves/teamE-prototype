@@ -12,6 +12,7 @@
     "db:studio": "pnpx prisma studio",
     "postinstall": "pnpm run db:generate",
     "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma",
+    "dk:start": "docker compose -f docker-compose.postgres.yml up -d",
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {

@@ -10,16 +10,11 @@ import {
 } from "@/components/ui/table"
 
 import {HugeiconsIcon} from "@hugeicons/react";
-import { Delete02Icon } from '@hugeicons/core-free-icons';
 import { UserCircleIcon } from '@hugeicons/core-free-icons';
-import { Button } from "@/components/ui/button";
-
 import {useEffect, useState} from "react";
-
-
 import EmployeeForm from "@/components/employeeForm.tsx";
 import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
-import removeEmployee from "@/components/deletePopupConfirmationEmployee.tsx";
+
 type Employee = {
     id: string;
     first_name: string;

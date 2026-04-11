@@ -2,6 +2,7 @@ import Card from "../components/card.tsx";
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
 import DocTable from "@/components/docTable.tsx";
+import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 
 const rows = [
     { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
@@ -45,6 +46,7 @@ function Home(props: homeProps) {
                         <Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
@@ -71,17 +73,21 @@ function Home(props: homeProps) {
                         <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
     else {
         return (
+            <>
             <div className="hero-container">
                 <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
                 <div className="hero-body">
                     <h1 className="text-shadow-lg/40">Home</h1>
                 </div>
             </div>
+            <DisclaimerFooter/>
+            </>
         )
     }
 

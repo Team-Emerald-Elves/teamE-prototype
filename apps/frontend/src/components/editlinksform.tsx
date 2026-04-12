@@ -14,24 +14,27 @@ import { Label } from "@/components/ui/label"
 import {useState} from "react";
 
 type Links ={
-    id: number
+    id: number,
     link_name: string,
     url: string,
     owner: string
 }
 
 
-type editlinksRequest ={
+type editlinksRequest = {
     action: string,
-    linkData: Links,
+    linkData: Links
 
 }
 
 type linkProp = {
-    id: string,
+    id?: number,
+    type?: string,
+    size?: boolean,
+    description?: string,
     url: string,
-    owner: string
-    name: string,
+    owner?: string,
+    name: string
 }
 
 async function updateLinks(body: editlinksRequest) {
@@ -104,10 +107,10 @@ function EditLinksForm(props: linkProp){
                                 const bodyData: editlinksRequest = {
                                     action: "edit",
                                     linkData: {
-                                        id: props.id,
+                                        id: props.id!,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: props.owner,
+                                        owner: props.owner!,
                                     }
 
                                 };

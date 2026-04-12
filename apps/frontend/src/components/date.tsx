@@ -15,11 +15,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-type DateAndTimeProps ={
-    id: string
-    date: Date | undefined
-    time: string
-}
+import type { DateAndTimeProps } from './types/date.d.ts'
 
 export default function DateAndTime(props: DateAndTimeProps) {
     const [open, setOpen] = React.useState(false)

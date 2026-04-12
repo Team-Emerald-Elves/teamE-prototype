@@ -32,7 +32,7 @@ function DocumentCard(props: documentCardProps) {
                             <div className="w-50 h-15 bg-gray-300 rounded-md" />
 
                             <div className="text-lg font-semibold font-serif text-primary truncate w-full">
-                                {props.document.name}
+                                {props.document!.name}
                             </div>
                             <div className="text-xs text-gray-500 font-serif">
                                 <p>Last Modified: {formattedDate}</p>

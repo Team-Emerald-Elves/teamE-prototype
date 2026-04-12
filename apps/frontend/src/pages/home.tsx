@@ -3,6 +3,8 @@ import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
 import DocTable from "@/components/docTable.tsx";
 import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
+import {useEffect, useState} from "react";
+import {useAuth} from "@clerk/react";
 
 const rows = [
     { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
@@ -12,13 +14,37 @@ const rows = [
     { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" }
 ];
 
-type homeProps = {
-    role: string;
-    me: any
-}
-function Home(props: homeProps) {
-    console.log(props.me)
-    if ( !props.me) {
+
+function Home() {
+
+    const [roles, setRoles] = useState<string[]>([]);
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+        }
+
+        load();
+    }, [isSignedIn, roles]);
+
+    if (!me) {
         return (
             <div className="hero-container">
                 <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
@@ -28,9 +54,8 @@ function Home(props: homeProps) {
             </div>
         )
     }
-    if ( ["business analyst"].includes(props.me.roles.at(0).toLowerCase())) {
+    if (roles.includes("businessanalyst")) {
         return (
-
             <>
                 <div className="hero-container">
                     <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
@@ -50,7 +75,8 @@ function Home(props: homeProps) {
             </>
         )
     }
-    if (["underwriter"].includes(props.me.roles.at(0).toLowerCase())) {
+    if (roles.includes("underwriter")) {
+
         return(
             <>
                 <div className="hero-container">
@@ -84,6 +110,7 @@ function Home(props: homeProps) {
                 <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
                 <div className="hero-body">
                     <h1 className="text-shadow-lg/40">Home</h1>
+                    <SearchBar/>
                 </div>
             </div>
             <DisclaimerFooter/>

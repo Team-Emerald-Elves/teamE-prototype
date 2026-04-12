@@ -11,9 +11,10 @@ import {
 import {Field, FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useAuth} from "@clerk/react";
 
-type Links ={
+type Links = {
     id: number
     link_name: string,
     url: string,
@@ -22,16 +23,19 @@ type Links ={
 }
 
 
-type editlinksRequest ={
+type editlinksRequest = {
     action: string,
     linkData: Links,
 
 }
 
 type linkProp = {
-    id: number,
+    id?: number,
+    type: string,
+    size: boolean,
     url: string,
-    owner: string
+    description: string,
+    owner?: string
     name: string,
     me: any
 }
@@ -55,6 +59,32 @@ async function updateLinks(body: editlinksRequest) {
 }
 
 function AddLinksForm(props: linkProp){
+    const [roles, setRoles] = useState<string[]>([]);
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+        }
+
+        load();
+    }, [isSignedIn, roles]);
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
@@ -107,10 +137,10 @@ function AddLinksForm(props: linkProp){
                                 const bodyData: editlinksRequest = {
                                     action: "create",
                                     linkData: {
-                                        id: props.id,
+                                        id: props.id!,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: props.me.roles.at(0),
+                                        owner: roles.at(0),
                                     }
 
                                 };

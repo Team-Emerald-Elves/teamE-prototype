@@ -4,70 +4,56 @@ import {
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuContent,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {HugeiconsIcon} from "@hugeicons/react";
-import { Settings02FreeIcons } from "@hugeicons/core-free-icons";
-import { UserSquareIcon } from "@hugeicons/core-free-icons";
 import {type ReactNode, useEffect, useState} from "react";
 import CenterDiv from "./center-div.tsx";
 import {useAuth} from "@clerk/react";
 
 
 interface NavbarProps {
-    role: string;
     children?: ReactNode
-    me: any
 }
 
-async function getCurrentUserData() {
-    const res = await fetch(`${import.meta.env.BACKEND_URL}/me`);
+// async function getCurrentUserData() {
+//     const res = await fetch(`${import.meta.env.BACKEND_URL}/me`);
 
-    if (!res.ok) {
-        throw new Error("Failed to fetch user data");
-    }
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch user data");
+//     }
 
-    const data = res.json();
-    console.log(data)
+//     const data = res.json();
+//     console.log(data)
 
-}
-
-
-
-
+// }
 
 function Navbar(props: NavbarProps) {
-   // getCurrentUserData();
-   //  const { getToken } = useAuth()
-   //  const [me, setMe] = useState()
-   //
-   //  useEffect(() => {
-   //      async function load() {
-   //          const token = await getToken()
-   //
-   //          const res = await fetch("http://localhost:3000/api/tests/me", {
-   //              headers: {
-   //                  Authorization: `Bearer ${token}`
-   //              }
-   //          })
-   //
-   //          const data = await res.json()
-   //          setMe(data)
-   //      }
-   //
-   //      load()
-   //  }, [])
-   //  console.log(me)
-   //  if (!me) {
-   //      return (
-   //          <header className="w-full bg-[#00355f] text-white">
-   //              <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-2">
-   //              </div>
-   //          </header>
-   //      )
-   //  }
+    const [roles, setRoles] = useState<string[]>([]);
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+        }
+
+        load();
+    }, [isSignedIn, roles]);
     return (
         <header className="w-full bg-[#00355f] text-white">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-2">
@@ -85,7 +71,7 @@ function Navbar(props: NavbarProps) {
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
-                        {["admin", "administrator"].includes(props.me.roles?.[0]?.toLowerCase()) && (
+                        {roles.includes("administrator") && (
                             <NavigationMenuItem>
                                 <NavigationMenuLink
                                     render={<Link to="/employee-management">User Management</Link>}
@@ -95,7 +81,7 @@ function Navbar(props: NavbarProps) {
                         )}
                         <NavigationMenuItem>
                             <NavigationMenuLink
-                                render={<Link to="/settings">Links </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
+                                render={<Link to="/links">Links </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
                         </NavigationMenuItem>
 
                     </NavigationMenuList>

@@ -16,6 +16,7 @@ import {
 
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
+import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 
 type Document = {
     id: number;
@@ -29,9 +30,9 @@ type Document = {
     status: string;
 };
 
-let Documents: Document[] = [];
+const Documents: Document[] = [];
 
-let Doc1: Document = {
+const Doc1: Document = {
     id: 1,
     url: "www.testurl.com",
     name: "underwritingrole",
@@ -43,7 +44,7 @@ let Doc1: Document = {
     status: "not_started",
 };
 
-let Doc2: Document = {
+const Doc2: Document = {
     id: 2,
     url: "www.testurl2.com",
     name: "businessanalystrole1",
@@ -59,7 +60,7 @@ Documents.push(Doc1);
 Documents.push(Doc2);
 
 export default function Favorites() {
-    const [favorited, setFavorited] = useState(false);
+    // const [favorited, setFavorited] = useState(false);
 
     return (
         <div className="max-w-6xl mx-auto px-6 py-6">
@@ -67,8 +68,7 @@ export default function Favorites() {
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <FontAwesomeIcon
-                        icon={favorited ? solidStar : regularStar}
-                        onClick={() => setFavorited(!favorited)}
+                        icon={solidStar }
                         className="text-yellow-400 cursor-pointer"
                     />
                     <h4 className="text-lg font-semibold text-gray-800">
@@ -87,8 +87,8 @@ export default function Favorites() {
 
             <div className="bg-white rounded-xl shadow-sm border p-4">
 
-                <div className="flex items-center justify-between mb-4">
-                    <div className="w-1/3">
+                <div className="flex items-center mb-4">
+                    <div className="w-1/3 mr-4">
                         <SearchBar />
                     </div>
 
@@ -108,76 +108,22 @@ export default function Favorites() {
 
 
                 <Table className="border rounded-lg overflow-hidden">
-                    <TableHeader className="bg-[#0b3c5d]">
+                    <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                         <TableRow>
-                            <TableHead className="text-white">Favorite</TableHead>
-                            <TableHead className="text-white">Title</TableHead>
-                            <TableHead className="text-white">Content Type</TableHead>
-                            <TableHead className="text-white">Expiration Date</TableHead>
-                            <TableHead className="text-white">Status</TableHead>
-                            <TableHead className="text-white">Owner</TableHead>
-                            <TableHead className="text-white">Last Modified</TableHead>
-                            <TableHead className="text-white">Actions</TableHead>
+                            <TableHead className=" text-[#0b4461]">Favorite</TableHead>
+                            <TableHead className=" text-[#0b4461]">Title</TableHead>
+                            <TableHead className=" text-[#0b4461]">Content Type</TableHead>
+                            <TableHead className=" text-[#0b4461]">Expiration Date</TableHead>
+                            <TableHead className="text-[#0b4461]">Status</TableHead>
+                            <TableHead className="text-[#0b4461]">Owner</TableHead>
+                            <TableHead className="text-[#0b4461]">Last Modified</TableHead>
+                            <TableHead className="text-[#0b4461]">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
                         {Documents.map((d) => (
-                            <TableRow
-                                key={d.id}
-                                className="hover:bg-gray-50 transition"
-                            >
-                                <TableCell>
-                                    <FontAwesomeIcon
-                                        icon={favorited ? solidStar : regularStar}
-                                        onClick={() => setFavorited(!favorited)}
-                                        className="text-yellow-400 cursor-pointer"
-                                    />
-                                </TableCell>
-
-                                <TableCell className="py-3 text-gray-700">
-                                    {d.name}
-                                </TableCell>
-
-                                <TableCell className="text-gray-700">
-                                    {d.mime_type}
-                                </TableCell>
-
-                                <TableCell className="text-gray-700">
-                                    {d.expirationDate}
-                                </TableCell>
-
-                                <TableCell className="text-gray-700">
-                                    {d.status}
-                                </TableCell>
-
-                                <TableCell className="text-gray-700">
-                                    {d.contentOwner}
-                                </TableCell>
-
-                                <TableCell className="text-gray-700">
-                                    {d.lastModified}
-                                </TableCell>
-
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <ContentForm
-                                            type="Edit"
-                                            currentID={d.id}
-                                            currentName={d.name}
-                                            currentURL={d.url}
-                                            currentContentOwner={d.contentOwner}
-                                            currentRole={d.role}
-                                            currentExpirationDate="Tomorrow"
-                                            currentExpirationTime="10:30:00"
-                                            currentStatus={d.status}
-                                            size={false}
-                                        />
-
-                                        <DeleteConfirmationPopup target={d.id} />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
+                            <FavoritesTableEntry key={d.id} d={d} />
                         ))}
                     </TableBody>
                 </Table>

@@ -25,6 +25,8 @@ import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 import { useAuth } from '@clerk/react'
+import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
+import {HugeiconsIcon} from "@hugeicons/react";
 
 type contentFormProps = {
     type: string,
@@ -111,7 +113,12 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
+                {props.size ?
+                    <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
+                    :
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                }
+
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">

@@ -59,7 +59,6 @@ function App() {
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
-                {!me ? <OutagePage /> : (
                     <div className="app">
                         <Navbar >
                             <UserButton />

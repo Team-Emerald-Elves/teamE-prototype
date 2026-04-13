@@ -47,7 +47,10 @@ supaBaseRouter.post(
                 assigned_role: document.documentContent.assigned_role,
                 bucketId: employee.bucket!.id,
                 mime_type: document.documentContent.mime_type ?? "text/plain",
-                expiration_date: !isNaN(expirationDate.getTime()) ? expirationDate.toISOString() : new Date(Date.now() + 1)
+                expiration_date: !isNaN(expirationDate.getTime()) ? expirationDate.toISOString() : new Date(Date.now() + 1),
+                document_status: "not_started",
+                document_type: document.documentContent.document_type ?? "Reference"
+
             }
         })
 
@@ -159,7 +162,8 @@ supaBaseRouter.put(
                     assigned_role: document.documentContent.assigned_role,
                     bucketId: employee.bucket!.id,
                     mime_type: document.documentContent.mime_type ?? "text/plain",
-                    expiration_date: document.documentContent.expiration_date
+                    expiration_date: document.documentContent.expiration_date,
+                    document_type: document.documentContent.document_type
                 }
             })
 

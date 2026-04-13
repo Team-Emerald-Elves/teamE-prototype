@@ -2,7 +2,7 @@ import express from "express";
 import { prisma } from "../lib/prisma.ts";
 
 function contentRoute(req: express.Request, res: express.Response) {
-    prisma.fileContent
+    prisma.documentContent
         .findMany({
             orderBy: {
                 name: "asc",

@@ -81,10 +81,6 @@ function Navbar(props: NavbarProps) {
                                 />
                             </NavigationMenuItem>
                         )}
-                        <NavigationMenuItem>
-                            <NavigationMenuLink
-                                render={<Link to="/links">Links </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>
-                        </NavigationMenuItem>
 
                     </NavigationMenuList>
                 </NavigationMenu>
@@ -98,7 +94,7 @@ function Navbar(props: NavbarProps) {
                         {/*</NavigationMenuItem>*/}
 
                         <NavigationMenuItem>
-                            <Bell size = {20}/>
+                            <Bell size = {18} className={navigationMenuTriggerStyle()}/>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <CenterDiv>

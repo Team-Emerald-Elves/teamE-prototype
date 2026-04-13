@@ -2,6 +2,7 @@ import Card from "../components/card.tsx";
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
 import DocTable from "@/components/docTable.tsx";
+import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 
@@ -70,6 +71,7 @@ function Home() {
                         <Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
@@ -97,11 +99,13 @@ function Home() {
                         <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
                     </div>
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
     else {
         return (
+            <>
             <div className="hero-container">
                 <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
                 <div className="hero-body">
@@ -109,6 +113,8 @@ function Home() {
                     <SearchBar/>
                 </div>
             </div>
+            <DisclaimerFooter/>
+            </>
         )
     }
 

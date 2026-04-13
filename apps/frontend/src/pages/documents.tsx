@@ -20,7 +20,7 @@ type Document = {
 
 async function getDocuments(token: string) {
     const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -78,7 +78,7 @@ function Documents() {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
 
     const [documents, setDocuments] = useState([]);
     const [sessionToken, setSessionToken] = useState("")

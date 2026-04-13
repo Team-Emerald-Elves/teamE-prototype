@@ -25,6 +25,8 @@ import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 import { useAuth } from '@clerk/react'
+import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
+import {HugeiconsIcon} from "@hugeicons/react";
 
 type contentFormProps = {
     type: string,
@@ -53,10 +55,10 @@ type FormDataType = {
     url: string,
     contentOwner: string,
     role: string,
-    contentType: string,
+    document_type: string,
     expirationDate: Date | undefined,
     expirationTime: string,
-    status: string,
+    document_status: string,
     id: number,
 };
 
@@ -89,10 +91,10 @@ function ContentForm(props: contentFormProps) {
         url: props.currentURL ?? "",
         contentOwner: props.currentContentOwner ?? "",
         role: props.currentRole ?? "",
-        contentType: "",
+        document_type: "",
         expirationDate: undefined,
         expirationTime: props.currentExpirationTime ?? "",
-        status: props.currentStatus ?? "",
+        document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
 
@@ -111,7 +113,14 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
+
+                {props.size ?
+                    <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
+                    :
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                }
+
+
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
@@ -190,8 +199,8 @@ function ContentForm(props: contentFormProps) {
                             <RadioGroup
                                 className="w-full max-w-48 flex items-center gap-7"
                                 id="contentType"
-                                value={formData.contentType}
-                                onValueChange={(value) => setFormData(prev => ({...prev, contentType: value}))}
+                                value={formData.document_type}
+                                onValueChange={(value) => setFormData(prev => ({...prev, document_type: value}))}
                             >
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
@@ -218,8 +227,8 @@ function ContentForm(props: contentFormProps) {
                         <Field>
                             <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
-                                value={formData.status}
-                                onValueChange={(value) => setFormData(prev => ({...prev, status: value!}))}
+                                value={formData.document_status}
+                                onValueChange={(value) => setFormData(prev => ({...prev, documnet_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus}/>

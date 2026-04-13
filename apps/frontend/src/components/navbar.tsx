@@ -55,7 +55,7 @@ function Navbar(props: NavbarProps) {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
     return (
         <header className="w-full bg-[#013C5A] text-white">
             <div className="w-full flex items-center justify-between px-6 py-2">

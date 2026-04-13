@@ -7,12 +7,13 @@ import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Links from './pages/links.tsx'
 import NotFound from './pages/not-found.tsx'
-import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
-import OutagePage from "@/pages/outage.tsx"
 
-import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
+import FavoritesPage from "./pages/favoritespage.tsx";
+
+
+import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
@@ -64,19 +65,20 @@ function App() {
                             <UserButton />
                         </Navbar>
 
-                    <main className="main">
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/documents" element={<Documents/>} />
-                            <Route path="/employee-management" element={<UserManagementPage />} />
-                            <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
-                            <Route path="/business-dummy" element={<BusinessDummy />} />
-                            <Route path="/links" element={<Links />} />
-                            <Route path="/profile" element={<Profile />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </main>
-                </div>
+                        <main className="main">
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/documents" element={<Documents/>} />
+                                <Route path="/employee-management" element={<UserManagementPage />} />
+                                <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
+                                <Route path="/business-dummy" element={<BusinessDummy />} />
+                                <Route path="/links" element={<Links />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path="*" element={<NotFound />} />
+                                <Route path="/favorites" element={<FavoritesPage />} />
+                            </Routes>
+                        </main>
+                    </div>
             </Show>
         </BrowserRouter>
     );

@@ -18,11 +18,11 @@ type SubmitConfirmationPopupProps = {
         url: string,
         contentOwner: string,
         role: string,
-        contentType: string,
+        document_type: string,
         expirationDate: Date | undefined,
         expirationTime: string,
-        status: string,
-        id: number
+        document_status: string,
+        id: number,
     }
 }
 
@@ -36,6 +36,9 @@ export type IFile = {
         expiration_date?: Date | string
         mime_type?: string
         documment_status?: number
+        assigned_role: string
+        document_type: string
+        document_status: string
     }
     filePayload: File | string
 }
@@ -51,7 +54,9 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
             URL: fileData.formData.url,
             content_owner: fileData.formData.contentOwner,
             expiration_date: undefined,
-            mime_type: fileData.formData.contentType
+            document_type: fileData.formData.document_type,
+            document_status: fileData.formData.document_status,
+            assigned_role: fileData.formData.role
         },
         filePayload: "test"
     }

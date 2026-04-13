@@ -43,7 +43,7 @@ function Home() {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
 
     if (!me) {
         return (

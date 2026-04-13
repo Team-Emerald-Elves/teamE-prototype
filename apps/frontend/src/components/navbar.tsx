@@ -53,7 +53,7 @@ function Navbar(props: NavbarProps) {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
     return (
         <header className="w-full bg-[#00355f] text-white">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-2">

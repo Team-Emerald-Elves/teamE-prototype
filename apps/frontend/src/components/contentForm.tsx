@@ -55,10 +55,10 @@ type FormDataType = {
     url: string,
     contentOwner: string,
     role: string,
-    contentType: string,
+    document_type: string,
     expirationDate: Date | undefined,
     expirationTime: string,
-    status: string,
+    document_status: string,
     id: number,
 };
 
@@ -91,10 +91,10 @@ function ContentForm(props: contentFormProps) {
         url: props.currentURL ?? "",
         contentOwner: props.currentContentOwner ?? "",
         role: props.currentRole ?? "",
-        contentType: "",
+        document_type: "",
         expirationDate: undefined,
         expirationTime: props.currentExpirationTime ?? "",
-        status: props.currentStatus ?? "",
+        document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
 
@@ -199,8 +199,8 @@ function ContentForm(props: contentFormProps) {
                             <RadioGroup
                                 className="w-full max-w-48 flex items-center gap-7"
                                 id="contentType"
-                                value={formData.contentType}
-                                onValueChange={(value) => setFormData(prev => ({...prev, contentType: value}))}
+                                value={formData.document_type}
+                                onValueChange={(value) => setFormData(prev => ({...prev, document_type: value}))}
                             >
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem value="workflow" id="workflow"></RadioGroupItem>
@@ -227,8 +227,8 @@ function ContentForm(props: contentFormProps) {
                         <Field>
                             <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
-                                value={formData.status}
-                                onValueChange={(value) => setFormData(prev => ({...prev, status: value!}))}
+                                value={formData.document_status}
+                                onValueChange={(value) => setFormData(prev => ({...prev, documnet_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus}/>

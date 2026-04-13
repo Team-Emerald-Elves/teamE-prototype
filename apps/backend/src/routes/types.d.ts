@@ -28,8 +28,9 @@ export type documentContent = {
         content_owner: string
         assigned_role: Roles
         expiration_date?: Date | string
+        document_type?: string
+        document_status?: Status
         mime_type?: string
-        documment_status?: Status
     }
     documentID: number
     filePayload?: File

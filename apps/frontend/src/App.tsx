@@ -7,13 +7,13 @@ import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Links from './pages/links.tsx'
 import NotFound from './pages/not-found.tsx'
-import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
 
 import FavoritesPage from "./pages/favoritespage.tsx";
 
-import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
+
+import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {

@@ -5,48 +5,48 @@ import Profile from './pages/profile.tsx';
 import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
-import Settings from './pages/settings.tsx'
+import Links from './pages/links.tsx'
 import NotFound from './pages/not-found.tsx'
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+import OutagePage from "@/pages/outage.tsx"
 
 import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
-    const [role, setRole] = useState("u");
-    const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
-
-    useEffect(() => {
-        if (!isSignedIn) {
-            setMe(null);
-            return;
-        }
-
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch("http://localhost:3000/api/tests/me", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const data = await res.json();
-            setMe(data);
-        }
-
-        load();
-    }, [isSignedIn]);
+    // const [roles, setRoles] = useState<string[]>([]);
+    // const { getToken, isSignedIn } = useAuth();
+    // const [me, setMe] = useState(null);
+    //
+    // useEffect(() => {
+    //     if (!isSignedIn) {
+    //         setMe(null);
+    //         return;
+    //     }
+    //
+    //     async function load() {
+    //         const token = await getToken();
+    //
+    //         const res = await fetch("http://localhost:3000/api/tests/me", {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         });
+    //
+    //         const data = await res.json();
+    //         setMe(data);
+    //         setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
+    //     }
+    //
+    //     load();
+    // }, [isSignedIn, roles]);
 
     return (
         <BrowserRouter>
             <Show when="signed-out">
-                <Home me={null} role="none" />
+                <Home />
                 <CenterDiv>
                     <SignInButton>
                         <button className="clerk-button">Sign in</button>
@@ -59,26 +59,25 @@ function App() {
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
-                {!me ? null : (
                     <div className="app">
-                        <Navbar role={role} me={me}>
+                        <Navbar >
                             <UserButton />
                         </Navbar>
 
+
                         <main className="main">
                             <Routes>
-                                <Route path="/" element={<Home me={me} role={role} />} />
-                                <Route path="/documents" element={<Documents me={me} role={role} />} />
+                                <Route path="/" element={<Home />} />
+                                <Route path="/documents" element={<Documents/>} />
                                 <Route path="/employee-management" element={<UserManagementPage />} />
                                 <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
                                 <Route path="/business-dummy" element={<BusinessDummy />} />
-                                <Route path="/settings" element={<Settings me={me} />} />
+                                <Route path="/links" element={<Links />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="*" element={<NotFound />} />
                             </Routes>
                         </main>
                     </div>
-                )}
             </Show>
         </BrowserRouter>
     );

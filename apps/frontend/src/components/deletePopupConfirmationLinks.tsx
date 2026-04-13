@@ -8,22 +8,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Delete02Icon} from "@hugeicons/core-free-icons";
-import {getToken, useAuth} from '@clerk/react'
-import {useEffect, useState} from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete02Icon } from "@hugeicons/core-free-icons";
+import type { Links } from './types/linkstable.d.ts'
 
 type deleteConfirmationPopupProps = {
     link: Links
 }
-
-type Links ={
-    id: string
-    link_name: string,
-    url: string,
-    owner: string
-}
-
 
 type editlinksRequest ={
     action: string,
@@ -31,23 +22,23 @@ type editlinksRequest ={
 
 }
 
-async function updateLinks(body: editlinksRequest) {
-    console.log(body)
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-    });
+// async function updateLinks(body: editlinksRequest) {
+//     console.log(body)
+//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+//         method: 'POST',
+//         headers: {
+//             Accept: 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(body),
+//     });
 
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
-    }
-    return res.json();
-}
+//     if (!res.ok) {
+//         const errorText = await res.text();
+//         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+//     }
+//     return res.json();
+// }
 async function removeLink(body: editlinksRequest) {
 
     console.log(body)
@@ -69,11 +60,11 @@ async function removeLink(body: editlinksRequest) {
 
 export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps) {
 
-    const [sessionToken, setSessionToken] = useState("")
+    // const [sessionToken, setSessionToken] = useState("")
 
-    useEffect(() => {
-        getToken().then(t => setSessionToken(t ?? ""))
-    }, [])
+    // useEffect(() => {
+    //     getToken().then(t => setSessionToken(t ?? ""))
+    // }, [])
 
     const bodyData ={
         action: "delete",

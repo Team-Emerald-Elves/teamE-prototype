@@ -8,24 +8,24 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Delete02Icon} from "@hugeicons/core-free-icons";
-import {getToken, useAuth} from '@clerk/react'
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete02Icon } from "@hugeicons/core-free-icons";
+import { getToken } from '@clerk/react'
 import {useEffect, useState} from "react";
-import getEmployees from '@/components/user-management-table.tsx'
-type Employee = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    uname: string;
-    email?: string;
-    roles?: string[];
-};
+
+// type Employee = {
+//     id: string;
+//     first_name: string;
+//     last_name: string;
+//     uname: string;
+//     email?: string;
+//     roles?: string[];
+// };
 type deleteConfirmationPopupProps = {
     target: string
 }
 
-async function removeEmployee(employeeID: string,token: string) {
+async function removeEmployee(employeeID: string, token: string) {
 
     const data = {
         action: "delete",
@@ -36,6 +36,7 @@ async function removeEmployee(employeeID: string,token: string) {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(data),
     });

@@ -1,11 +1,5 @@
 import {
-    Card,
-    CardAction,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+    Card
 } from "@/components/ui/card"
 import EditLinksForm from "@/components/addlinksform.tsx";
 import { Button } from './ui/button.tsx'
@@ -36,7 +30,7 @@ function LinkCard(props: documentCardProps) {
                         <EditLinksForm
                             type="Edit"
                             name="Document Name"
-                            link="www.something.com"
+                            url="www.something.com"
                             description="Bobby Tanner"
                             size={false}
                             me={props.me}

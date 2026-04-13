@@ -8,10 +8,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Delete02Icon} from "@hugeicons/core-free-icons";
-import {getToken, useAuth} from '@clerk/react'
-import {useEffect, useState} from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete02Icon } from "@hugeicons/core-free-icons";
+import { getToken } from '@clerk/react'
+import { useEffect, useState } from "react";
 
 type deleteConfirmationPopupProps = {
     target: string

@@ -71,11 +71,19 @@ function Home() {
     if (roles.includes("businessanalyst")) {
         return (
             <>
-                <div className="hero-container">
-                    <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
-                    <div className="hero-body">
-                        <h1 className="text-shadow-lg/40">Home</h1>
-                        <SearchBar/>
+                <div className ="hero-container p-40px">
+                    <div className="hero-overlay"></div>
+                    <div className = "hero-image"></div>
+                    <div className="hero-content justify-content-start">
+                        <div className ="hero-content-top flex items-center">
+                            <UserAvatar/>
+                            <div className="hero-text px-5 justify-center text-lg/10">
+                                <h1>Hello,<br/> {user.firstName}</h1>
+                            </div>
+                        </div>
+                        <div className = "hero-content-bottom py-5 pl-2">
+                            <SearchBar/>
+                        </div>
                     </div>
                 </div>
 
@@ -93,10 +101,19 @@ function Home() {
 
         return(
             <>
-                <div className="hero-container">
-                    <div className="hero-body">
-                        <h1 className="text-shadow-lg/40">Home</h1>
-                        <SearchBar/>
+                <div className ="hero-container p-40px">
+                    <div className="hero-overlay"></div>
+                    <div className = "hero-image"></div>
+                    <div className="hero-content justify-content-start">
+                        <div className ="hero-content-top flex items-center">
+                            <UserAvatar/>
+                            <div className="hero-text px-5 justify-center text-lg/10">
+                                <h1>Hello,<br/> {user.firstName}</h1>
+                            </div>
+                        </div>
+                        <div className = "hero-content-bottom py-5 pl-2">
+                            <SearchBar/>
+                        </div>
                     </div>
                 </div>
 

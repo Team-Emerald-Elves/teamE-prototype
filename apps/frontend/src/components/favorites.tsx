@@ -4,7 +4,7 @@ import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { SearchBar } from "@/components/SearchBar";
+import { SearchBar } from "@/components/searchbar";
 import {
     Table,
     TableBody,

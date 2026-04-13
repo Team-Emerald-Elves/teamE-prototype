@@ -6,8 +6,9 @@ import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
-
 import {UserAvatar} from '@clerk/react'
+import {HomepageButtons} from "@/components/homepageButtons.tsx";
+import {ChartArea, TableOfContents} from "lucide-react";
 
 
 const rows = [
@@ -17,6 +18,7 @@ const rows = [
     { docTitle: "Notes.docx", docDate: "2024-01-02", docStatus: "Draft" },
     { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" }
 ];
+
 
 
 function Home() {
@@ -60,6 +62,11 @@ function Home() {
                         <div className="hero-text px-5 justify-center text-lg/10">
                             <h1>Hello,<br/> {user.firstName}</h1>
                         </div>
+
+                        <div className="pl-2 flex flex-row gap-5 mt-auto">
+                            <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                            <HomepageButtons icon={TableOfContents} label="View Content"/>
+                        </div>
                     </div>
                     <div className = "hero-content-bottom py-5 pl-2">
                         <SearchBar/>
@@ -79,6 +86,10 @@ function Home() {
                             <UserAvatar/>
                             <div className="hero-text px-5 justify-center text-lg/10">
                                 <h1>Hello,<br/> {user.firstName}</h1>
+                            </div>
+                            <div className="pl-2 flex flex-row gap-5 mt-auto">
+                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                <HomepageButtons icon={TableOfContents} label="View Content"/>
                             </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
@@ -110,6 +121,10 @@ function Home() {
                             <div className="hero-text px-5 justify-center text-lg/10">
                                 <h1>Hello,<br/> {user.firstName}</h1>
                             </div>
+                            <div className="pl-2 flex flex-row gap-5 mt-auto">
+                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                <HomepageButtons icon={TableOfContents} label="View Content"/>
+                            </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
                             <SearchBar/>
@@ -136,13 +151,25 @@ function Home() {
     else {
         return (
             <>
-            <div className="hero-container">
-                <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
-                <div className="hero-body">
-                    <h1 className="text-shadow-lg/40">Home</h1>
-                    <SearchBar/>
+                <div className ="hero-container p-40px">
+                    <div className="hero-overlay"></div>
+                    <div className = "hero-image"></div>
+                    <div className="hero-content justify-content-start">
+                        <div className ="hero-content-top flex items-center">
+                            <UserAvatar/>
+                            <div className="hero-text px-5 justify-center text-lg/10">
+                                <h1>Hello,<br/> {user.firstName}</h1>
+                            </div>
+                            <div className="pl-2 flex flex-row gap-5 mt-auto">
+                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                <HomepageButtons icon={TableOfContents} label="View Content"/>
+                            </div>
+                        </div>
+                        <div className = "hero-content-bottom py-5 pl-2">
+                            <SearchBar/>
+                        </div>
+                    </div>
                 </div>
-            </div>
             <DisclaimerFooter/>
             </>
         )

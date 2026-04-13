@@ -110,14 +110,14 @@ export default function Favorites() {
                 <Table className="border rounded-lg overflow-hidden">
                     <TableHeader className="bg-[#0b3c5d]">
                         <TableRow>
-                            <TableHead className="text-white">Favorite</TableHead>
-                            <TableHead className="text-white">Title</TableHead>
-                            <TableHead className="text-white">Content Type</TableHead>
-                            <TableHead className="text-white">Expiration Date</TableHead>
-                            <TableHead className="text-white">Status</TableHead>
-                            <TableHead className="text-white">Owner</TableHead>
-                            <TableHead className="text-white">Last Modified</TableHead>
-                            <TableHead className="text-white">Actions</TableHead>
+                            <TableHead className="text-white text-center font-medium text-sm">Favorite</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Title</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Content Type</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Expiration Date</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Status</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Owner</TableHead>
+                            <TableHead className="text-white font-medium text-sm">Last Modified</TableHead>
+                            <TableHead className="text-white text-center font-medium text-sm">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -125,9 +125,9 @@ export default function Favorites() {
                         {Documents.map((d) => (
                             <TableRow
                                 key={d.id}
-                                className="hover:bg-gray-50 transition"
+                                className="hover:bg-gray-50 transition h-12"
                             >
-                                <TableCell>
+                                <TableCell className={"text-center"}>
                                     <FontAwesomeIcon
                                         icon={favorited ? solidStar : regularStar}
                                         onClick={() => setFavorited(!favorited)}
@@ -135,46 +135,52 @@ export default function Favorites() {
                                     />
                                 </TableCell>
 
-                                <TableCell className="py-3 text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.name}
                                 </TableCell>
 
-                                <TableCell className="text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.mime_type}
                                 </TableCell>
 
-                                <TableCell className="text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.expirationDate}
                                 </TableCell>
 
-                                <TableCell className="text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.status}
                                 </TableCell>
 
-                                <TableCell className="text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.contentOwner}
                                 </TableCell>
 
-                                <TableCell className="text-gray-700">
+                                <TableCell className="text-[14px] font-medium text-gray-700">
                                     {d.lastModified}
                                 </TableCell>
 
                                 <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <ContentForm
-                                            type="Edit"
-                                            currentID={d.id}
-                                            currentName={d.name}
-                                            currentURL={d.url}
-                                            currentContentOwner={d.contentOwner}
-                                            currentRole={d.role}
-                                            currentExpirationDate="Tomorrow"
-                                            currentExpirationTime="10:30:00"
-                                            currentStatus={d.status}
-                                            size={false}
-                                        />
+                                    <div className="flex items-center justify-center gap-2">
 
-                                        <DeleteConfirmationPopup target={d.id} />
+                                        <div className="w-16" >
+                                            <ContentForm
+                                                type="Edit"
+                                                currentID={d.id}
+                                                currentName={d.name}
+                                                currentURL={d.url}
+                                                currentContentOwner={d.contentOwner}
+                                                currentRole={d.role}
+                                                currentExpirationDate="Tomorrow"
+                                                currentExpirationTime="10:30:00"
+                                                currentStatus={d.status}
+                                                size={false}
+                                            />
+                                        </div>
+
+                                        <div className="w=16 flex justify-center">
+                                            <DeleteConfirmationPopup target={d.id} />
+                                        </div>
+
                                     </div>
                                 </TableCell>
                             </TableRow>

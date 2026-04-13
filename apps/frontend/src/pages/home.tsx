@@ -1,7 +1,6 @@
 import Card from "../components/card.tsx";
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
-import DocTable from "@/components/docTable.tsx";
 import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";

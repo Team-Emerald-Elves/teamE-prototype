@@ -2,6 +2,7 @@ import Card from "../components/card.tsx";
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
 import DocTable from "@/components/docTable.tsx";
+import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import Favorites from "@/components/favorites.tsx";
@@ -72,6 +73,7 @@ function Home() {
                         <Favorites />
                     {/*</div>*/}
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
@@ -100,19 +102,20 @@ function Home() {
                         <Favorites />
                     {/*</div>*/}
                 </div>
+                <DisclaimerFooter/>
             </>
         )
     }
     else {
         return (
             <>
-                <div className="hero-container">
-                    <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
-                    <div className="hero-body">
-                        <h1 className="text-shadow-lg/40">Home</h1>
-                        <SearchBar/>
-                    </div>
+            <div className="hero-container">
+                <img src = "/hanover-hero.webp" alt = "hanoverPic"/>
+                <div className="hero-body">
+                    <h1 className="text-shadow-lg/40">Home</h1>
+                    <SearchBar/>
                 </div>
+            </div>
                 <div className="home-content-container">
                     {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
                     {/*    <Card title={"Reviews and Testimonies"}*/}
@@ -126,6 +129,7 @@ function Home() {
                     <Favorites />
                     {/*</div>*/}
                 </div>
+            <DisclaimerFooter/>
             </>
         )
     }

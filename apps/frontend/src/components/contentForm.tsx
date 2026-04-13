@@ -125,14 +125,14 @@ function ContentForm(props: contentFormProps) {
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
                             <DialogTitle className="text-2xl text-primary font-sans font-bold">{props.type} Content</DialogTitle>
-                            <Button variant="outline" size="lg" className=" relative right-103 top-121 bg-primary text-primary-foreground">Clear</Button>
+
                         </div>
 
                     </DialogHeader>
                     <FieldGroup>
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
-                                <Label htmlFor="name" className="text-base">Name of Link or Document</Label>
+                                <Label htmlFor="name" className="text-xs font-bold">Name of Link or Document</Label>
                                 <Input
                                     id="name"
                                     name="name"
@@ -142,7 +142,7 @@ function ContentForm(props: contentFormProps) {
                                 />
                             </Field>
                             <Field>
-                                <Label htmlFor="url" className="text-base">URL</Label>
+                                <Label htmlFor="url" className="text-xs font-bold">URL</Label>
                                 <Input
                                     id="url"
                                     name="url"
@@ -155,7 +155,7 @@ function ContentForm(props: contentFormProps) {
                         <div className="grid grid-cols-2 gap-4">
 
                             <Field>
-                                <Label htmlFor="contentOwner" className="text-base">Select Content Owner</Label>
+                                <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
                                     value={formData.contentOwner}
                                     onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value!}))}
@@ -176,7 +176,7 @@ function ContentForm(props: contentFormProps) {
                                 </Select>
                             </Field>
                             <Field>
-                                <Label htmlFor="role" className="text-base">Select Role For Content</Label>
+                                <Label htmlFor="role" className="text-xs font-bold">Select Role For Content</Label>
                                 <Select
                                     value={formData.role}
                                     onValueChange={(value) => setFormData(prev => ({...prev, role: value!}))}
@@ -195,7 +195,7 @@ function ContentForm(props: contentFormProps) {
                             </Field>
                         </div>
                         <Field>
-                            <Label htmlFor="contentType" className="text-base">Select Content Type</Label>
+                            <Label htmlFor="contentType" className="text-xs font-bold">Select Content Type</Label>
                             <RadioGroup
                                 className="w-full max-w-48 flex items-center gap-7"
                                 id="contentType"
@@ -217,7 +217,7 @@ function ContentForm(props: contentFormProps) {
                             </RadioGroup>
                         </Field>
                         <Field>
-                            <Label htmlFor="expiration" className="text-base">Choose Expiration Date</Label>
+                            <Label htmlFor="expiration" className="text-xs font-bold">Choose Expiration Date</Label>
                             <DateAndTime
                                 id="expiration"
                                 date={formData.expirationDate}
@@ -225,7 +225,7 @@ function ContentForm(props: contentFormProps) {
                             />
                         </Field>
                         <Field>
-                            <Label htmlFor="status" className="text-base">Select Current Status</Label>
+                            <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
                                 value={formData.status}
                                 onValueChange={(value) => setFormData(prev => ({...prev, status: value!}))}
@@ -249,6 +249,7 @@ function ContentForm(props: contentFormProps) {
                     <p>Last Modified: {formattedDate}</p>
 
                     <DialogFooter>
+                        <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
                         <SubmitConfirmationPopup formData={formData} type={props.type}/>
                     </DialogFooter>

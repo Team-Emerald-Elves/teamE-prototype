@@ -10,6 +10,7 @@ import NotFound from './pages/not-found.tsx'
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+
 import FavoritesPage from "./pages/favoritespage.tsx";
 
 import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
@@ -63,6 +64,7 @@ function App() {
                         <Navbar >
                             <UserButton />
                         </Navbar>
+
 
                         <main className="main">
                             <Routes>

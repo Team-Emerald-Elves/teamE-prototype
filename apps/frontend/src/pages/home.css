@@ -2,39 +2,31 @@
 :root{
     --dark-blue: #00355f;
     --light-gray: #f1f1f1;
-    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --sans: "Plus Jakarta Sans", sans-serif;
     background: var(--light-gray);
-}
-
-.home-content-container {
-    padding: 40px;
-
 }
 
 .home-cards-container{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 50px;
+
+}
+
+h1, h2, h3, h4, h5, body{
+    font-family: var(--sans);
 
 }
 
 h1{
     font-size: 48px;
     font-weight: bold;
-    font-family: var(--sans), monospace;
     display: flex;
     justify-content: center;
     align-items: center;
-
+    left: 20px;
 }
 
-.search-container{
-    display: flex;
-    width: 100%;
-    position: absolute;
-    top: 25%;
-    left: 40%;
-}
 
 .home-header-container{
     position: absolute;
@@ -44,36 +36,52 @@ h1{
 }
 
 .hero-container{
-    position: relative;
     width: 100%;
-    overflow: hidden;
+    height: 200px;
+    position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 
-.hero-container::after{
-    content: "";
+.hero-overlay{
+    width: 100%;
+    height: 100%;
+    background-color: #F4A258;
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.85) 100%);
-    pointer-events: none;
 }
 
-.hero-container img {
-    width: 100%;
-    display: block;
-}
-
-.hero-body{
+.hero-image{
+    width:100%;
+    height:100%;
+    background-image: url("/hanover-hero.webp");
+    background-position: right top;
+    background-size: auto 150%;
+    background-repeat: no-repeat;
+    -webkit-clip-path: polygon(40% 0, 100% 0, 100% 100%, 65% 100%);
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+
+}
+
+.hero-content{
+    padding-left: 30px;
+    margin-bottom: 30px;
+    position: relative;
     z-index: 1;
-
-}
-
-.hero-body h1{
     color: #f1f1f1;
+    top: 25px;
+    left: 20px;
+    justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
+
+
+.hero-content .cl-avatarBox{
+    width: 100px;
+    height: 100px;
+}
+
+

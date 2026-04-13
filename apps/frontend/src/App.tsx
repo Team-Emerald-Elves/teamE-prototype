@@ -64,20 +64,19 @@ function App() {
                             <UserButton />
                         </Navbar>
 
-
-                        <main className="main">
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/documents" element={<Documents/>} />
-                                <Route path="/employee-management" element={<UserManagementPage />} />
-                                <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
-                                <Route path="/business-dummy" element={<BusinessDummy />} />
-                                <Route path="/links" element={<Links />} />
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="*" element={<NotFound />} />
-                            </Routes>
-                        </main>
-                    </div>
+                    <main className="main">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/documents" element={<Documents/>} />
+                            <Route path="/employee-management" element={<UserManagementPage />} />
+                            <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
+                            <Route path="/business-dummy" element={<BusinessDummy />} />
+                            <Route path="/links" element={<Links />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </main>
+                </div>
             </Show>
         </BrowserRouter>
     );

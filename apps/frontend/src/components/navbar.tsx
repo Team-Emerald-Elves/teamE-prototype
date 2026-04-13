@@ -9,6 +9,8 @@ import {
 import {type ReactNode, useEffect, useState} from "react";
 import CenterDiv from "./center-div.tsx";
 import {useAuth} from "@clerk/react";
+import { Bell } from 'lucide-react';
+
 
 
 interface NavbarProps {
@@ -55,12 +57,12 @@ function Navbar(props: NavbarProps) {
         load();
     }, [isSignedIn, roles]);
     return (
-        <header className="w-full bg-[#00355f] text-white">
-            <div className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-2">
+        <header className="w-full bg-[#013C5A] text-white">
+            <div className="w-full flex items-center justify-between px-6 py-2">
 
                 {/*Left side*/}
                 <NavigationMenu>
-                    <NavigationMenuList className = "flex gap-10">
+                    <NavigationMenuList className = "flex gap-10 justify-items-start pl-5">
                         <NavigationMenuItem >
                             <NavigationMenuLink render={<Link to="/">Home</Link>} className={navigationMenuTriggerStyle()}>
                             </NavigationMenuLink>
@@ -88,7 +90,7 @@ function Navbar(props: NavbarProps) {
                 </NavigationMenu>
 
                 <NavigationMenu>
-                    <NavigationMenuList className = "flex gap-4">
+                    <NavigationMenuList className = "flex gap-10">
 
                         {/*<NavigationMenuItem>*/}
                         {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
@@ -96,10 +98,14 @@ function Navbar(props: NavbarProps) {
                         {/*</NavigationMenuItem>*/}
 
                         <NavigationMenuItem>
+                            <Bell size = {20}/>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
                             <CenterDiv>
                                 {props.children}
                             </CenterDiv>
                         </NavigationMenuItem>
+
                     </NavigationMenuList>
                 </NavigationMenu>
             </div>

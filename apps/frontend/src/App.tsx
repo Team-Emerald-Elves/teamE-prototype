@@ -6,6 +6,7 @@ import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Links from './pages/links.tsx'
+import LoginSignup from './pages/login-signup.tsx'
 import NotFound from './pages/not-found.tsx'
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
@@ -47,7 +48,11 @@ function App() {
     return (
         <BrowserRouter>
             <Show when="signed-out">
-                <Home />
+                <Routes>
+                    <Route path = "/login" element={<LoginSignup/>} />
+                </Routes>
+                <LoginSignup />
+                {/*<Home />
                 <CenterDiv>
                     <SignInButton>
                         <button className="clerk-button">Sign in</button>
@@ -55,7 +60,7 @@ function App() {
                     <SignUpButton>
                         <button className="clerk-button">Sign up</button>
                     </SignUpButton>
-                </CenterDiv>
+                </CenterDiv>*/}
             </Show>
 
             <Show when="signed-in">
@@ -79,6 +84,7 @@ function App() {
                             </Routes>
                         </main>
                     </div>
+
             </Show>
         </BrowserRouter>
     );

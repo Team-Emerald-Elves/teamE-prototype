@@ -25,6 +25,8 @@ import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 import { useAuth } from '@clerk/react'
+import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
+import {HugeiconsIcon} from "@hugeicons/react";
 
 type contentFormProps = {
     type: string,
@@ -111,7 +113,14 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={props.size ? "px-6 py-3.5 text-lg bg-secondary text-secondary-foreground": "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >{props.type}</Button>} />
+
+                {props.size ?
+                    <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
+                    :
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                }
+
+
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
@@ -123,7 +132,7 @@ function ContentForm(props: contentFormProps) {
                     <FieldGroup>
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
-                                <Label htmlFor="name" className="text-xs">Name of Link or Document</Label>
+                                <Label htmlFor="name" className="text-xs font-bold">Name of Link or Document</Label>
                                 <Input
                                     id="name"
                                     name="name"
@@ -133,7 +142,7 @@ function ContentForm(props: contentFormProps) {
                                 />
                             </Field>
                             <Field>
-                                <Label htmlFor="url" className="text-xs">URL</Label>
+                                <Label htmlFor="url" className="text-xs font-bold">URL</Label>
                                 <Input
                                     id="url"
                                     name="url"
@@ -146,7 +155,7 @@ function ContentForm(props: contentFormProps) {
                         <div className="grid grid-cols-2 gap-4">
 
                             <Field>
-                                <Label htmlFor="contentOwner" className="text-xs">Select Content Owner</Label>
+                                <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
                                     value={formData.contentOwner}
                                     onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value!}))}
@@ -167,7 +176,7 @@ function ContentForm(props: contentFormProps) {
                                 </Select>
                             </Field>
                             <Field>
-                                <Label htmlFor="role" className="text-xs">Select Role For Content</Label>
+                                <Label htmlFor="role" className="text-xs font-bold">Select Role For Content</Label>
                                 <Select
                                     value={formData.role}
                                     onValueChange={(value) => setFormData(prev => ({...prev, role: value!}))}
@@ -186,7 +195,7 @@ function ContentForm(props: contentFormProps) {
                             </Field>
                         </div>
                         <Field>
-                            <Label htmlFor="contentType" className="text-xs">Select Content Type</Label>
+                            <Label htmlFor="contentType" className="text-xs font-bold">Select Content Type</Label>
                             <RadioGroup
                                 className="w-full max-w-48 flex items-center gap-7"
                                 id="contentType"
@@ -208,7 +217,7 @@ function ContentForm(props: contentFormProps) {
                             </RadioGroup>
                         </Field>
                         <Field>
-                            <Label htmlFor="expiration" className="text-xs">Choose Expiration Date</Label>
+                            <Label htmlFor="expiration" className="text-xs font-bold">Choose Expiration Date</Label>
                             <DateAndTime
                                 id="expiration"
                                 date={formData.expirationDate}
@@ -216,7 +225,7 @@ function ContentForm(props: contentFormProps) {
                             />
                         </Field>
                         <Field>
-                            <Label htmlFor="status" className="text-xs">Select Current Status</Label>
+                            <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
                                 value={formData.document_status}
                                 onValueChange={(value) => setFormData(prev => ({...prev, documnet_status: value!}))}

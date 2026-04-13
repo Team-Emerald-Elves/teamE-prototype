@@ -16,6 +16,7 @@ import {
 
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
+import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 
 type Document = {
     id: number;
@@ -29,9 +30,9 @@ type Document = {
     status: string;
 };
 
-let Documents: Document[] = [];
+const Documents: Document[] = [];
 
-let Doc1: Document = {
+const Doc1: Document = {
     id: 1,
     url: "www.testurl.com",
     name: "underwritingrole",
@@ -43,7 +44,7 @@ let Doc1: Document = {
     status: "not_started",
 };
 
-let Doc2: Document = {
+const Doc2: Document = {
     id: 2,
     url: "www.testurl2.com",
     name: "businessanalystrole1",
@@ -59,7 +60,7 @@ Documents.push(Doc1);
 Documents.push(Doc2);
 
 export default function Favorites() {
-    const [favorited, setFavorited] = useState(false);
+    // const [favorited, setFavorited] = useState(false);
 
     return (
         <div className="max-w-6xl mx-auto px-6 py-6">
@@ -67,8 +68,7 @@ export default function Favorites() {
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <FontAwesomeIcon
-                        icon={favorited ? solidStar : regularStar}
-                        onClick={() => setFavorited(!favorited)}
+                        icon={solidStar }
                         className="text-yellow-400 cursor-pointer"
                     />
                     <h4 className="text-lg font-semibold text-gray-800">
@@ -87,8 +87,8 @@ export default function Favorites() {
 
             <div className="bg-white rounded-xl shadow-sm border p-4">
 
-                <div className="flex items-center justify-between mb-4">
-                    <div className="w-1/3">
+                <div className="flex items-center mb-4">
+                    <div className="w-1/3 mr-4">
                         <SearchBar />
                     </div>
 
@@ -108,82 +108,26 @@ export default function Favorites() {
 
 
                 <Table className="border rounded-lg overflow-hidden">
-                    <TableHeader className="bg-[#0b3c5d]">
+                    <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                         <TableRow>
-                            <TableHead className="text-white text-center font-medium text-sm">Favorite</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Title</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Content Type</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Expiration Date</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Status</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Owner</TableHead>
-                            <TableHead className="text-white font-medium text-sm">Last Modified</TableHead>
-                            <TableHead className="text-white text-center font-medium text-sm">Actions</TableHead>
+
+                            <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                            <TableHead className="text-[#0b4461] text-center font-medium text-sm">Actions</TableHead>
+
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
                         {Documents.map((d) => (
-                            <TableRow
-                                key={d.id}
-                                className="hover:bg-gray-50 transition h-12"
-                            >
-                                <TableCell className={"text-center"}>
-                                    <FontAwesomeIcon
-                                        icon={favorited ? solidStar : regularStar}
-                                        onClick={() => setFavorited(!favorited)}
-                                        className="text-yellow-400 cursor-pointer"
-                                    />
-                                </TableCell>
 
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.name}
-                                </TableCell>
+                            <FavoritesTableEntry key={d.id} d={d} />
 
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.mime_type}
-                                </TableCell>
-
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.expirationDate}
-                                </TableCell>
-
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.status}
-                                </TableCell>
-
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.contentOwner}
-                                </TableCell>
-
-                                <TableCell className="text-[14px] font-medium text-gray-700">
-                                    {d.lastModified}
-                                </TableCell>
-
-                                <TableCell>
-                                    <div className="flex items-center justify-center gap-2">
-
-                                        <div className="w-16" >
-                                            <ContentForm
-                                                type="Edit"
-                                                currentID={d.id}
-                                                currentName={d.name}
-                                                currentURL={d.url}
-                                                currentContentOwner={d.contentOwner}
-                                                currentRole={d.role}
-                                                currentExpirationDate="Tomorrow"
-                                                currentExpirationTime="10:30:00"
-                                                currentStatus={d.status}
-                                                size={false}
-                                            />
-                                        </div>
-
-                                        <div className="w=16 flex justify-center">
-                                            <DeleteConfirmationPopup target={d.id} />
-                                        </div>
-
-                                    </div>
-                                </TableCell>
-                            </TableRow>
                         ))}
                     </TableBody>
                 </Table>

@@ -82,6 +82,23 @@ async function getDocuments(token: string) {
     return await res.json()
 }
 
+async function downloadDocument(token: string) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/download-document`,
+        {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
+    )
+
+    if (!res.ok) {
+        throw new Error("Failed to download doc")
+    }
+
+    return await res.json()
+}
+
 async function getDocumentsAdmin(token: string) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/content`,
         {

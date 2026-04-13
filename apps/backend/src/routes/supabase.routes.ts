@@ -189,7 +189,7 @@ supaBaseRouter.get(
     '/list-documents',
     //requireAuth(),
     async (req: Request, res: Response) => {
-        const { userId, isAuthenticated } = getAuth(req)
+        const {userId, isAuthenticated} = getAuth(req)
         console.log(userId)
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
@@ -217,6 +217,46 @@ supaBaseRouter.get(
             res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)
         }
     }
+)
+
+supaBaseRouter.get(
+    '/download-document',
+    //requireAuth(),
+    async (req: Request, res: Response) => {
+        const {userId, isAuthenticated} = getAuth(req)
+        const document: documentContent = req.body
+        const supabaseClient = await createSupabaseForRequest()
+        console.log(userId)
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
+
+        try {
+            const employee = await prisma.employee.findFirstOrThrow({
+                where: {
+                    clerkUserId: userId
+                },
+                include: {
+                    bucket: true
+                }
+            })
+
+            const { data, error } = await supabaseClient.storage
+                .from(employee.bucket!.id).download((document.documentContent.name as string).trim())
+
+            if (!data || error) {
+                throw new Error(`Failed to download document '${document.documentContent.name}' for user '${employee.uname}'.`)
+            }
+        } catch (error) {
+            console.error("Download document error:", error);
+
+            res.status(500).json({
+                message: "Error downloading document",
+                error: String(error),
+            });
+        }
+    }
+
 )
 
 export default supaBaseRouter

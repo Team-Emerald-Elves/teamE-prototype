@@ -5,6 +5,7 @@ import DocTable from "@/components/docTable.tsx";
 import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
+import Favorites from "@/components/favorites.tsx";
 
 const rows = [
     { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
@@ -66,10 +67,11 @@ function Home() {
                 </div>
 
                 <div className="home-content-container">
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">
-                        <Card title={"Reviews and Testimonies"} content={<DocTable rows={rows} />} />
-                        <Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
-                    </div>
+                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
+                        {/*<Card title={"Reviews and Testimonies"} content={<DocTable rows={rows} />} />*/}
+                        {/*<Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
+                        <Favorites />
+                    {/*</div>*/}
                 </div>
                 <DisclaimerFooter/>
             </>
@@ -88,16 +90,17 @@ function Home() {
                 </div>
 
                 <div className="home-content-container">
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">
-                        <Card title={"Reviews and Testimonies"}
-                              content={
-                            <p>
-                                I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker
-                            </p>
-                            }
-                            />
-                        <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>
-                    </div>
+                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
+                    {/*    <Card title={"Reviews and Testimonies"}*/}
+                    {/*          content={*/}
+                    {/*        <p>*/}
+                    {/*            I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker*/}
+                    {/*        </p>*/}
+                    {/*        }*/}
+                    {/*        />*/}
+                    {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
+                        <Favorites />
+                    {/*</div>*/}
                 </div>
                 <DisclaimerFooter/>
             </>
@@ -113,6 +116,19 @@ function Home() {
                     <SearchBar/>
                 </div>
             </div>
+                <div className="home-content-container">
+                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
+                    {/*    <Card title={"Reviews and Testimonies"}*/}
+                    {/*          content={*/}
+                    {/*        <p>*/}
+                    {/*            I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker*/}
+                    {/*        </p>*/}
+                    {/*        }*/}
+                    {/*        />*/}
+                    {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
+                    <Favorites />
+                    {/*</div>*/}
+                </div>
             <DisclaimerFooter/>
             </>
         )

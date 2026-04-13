@@ -10,7 +10,8 @@ import NotFound from './pages/not-found.tsx'
 import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
-import OutagePage from "@/pages/outage.tsx"
+
+import FavoritesPage from "./pages/favoritespage.tsx";
 
 import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
@@ -75,6 +76,7 @@ function App() {
                                 <Route path="/links" element={<Links />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="*" element={<NotFound />} />
+                                <Route path="/favorites" element={<FavoritesPage />} />
                             </Routes>
                         </main>
                     </div>

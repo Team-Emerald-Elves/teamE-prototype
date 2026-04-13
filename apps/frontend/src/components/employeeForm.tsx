@@ -21,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {FieldGroup} from "@/components/ui/field"
+import {FieldGroup, Field} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { type JSX, useState} from "react";
@@ -88,13 +88,14 @@ function EmployeeForm(props: empProps): JSX.Element {
                 <div className="flex justify-end">
                     <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 </div>
-                <DialogContent className="lg:max-w-3xl">
+                <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <DialogTitle className="text-2xl text-primary font-sans font-bold">Edit Employee</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
-                        <div className="flex items-center gap-4">
-                            <label className="w-24 text-right font-bold">First Name: </label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                            <label className="w-24 text-xs font-bold">First Name: </label>
                             <Input
                                 name="firstname"
                                 value={user.firstname}
@@ -102,9 +103,9 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 disabled={false}
                                 className="mt-1"
                             />
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <label className="w-24 text-right font-bold">Last Name: </label>
+                            </Field>
+                            <Field>
+                            <label className="w-24 text-xs font-bold">Last Name: </label>
                             <Input
                                 name="lastname"
                                 value={user.lastname}
@@ -112,9 +113,11 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 disabled={false}
                                 className="mt-1"
                             />
+                            </Field>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <label className="w-24 text-right font-bold">Username: </label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                            <label className="w-24 text-xs font-bold">Username: </label>
                             <Input
                                 name="username"
                                 value={user.username}
@@ -122,9 +125,10 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 disabled={false}
                                 className="mt-1"
                             />
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <label className="w-24 text-right font-bold">Email: </label>
+                            </Field>
+                            <Field>
+
+                            <label className="w-24 text-xs font-bold">Email: </label>
                             <Input
                                 name="email"
                                 value={user.email}
@@ -132,9 +136,10 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 disabled={false}
                                 className="mt-1"
                             />
+                            </Field>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <Label htmlFor="role" className="w-22 text-right font-bold">Select Roles:</Label>
+                       <Field>
+                            <Label htmlFor="role" className="w-22 text-right text-xs font-bold">Select Roles:</Label>
                             <Select id="role" onValueChange={(value: string | null) =>
                                 setUser({ ...user, role: value ?? "" })
                             }>
@@ -150,7 +155,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </Field>
                     </FieldGroup>
                     <DialogFooter className="mt-4 justify-end gap-2">
                         <DialogClose render={<Button variant="secondary">Cancel</Button>} />

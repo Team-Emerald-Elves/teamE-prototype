@@ -84,7 +84,7 @@ function AddLinksForm(props: linkProp){
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,

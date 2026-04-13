@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/input-group"
 export function SearchBar() {
     return (
-        <InputGroup className="max-w-md py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-            <InputGroupInput placeholder="Search                                       " />
+        <InputGroup className="w-full max-w-3xl py-0.75 border-0 shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer bg-white">
+            <InputGroupInput placeholder="Search for content..." />
             <InputGroupAddon>
                 <Search />
             </InputGroupAddon>

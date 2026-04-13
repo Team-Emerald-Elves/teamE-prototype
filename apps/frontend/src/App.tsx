@@ -6,13 +6,15 @@ import UnderwriterDummy from './pages/underwriterdummypage.tsx'
 import BusinessDummy from './pages/buisnessanalystdummy.tsx'
 import Navbar from './components/navbar.tsx'
 import Links from './pages/links.tsx'
+import LoginSignup from './pages/login-signup.tsx'
 import NotFound from './pages/not-found.tsx'
-import {useEffect, useState} from "react";
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
-import OutagePage from "@/pages/outage.tsx"
 
-import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
+import FavoritesPage from "./pages/favoritespage.tsx";
+
+
+import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
@@ -46,7 +48,11 @@ function App() {
     return (
         <BrowserRouter>
             <Show when="signed-out">
-                <Home />
+                <Routes>
+                    <Route path = "/login" element={<LoginSignup/>} />
+                </Routes>
+                <LoginSignup />
+                {/*<Home />
                 <CenterDiv>
                     <SignInButton>
                         <button className="clerk-button">Sign in</button>
@@ -54,7 +60,7 @@ function App() {
                     <SignUpButton>
                         <button className="clerk-button">Sign up</button>
                     </SignUpButton>
-                </CenterDiv>
+                </CenterDiv>*/}
             </Show>
 
             <Show when="signed-in">
@@ -63,7 +69,6 @@ function App() {
                         <Navbar >
                             <UserButton />
                         </Navbar>
-
 
                         <main className="main">
                             <Routes>
@@ -75,9 +80,11 @@ function App() {
                                 <Route path="/links" element={<Links />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="*" element={<NotFound />} />
+                                <Route path="/favorites" element={<FavoritesPage />} />
                             </Routes>
                         </main>
                     </div>
+
             </Show>
         </BrowserRouter>
     );

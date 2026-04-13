@@ -67,7 +67,7 @@ async function getData(): Promise<UserDocuments[]> {
 
 async function getDocuments(token: string) {
     const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-files`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -126,7 +126,7 @@ export default function Documents() {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
 
     const [sessionToken, setSessionToken] = useState("")
 

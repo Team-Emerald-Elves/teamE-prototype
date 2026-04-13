@@ -75,7 +75,7 @@ function LinksTable(){
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, [isSignedIn]);
 
     useEffect(() => {
         if (roles.length === 0) return; // wait until roles are loaded

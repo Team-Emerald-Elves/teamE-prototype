@@ -14,6 +14,9 @@ import { UserCircleIcon } from '@hugeicons/core-free-icons';
 import {useEffect, useState} from "react";
 import EmployeeForm from "@/components/employeeForm.tsx";
 import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
+import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
+import * as React from "react";
+
 
 type Employee = {
     id: string;
@@ -50,17 +53,23 @@ function UserManagementTable(){
             .then(setEmployees)
             .catch(console.error);
     }, []);
+
+
     return (
         <>
-            <div className="shadow-md">
-            <Table>
-                <TableHeader>
+            <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="flex items-center mb-4 justify-end ml-auto">
+                        <CreateEmployeeForm />
+                    </div>
+            <Table className="border rounded-lg overflow-hidden">
+                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                     <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Name</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Username</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Email</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Role</TableHead>
+                        <TableHead className="text-[#0b4461]  flex text-center items-center pl-[35px]">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -89,6 +98,7 @@ function UserManagementTable(){
                     ))}
                 </TableBody>
             </Table>
+            </div>
             </div>
         </>
     )

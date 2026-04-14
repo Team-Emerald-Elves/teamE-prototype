@@ -80,21 +80,37 @@ async function getEmployees(sessionToken: string) {
 
 async function getDocumentLock(sessionToken: string, documentID: number) {
 
-    const metaData = {
-        id: documentID
-    }
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-lock?id=${documentID}`, {
         headers: {
             Authorization: `Bearer ${sessionToken}`,
+            method: "GET",
         },
-        body: JSON.stringify(metaData)
     });
 
     if (!res.ok) {
         throw new Error("Failed to fetch document.");
     }
 
+    const data = await res.json();
+
+    return data;
+}
+
+async function setDocumentLock(sessionToken: string, documentID: number, status: boolean) {
+    const metaData = {
+        id: documentID,
+        status: status
+    }
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-lock`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+            method: "PUT",
+        },
+        body: JSON.stringify(metaData)
+    })
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
     const data = await res.json();
 
     return data;

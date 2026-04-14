@@ -3,7 +3,7 @@ import type {LucideIcon} from "lucide-react";
 interface homepageButtonProps{
     icon: LucideIcon;
     label: string;
-    onClick?: () => void;
+    onClick?: string;
 }
 
 export function HomepageButtons({icon: Icon, label}: homepageButtonProps){

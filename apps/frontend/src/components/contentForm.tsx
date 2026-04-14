@@ -231,7 +231,7 @@ function ContentForm(props: contentFormProps) {
                                 onValueChange={(value) => setFormData(prev => ({...prev, documnet_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">
-                                    <SelectValue placeholder={props.currentStatus}/>
+                                    <SelectValue placeholder={props.currentStatus} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>

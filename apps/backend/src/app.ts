@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
 import linkRoute from "./routes/links.ts";
-import contentRoute from "./routes/content.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createOldEmployeeRoute from "./routes/create-employee.ts";
@@ -57,7 +56,6 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/content', contentRoute)
 app.get('/get-favorited', favoriteRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 

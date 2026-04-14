@@ -17,13 +17,13 @@ type deleteConfirmationPopupProps = {
     target: number
 }
 
-async function removeDocument(fileID: number, token: string) {
+async function removeDocument(documentID: number, token: string) {
 
     const data = {
-        fileName: fileID
+        id: documentID
     }
 
-    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/delete-file`, {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/delete-document`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

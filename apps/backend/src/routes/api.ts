@@ -43,6 +43,9 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
                 first_name: "admin",
                 last_name: "1",
                 roles: ["UnderWriter"],
+                bucket: {
+                    create: {}
+                },
                 email: clerkUser.emailAddresses[0]?.emailAddress
             }
         })

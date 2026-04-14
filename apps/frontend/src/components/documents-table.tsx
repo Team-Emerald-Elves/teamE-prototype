@@ -32,6 +32,10 @@ import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
 import {useAuth, useUser} from "@clerk/react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
+import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
+import FavoriteStar from "@/components/favoriteStar.tsx";
 
 type Document = {
     id: number;
@@ -52,6 +56,7 @@ interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
+
 
 export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
@@ -152,6 +157,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
+                                        <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
                                                 <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -169,32 +175,39 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 ))}
                             </TableHeader>
                             <TableBody>
-                                {table.getRowModel().rows.map((row) => (
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {table.getRowModel().rows.map((row) => {
+                                    const doc = row.original;
+
+                                    return (
+                                        <TableRow key={row.id}>
+                                            <FavoriteStar doc={doc} />
+
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+
+                                            <TableCell>
+                                                <div className="flex gap-2 justify-end">
+                                                    <ContentForm
+                                                        type="Edit"
+                                                        currentID={doc.id}
+                                                        currentName={doc.name}
+                                                        currentURL={doc.url}
+                                                        currentContentOwner={doc.content_owner}
+                                                        currentRole={doc.assigned_role}
+                                                        currentExpirationDate={doc.expiration_date}
+                                                        currentExpirationTime={doc.expiration_date}
+                                                        currentStatus={doc.document_status}
+                                                        size={false}
+                                                    />
+                                                    <DeleteConfirmationPopup target={doc.id}/>
+                                                </div>
                                             </TableCell>
-                                        ))}
-                                        <div className="flex justify-end">
-                                            <ContentForm
-                                                type="Edit"
-                                                currentID={row.original.id}
-                                                currentName={row.original.name}
-                                                currentURL={row.original.url}
-                                                currentContentOwner={row.original.content_owner}
-                                                currentRole={row.original.assigned_role}
-                                                currentExpirationDate={row.original.expiration_date}
-                                                currentExpirationTime={row.original.expiration_date}
-                                                currentStatus={row.original.document_status}
-                                                size={false}
-                                            />
-                                        </div>
-                                        <DeleteConfirmationPopup target={row.original.id}/>
-                                    </TableRow> ))}
+                                        </TableRow>
+                                    );
+                                })}
                             </TableBody>
                         </Table>
                         <div className="flex items-center justify-end space-x-2 py-4">
@@ -259,6 +272,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                         {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
+                                    <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -286,6 +300,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 console.log(roles.includes("businessanalyst"))
                                 return (
                                     <TableRow key={row.id}>
+                                        <FavoriteStar doc={doc} />
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

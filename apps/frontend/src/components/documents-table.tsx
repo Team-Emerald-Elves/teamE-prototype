@@ -100,7 +100,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         []
     )
     const table = useReactTable({
-        data,
+        data: docs,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -180,7 +180,40 @@ export function DocumentsTable<TData extends Document, TValue>({
 
                                     return (
                                         <TableRow key={row.id}>
-                                            <FavoriteStar doc={doc} />
+                                            <FavoriteStar
+                                                doc={doc}
+                                                onToggle={async (doc) => {
+                                                    const newValue = !doc.favorite;
+                                                    try {
+                                                        const res = await fetch(
+                                                            `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
+                                                            {
+                                                                method: "POST",
+                                                                headers: {
+                                                                    Accept: "application/json",
+                                                                    "Content-Type": "application/json",
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    id: doc.id,
+                                                                    favorite: doc.favorite,
+                                                                }),
+                                                            }
+                                                        );
+
+                                                        if (!res.ok) {
+                                                            throw new Error("Failed to update favorite");
+                                                        }
+                                                        setDocs((prev) =>
+                                                            prev.map((d) =>
+                                                                d.id === doc.id ? { ...d, favorite: newValue } : d
+                                                            )
+                                                        );
+
+                                                    } catch (err) {
+                                                        console.error(err);
+                                                    }
+                                                }}
+                                            />
 
                                             {row.getVisibleCells().map((cell) => (
                                                 <TableCell key={cell.id}>
@@ -300,7 +333,41 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 console.log(roles.includes("businessanalyst"))
                                 return (
                                     <TableRow key={row.id}>
-                                        <FavoriteStar doc={doc} />
+                                        <FavoriteStar
+                                            doc={doc}
+                                            onToggle={async (doc) => {
+                                                const newValue = !doc.favorite;
+
+                                                try {
+                                                    const res = await fetch(
+                                                        `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
+                                                        {
+                                                            method: "POST",
+                                                            headers: {
+                                                                Accept: "application/json",
+                                                                "Content-Type": "application/json",
+                                                            },
+                                                            body: JSON.stringify({
+                                                                id: doc.id,
+                                                                favorite: doc.favorite,
+                                                            }),
+                                                        }
+                                                    );
+
+                                                    if (!res.ok) {
+                                                        throw new Error("Failed to update favorite");
+                                                    }
+                                                    setDocs((prev) =>
+                                                        prev.map((d) =>
+                                                            d.id === doc.id ? { ...d, favorite: newValue } : d
+                                                        )
+                                                    );
+
+                                                } catch (err) {
+                                                    console.error(err);
+                                                }
+                                            }}
+                                        />
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

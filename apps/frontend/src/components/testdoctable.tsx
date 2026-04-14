@@ -35,8 +35,8 @@ type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
     role: string;
     contentOwner: string;
@@ -167,13 +167,13 @@ export function TestDoc<TData, TValue>({
                                         <ContentForm
                                             type="Edit"
                                             currentID= {1}
-                                            currentName="Name"
-                                            currentURL="www.example.com"
-                                            currentContentOwner="alex"
-                                            currentRole="underwriter"
-                                            currentExpirationDate="Tomorrow"
-                                            currentExpirationTime="10:30:00"
-                                            currentStatus="none"
+                                            currentName={"example"}
+                                            currentURL={"www.example.com"}
+                                            currentContentOwner={"alex"}
+                                            currentRole={"underwriter"}
+                                            currentExpirationDate={"1/2/3"}
+                                            currentExpirationTime={"2:30"}
+                                            currentStatus={"done"}
                                             size={false}
                                         />
 

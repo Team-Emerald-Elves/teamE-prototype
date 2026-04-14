@@ -1,90 +1,72 @@
 import {TableCell, TableRow} from "@/components/ui/table.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
-import ContentForm from "@/components/contentForm.tsx";
-import DeleteConfirmationPopup from "./deletePopupConfirmation";
+import FavoriteStar from "@/components/favoriteStar.tsx";
 
 type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
-type favoriteProps = {
+type FavoriteProps = {
     d: Document;
-}
+    onToggle: (doc: Document) => void;
+};
 
-export default function FavoritesTableEntry(props: favoriteProps) {
-    const [favorited, setFavorited] = useState(false);
+export default function FavoritesTableEntry(props: FavoriteProps)  {
     return (
         <TableRow
             key={props.d.id}
             className="hover:bg-gray-50 transition h-12"
         >
-            <TableCell className="text-center">
-                <FontAwesomeIcon
-                    icon={favorited ? solidStar : regularStar}
-                    onClick={() => setFavorited(!favorited)}
-                    className="text-yellow-400 cursor-pointer"
-                />
+            <FavoriteStar
+                doc={props.d}
+                onToggle={props.onToggle}
+            />
+
+            <TableCell className="text-[14px] font-medium text-gray-700">
+                <a
+                    href={props.d.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                >
+                    {props.d.name}
+                </a>
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.name}
+                {props.d.document_type}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.mime_type}
+                {props.d.expiration_date}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.expirationDate}
+                {props.d.document_status}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.status}
+                {props.d.content_owner}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.contentOwner}
+                {props.d.assigned_role}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.lastModified}
+                {props.d.last_modified}
             </TableCell>
 
-            <TableCell className="text-center">
-                <div className="flex items-center justify-center">
 
-                    <div className="w-16" >
-                        <ContentForm
-                            type="Edit"
-                            currentID={props.d.id}
-                            currentName={props.d.name}
-                            currentURL={props.d.url}
-                            currentContentOwner={props.d.contentOwner}
-                            currentRole={props.d.role}
-                            currentExpirationDate="Tomorrow"
-                            currentExpirationTime="10:30:00"
-                            currentStatus={props.d.status}
-                            size={false}
-                        />
-                    </div>
-
-                    <div className="w-16 flex justify-center">
-                        <DeleteConfirmationPopup target={props.d.id.toString()} />
-                    </div>
-
-                </div>
-            </TableCell>
         </TableRow>
     )
 }

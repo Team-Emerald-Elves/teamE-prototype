@@ -1,6 +1,6 @@
 import express, {type Express} from "express";
 import {prisma} from "../lib/prisma.ts";
-import contentRoute from "./content.ts";
+
 interface IEmployeeID {
     id: string;
     first_name?: string;
@@ -12,7 +12,7 @@ interface IEmployeeID {
 
 function contentEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: IEmployeeID = req.body as IEmployeeID;
-    prisma.fileContent.findMany({
+    prisma.documentContent.findMany({
         where: {
             bucket: {
                 employeeId: employee.id

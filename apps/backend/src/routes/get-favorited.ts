@@ -1,9 +1,12 @@
 import express from "express";
 import { prisma } from "../lib/prisma.ts";
 
-function contentRoute(req: express.Request, res: express.Response) {
+function favoriteRoute(req: express.Request, res: express.Response) {
     prisma.documentContent
         .findMany({
+            where : {
+                favorite: true,
+            },
             orderBy: {
                 name: "asc",
             },
@@ -18,4 +21,4 @@ function contentRoute(req: express.Request, res: express.Response) {
             }
         );
 }
-export default contentRoute;
+export default favoriteRoute;

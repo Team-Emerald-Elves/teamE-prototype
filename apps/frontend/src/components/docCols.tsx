@@ -3,23 +3,25 @@ import type {ColumnDef} from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react"
 import { Button } from './ui/button.tsx'
 
-export type UserDocuments = {
+export type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
-export const columns: ColumnDef<UserDocuments>[] = [
-    {
-        accessorKey: "favorite",
-        header: "Favorite",
-    },
+export const columns: ColumnDef<Document>[] = [
+    // {
+    //     accessorKey: "favorite",
+    //     header: "Favorite",
+    // },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -33,9 +35,23 @@ export const columns: ColumnDef<UserDocuments>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const doc = row.original;
+
+            return (
+                <a
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                >
+                    {doc.name}
+                </a>
+            );
+        },
     },
     {
-        accessorKey: "mime_type",
+        accessorKey: "document_type",
         header: ({ column }) => {
             return (
                 <Button
@@ -50,7 +66,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
 
     },
     {
-        accessorKey: "expirationDate",
+        accessorKey: "expiration_date",
         header: ({ column }) => {
             return (
                 <Button
@@ -64,7 +80,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "status",
+        accessorKey: "document_status",
         header: ({ column }) => {
             return (
                 <Button
@@ -78,7 +94,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "contentOwner",
+        accessorKey: "content_owner",
         header: ({ column }) => {
             return (
                 <Button
@@ -92,7 +108,21 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "lastModified",
+        accessorKey: "assigned_role",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Role
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "last_modified",
         header: ({ column }) => {
             return (
                 <Button

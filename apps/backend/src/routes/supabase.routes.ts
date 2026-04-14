@@ -219,4 +219,5 @@ supaBaseRouter.get(
     }
 )
 
+
 export default supaBaseRouter

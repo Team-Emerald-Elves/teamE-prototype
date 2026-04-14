@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 
+
+
 type EmployeeStats = {
     employee: string;
     role: string;
     loginAttempts: number;
 };
+
+type SimpleStats = {
+    docTotal: number;
+    empTotal: number;
+}
 
 const MOCK_STATS: EmployeeStats[] = [
     { employee: "Alice Chen", role: "Admin", loginAttempts: 42 },
@@ -13,38 +20,33 @@ const MOCK_STATS: EmployeeStats[] = [
     { employee: "David Park", role: "Manager", loginAttempts: 27 },
 ];
 
+
+
+
 export default function StatisticsPage() {
-    const [stats, setStats] = useState<EmployeeStats[]>([]);
-
+    const [docTotal, setDocTotal] = useState(0);
+    const [empTotal, setEmpTotal] = useState(0);
     useEffect(() => {
-        setStats(MOCK_STATS);
+        async function getStats() {
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/statistics`,
 
-        //fetch("http://localhost:3000/statistics")
-            //.then((res) => res.json())
-            //.then((data) => setStats(data));
+            )
+            const data = await res.json();
+            setDocTotal(data.docCount);
+            setEmpTotal(data.empCount);
+
+        }
+        getStats()
     }, []);
 
-    return (
-        <div>
-            <h1>Employee Statistics</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>Employee</th>
-                    <th>Role</th>
-                    <th>Login Attempts</th>
-                </tr>
-                </thead>
-                <tbody>
-                {stats.map((row) => (
-                    <tr key={row.employee}>
-                        <td>{row.employee}</td>
-                        <td>{row.role}</td>
-                        <td>{row.loginAttempts}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
-    );
+    return(
+        <>
+            <h1> {docTotal}</h1>
+            <h1> {empTotal}</h1>
+
+        </>
+    )
 }
+
+

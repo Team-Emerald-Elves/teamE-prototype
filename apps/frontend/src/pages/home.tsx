@@ -164,7 +164,9 @@ function Home() {
                                 <h1>Hello,<br/> {user.firstName}</h1>
                             </div>
                             <div className="pl-2 flex flex-row gap-5 mt-auto">
-                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                <a href="/statistics">
+                                    <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                </a>
                                 <HomepageButtons icon={TableOfContents} label="View Content"/>
                             </div>
                         </div>

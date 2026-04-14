@@ -17,6 +17,7 @@ import cors from 'cors';
 import APIRouter from './routes/api.ts';
 
 import linkRoleRoute from "./routes/get-link-role.ts";
+import statsRoutes from "./routes/statistics.ts";
 
 
 const app = express();
@@ -55,6 +56,7 @@ app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
 app.get('/content', contentRoute)
+app.get('/statistics', statsRoutes)
 //app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);

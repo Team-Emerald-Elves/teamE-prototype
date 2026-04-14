@@ -112,264 +112,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     console.log(docs)
     console.log(typeof docs)
     console.log(Array.isArray(docs))
-    if (roles.includes("underwriter")) {
-        return (
-            <>
-            <div className="max-w-10xl mx-auto px-6 py-6">
-                <div className="bg-white rounded-xl shadow-sm border p-4">
-                    <div className="flex items-center mb-4">
-                        <InputGroup
-                            className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-                            <InputGroupInput
-                                placeholder="Search"
-                                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                                onChange={(event) =>
-                                    table.getColumn("name")?.setFilterValue(event.target.value)
-                                }
-                                className="max-w-sm"
-                            />
-                            <InputGroupAddon>
-                                <Search/>
-                            </InputGroupAddon>
-                        </InputGroup>
-                        <div className="flex justify-end ml-auto">
-                            <ContentForm
-                                type="Create"
-                                currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                currentName="Name..."
-                                currentURL="www.example.com"
-                                currentContentOwner="Select Content Owner"
-                                currentRole="Select Role"
-                                currentExpirationDate="Tomorrow"
-                                currentExpirationTime="10:30:00"
-                                currentStatus="Select Status"
-                                size={true}
-                            />
-                        </div>
-                    </div>
-
-                    <Table className="border rounded-lg overflow-hidden">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead className=" text-[#0b4461] text-center" key={header.id}>
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext()
-                                                    )}
-                                            </TableHead>
-                                        )
-                                    })}
-                                    <TableHead className="text-[#0b4461]">Actions</TableHead>
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
-                                <TableRow
-                                    key={doc.id}>
-                                    <TableCell className="text-[#0b4461] font-medium">
-                                        <div className="flex gap-3 items-center">
-                                            {doc.favorite}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-center">{doc.name}</TableCell>
-                                    <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                    <TableCell className="text-center">{doc.expiration_date}</TableCell>
-                                    <TableCell className="text-center">{doc.document_status}</TableCell>
-                                    <TableCell className="text-center">{doc.content_owner}</TableCell>
-                                    <TableCell className="text-center">{doc.last_modified}</TableCell>
-                                    <TableCell className="flex items-center gap-3">
-                                        <div className="flex justify-end">
-                                            <ContentForm
-                                                type="Edit"
-                                                currentID={doc.id}
-                                                currentName={doc.name}
-                                                currentURL={doc.url}
-                                                currentContentOwner={doc.content_owner}
-                                                currentRole={doc.assigned_role}
-                                                currentExpirationDate={doc.expiration_date}
-                                                currentExpirationTime={doc.expiration_date}
-                                                currentStatus={doc.document_status}
-                                                size={true}
-                                            />
-                                        </div>
-                                        <DeleteConfirmationPopup target={"null"}/>
-                                    </TableCell>
-                                </TableRow>))}
-                            {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
-                                <TableRow key={doc.id}>
-                                    <TableCell className="text-[#0b4461] font-medium">
-                                        <div className="flex gap-3 items-center">
-                                            {doc.favorite}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-center">{doc.name}</TableCell>
-                                    <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                    <TableCell className="text-center">{doc.expiration_date}</TableCell>
-                                    <TableCell className="text-center">{doc.document_status}</TableCell>
-                                    <TableCell className="text-center">{doc.content_owner}</TableCell>
-                                    <TableCell className="text-center">{doc.last_modified}</TableCell>
-
-                                </TableRow>))}
-                    </TableBody>
-                </Table>
-                <div className="flex items-center justify-end space-x-2 py-4">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
-                </div>
-            </div>
-            </div>
-            </>
-        )
-    }
-    if (roles.includes("businessanalyst")) {
-        return (
-            <>
-                <div className="max-w-10xl mx-auto px-6 py-6">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
-                        <div className="flex items-center mb-4">
-                            <InputGroup
-                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-                                <InputGroupInput
-                                    placeholder="Search"
-                                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                                    onChange={(event) =>
-                                        table.getColumn("name")?.setFilterValue(event.target.value)
-                                    }
-                                    className="max-w-sm"
-                                />
-                                <InputGroupAddon>
-                                    <Search/>
-                                </InputGroupAddon>
-                            </InputGroup>
-                            <div className="flex justify-end ml-auto">
-                                <ContentForm
-                                    type="Create"
-                                    currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                    currentName="Name..."
-                                    currentURL="www.example.com"
-                                    currentContentOwner="Select Content Owner"
-                                    currentRole="Select Role"
-                                    currentExpirationDate="Tomorrow"
-                                    currentExpirationTime="10:30:00"
-                                    currentStatus="Select Status"
-                                    size={true}
-                                />
-                            </div>
-                        </div>
-
-                        <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => {
-                                            return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
-                                                    {header.isPlaceholder
-                                                        ? null
-                                                        : flexRender(
-                                                            header.column.columnDef.header,
-                                                            header.getContext()
-                                                        )}
-                                                </TableHead>
-                                            )
-                                        })}
-                                        <TableHead className="text-[#0b4461]">Actions</TableHead>
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
-                            <TableBody>
-                                {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
-                                    <TableRow key={doc.id}>
-                                        <TableCell className="text-[#0b4461] font-medium">
-                                            <div className="flex gap-3 items-center">
-                                                {doc.favorite}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-center">{doc.name}</TableCell>
-                                        <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
-                                        <TableCell className="text-center">{doc.document_status}</TableCell>
-                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
-                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
-                                        <TableCell className="flex items-center gap-3">
-                                            <div className="flex justify-end">
-                                                <ContentForm
-                                                    type="Edit"
-                                                    currentID={doc.id}
-                                                    currentName={doc.name}
-                                                    currentURL={doc.url}
-                                                    currentContentOwner={doc.content_owner}
-                                                    currentRole={doc.assigned_role}
-                                                    currentExpirationDate={doc.expiration_date}
-                                                    currentExpirationTime={doc.expiration_date}
-                                                    currentStatus={doc.document_status}
-                                                    size={true}
-                                                />
-                                            </div>
-                                            <DeleteConfirmationPopup target={"null"}/>
-                                        </TableCell>
-                                    </TableRow>))}
-                                {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
-                                    <TableRow key={doc.id}>
-                                        <TableCell className="text-[#0b4461] font-medium">
-                                            <div className="flex gap-3 items-center">
-                                                {doc.favorite}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-center">{doc.name}</TableCell>
-                                        <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
-                                        <TableCell className="text-center">{doc.document_status}</TableCell>
-                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
-                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
-
-                                    </TableRow>))}
-                            </TableBody>
-                        </Table>
-                        <div className="flex items-center justify-end space-x-2 py-4">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.previousPage()}
-                                disabled={!table.getCanPreviousPage()}
-                            >
-                                Previous
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.nextPage()}
-                                disabled={!table.getCanNextPage()}
-                            >
-                                Next
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
-    else {
+    if(roles.includes("administrator")) {
         return (
             <>
                 <div className="max-w-10xl mx-auto px-6 py-6">
@@ -427,30 +170,30 @@ export function DocumentsTable<TData extends Document, TValue>({
                             </TableHeader>
                             <TableBody>
                                 {table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                            <div className="flex justify-end">
-                                                <ContentForm
-                                                    type="Edit"
-                                                    currentID={row.original.id}
-                                                    currentName={row.original.name}
-                                                    currentURL={row.original.url}
-                                                    currentContentOwner={row.original.content_owner}
-                                                    currentRole={row.original.assigned_role}
-                                                    currentExpirationDate={row.original.expiration_date}
-                                                    currentExpirationTime={row.original.expiration_date}
-                                                    currentStatus={row.original.document_status}
-                                                    size={true}
-                                                />
-                                            </div>
-                                            <DeleteConfirmationPopup target={"null"}/>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                        <div className="flex justify-end">
+                                            <ContentForm
+                                                type="Edit"
+                                                currentID={row.original.id}
+                                                currentName={row.original.name}
+                                                currentURL={row.original.url}
+                                                currentContentOwner={row.original.content_owner}
+                                                currentRole={row.original.assigned_role}
+                                                currentExpirationDate={row.original.expiration_date}
+                                                currentExpirationTime={row.original.expiration_date}
+                                                currentStatus={row.original.document_status}
+                                                size={false}
+                                            />
+                                        </div>
+                                        <DeleteConfirmationPopup target={row.original.id}/>
                                     </TableRow> ))}
                             </TableBody>
                         </Table>
@@ -477,4 +220,386 @@ export function DocumentsTable<TData extends Document, TValue>({
             </>
         )
     }
+    else{
+        return(
+            <>
+                <div className="max-w-10xl mx-auto px-6 py-6">
+                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                        <div className="flex items-center mb-4">
+                            <InputGroup
+                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                                <InputGroupInput
+                                    placeholder="Search"
+                                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                                    onChange={(event) =>
+                                        table.getColumn("name")?.setFilterValue(event.target.value)
+                                    }
+                                    className="max-w-sm"
+                                />
+                                <InputGroupAddon>
+                                    <Search/>
+                                </InputGroupAddon>
+                            </InputGroup>
+                            <div className="flex justify-end ml-auto">
+                                <ContentForm
+                                    type="Create"
+                                    currentID={Math.trunc((Math.random() * 10000) % 10000)}
+                                    currentName="Name..."
+                                    currentURL="www.example.com"
+                                    currentContentOwner="Select Content Owner"
+                                    currentRole="Select Role"
+                                    currentExpirationDate="Tomorrow"
+                                    currentExpirationTime="10:30:00"
+                                    currentStatus="Select Status"
+                                    size={true}
+                                />
+                            </div>
+                        </div>
+                    <Table className="border rounded-lg overflow-hidden">
+                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
+                                    <TableHead className="text-[#0b4461]">Actions</TableHead>
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows.map((row) => {
+                                const doc = row.original;
+
+                                const canEdit =
+                                    (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") ||
+                                    (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst")
+                                console.log(doc.assigned_role)
+                                console.log(roles.includes("businessanalyst"))
+                                return (
+                                    <TableRow key={row.id}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+
+                                        <TableCell>
+                                            <div className="flex gap-2 justify-end">
+                                                {canEdit && (
+                                                    <ContentForm
+                                                        type="Edit"
+                                                        currentID={doc.id}
+                                                        currentName={doc.name}
+                                                        currentURL={doc.url}
+                                                        currentContentOwner={doc.content_owner}
+                                                        currentRole={doc.assigned_role}
+                                                        currentExpirationDate={doc.expiration_date}
+                                                        currentExpirationTime={doc.expiration_date}
+                                                        currentStatus={doc.document_status}
+                                                        size={false}
+                                                    />
+                                                )}
+
+                                                {canEdit && (
+                                                    <DeleteConfirmationPopup target={doc.id} />
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                            </TableBody>
+                    </Table>
+                    </div>
+                    <div className="flex items-center justify-end space-x-2 py-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </div>
+            </>
+        )
+    }
+    // if (roles.includes("underwriter")) {
+    //     return (
+    //         <>
+    //         <div className="max-w-10xl mx-auto px-6 py-6">
+    //             <div className="bg-white rounded-xl shadow-sm border p-4">
+    //                 <div className="flex items-center mb-4">
+    //                     <InputGroup
+    //                         className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+    //                         <InputGroupInput
+    //                             placeholder="Search"
+    //                             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+    //                             onChange={(event) =>
+    //                                 table.getColumn("name")?.setFilterValue(event.target.value)
+    //                             }
+    //                             className="max-w-sm"
+    //                         />
+    //                         <InputGroupAddon>
+    //                             <Search/>
+    //                         </InputGroupAddon>
+    //                     </InputGroup>
+    //                     <div className="flex justify-end ml-auto">
+    //                         <ContentForm
+    //                             type="Create"
+    //                             currentID={Math.trunc((Math.random() * 10000) % 10000)}
+    //                             currentName="Name..."
+    //                             currentURL="www.example.com"
+    //                             currentContentOwner="Select Content Owner"
+    //                             currentRole="Select Role"
+    //                             currentExpirationDate="Tomorrow"
+    //                             currentExpirationTime="10:30:00"
+    //                             currentStatus="Select Status"
+    //                             size={true}
+    //                         />
+    //                     </div>
+    //                 </div>
+    //
+    //                 <Table className="border rounded-lg overflow-hidden">
+    //                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+    //                         {table.getHeaderGroups().map((headerGroup) => (
+    //                             <TableRow key={headerGroup.id}>
+    //                                 {headerGroup.headers.map((header) => {
+    //                                     return (
+    //                                         <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+    //                                             {header.isPlaceholder
+    //                                                 ? null
+    //                                                 : flexRender(
+    //                                                     header.column.columnDef.header,
+    //                                                     header.getContext()
+    //                                                 )}
+    //                                         </TableHead>
+    //                                     )
+    //                                 })}
+    //                                 <TableHead className="text-[#0b4461]">Actions</TableHead>
+    //                             </TableRow>
+    //                         ))}
+    //                     </TableHeader>
+    //                     <TableBody>
+    //                         {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
+    //                             <TableRow
+    //                                 key={doc.id}>
+    //                                 <TableCell className="text-[#0b4461] font-medium">
+    //                                     <div className="flex gap-3 items-center">
+    //                                         {doc.favorite}
+    //                                     </div>
+    //                                 </TableCell>
+    //                                 <TableCell className="text-center">{doc.name}</TableCell>
+    //                                 <TableCell className="text-center">{doc.mime_type}</TableCell>
+    //                                 <TableCell className="text-center">{doc.expiration_date}</TableCell>
+    //                                 <TableCell className="text-center">{doc.document_status}</TableCell>
+    //                                 <TableCell className="text-center">{doc.content_owner}</TableCell>
+    //                                 <TableCell className="text-center">{doc.last_modified}</TableCell>
+    //                                 <TableCell className="flex items-center gap-3">
+    //                                     <div className="flex justify-end">
+    //                                         <ContentForm
+    //                                             type="Edit"
+    //                                             currentID={doc.id}
+    //                                             currentName={doc.name}
+    //                                             currentURL={doc.url}
+    //                                             currentContentOwner={doc.content_owner}
+    //                                             currentRole={doc.assigned_role}
+    //                                             currentExpirationDate={doc.expiration_date}
+    //                                             currentExpirationTime={doc.expiration_date}
+    //                                             currentStatus={doc.document_status}
+    //                                             size={true}
+    //                                         />
+    //                                     </div>
+    //                                     <DeleteConfirmationPopup target={"null"}/>
+    //                                 </TableCell>
+    //                             </TableRow>))}
+    //                         {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
+    //                             <TableRow key={doc.id}>
+    //                                 <TableCell className="text-[#0b4461] font-medium">
+    //                                     <div className="flex gap-3 items-center">
+    //                                         {doc.favorite}
+    //                                     </div>
+    //                                 </TableCell>
+    //                                 <TableCell className="text-center">{doc.name}</TableCell>
+    //                                 <TableCell className="text-center">{doc.mime_type}</TableCell>
+    //                                 <TableCell className="text-center">{doc.expiration_date}</TableCell>
+    //                                 <TableCell className="text-center">{doc.document_status}</TableCell>
+    //                                 <TableCell className="text-center">{doc.content_owner}</TableCell>
+    //                                 <TableCell className="text-center">{doc.last_modified}</TableCell>
+    //
+    //                             </TableRow>))}
+    //                 </TableBody>
+    //             </Table>
+    //             <div className="flex items-center justify-end space-x-2 py-4">
+    //                 <Button
+    //                     variant="outline"
+    //                     size="sm"
+    //                     onClick={() => table.previousPage()}
+    //                     disabled={!table.getCanPreviousPage()}
+    //                 >
+    //                     Previous
+    //                 </Button>
+    //                 <Button
+    //                     variant="outline"
+    //                     size="sm"
+    //                     onClick={() => table.nextPage()}
+    //                     disabled={!table.getCanNextPage()}
+    //                 >
+    //                     Next
+    //                 </Button>
+    //             </div>
+    //         </div>
+    //         </div>
+    //         </>
+    //     )
+    // }
+    // if (roles.includes("businessanalyst")) {
+    //     return (
+    //         <>
+    //             <div className="max-w-10xl mx-auto px-6 py-6">
+    //                 <div className="bg-white rounded-xl shadow-sm border p-4">
+    //                     <div className="flex items-center mb-4">
+    //                         <InputGroup
+    //                             className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+    //                             <InputGroupInput
+    //                                 placeholder="Search"
+    //                                 value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+    //                                 onChange={(event) =>
+    //                                     table.getColumn("name")?.setFilterValue(event.target.value)
+    //                                 }
+    //                                 className="max-w-sm"
+    //                             />
+    //                             <InputGroupAddon>
+    //                                 <Search/>
+    //                             </InputGroupAddon>
+    //                         </InputGroup>
+    //                         <div className="flex justify-end ml-auto">
+    //                             <ContentForm
+    //                                 type="Create"
+    //                                 currentID={Math.trunc((Math.random() * 10000) % 10000)}
+    //                                 currentName="Name..."
+    //                                 currentURL="www.example.com"
+    //                                 currentContentOwner="Select Content Owner"
+    //                                 currentRole="Select Role"
+    //                                 currentExpirationDate="Tomorrow"
+    //                                 currentExpirationTime="10:30:00"
+    //                                 currentStatus="Select Status"
+    //                                 size={true}
+    //                             />
+    //                         </div>
+    //                     </div>
+    //
+    //                     <Table className="border rounded-lg overflow-hidden">
+    //                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+    //                             {table.getHeaderGroups().map((headerGroup) => (
+    //                                 <TableRow key={headerGroup.id}>
+    //                                     {headerGroup.headers.map((header) => {
+    //                                         return (
+    //                                             <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+    //                                                 {header.isPlaceholder
+    //                                                     ? null
+    //                                                     : flexRender(
+    //                                                         header.column.columnDef.header,
+    //                                                         header.getContext()
+    //                                                     )}
+    //                                             </TableHead>
+    //                                         )
+    //                                     })}
+    //                                     <TableHead className="text-[#0b4461]">Actions</TableHead>
+    //                                 </TableRow>
+    //                             ))}
+    //                         </TableHeader>
+    //                         <TableBody>
+    //                             {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
+    //                                 <TableRow key={doc.id}>
+    //                                     <TableCell className="text-[#0b4461] font-medium">
+    //                                         <div className="flex gap-3 items-center">
+    //                                             {doc.favorite}
+    //                                         </div>
+    //                                     </TableCell>
+    //                                     <TableCell className="text-center">{doc.name}</TableCell>
+    //                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
+    //                                     <TableCell className="text-center">{doc.expiration_date}</TableCell>
+    //                                     <TableCell className="text-center">{doc.document_status}</TableCell>
+    //                                     <TableCell className="text-center">{doc.content_owner}</TableCell>
+    //                                     <TableCell className="text-center">{doc.last_modified}</TableCell>
+    //                                     <TableCell className="flex items-center gap-3">
+    //                                         <div className="flex justify-end">
+    //                                             <ContentForm
+    //                                                 type="Edit"
+    //                                                 currentID={doc.id}
+    //                                                 currentName={doc.name}
+    //                                                 currentURL={doc.url}
+    //                                                 currentContentOwner={doc.content_owner}
+    //                                                 currentRole={doc.assigned_role}
+    //                                                 currentExpirationDate={doc.expiration_date}
+    //                                                 currentExpirationTime={doc.expiration_date}
+    //                                                 currentStatus={doc.document_status}
+    //                                                 size={true}
+    //                                             />
+    //                                         </div>
+    //                                         <DeleteConfirmationPopup target={"null"}/>
+    //                                     </TableCell>
+    //                                 </TableRow>))}
+    //                             {table.data.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
+    //                                 <TableRow key={doc.id}>
+    //                                     <TableCell className="text-[#0b4461] font-medium">
+    //                                         <div className="flex gap-3 items-center">
+    //                                             {doc.favorite}
+    //                                         </div>
+    //                                     </TableCell>
+    //                                     <TableCell className="text-center">{doc.name}</TableCell>
+    //                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
+    //                                     <TableCell className="text-center">{doc.expiration_date}</TableCell>
+    //                                     <TableCell className="text-center">{doc.document_status}</TableCell>
+    //                                     <TableCell className="text-center">{doc.content_owner}</TableCell>
+    //                                     <TableCell className="text-center">{doc.last_modified}</TableCell>
+    //
+    //                                 </TableRow>))}
+    //                         </TableBody>
+    //                     </Table>
+    //                     <div className="flex items-center justify-end space-x-2 py-4">
+    //                         <Button
+    //                             variant="outline"
+    //                             size="sm"
+    //                             onClick={() => table.previousPage()}
+    //                             disabled={!table.getCanPreviousPage()}
+    //                         >
+    //                             Previous
+    //                         </Button>
+    //                         <Button
+    //                             variant="outline"
+    //                             size="sm"
+    //                             onClick={() => table.nextPage()}
+    //                             disabled={!table.getCanNextPage()}
+    //                         >
+    //                             Next
+    //                         </Button>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </>
+    //     )
+    // }
+    // else {
+    //
+    // }
 }

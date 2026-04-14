@@ -99,6 +99,7 @@ function LinksTable(){
                         <TableRow>
                             <TableHead>Name</TableHead>
                             <TableHead>URL</TableHead>
+                            <TableHead>Role</TableHead>
                             <TableHead></TableHead>
                             <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
                         </TableRow>
@@ -108,6 +109,7 @@ function LinksTable(){
                             <TableRow key={l.link_name}>
                                 <TableCell>{l.link_name}</TableCell>
                                 <TableCell>{l.url}</TableCell>
+                                <TableCell>{l.owner}</TableCell>
                                 <TableCell></TableCell>
 
                                 <TableCell className="flex items-center gap-3">

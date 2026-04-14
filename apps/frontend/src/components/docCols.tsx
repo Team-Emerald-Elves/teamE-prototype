@@ -37,7 +37,7 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "mime_type",
+        accessorKey: "document_type",
         header: ({ column }) => {
             return (
                 <Button
@@ -88,6 +88,20 @@ export const columns: ColumnDef<Document>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Content Owner
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "assigned_role",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Role
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )

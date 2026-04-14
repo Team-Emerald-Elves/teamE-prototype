@@ -14,13 +14,13 @@ import { getToken } from '@clerk/react'
 import { useEffect, useState } from "react";
 
 type deleteConfirmationPopupProps = {
-    target: string
+    target: number
 }
 
-async function removeDocument(fileName: string, token: string) {
+async function removeDocument(fileID: number, token: string) {
 
     const data = {
-        fileName: fileName
+        fileName: fileID
     }
 
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/delete-file`, {

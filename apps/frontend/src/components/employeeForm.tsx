@@ -86,7 +86,7 @@ function EmployeeForm(props: empProps): JSX.Element {
         <Dialog>
             <form>
                 <div className="flex justify-end">
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-secondary text-secondary-foreground"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 </div>
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>

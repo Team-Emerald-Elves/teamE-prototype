@@ -25,6 +25,7 @@ type Employee = {
     uname: string;
     email?: string;
     roles?: string[];
+    imageUrl: string;
 };
 
 async function getEmployees() {
@@ -77,7 +78,7 @@ function UserManagementTable(){
                         <TableRow key={emp.id}>
                             <TableCell className="font-medium text-center">
                                 <div className="flex gap-3 text-center items-center">
-                                    <HugeiconsIcon icon={UserCircleIcon} size={25} strokeWidth={1.5}/>
+                                    <img className="size-8 rounded-full" src={emp.imageUrl}/>
                                     {emp.first_name} {emp.last_name}
                                 </div>
                             </TableCell>

@@ -40,7 +40,8 @@ type contentFormProps = {
     currentExpirationTime: string,
     currentStatus: string,
     currentID: number,
-    size: boolean
+    size: boolean,
+    file: File,
 }
 
 type Employee = {
@@ -99,6 +100,8 @@ function ContentForm(props: contentFormProps) {
         document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
+
+    const uploadHandler = (files: File[])
 
     useEffect(() => {
 

@@ -15,7 +15,7 @@ function FileUpload(props: FileUploadProps): ReactElement {
     const [files, setFiles] = useState<File[]>([]);
 
     useEffect(() => {
-        console.log("New Files: ", files);
+       props.onUpload(files);
     }, [files])
 
     const dragHandler = (e: DragEvent) => {

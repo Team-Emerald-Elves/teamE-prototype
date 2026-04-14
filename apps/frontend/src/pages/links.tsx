@@ -40,7 +40,7 @@ function Links() {
             <div className="relative w-full flex items-center">
 
             </div>
-            <div className="px-10 py-20 ">
+            <div>
                 <Linkstable me={me}/>
             </div>
         </>

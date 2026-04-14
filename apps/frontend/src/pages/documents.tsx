@@ -26,7 +26,7 @@ async function getDocuments(token: string):Promise<Document[]> {
 }
 
 async function getDocumentsAdmin(token: string) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/content`,
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
             headers: {
                 "Authorization": `Bearer ${token}`

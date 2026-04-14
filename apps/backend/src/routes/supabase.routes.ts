@@ -1,6 +1,6 @@
 
 import { Router, type Request, type Response } from 'express'
-import { getAuth } from '@clerk/express'
+import { requireAuth, getAuth } from '@clerk/express'
 import { prisma } from '../lib/prisma.ts'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { documentContent, Roles, UserRoles } from './types.d.ts'
@@ -190,27 +190,24 @@ supaBaseRouter.get(
     //requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)
+        
         console.log(userId)
+
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
 
         try {
-            const employee = await prisma.employee.findFirstOrThrow({
-                where: {
-                    clerkUserId: userId
-                },
-                include: {
-                    bucket: true
-                }
-            })
+            // const employee = await prisma.employee.findFirstOrThrow({
 
+            //     where: {
+            //         clerkUserId: userId
+            //     },
+            //     include: {
+            //         bucket: true
+            //     }
+            // })
             const documents = await prisma.documentContent.findMany({
-                where: {
-                    assigned_role: {
-                        in: employee.roles
-                    }
-                }
             })
             res.status(200).json(documents)
         } catch(error) {

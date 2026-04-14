@@ -2,6 +2,16 @@
 import type {ColumnDef} from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react"
 import { Button } from './ui/button.tsx'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import DocumentViewer from "@/components/docViewer.tsx";
 
 export type Document = {
     id: number;
@@ -39,14 +49,23 @@ export const columns: ColumnDef<Document>[] = [
             const doc = row.original;
 
             return (
-                <a
-                    href={doc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                >
-                    {doc.name}
-                </a>
+                <Dialog>
+                    <DialogTrigger >
+                        <button className="hover:underline">{doc.name}</button>
+                    </DialogTrigger>
+
+                    <DialogContent className="2xl:max-w-2xl">
+                        <DialogClose className="absolute right-4 top-4 text-xl z-10">
+                            ✕
+                        </DialogClose>
+
+                        <div className="flex-1 overflow-auto flex justify-center">
+                            <div className="w-full max-w-[1400px]">
+                                <DocumentViewer doc={doc} />
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             );
         },
     },

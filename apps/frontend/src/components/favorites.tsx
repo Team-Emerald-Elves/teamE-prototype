@@ -80,7 +80,7 @@ export default function Favorites() {
 
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-6">
+        <div className="max-w-10xl mx-auto px-6 py-6">
 
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -123,6 +123,7 @@ export default function Favorites() {
                             <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
 
 
                         </TableRow>

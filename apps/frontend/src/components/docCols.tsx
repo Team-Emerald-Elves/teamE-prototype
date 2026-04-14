@@ -7,12 +7,14 @@ export type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
 export const columns: ColumnDef<Document>[] = [
@@ -50,7 +52,7 @@ export const columns: ColumnDef<Document>[] = [
 
     },
     {
-        accessorKey: "expirationDate",
+        accessorKey: "expiration_date",
         header: ({ column }) => {
             return (
                 <Button
@@ -64,7 +66,7 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "status",
+        accessorKey: "document_status",
         header: ({ column }) => {
             return (
                 <Button
@@ -78,7 +80,7 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "contentOwner",
+        accessorKey: "content_owner",
         header: ({ column }) => {
             return (
                 <Button

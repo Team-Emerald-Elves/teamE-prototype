@@ -40,9 +40,9 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
             data: {
                 clerkUserId: userId,
                 uname: clerkUser.username as string,
-                first_name: clerkUser.firstName as string,
-                last_name: clerkUser.lastName as string,
-                roles: [],
+                first_name: "admin",
+                last_name: "1",
+                roles: ["UnderWriter"],
                 email: clerkUser.emailAddresses[0]?.emailAddress
             }
         })

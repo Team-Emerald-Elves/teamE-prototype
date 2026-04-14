@@ -32,7 +32,14 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             />
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.name}
+                <a
+                    href={props.d.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                >
+                    {props.d.name}
+                </a>
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">

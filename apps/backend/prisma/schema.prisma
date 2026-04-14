@@ -56,6 +56,7 @@ model documentContent { // Must match creation details of document content.
   name            String
   url             String?
   content_owner   String
+  lock            Boolean @default(false)
   assigned_role   UserRoles
   bucketId        String   @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])

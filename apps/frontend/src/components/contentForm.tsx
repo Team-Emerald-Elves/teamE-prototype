@@ -78,6 +78,28 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
+async function getDocumentLock(sessionToken: string, documentID: number) {
+
+    const metaData = {
+        id: documentID
+    }
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+        },
+        body: JSON.stringify(metaData)
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
+
+    const data = await res.json();
+
+    return data;
+}
+
 function ContentForm(props: contentFormProps) {
 
     const { getToken } = useAuth();

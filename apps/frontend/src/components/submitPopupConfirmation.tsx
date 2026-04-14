@@ -36,7 +36,7 @@ export type IFile = {
   assigned_role: string
   document_type: string
   document_status: string
-  filePayload?: string
+  filePayload?: File
 }
 
 function buildExpirationDate(

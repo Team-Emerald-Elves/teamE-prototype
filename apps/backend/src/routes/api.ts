@@ -1,8 +1,7 @@
-import {
-         Router
-} from "express"
+import Router, { request, response, type Request, type Response } from "express"
 import { requireAuth, getAuth, clerkClient } from '@clerk/express'
 import {prisma} from "../lib/prisma.ts";
+
 
 
 const APIRouter = Router()
@@ -56,5 +55,45 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
   else
     res.sendStatus(403).json({"message":"Employee in clerk but missing supabase record."})
 })
+
+async function updateLock(req: Request, res: Response) {
+    const { id, status } = req.body
+
+    await prisma.documentContent.update({
+        where: {
+            id: id
+        },
+        data: {
+            lock: status as boolean
+        }
+    }).catch((error) => {
+
+    })
+
+    res.sendStatus(200)
+}
+
+async function getLock(req: Request, res: Response) {
+    const id = Number(req.query.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid id" });
+    }
+
+    try {
+        const data = await prisma.documentContent.findFirst({
+            where: {
+                id: id
+            }
+        });
+
+        return res.status(200).json(data?.lock);
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to get lock", error });
+    }
+}
+
+APIRouter.put('/update-lock',updateLock)
+APIRouter.get('/get-lock', getLock)
 
 export default APIRouter

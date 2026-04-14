@@ -1,8 +1,7 @@
-import ContentForm from '../components/contentForm.tsx'
-import {SearchBar} from '../components/searchbar.tsx'
+
 import {useState, useEffect} from "react";
 import {getToken, useAuth} from "@clerk/react"
-import {TestDoc} from "../components/testdoctable.tsx"
+import {DocumentsTable} from "../components/documents-table.tsx"
 import { columns, type UserDocuments } from "../components/docCols.tsx"
 
 
@@ -153,51 +152,16 @@ export default function Documents() {
         fetchData();
     }, [sessionToken, roles]);
 
-
-
-    if (roles.includes("u")) {
-        return (
-            <>
-                <div className="text-center font-bold text-primary">
-                    <h1 className="font-mono">Documents</h1>
-                </div>
-                <div className="flex items-center w-full p-4">
-                    <div className="flex-1 flex ">
-                        <SearchBar />
-                    </div>
-
-
-                    <div className="ml-auto  p-4">
-                        <ContentForm
-                            type="Create"
-                            currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                            currentName="Name..."
-                            currentURL="www.example.com"
-                            currentContentOwner="Select Content Owner"
-                            currentRole="Select Role"
-                            currentExpirationDate={(new Date(Date.now() + 1)).toISOString()}
-                            currentExpirationTime="10:30:00"
-                            currentStatus="Select Status"
-                            size={true}
-                        />
-                    </div>
-
-                </div>
-
-            </>
-        )
-    }
-    else {
         return (
             <>
                 <div className="text-center font-bold text-primary">
                     <h1 className="font-mono">Documents</h1>
                 </div>
                 <div>
-                    <TestDoc columns={columns} data={Data} />
+                    <DocumentsTable columns={columns} data={Data} />
                 </div>
 
             </>
         )
-    }
+
 }

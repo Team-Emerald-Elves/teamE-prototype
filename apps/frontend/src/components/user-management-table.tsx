@@ -75,18 +75,18 @@ function UserManagementTable(){
                 <TableBody>
                     {employees.map((emp) => (
                         <TableRow key={emp.id}>
-                            <TableCell className="font-medium">
-                                <div className="flex gap-3 items-center">
+                            <TableCell className="font-medium text-center">
+                                <div className="flex gap-3 text-center items-center">
                                     <HugeiconsIcon icon={UserCircleIcon} size={25} strokeWidth={1.5}/>
                                     {emp.first_name} {emp.last_name}
                                 </div>
                             </TableCell>
 
-                            <TableCell>{emp.uname}</TableCell>
-                            <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.roles?.at(0) ?? "No Roles" }</TableCell>
+                            <TableCell className="text-center">{emp.uname}</TableCell>
+                            <TableCell className="text-center">{emp.email}</TableCell>
+                            <TableCell className="text-center">{emp.roles?.at(0) ?? "No Roles" }</TableCell>
 
-                            <TableCell className="flex items-center gap-3">
+                            <TableCell className="flex items-center text-center gap-3">
                                 <div className="flex justify-end">
                                     <EmployeeForm employee={emp}/>
                                 </div>

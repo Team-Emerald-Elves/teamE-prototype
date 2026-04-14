@@ -11,7 +11,6 @@ import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, requireAuth} from '@clerk/express'
-
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';

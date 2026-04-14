@@ -18,10 +18,10 @@ export type Document = {
 };
 
 export const columns: ColumnDef<Document>[] = [
-    {
-        accessorKey: "favorite",
-        header: "Favorite",
-    },
+    // {
+    //     accessorKey: "favorite",
+    //     header: "Favorite",
+    // },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -34,6 +34,20 @@ export const columns: ColumnDef<Document>[] = [
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const doc = row.original;
+
+            return (
+                <a
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                >
+                    {doc.name}
+                </a>
+            );
         },
     },
     {

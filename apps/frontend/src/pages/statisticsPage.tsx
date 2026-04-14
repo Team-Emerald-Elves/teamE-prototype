@@ -1,23 +1,9 @@
 import { useState, useEffect } from "react";
 import { FileText } from 'lucide-react';
 import { UsersRound } from 'lucide-react';
+import { UserPen } from 'lucide-react';
+import { UserLock } from 'lucide-react';
 import PageHeader from "../components/page-header.tsx"
-
-
-
-type EmployeeStats = {
-    employee: string;
-    role: string;
-    loginAttempts: number;
-};
-
-
-const MOCK_STATS: EmployeeStats[] = [
-    { employee: "Alice Chen", role: "Admin", loginAttempts: 42 },
-    { employee: "Ben Torres", role: "Developer", loginAttempts: 31 },
-    { employee: "Clara Liu", role: "Analyst", loginAttempts: 18 },
-    { employee: "David Park", role: "Manager", loginAttempts: 27 },
-];
 
 
 
@@ -25,8 +11,8 @@ const MOCK_STATS: EmployeeStats[] = [
 export default function StatisticsPage() {
     const [docTotal, setDocTotal] = useState(0);
     const [empTotal, setEmpTotal] = useState(0);
-    type StatusCount = { document_status: string, _count: { id: number } }
-    const [docByStatus, setDocByStatus] = useState<StatusCount[]>([]);
+    const [undCount, setUndTotal] = useState(0);
+    const [busCount, setBusTotal] = useState(0);
     useEffect(() => {
         async function getStats() {
             const res = await fetch(
@@ -36,8 +22,8 @@ export default function StatisticsPage() {
             const data = await res.json();
             setDocTotal(data.docCount);
             setEmpTotal(data.empCount);
-            setDocByStatus(data.docByStatus);
-
+            setUndTotal(data.underwriterCount);
+            setBusTotal(data.analystCount);
         }
         getStats()
     }, []);
@@ -62,6 +48,21 @@ export default function StatisticsPage() {
                                 <p>Total Employees</p>
                             </div>
                         </div>
+                        <div className= "flex flex-row gap-0 items-center">
+                            <UserPen size={60} color="#013C5A"/>
+                            <div className="flex text-left flex-col pl-5 gap-1">
+                                <h1> {undCount}</h1>
+                                <p>Total Underwriters</p>
+                            </div>
+                        </div>
+                        <div className= "flex flex-row gap-0 items-center">
+                            <UserLock size={60} color="#013C5A"/>
+                            <div className="flex text-left flex-col pl-5 gap-1">
+                                <h1> {busCount}</h1>
+                                <p>Total Business Analysts</p>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>

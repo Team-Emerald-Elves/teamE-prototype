@@ -60,15 +60,6 @@ const Doc2: Document = {
 Documents.push(Doc1);
 Documents.push(Doc2);
 
-async function getFavorites() {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`);
-     if (!res.ok) {
-         throw new Error("Failed to fetch favorited docs");
-     }
-
-     return await res.json() ;
-}
-
 export default function Favorites() {
     const [favorites, setFavorites] = useState<Document[]>([]);
 
@@ -140,7 +131,29 @@ export default function Favorites() {
                     <TableBody>
                         {favorites.map((d) => (
 
-                            <FavoritesTableEntry key={d.id} d={d} />
+                            <FavoritesTableEntry
+                                    d={d}
+                                    onToggle={async (doc) => {
+                                    const newValue = !doc.favorite;
+
+                                    await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                    method: "POST",
+                                    headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                    body: JSON.stringify({
+                                    id: doc.id,
+                                    favorite: doc.favorite, // backend expects old value (your rule)
+                                }),
+                                });
+
+                                    setFavorites(prev =>
+                                    prev.map(f =>
+                                    f.id === doc.id ? { ...f, favorite: newValue } : f
+                                    )
+                                    );
+                                }}
+                            />
 
                         ))}
                     </TableBody>

@@ -10,20 +10,42 @@ type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
 type favoriteProps = {
     d: Document;
 }
 
+type updateProps = {
+    doc: Document;
+    setFavorited: (newFavorite: boolean) => void;
+}
+
+async function updateFavorite(props: updateProps) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: props.doc.id, favorite: props.doc.favorite})
+    })
+    if (!res.ok) {
+        throw new Error("Failed to update favorite");
+    }
+    props.setFavorited(!props.doc.favorite);
+}
+
 export default function FavoritesTableEntry(props: favoriteProps) {
-    const [favorited, setFavorited] = useState(false);
+    const [favorited, setFavorited] = useState(props.d.favorite);
     return (
         <TableRow
             key={props.d.id}
@@ -32,7 +54,7 @@ export default function FavoritesTableEntry(props: favoriteProps) {
             <TableCell className="text-center">
                 <FontAwesomeIcon
                     icon={favorited ? solidStar : regularStar}
-                    onClick={() => setFavorited(!favorited)}
+                    onClick={async () => { updateFavorite({doc: props.d, setFavorited: setFavorited})}}
                     className="text-yellow-400 cursor-pointer"
                 />
             </TableCell>
@@ -42,49 +64,30 @@ export default function FavoritesTableEntry(props: favoriteProps) {
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.mime_type}
+                {props.d.document_type}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.expirationDate}
+                {props.d.expiration_date}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.status}
+                {props.d.document_status}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.contentOwner}
+                {props.d.content_owner}
             </TableCell>
 
             <TableCell className="text-[14px] font-medium text-gray-700">
-                {props.d.lastModified}
+                {props.d.assigned_role}
             </TableCell>
 
-            <TableCell className="text-center">
-                <div className="flex items-center justify-center">
-
-                    <div className="w-16" >
-                        <ContentForm
-                            type="Edit"
-                            currentID={props.d.id}
-                            currentName={props.d.name}
-                            currentURL={props.d.url}
-                            currentContentOwner={props.d.contentOwner}
-                            currentRole={props.d.role}
-                            currentExpirationDate="Tomorrow"
-                            currentExpirationTime="10:30:00"
-                            currentStatus={props.d.status}
-                            size={false}
-                        />
-                    </div>
-
-                    <div className="w-16 flex justify-center">
-                        <DeleteConfirmationPopup target={props.d.id.toString()} />
-                    </div>
-
-                </div>
+            <TableCell className="text-[14px] font-medium text-gray-700">
+                {props.d.last_modified}
             </TableCell>
+
+
         </TableRow>
     )
 }

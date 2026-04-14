@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 
 import { SearchBar } from "@/components/searchbar";
@@ -22,14 +22,15 @@ type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
-
 const Documents: Document[] = [];
 
 const Doc1: Document = {
@@ -59,8 +60,33 @@ const Doc2: Document = {
 Documents.push(Doc1);
 Documents.push(Doc2);
 
+async function getFavorites() {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`);
+     if (!res.ok) {
+         throw new Error("Failed to fetch favorited docs");
+     }
+
+     return await res.json() ;
+}
+
 export default function Favorites() {
-    // const [favorited, setFavorited] = useState(false);
+    const [favorites, setFavorites] = useState<Document[]>([]);
+
+    useEffect(() => {
+
+        const getFavorites = async () => {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`);
+            if (!res.ok) {
+                throw new Error("Failed to fetch favorited docs");
+            }
+            const data = await res.json();
+            console.log(data)
+            setFavorites(data);
+        };
+
+        getFavorites();
+    }, [favorites]);
+
 
     return (
         <div className="max-w-6xl mx-auto px-6 py-6">
@@ -91,19 +117,6 @@ export default function Favorites() {
                     <div className="w-1/3 mr-4">
                         <SearchBar />
                     </div>
-
-                    <ContentForm
-                        type="Create"
-                        currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                        currentName="Name..."
-                        currentURL="www.example.com"
-                        currentContentOwner="Select Content Owner"
-                        currentRole="Select Role"
-                        currentExpirationDate="Tomorrow"
-                        currentExpirationTime="10:30:00"
-                        currentStatus="Select Status"
-                        size={true}
-                    />
                 </div>
 
 
@@ -117,14 +130,15 @@ export default function Favorites() {
                             <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
-                            <TableHead className="text-[#0b4461] text-center font-medium text-sm">Actions</TableHead>
+
 
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
-                        {Documents.map((d) => (
+                        {favorites.map((d) => (
 
                             <FavoritesTableEntry key={d.id} d={d} />
 

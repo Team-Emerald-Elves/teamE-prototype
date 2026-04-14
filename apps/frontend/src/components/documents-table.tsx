@@ -170,7 +170,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                         </TableHeader>
                         <TableBody>
                             {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
-                                <TableRow key={doc.id}>
+                                <TableRow
+                                    key={doc.id}>
                                     <TableCell className="text-[#0b4461] font-medium">
                                         <div className="flex gap-3 items-center">
                                             {doc.favorite}
@@ -425,38 +426,32 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 ))}
                             </TableHeader>
                             <TableBody>
-                                {docs.map((doc) => (
-                                    <TableRow key={doc.id}>
-                                        <TableCell className="text-[#0b4461] font-medium">
-                                            <div className="flex gap-3 items-center">
-                                                {doc.favorite}
-                                            </div>
+                                {table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
-                                        <TableCell className="text-center">{doc.name}</TableCell>
-                                        <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
-                                        <TableCell className="text-center">{doc.document_status}</TableCell>
-                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
-                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
-                                        <TableCell className="flex items-center gap-3">
+                                    ))}
                                             <div className="flex justify-end">
                                                 <ContentForm
                                                     type="Edit"
-                                                    currentID={doc.id}
-                                                    currentName={doc.name}
-                                                    currentURL={doc.url}
-                                                    currentContentOwner={doc.content_owner}
-                                                    currentRole={doc.assigned_role}
-                                                    currentExpirationDate={doc.expiration_date}
-                                                    currentExpirationTime={doc.expiration_date}
-                                                    currentStatus={doc.document_status}
+                                                    currentID={row.original.id}
+                                                    currentName={row.original.name}
+                                                    currentURL={row.original.url}
+                                                    currentContentOwner={row.original.content_owner}
+                                                    currentRole={row.original.assigned_role}
+                                                    currentExpirationDate={row.original.expiration_date}
+                                                    currentExpirationTime={row.original.expiration_date}
+                                                    currentStatus={row.original.document_status}
                                                     size={true}
                                                 />
                                             </div>
                                             <DeleteConfirmationPopup target={"null"}/>
-                                        </TableCell>
-                                    </TableRow>))}
-
+                                    </TableRow> ))}
                             </TableBody>
                         </Table>
                         <div className="flex items-center justify-end space-x-2 py-4">

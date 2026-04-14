@@ -73,6 +73,11 @@ function Navbar(props: NavbarProps) {
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
+                        <NavigationMenuItem>
+                            <NavigationMenuLink render={<Link to="/links">Links</Link>} className={navigationMenuTriggerStyle()}>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+
                         {roles.includes("administrator") && (
                             <NavigationMenuItem>
                                 <NavigationMenuLink

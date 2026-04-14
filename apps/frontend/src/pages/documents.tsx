@@ -82,13 +82,11 @@ export default function Documents() {
         if (!sessionToken || roles.length === 0) return;
 
         const fetchData = async () => {
-            const isAdmin = roles.some(role =>
-                role.toLowerCase().startsWith("admin")
-            );
+            // const isAdmin = roles.some(role =>
+            //     role.toLowerCase().startsWith("admin")
+            // );
 
-            const docsData = isAdmin
-                ? await getDocumentsAdmin(sessionToken)
-                : await getDocuments(sessionToken);
+            const docsData = await getDocumentsAdmin(sessionToken)
 
             setDocs(docsData);
             console.log(docs);

@@ -36,6 +36,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
 import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
 import FavoriteStar from "@/components/favoriteStar.tsx";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Download01Icon} from "@hugeicons/core-free-icons";
 
 type Document = {
     id: number;
@@ -236,6 +238,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         size={false}
                                                     />
                                                     <DeleteConfirmationPopup target={doc.id}/>
+                                                    <a
+                                                        href={doc.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        <HugeiconsIcon icon={Download01Icon} />
+                                                    </a>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -394,6 +404,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 {canEdit && (
                                                     <DeleteConfirmationPopup target={doc.id} />
                                                 )}
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
                                             </div>
                                         </TableCell>
                                     </TableRow>

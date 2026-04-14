@@ -41,7 +41,6 @@ type contentFormProps = {
     currentStatus: string,
     currentID: number,
     size: boolean,
-    file: File,
 }
 
 type Employee = {

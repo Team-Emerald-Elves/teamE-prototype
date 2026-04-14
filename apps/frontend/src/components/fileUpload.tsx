@@ -1,4 +1,4 @@
-import {type ReactElement, type DragEvent} from "react";
+import {type ReactElement, type DragEvent, useState, useEffect} from "react";
 import CenterDiv from "./center-div.tsx";
 import fileImg from "../assets/file.svg";
 import "./fupload.css";
@@ -7,13 +7,18 @@ interface FileUploadProps {
     // Drag n' drop files
     dnd: boolean;
     show?: boolean;
+    onUpload: (files: File[]) => void;
 }
 
 function FileUpload(props: FileUploadProps): ReactElement {
 
-    const fileInput = <input type="file" id="dropZone" style={{width: "100%", height: "100%"}}/>
+    const [files, setFiles] = useState<File[]>([]);
 
-    function dragHandler(e: DragEvent) {
+    useEffect(() => {
+        console.log("New Files: ", files);
+    }, [files])
+
+    const dragHandler = (e: DragEvent) => {
         console.log(e.dataTransfer);
         const fileItems = [...e.dataTransfer!.items].filter(
             (item) => item.kind === "file",
@@ -31,6 +36,19 @@ function FileUpload(props: FileUploadProps): ReactElement {
             })
         }
     }
+
+    const dropHandler = (e: DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const tFiles = e.dataTransfer.files;
+
+        if (tFiles && tFiles.length > 0) {
+            setFiles(Array.from(tFiles));
+        }
+    }
+
+    const fileInput = <input type="file" id="dropZone" style={{width: "100%", height: "100%"}} onDragOver={dragHandler} onDrop={dropHandler}/>
     return ( props.show ?
         <>
             <CenterDiv style={{
@@ -39,10 +57,11 @@ function FileUpload(props: FileUploadProps): ReactElement {
             }}>
                 <div className="fupload">
                     {fileInput}
-                    <img src={fileImg} onDragOver={dragHandler} width="500rem" draggable="false" alt="file_image"/>
+                    <img src={fileImg} width="50rem" draggable="false" alt="file_image"/>
                 </div>
+                <p>Files:</p>
+                <p>{fileInput.props.toString()}</p>
                 <br/>
-                <button>Submit</button>
             </CenterDiv>
         </> : <div hidden/>
     )

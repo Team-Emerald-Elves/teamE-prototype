@@ -28,6 +28,7 @@ import { useAuth } from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
+import {tr} from "date-fns/locale/tr";
 
 type contentFormProps = {
     type: string,
@@ -98,8 +99,6 @@ function ContentForm(props: contentFormProps) {
         document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
-
-    const [upload, setUpload] = useState(<FileUpload dnd={true} show={false}/>);
 
     useEffect(() => {
 
@@ -250,10 +249,7 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                     </FieldGroup>
 
-                    <button onClick={() => {
-                        setUpload(<FileUpload show={true} dnd={true}/>);
-                    }}>Upload</button>
-                    {upload}
+                    <FileUpload dnd={true} show={true}/>
 
                     <p>Last Modified: {formattedDate}</p>
 

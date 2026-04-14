@@ -3,19 +3,21 @@ import type {ColumnDef} from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react"
 import { Button } from './ui/button.tsx'
 
-export type UserDocuments = {
+export type Document = {
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
-export const columns: ColumnDef<UserDocuments>[] = [
+export const columns: ColumnDef<Document>[] = [
     {
         accessorKey: "favorite",
         header: "Favorite",
@@ -50,7 +52,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
 
     },
     {
-        accessorKey: "expirationDate",
+        accessorKey: "expiration_date",
         header: ({ column }) => {
             return (
                 <Button
@@ -64,7 +66,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "status",
+        accessorKey: "document_status",
         header: ({ column }) => {
             return (
                 <Button
@@ -78,7 +80,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "contentOwner",
+        accessorKey: "content_owner",
         header: ({ column }) => {
             return (
                 <Button
@@ -92,7 +94,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "lastModified",
+        accessorKey: "last_modified",
         header: ({ column }) => {
             return (
                 <Button

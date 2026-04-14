@@ -32,60 +32,28 @@ import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
 import {useAuth, useUser} from "@clerk/react";
-import {HugeiconsIcon} from "@hugeicons/react";
-import {UserCircleIcon} from "@hugeicons/core-free-icons";
-import EmployeeForm from "@/components/employeeForm.tsx";
 
 type Document = {
-    isFavorite: boolean;
     id: number;
     url: string;
     name: string;
-    lastModified: string;
-    expirationDate: string;
+    last_modified: string;
+    expiration_date: string;
     mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
 };
 
-const Documents: Document[] = [];
 
-const Doc1: Document = {
-    isFavorite: false,
-    id: 1,
-    url: "www.testurl.com",
-    name: "underwritingrole",
-    lastModified: "01/02/2025",
-    expirationDate: "01/02/2027",
-    mime_type: "reference",
-    role: "underwriter",
-    contentOwner: "leah",
-    status: "not_started",
-};
-
-const Doc2: Document = {
-    isFavorite: false,
-    id: 2,
-    url: "www.testurl2.com",
-    name: "businessanalystrole1",
-    lastModified: "03/02/2025",
-    expirationDate: "03/02/2027",
-    mime_type: "reference",
-    role: "businessanalyst",
-    contentOwner: "john",
-    status: "not_started",
-};
-
-Documents.push(Doc1);
-Documents.push(Doc2);
-
-interface DocProps<TData, TValue> {
+interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 
-export function DocumentsTable<TData, TValue>({
+export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
                                              data,
                                          }: DocProps<TData, TValue>) {
@@ -93,6 +61,8 @@ export function DocumentsTable<TData, TValue>({
     const {user} = useUser()
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
+    const[docs, setDocs] = useState<Document[]>([]);
+
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -113,9 +83,12 @@ export function DocumentsTable<TData, TValue>({
             setMe(data);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
-
         load();
+
     }, [isSignedIn]);
+    useEffect(() => {
+        setDocs(data);
+    }, [data]);
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -134,7 +107,11 @@ export function DocumentsTable<TData, TValue>({
             sorting,
             columnFilters,
         },
+
     })
+    console.log(docs)
+    console.log(typeof docs)
+    console.log(Array.isArray(docs))
     if (roles.includes("underwriter")) {
         return (
             <>
@@ -192,19 +169,19 @@ export function DocumentsTable<TData, TValue>({
                             ))}
                         </TableHeader>
                         <TableBody>
-                            {Documents.filter((doc) => doc.role === "underwriter").map((doc) => (
+                            {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
                                 <TableRow key={doc.id}>
                                     <TableCell className="text-[#0b4461] font-medium">
                                         <div className="flex gap-3 items-center">
-                                            {doc.isFavorite}
+                                            {doc.favorite}
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">{doc.name}</TableCell>
                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                    <TableCell className="text-center">{doc.expirationDate}</TableCell>
-                                    <TableCell className="text-center">{doc.status}</TableCell>
-                                    <TableCell className="text-center">{doc.contentOwner}</TableCell>
-                                    <TableCell className="text-center">{doc.lastModified}</TableCell>
+                                    <TableCell className="text-center">{doc.expiration_date}</TableCell>
+                                    <TableCell className="text-center">{doc.document_status}</TableCell>
+                                    <TableCell className="text-center">{doc.content_owner}</TableCell>
+                                    <TableCell className="text-center">{doc.last_modified}</TableCell>
                                     <TableCell className="flex items-center gap-3">
                                         <div className="flex justify-end">
                                             <ContentForm
@@ -212,30 +189,30 @@ export function DocumentsTable<TData, TValue>({
                                                 currentID={doc.id}
                                                 currentName={doc.name}
                                                 currentURL={doc.url}
-                                                currentContentOwner={doc.contentOwner}
-                                                currentRole={doc.role}
-                                                currentExpirationDate={doc.expirationDate}
-                                                currentExpirationTime={doc.expirationDate}
-                                                currentStatus={doc.status}
+                                                currentContentOwner={doc.content_owner}
+                                                currentRole={doc.assigned_role}
+                                                currentExpirationDate={doc.expiration_date}
+                                                currentExpirationTime={doc.expiration_date}
+                                                currentStatus={doc.document_status}
                                                 size={true}
                                             />
                                         </div>
                                         <DeleteConfirmationPopup target={"null"}/>
                                     </TableCell>
                                 </TableRow>))}
-                            {Documents.filter((doc) => doc.role === "businessanalyst").map((doc) => (
+                            {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
                                 <TableRow key={doc.id}>
                                     <TableCell className="text-[#0b4461] font-medium">
                                         <div className="flex gap-3 items-center">
-                                            {doc.isFavorite}
+                                            {doc.favorite}
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center">{doc.name}</TableCell>
                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                    <TableCell className="text-center">{doc.expirationDate}</TableCell>
-                                    <TableCell className="text-center">{doc.status}</TableCell>
-                                    <TableCell className="text-center">{doc.contentOwner}</TableCell>
-                                    <TableCell className="text-center">{doc.lastModified}</TableCell>
+                                    <TableCell className="text-center">{doc.expiration_date}</TableCell>
+                                    <TableCell className="text-center">{doc.document_status}</TableCell>
+                                    <TableCell className="text-center">{doc.content_owner}</TableCell>
+                                    <TableCell className="text-center">{doc.last_modified}</TableCell>
 
                                 </TableRow>))}
                     </TableBody>
@@ -320,19 +297,19 @@ export function DocumentsTable<TData, TValue>({
                                 ))}
                             </TableHeader>
                             <TableBody>
-                                {Documents.filter((doc) => doc.role === "businessanalyst").map((doc) => (
+                                {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
                                     <TableRow key={doc.id}>
                                         <TableCell className="text-[#0b4461] font-medium">
                                             <div className="flex gap-3 items-center">
-                                                {doc.isFavorite}
+                                                {doc.favorite}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">{doc.name}</TableCell>
                                         <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expirationDate}</TableCell>
-                                        <TableCell className="text-center">{doc.status}</TableCell>
-                                        <TableCell className="text-center">{doc.contentOwner}</TableCell>
-                                        <TableCell className="text-center">{doc.lastModified}</TableCell>
+                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
+                                        <TableCell className="text-center">{doc.document_status}</TableCell>
+                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
+                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
                                         <TableCell className="flex items-center gap-3">
                                             <div className="flex justify-end">
                                                 <ContentForm
@@ -340,30 +317,30 @@ export function DocumentsTable<TData, TValue>({
                                                     currentID={doc.id}
                                                     currentName={doc.name}
                                                     currentURL={doc.url}
-                                                    currentContentOwner={doc.contentOwner}
-                                                    currentRole={doc.role}
-                                                    currentExpirationDate={doc.expirationDate}
-                                                    currentExpirationTime={doc.expirationDate}
-                                                    currentStatus={doc.status}
+                                                    currentContentOwner={doc.content_owner}
+                                                    currentRole={doc.assigned_role}
+                                                    currentExpirationDate={doc.expiration_date}
+                                                    currentExpirationTime={doc.expiration_date}
+                                                    currentStatus={doc.document_status}
                                                     size={true}
                                                 />
                                             </div>
                                             <DeleteConfirmationPopup target={"null"}/>
                                         </TableCell>
                                     </TableRow>))}
-                                {Documents.filter((doc) => doc.role === "underwriter").map((doc) => (
+                                {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
                                     <TableRow key={doc.id}>
                                         <TableCell className="text-[#0b4461] font-medium">
                                             <div className="flex gap-3 items-center">
-                                                {doc.isFavorite}
+                                                {doc.favorite}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">{doc.name}</TableCell>
                                         <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expirationDate}</TableCell>
-                                        <TableCell className="text-center">{doc.status}</TableCell>
-                                        <TableCell className="text-center">{doc.contentOwner}</TableCell>
-                                        <TableCell className="text-center">{doc.lastModified}</TableCell>
+                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
+                                        <TableCell className="text-center">{doc.document_status}</TableCell>
+                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
+                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
 
                                     </TableRow>))}
                             </TableBody>
@@ -448,19 +425,19 @@ export function DocumentsTable<TData, TValue>({
                                 ))}
                             </TableHeader>
                             <TableBody>
-                                {Documents.map((doc) => (
+                                {docs.map((doc) => (
                                     <TableRow key={doc.id}>
                                         <TableCell className="text-[#0b4461] font-medium">
                                             <div className="flex gap-3 items-center">
-                                                {doc.isFavorite}
+                                                {doc.favorite}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">{doc.name}</TableCell>
                                         <TableCell className="text-center">{doc.mime_type}</TableCell>
-                                        <TableCell className="text-center">{doc.expirationDate}</TableCell>
-                                        <TableCell className="text-center">{doc.status}</TableCell>
-                                        <TableCell className="text-center">{doc.contentOwner}</TableCell>
-                                        <TableCell className="text-center">{doc.lastModified}</TableCell>
+                                        <TableCell className="text-center">{doc.expiration_date}</TableCell>
+                                        <TableCell className="text-center">{doc.document_status}</TableCell>
+                                        <TableCell className="text-center">{doc.content_owner}</TableCell>
+                                        <TableCell className="text-center">{doc.last_modified}</TableCell>
                                         <TableCell className="flex items-center gap-3">
                                             <div className="flex justify-end">
                                                 <ContentForm
@@ -468,11 +445,11 @@ export function DocumentsTable<TData, TValue>({
                                                     currentID={doc.id}
                                                     currentName={doc.name}
                                                     currentURL={doc.url}
-                                                    currentContentOwner={doc.contentOwner}
-                                                    currentRole={doc.role}
-                                                    currentExpirationDate={doc.expirationDate}
-                                                    currentExpirationTime={doc.expirationDate}
-                                                    currentStatus={doc.status}
+                                                    currentContentOwner={doc.content_owner}
+                                                    currentRole={doc.assigned_role}
+                                                    currentExpirationDate={doc.expiration_date}
+                                                    currentExpirationTime={doc.expiration_date}
+                                                    currentStatus={doc.document_status}
                                                     size={true}
                                                 />
                                             </div>

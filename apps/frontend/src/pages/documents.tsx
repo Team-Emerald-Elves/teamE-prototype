@@ -2,69 +2,13 @@
 import {useState, useEffect} from "react";
 import {getToken, useAuth} from "@clerk/react"
 import {DocumentsTable} from "../components/documents-table.tsx"
-import { columns, type UserDocuments } from "../components/docCols.tsx"
+import { columns, type Document } from "../components/docCols.tsx"
 
 
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    lastModified: string;
-    expirationDate: string;
-    mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
-};
 
-const Data: Document[] = [];
 
-const Doc1: Document = {
-    id: 1,
-    url: "www.testurl.com",
-    name: "underwritingrole",
-    lastModified: "01/02/2025",
-    expirationDate: "01/02/2027",
-    mime_type: "reference",
-    role: "underwriter",
-    contentOwner: "leah",
-    status: "not_started",
-};
 
-const Doc2: Document = {
-    id: 2,
-    url: "www.testurl2.com",
-    name: "businessanalystrole1",
-    lastModified: "03/02/2025",
-    expirationDate: "03/02/2027",
-    mime_type: "reference",
-    role: "businessanalyst",
-    contentOwner: "john",
-    status: "not_started",
-};
-
-Data.push(Doc1);
-Data.push(Doc2);
-
-async function getData(): Promise<UserDocuments[]> {
-    // Fetch data from your API here.
-    return [
-        {
-            id: 2,
-            url: "www.testurl2.com",
-            name: "businessanalystrole1",
-            lastModified: "03/02/2025",
-            expirationDate: "03/02/2027",
-            mime_type: "reference",
-            role: "businessanalyst",
-            contentOwner: "john",
-            status: "not_started",
-        },
-        // ...
-    ]
-}
-
-async function getDocuments(token: string) {
+async function getDocuments(token: string):Promise<Document[]> {
     const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
@@ -147,6 +91,7 @@ export default function Documents() {
                 : await getDocuments(sessionToken);
 
             setDocs(docsData);
+            console.log(docs);
         };
 
         fetchData();
@@ -154,11 +99,11 @@ export default function Documents() {
 
         return (
             <>
-                <div className="text-center font-bold text-primary">
+                <div className="text-left font-bold text-primary">
                     <h1 className="font-mono">Documents</h1>
                 </div>
                 <div>
-                    <DocumentsTable columns={columns} data={Data} />
+                    <DocumentsTable columns={columns} data={docs} />
                 </div>
 
             </>

@@ -61,7 +61,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
         filePayload: "test"
     }
     if (fileData.type === "Create") {
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/create-file`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/create-document`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     else if (fileData.type === "Edit") {
         console.log(data)
         console.log(token)
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-file`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-document`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

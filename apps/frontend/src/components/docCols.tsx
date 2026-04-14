@@ -3,7 +3,7 @@ import type {ColumnDef} from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react"
 import { Button } from './ui/button.tsx'
 
-export type UserDocuments = {
+export type Document = {
     id: number;
     url: string;
     name: string;
@@ -15,7 +15,7 @@ export type UserDocuments = {
     status: string;
 };
 
-export const columns: ColumnDef<UserDocuments>[] = [
+export const columns: ColumnDef<Document>[] = [
     {
         accessorKey: "favorite",
         header: "Favorite",
@@ -92,7 +92,7 @@ export const columns: ColumnDef<UserDocuments>[] = [
         },
     },
     {
-        accessorKey: "lastModified",
+        accessorKey: "last_modified",
         header: ({ column }) => {
             return (
                 <Button

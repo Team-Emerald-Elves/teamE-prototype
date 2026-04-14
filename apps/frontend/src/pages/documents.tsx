@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import {getToken, useAuth} from "@clerk/react"
 import {DocumentsTable} from "../components/documents-table.tsx"
 import { columns, type Document } from "../components/docCols.tsx"
-
+import PageHeader from "../components/page-header.tsx"
 
 
 
@@ -97,9 +97,7 @@ export default function Documents() {
 
         return (
             <>
-                <div className="text-left font-bold text-primary">
-                    <h1 className="font-mono">Documents</h1>
-                </div>
+                <PageHeader title="Documents" description="View your documents or modify them by adding, deleting, or updating existing ones."/>
                 <div>
                     <DocumentsTable columns={columns} data={docs} />
                 </div>

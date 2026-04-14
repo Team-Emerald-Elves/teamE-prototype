@@ -17,6 +17,7 @@ import type { Links,
               linksProps
 } from './types/linkstable.d.ts';
 import {useAuth} from "@clerk/react";
+import AddLinksForm from "@/components/addlinksform.tsx";
 
 async function getLinks() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
@@ -93,15 +94,28 @@ function LinksTable(){
 
     return (
         <>
-            <div className="shadow-md">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>URL</TableHead>
-                            <TableHead>Role</TableHead>
+            <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="flex justify-end">
+                    <div className="pr-6 py-2 relative flex items-center">
+                        <AddLinksForm
+                            type="Add Link"
+                            name="Name"
+                            url="www.example.com"
+                            description="What is the link used for"
+                            size={true}
+                            me={me}
+                        />
+                    </div>
+                    </div>
+                <Table className="border rounded-lg overflow-hidden">
+                    <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        <TableRow >
+                            <TableHead className=" text-[#0b4461] text-left">Name</TableHead>
+                            <TableHead className=" text-[#0b4461] text-left">URL</TableHead>
+                            <TableHead className=" text-[#0b4461] text-left">Role</TableHead>
                             <TableHead></TableHead>
-                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
+                            <TableHead className="flex text-left items-center pl-[35px] text-[#0b4461]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -127,6 +141,7 @@ function LinksTable(){
                         ))}
                     </TableBody>
                 </Table>
+            </div>
             </div>
         </>
     )

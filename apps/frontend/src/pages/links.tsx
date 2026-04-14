@@ -39,17 +39,6 @@ function Links() {
 
             <div className="relative w-full flex items-center">
 
-
-                <div className="ml-auto pr-6">
-                    <AddLinksForm
-                        type="Add Link"
-                        name="Name"
-                        url="www.example.com"
-                        description="What is the link used for"
-                        size={true}
-                        me={me}
-                    />
-                </div>
             </div>
             <div className="px-10 py-20 ">
                 <Linkstable me={me}/>

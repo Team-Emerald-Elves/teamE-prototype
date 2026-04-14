@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {PlusSignIcon} from "@hugeicons/core-free-icons";
 
 type Links = {
     id: number
@@ -100,7 +102,7 @@ function AddLinksForm(props: linkProp){
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={"px-6 py-3.5 text-lg bg-secondary text-secondary-foreground"} >Add Link</Button>} />
+                <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">

@@ -12,6 +12,8 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useState} from "react";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 
 type Links ={
     id: number,
@@ -70,7 +72,7 @@ function EditLinksForm(props: linkProp){
     return (
         <Dialog>
             <form>
-                <DialogTrigger render={<Button variant="outline" className={ "px-4 py-3 text-base bg-secondary text-secondary-foreground"} >Edit</Button>} />
+                <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">

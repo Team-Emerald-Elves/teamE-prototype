@@ -44,7 +44,6 @@ export default function StatisticsPage() {
         <>
             <h1> {docTotal}</h1>
             <h1> {empTotal}</h1>
-
         </>
     )
 }

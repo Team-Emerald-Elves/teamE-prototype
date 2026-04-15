@@ -76,7 +76,7 @@ supaBaseRouter.post(
 
             }
         })
-        const decoded = Buffer.from(document.filePayload, 'base64');
+        const decoded = Buffer.from(document.filePayload as string, 'base64');
         const payload: File = new File([decoded], document.name)
 
         // Upload document to authenticated employee with supabase bucket association.
@@ -193,7 +193,7 @@ supaBaseRouter.put(
             console.log("New doc created: ", newDoc);
 
             const {data, error} = await supabaseClient.storage
-                .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as File)
+                .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as string)
 
             if (!data || error) {
                 throw new Error(`Failed to modify document '${document.name}' for user '${employee.uname}'.`)

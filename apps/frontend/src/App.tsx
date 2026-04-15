@@ -12,6 +12,7 @@ import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
 
 import FavoritesPage from "./pages/favoritespage.tsx";
+import StatisticsPage from "./pages/statisticsPage.tsx";
 
 
 import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
@@ -81,6 +82,7 @@ function App() {
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="*" element={<NotFound />} />
                                 <Route path="/favorites" element={<FavoritesPage />} />
+                                <Route path="/statistics" element={<StatisticsPage />} />
                             </Routes>
                         </main>
                     </div>

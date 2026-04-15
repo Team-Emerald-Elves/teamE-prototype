@@ -210,23 +210,47 @@ supaBaseRouter.put(
     }
 )
 
-supaBaseRouter.get(
-    '/list-documents',
-    //requireAuth(),
-    async (req: Request, res: Response) => {
-        
-        const { userId, isAuthenticated } = getAuth(req)
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
-        }
+supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
+    const { isAuthenticated } = getAuth(req);
 
-        try {
-            const documents = await prisma.documentContent.findMany()
-            res.status(200).json(documents)
-        } catch(error) {
-            res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)
-        }
+    if (!isAuthenticated) {
+        return res.status(401).json({ error: "Not authenticated" });
     }
-)
+
+    try {
+        const documents = await prisma.documentContent.findMany();
+
+        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+
+        const employees = await prisma.employee.findMany({
+            where: {
+                id: { in: ownerIds },
+            },
+            select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+            },
+        });
+
+        const employeeMap = new Map(
+            employees.map(emp => [
+                emp.id,
+                `${emp.first_name} ${emp.last_name}`
+            ])
+        );
+
+        const formattedDocs = documents.map(doc => ({
+            ...doc,
+            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
+        }));
+
+        res.status(200).json(formattedDocs);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to fetch documents" });
+    }
+});
+
 
 export default supaBaseRouter

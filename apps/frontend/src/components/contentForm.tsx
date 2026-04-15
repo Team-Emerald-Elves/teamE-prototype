@@ -1,5 +1,5 @@
 import { Button } from './ui/button.tsx'
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {
     Dialog,
     DialogClose,
@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-import { useAuth } from '@clerk/react'
+import {useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
@@ -65,6 +65,7 @@ type FormDataType = {
     filePayload?: string,
 };
 
+
 async function getEmployees(sessionToken: string) {
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
@@ -81,9 +82,62 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
+async function getDocumentLock(sessionToken: string, documentID: number) {
+
+    const metaData = {
+        id: documentID
+    }
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+        },
+        body: JSON.stringify(metaData)
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
+
+    const data = await res.json();
+
+    return data;
+}
+
 function ContentForm(props: contentFormProps) {
 
-    const { getToken } = useAuth();
+    const [roles, setRoles] = useState<string[]>([]);
+    const {user} = useUser()
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch("http://localhost:3000/api/tests/me", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            console.log("Full response data:", data);
+
+        }
+
+        load();
+    }, [getToken,isSignedIn]);
+
+
+
+
 
     const now = new Date();
     const formattedDate = now.toLocaleString();
@@ -132,6 +186,26 @@ function ContentForm(props: contentFormProps) {
             .catch(console.error)
         })
     }, []);
+
+    const [sessionToken, setSessionToken] = useState("")
+
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [getToken])
+
+    const isAdmin = roles.some(role =>
+        role.toLowerCase().startsWith("admin")
+    );
+    //console.log(isAdmin);
+    useEffect(() => {
+        if(!isAdmin && roles.length >0 ){
+            setFormData(prev => ({...prev, role: roles[0]!}))
+        }
+    }, [isAdmin,roles]);
+    /*useEffect(() => {
+        console.log("Current roles:", roles);
+    }, [roles]);*/
+    if (!sessionToken ) return;
 
 
 
@@ -200,6 +274,8 @@ function ContentForm(props: contentFormProps) {
                                     </SelectContent>
                                 </Select>
                             </Field>
+
+                            {isAdmin ? (
                             <Field>
                                 <Label htmlFor="role" className="text-xs font-bold">Select Role For Content</Label>
                                 <Select
@@ -210,6 +286,7 @@ function ContentForm(props: contentFormProps) {
                                         <SelectValue placeholder={props.currentRole}/>
                                     </SelectTrigger>
                                     <SelectContent>
+
                                         <SelectGroup>
                                             <SelectLabel>Roles</SelectLabel>
                                             <SelectItem value="Underwriter">Underwriter</SelectItem>
@@ -218,6 +295,7 @@ function ContentForm(props: contentFormProps) {
                                     </SelectContent>
                                 </Select>
                             </Field>
+                            ): null}
                         </div>
                         <Field>
                             <Label htmlFor="contentType" className="text-xs font-bold">Select Content Type</Label>

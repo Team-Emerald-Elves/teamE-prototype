@@ -36,6 +36,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
 import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
 import FavoriteStar from "@/components/favoriteStar.tsx";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Download01Icon} from "@hugeicons/core-free-icons";
 
 type Document = {
     id: number;
@@ -120,21 +122,20 @@ export function DocumentsTable<TData extends Document, TValue>({
     if(roles.includes("administrator")) {
         return (
             <>
-                <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
-                            <InputGroup
-                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                                     onChange={(event) =>
                                         table.getColumn("name")?.setFilterValue(event.target.value)
                                     }
-                                    className="max-w-sm"
+                                    className="w-full"
                                 />
                                 <InputGroupAddon>
-                                    <Search/>
+                                    <Search />
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="flex justify-end ml-auto">
@@ -157,7 +158,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
+                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
                                                 <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -216,7 +217,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             />
 
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id}>
+                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
@@ -236,6 +237,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         size={false}
                                                     />
                                                     <DeleteConfirmationPopup target={doc.id}/>
+                                                    <a
+                                                        href={doc.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        <HugeiconsIcon icon={Download01Icon} />
+                                                    </a>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -269,21 +278,20 @@ export function DocumentsTable<TData extends Document, TValue>({
     else{
         return(
             <>
-                <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
-                            <InputGroup
-                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                                     onChange={(event) =>
                                         table.getColumn("name")?.setFilterValue(event.target.value)
                                     }
-                                    className="max-w-sm"
+                                    className="w-full"
                                 />
                                 <InputGroupAddon>
-                                    <Search/>
+                                    <Search />
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="flex justify-end ml-auto">
@@ -302,10 +310,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                             </div>
                         </div>
                     <Table className="border rounded-lg overflow-hidden">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">
                         {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
-                                    <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
+                                    <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -369,7 +377,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             }}
                                         />
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
+                                            <TableCell key={cell.id} className="px-1 py-0.5 text-center">
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}
@@ -394,6 +402,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 {canEdit && (
                                                     <DeleteConfirmationPopup target={doc.id} />
                                                 )}
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
                                             </div>
                                         </TableCell>
                                     </TableRow>

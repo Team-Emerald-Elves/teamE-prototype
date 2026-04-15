@@ -10,7 +10,6 @@ import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, requireAuth} from '@clerk/express'
-
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
@@ -19,6 +18,7 @@ import APIRouter from './routes/api.ts';
 import linkRoleRoute from "./routes/get-link-role.ts";
 import favoriteRoute from "./routes/get-favorited.ts";
 import updateFavoriteRoute from "./routes/update-favorite.ts";
+import statsRoutes from "./routes/statistics.ts";
 
 
 const app = express();
@@ -56,6 +56,7 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
+app.get('/statistics', statsRoutes)
 app.get('/get-favorited', favoriteRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 

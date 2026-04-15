@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model BucketMeta
@@ -237,7 +237,6 @@ export type BucketMetaWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"BucketMeta"> | Date | string
   employeeId?: Prisma.UuidFilter<"BucketMeta"> | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
-  documentContents?: Prisma.DocumentContentListRelationFilter
 }
 
 export type BucketMetaOrderByWithRelationInput = {
@@ -250,7 +249,6 @@ export type BucketMetaOrderByWithRelationInput = {
   updated_at?: Prisma.SortOrder
   employeeId?: Prisma.SortOrder
   employee?: Prisma.EmployeeOrderByWithRelationInput
-  documentContents?: Prisma.documentContentOrderByRelationAggregateInput
 }
 
 export type BucketMetaWhereUniqueInput = Prisma.AtLeast<{
@@ -266,7 +264,6 @@ export type BucketMetaWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"BucketMeta"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"BucketMeta"> | Date | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
-  documentContents?: Prisma.DocumentContentListRelationFilter
 }, "id" | "id" | "employeeId">
 
 export type BucketMetaOrderByWithAggregationInput = {
@@ -308,7 +305,6 @@ export type BucketMetaCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   employee: Prisma.EmployeeCreateNestedOneWithoutBucketInput
-  documentContents?: Prisma.documentContentCreateNestedManyWithoutBucketInput
 }
 
 export type BucketMetaUncheckedCreateInput = {
@@ -320,7 +316,6 @@ export type BucketMetaUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   employeeId: string
-  documentContents?: Prisma.documentContentUncheckedCreateNestedManyWithoutBucketInput
 }
 
 export type BucketMetaUpdateInput = {
@@ -332,7 +327,6 @@ export type BucketMetaUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutBucketNestedInput
-  documentContents?: Prisma.documentContentUpdateManyWithoutBucketNestedInput
 }
 
 export type BucketMetaUncheckedUpdateInput = {
@@ -344,7 +338,6 @@ export type BucketMetaUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
-  documentContents?: Prisma.documentContentUncheckedUpdateManyWithoutBucketNestedInput
 }
 
 export type BucketMetaCreateManyInput = {
@@ -384,14 +377,6 @@ export type BucketMetaNullableScalarRelationFilter = {
   isNot?: Prisma.BucketMetaWhereInput | null
 }
 
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type BucketMetaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   public?: Prisma.SortOrder
@@ -429,11 +414,6 @@ export type BucketMetaMinOrderByAggregateInput = {
 
 export type BucketMetaSumOrderByAggregateInput = {
   file_size_limit?: Prisma.SortOrder
-}
-
-export type BucketMetaScalarRelationFilter = {
-  is?: Prisma.BucketMetaWhereInput
-  isNot?: Prisma.BucketMetaWhereInput
 }
 
 export type BucketMetaCreateNestedOneWithoutEmployeeInput = {
@@ -481,20 +461,6 @@ export type BucketMetaUpdateallowed_mime_typesInput = {
   push?: string | string[]
 }
 
-export type BucketMetaCreateNestedOneWithoutDocumentContentsInput = {
-  create?: Prisma.XOR<Prisma.BucketMetaCreateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedCreateWithoutDocumentContentsInput>
-  connectOrCreate?: Prisma.BucketMetaCreateOrConnectWithoutDocumentContentsInput
-  connect?: Prisma.BucketMetaWhereUniqueInput
-}
-
-export type BucketMetaUpdateOneRequiredWithoutDocumentContentsNestedInput = {
-  create?: Prisma.XOR<Prisma.BucketMetaCreateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedCreateWithoutDocumentContentsInput>
-  connectOrCreate?: Prisma.BucketMetaCreateOrConnectWithoutDocumentContentsInput
-  upsert?: Prisma.BucketMetaUpsertWithoutDocumentContentsInput
-  connect?: Prisma.BucketMetaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.BucketMetaUpdateToOneWithWhereWithoutDocumentContentsInput, Prisma.BucketMetaUpdateWithoutDocumentContentsInput>, Prisma.BucketMetaUncheckedUpdateWithoutDocumentContentsInput>
-}
-
 export type BucketMetaCreateWithoutEmployeeInput = {
   id?: string
   public?: boolean
@@ -503,7 +469,6 @@ export type BucketMetaCreateWithoutEmployeeInput = {
   allowed_mime_types?: Prisma.BucketMetaCreateallowed_mime_typesInput | string[]
   created_at?: Date | string
   updated_at?: Date | string
-  documentContents?: Prisma.documentContentCreateNestedManyWithoutBucketInput
 }
 
 export type BucketMetaUncheckedCreateWithoutEmployeeInput = {
@@ -514,7 +479,6 @@ export type BucketMetaUncheckedCreateWithoutEmployeeInput = {
   allowed_mime_types?: Prisma.BucketMetaCreateallowed_mime_typesInput | string[]
   created_at?: Date | string
   updated_at?: Date | string
-  documentContents?: Prisma.documentContentUncheckedCreateNestedManyWithoutBucketInput
 }
 
 export type BucketMetaCreateOrConnectWithoutEmployeeInput = {
@@ -541,7 +505,6 @@ export type BucketMetaUpdateWithoutEmployeeInput = {
   allowed_mime_types?: Prisma.BucketMetaUpdateallowed_mime_typesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  documentContents?: Prisma.documentContentUpdateManyWithoutBucketNestedInput
 }
 
 export type BucketMetaUncheckedUpdateWithoutEmployeeInput = {
@@ -552,98 +515,8 @@ export type BucketMetaUncheckedUpdateWithoutEmployeeInput = {
   allowed_mime_types?: Prisma.BucketMetaUpdateallowed_mime_typesInput | string[]
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  documentContents?: Prisma.documentContentUncheckedUpdateManyWithoutBucketNestedInput
 }
 
-export type BucketMetaCreateWithoutDocumentContentsInput = {
-  id?: string
-  public?: boolean
-  type?: string
-  file_size_limit?: number
-  allowed_mime_types?: Prisma.BucketMetaCreateallowed_mime_typesInput | string[]
-  created_at?: Date | string
-  updated_at?: Date | string
-  employee: Prisma.EmployeeCreateNestedOneWithoutBucketInput
-}
-
-export type BucketMetaUncheckedCreateWithoutDocumentContentsInput = {
-  id?: string
-  public?: boolean
-  type?: string
-  file_size_limit?: number
-  allowed_mime_types?: Prisma.BucketMetaCreateallowed_mime_typesInput | string[]
-  created_at?: Date | string
-  updated_at?: Date | string
-  employeeId: string
-}
-
-export type BucketMetaCreateOrConnectWithoutDocumentContentsInput = {
-  where: Prisma.BucketMetaWhereUniqueInput
-  create: Prisma.XOR<Prisma.BucketMetaCreateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedCreateWithoutDocumentContentsInput>
-}
-
-export type BucketMetaUpsertWithoutDocumentContentsInput = {
-  update: Prisma.XOR<Prisma.BucketMetaUpdateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedUpdateWithoutDocumentContentsInput>
-  create: Prisma.XOR<Prisma.BucketMetaCreateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedCreateWithoutDocumentContentsInput>
-  where?: Prisma.BucketMetaWhereInput
-}
-
-export type BucketMetaUpdateToOneWithWhereWithoutDocumentContentsInput = {
-  where?: Prisma.BucketMetaWhereInput
-  data: Prisma.XOR<Prisma.BucketMetaUpdateWithoutDocumentContentsInput, Prisma.BucketMetaUncheckedUpdateWithoutDocumentContentsInput>
-}
-
-export type BucketMetaUpdateWithoutDocumentContentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  public?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  file_size_limit?: Prisma.IntFieldUpdateOperationsInput | number
-  allowed_mime_types?: Prisma.BucketMetaUpdateallowed_mime_typesInput | string[]
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employee?: Prisma.EmployeeUpdateOneRequiredWithoutBucketNestedInput
-}
-
-export type BucketMetaUncheckedUpdateWithoutDocumentContentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  public?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  file_size_limit?: Prisma.IntFieldUpdateOperationsInput | number
-  allowed_mime_types?: Prisma.BucketMetaUpdateallowed_mime_typesInput | string[]
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-
-/**
- * Count Type BucketMetaCountOutputType
- */
-
-export type BucketMetaCountOutputType = {
-  documentContents: number
-}
-
-export type BucketMetaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  documentContents?: boolean | BucketMetaCountOutputTypeCountDocumentContentsArgs
-}
-
-/**
- * BucketMetaCountOutputType without action
- */
-export type BucketMetaCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the BucketMetaCountOutputType
-   */
-  select?: Prisma.BucketMetaCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * BucketMetaCountOutputType without action
- */
-export type BucketMetaCountOutputTypeCountDocumentContentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.documentContentWhereInput
-}
 
 
 export type BucketMetaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -656,8 +529,6 @@ export type BucketMetaSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   updated_at?: boolean
   employeeId?: boolean
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
-  documentContents?: boolean | Prisma.BucketMeta$documentContentsArgs<ExtArgs>
-  _count?: boolean | Prisma.BucketMetaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bucketMeta"]>
 
 export type BucketMetaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -698,8 +569,6 @@ export type BucketMetaSelectScalar = {
 export type BucketMetaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "public" | "type" | "file_size_limit" | "allowed_mime_types" | "created_at" | "updated_at" | "employeeId", ExtArgs["result"]["bucketMeta"]>
 export type BucketMetaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
-  documentContents?: boolean | Prisma.BucketMeta$documentContentsArgs<ExtArgs>
-  _count?: boolean | Prisma.BucketMetaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BucketMetaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
@@ -712,7 +581,6 @@ export type $BucketMetaPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "BucketMeta"
   objects: {
     employee: Prisma.$EmployeePayload<ExtArgs>
-    documentContents: Prisma.$documentContentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1118,7 +986,6 @@ readonly fields: BucketMetaFieldRefs;
 export interface Prisma__BucketMetaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  documentContents<T extends Prisma.BucketMeta$documentContentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BucketMeta$documentContentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$documentContentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1554,30 +1421,6 @@ export type BucketMetaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many BucketMetas to delete.
    */
   limit?: number
-}
-
-/**
- * BucketMeta.documentContents
- */
-export type BucketMeta$documentContentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the documentContent
-   */
-  select?: Prisma.documentContentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the documentContent
-   */
-  omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
-  where?: Prisma.documentContentWhereInput
-  orderBy?: Prisma.documentContentOrderByWithRelationInput | Prisma.documentContentOrderByWithRelationInput[]
-  cursor?: Prisma.documentContentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DocumentContentScalarFieldEnum | Prisma.DocumentContentScalarFieldEnum[]
 }
 
 /**

@@ -122,7 +122,7 @@ function LinksTable(){
                         {links.map((l) => (
                             <TableRow key={l.link_name}>
                                 <TableCell>{l.link_name}</TableCell>
-                                <TableCell>{l.url}</TableCell>
+                                <TableCell><a href={l.url}></a></TableCell>
                                 <TableCell>{l.owner}</TableCell>
                                 <TableCell></TableCell>
 

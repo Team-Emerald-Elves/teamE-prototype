@@ -16,10 +16,10 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "../models.js"
-import { type PrismaClient } from "./class.js"
+import type * as Prisma from "../models.ts"
+import { type PrismaClient } from "./class.ts"
 
-export type * from '../models.js'
+export type * from '../models.ts'
 
 export type DMMF = typeof runtime.DMMF
 
@@ -858,18 +858,18 @@ export type BucketMetaScalarFieldEnum = (typeof BucketMetaScalarFieldEnum)[keyof
 
 export const DocumentContentScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   url: 'url',
-  content_owner: 'content_owner',
-  lock: 'lock',
-  assigned_role: 'assigned_role',
+  name: 'name',
   bucketId: 'bucketId',
   last_modified: 'last_modified',
   expiration_date: 'expiration_date',
   mime_type: 'mime_type',
   document_status: 'document_status',
   document_type: 'document_type',
-  favorite: 'favorite'
+  assigned_role: 'assigned_role',
+  content_owner: 'content_owner',
+  favorite: 'favorite',
+  lock: 'lock'
 } as const
 
 export type DocumentContentScalarFieldEnum = (typeof DocumentContentScalarFieldEnum)[keyof typeof DocumentContentScalarFieldEnum]
@@ -958,20 +958,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'UserRoles[]'
- */
-export type ListEnumUserRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRoles[]'>
-    
-
-
-/**
- * Reference to a field of type 'UserRoles'
- */
-export type EnumUserRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRoles'>
-    
-
-
-/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -989,6 +975,20 @@ export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Status[]'
  */
 export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRoles'
+ */
+export type EnumUserRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRoles'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRoles[]'
+ */
+export type ListEnumUserRolesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRoles[]'>
     
 
 

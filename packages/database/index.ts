@@ -1,28 +1,48 @@
-import { PrismaClient } from './prisma/generated/client.ts';
-import {PrismaPg} from '@prisma/adapter-pg';
-import dotenv from 'dotenv';
-import { enviroments } from './lib/env.js';
-dotenv.config();
+import { PrismaClient } from './prisma/generated/client.ts'
+import { PrismaPg } from '@prisma/adapter-pg'
+import dotenv from 'dotenv'
+import { enviroments } from './lib/env.ts'
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+// 1. Create a reliable __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-let dataBaseURL = process.env[(process.env.NODE_ENV?.toUpperCase() ?? "") + "_DIRECT_URL"]
+// Load env files
 
-if(process.env.NODE_ENV as string in enviroments) {
-    console.log(`Using "${dataBaseURL}" database url.`)
-    process.env[process.env.NODE_ENV?.toUpperCase() ?? "" + "DIRECT_URL"]
-} else throw new Error("Enviroment not found: " + process.env.NODE_ENV)
+dotenv.config({
+    path: path.resolve(__dirname, '../../apps/backend/.env'),
+    override: true
+});
 
+dotenv.config({ 
+    path: path.resolve(__dirname, '.env'),
+    override: true
+});
 
-// Export all prisma client declarations.
+const nodeEnv = process.env.NODE_ENV?.toUpperCase() || "DEVELOPMENT"
+const directUrlKey = `${nodeEnv}_DIRECT_URL`
+
+let dataBaseURL = process.env[directUrlKey]
+
+console.log(`Searching for key: ${directUrlKey}`)
+console.log(`DB URL: ${dataBaseURL}`)
+
+// 2. Validate environment
+if (!(process.env.NODE_ENV! in enviroments)) {
+    throw new Error("Environment not found: " + process.env.NODE_ENV)
+}
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
+
 const prisma = globalForPrisma.prisma || new PrismaClient({
     adapter: new PrismaPg({
-        connectionString: dataBaseURL
+        connectionString: dataBaseURL // Ensure this isn't undefined
     })
 });
 
 export default prisma
+export * from './prisma/generated/client.ts'
 
-export * from './prisma/generated/client.ts';
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma

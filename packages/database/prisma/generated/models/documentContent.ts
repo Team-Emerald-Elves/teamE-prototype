@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model documentContent
@@ -36,50 +36,50 @@ export type DocumentContentSumAggregateOutputType = {
 
 export type DocumentContentMinAggregateOutputType = {
   id: number | null
-  name: string | null
   url: string | null
-  content_owner: string | null
-  lock: boolean | null
-  assigned_role: $Enums.UserRoles | null
+  name: string | null
   bucketId: string | null
   last_modified: Date | null
   expiration_date: Date | null
   mime_type: string | null
   document_status: $Enums.Status | null
   document_type: string | null
+  assigned_role: $Enums.UserRoles | null
+  content_owner: string | null
   favorite: boolean | null
+  lock: boolean | null
 }
 
 export type DocumentContentMaxAggregateOutputType = {
   id: number | null
-  name: string | null
   url: string | null
-  content_owner: string | null
-  lock: boolean | null
-  assigned_role: $Enums.UserRoles | null
+  name: string | null
   bucketId: string | null
   last_modified: Date | null
   expiration_date: Date | null
   mime_type: string | null
   document_status: $Enums.Status | null
   document_type: string | null
+  assigned_role: $Enums.UserRoles | null
+  content_owner: string | null
   favorite: boolean | null
+  lock: boolean | null
 }
 
 export type DocumentContentCountAggregateOutputType = {
   id: number
-  name: number
   url: number
-  content_owner: number
-  lock: number
-  assigned_role: number
+  name: number
   bucketId: number
   last_modified: number
   expiration_date: number
   mime_type: number
   document_status: number
   document_type: number
+  assigned_role: number
+  content_owner: number
   favorite: number
+  lock: number
   _all: number
 }
 
@@ -94,50 +94,50 @@ export type DocumentContentSumAggregateInputType = {
 
 export type DocumentContentMinAggregateInputType = {
   id?: true
-  name?: true
   url?: true
-  content_owner?: true
-  lock?: true
-  assigned_role?: true
+  name?: true
   bucketId?: true
   last_modified?: true
   expiration_date?: true
   mime_type?: true
   document_status?: true
   document_type?: true
+  assigned_role?: true
+  content_owner?: true
   favorite?: true
+  lock?: true
 }
 
 export type DocumentContentMaxAggregateInputType = {
   id?: true
-  name?: true
   url?: true
-  content_owner?: true
-  lock?: true
-  assigned_role?: true
+  name?: true
   bucketId?: true
   last_modified?: true
   expiration_date?: true
   mime_type?: true
   document_status?: true
   document_type?: true
+  assigned_role?: true
+  content_owner?: true
   favorite?: true
+  lock?: true
 }
 
 export type DocumentContentCountAggregateInputType = {
   id?: true
-  name?: true
   url?: true
-  content_owner?: true
-  lock?: true
-  assigned_role?: true
+  name?: true
   bucketId?: true
   last_modified?: true
   expiration_date?: true
   mime_type?: true
   document_status?: true
   document_type?: true
+  assigned_role?: true
+  content_owner?: true
   favorite?: true
+  lock?: true
   _all?: true
 }
 
@@ -229,18 +229,18 @@ export type documentContentGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 
 export type DocumentContentGroupByOutputType = {
   id: number
-  name: string
   url: string | null
-  content_owner: string
-  lock: boolean
-  assigned_role: $Enums.UserRoles
+  name: string
   bucketId: string
   last_modified: Date
   expiration_date: Date
   mime_type: string
   document_status: $Enums.Status
-  document_type: string
-  favorite: boolean
+  document_type: string | null
+  assigned_role: $Enums.UserRoles | null
+  content_owner: string | null
+  favorite: boolean | null
+  lock: boolean | null
   _count: DocumentContentCountAggregateOutputType | null
   _avg: DocumentContentAvgAggregateOutputType | null
   _sum: DocumentContentSumAggregateOutputType | null
@@ -268,72 +268,69 @@ export type documentContentWhereInput = {
   OR?: Prisma.documentContentWhereInput[]
   NOT?: Prisma.documentContentWhereInput | Prisma.documentContentWhereInput[]
   id?: Prisma.IntFilter<"documentContent"> | number
-  name?: Prisma.StringFilter<"documentContent"> | string
   url?: Prisma.StringNullableFilter<"documentContent"> | string | null
-  content_owner?: Prisma.StringFilter<"documentContent"> | string
-  lock?: Prisma.BoolFilter<"documentContent"> | boolean
-  assigned_role?: Prisma.EnumUserRolesFilter<"documentContent"> | $Enums.UserRoles
+  name?: Prisma.StringFilter<"documentContent"> | string
   bucketId?: Prisma.UuidFilter<"documentContent"> | string
   last_modified?: Prisma.DateTimeFilter<"documentContent"> | Date | string
   expiration_date?: Prisma.DateTimeFilter<"documentContent"> | Date | string
   mime_type?: Prisma.StringFilter<"documentContent"> | string
   document_status?: Prisma.EnumStatusFilter<"documentContent"> | $Enums.Status
-  document_type?: Prisma.StringFilter<"documentContent"> | string
-  favorite?: Prisma.BoolFilter<"documentContent"> | boolean
-  bucket?: Prisma.XOR<Prisma.BucketMetaScalarRelationFilter, Prisma.BucketMetaWhereInput>
+  document_type?: Prisma.StringNullableFilter<"documentContent"> | string | null
+  assigned_role?: Prisma.EnumUserRolesNullableFilter<"documentContent"> | $Enums.UserRoles | null
+  content_owner?: Prisma.StringNullableFilter<"documentContent"> | string | null
+  favorite?: Prisma.BoolNullableFilter<"documentContent"> | boolean | null
+  lock?: Prisma.BoolNullableFilter<"documentContent"> | boolean | null
 }
 
 export type documentContentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   url?: Prisma.SortOrderInput | Prisma.SortOrder
-  content_owner?: Prisma.SortOrder
-  lock?: Prisma.SortOrder
-  assigned_role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   bucketId?: Prisma.SortOrder
   last_modified?: Prisma.SortOrder
   expiration_date?: Prisma.SortOrder
   mime_type?: Prisma.SortOrder
   document_status?: Prisma.SortOrder
-  document_type?: Prisma.SortOrder
-  favorite?: Prisma.SortOrder
-  bucket?: Prisma.BucketMetaOrderByWithRelationInput
+  document_type?: Prisma.SortOrderInput | Prisma.SortOrder
+  assigned_role?: Prisma.SortOrderInput | Prisma.SortOrder
+  content_owner?: Prisma.SortOrderInput | Prisma.SortOrder
+  favorite?: Prisma.SortOrderInput | Prisma.SortOrder
+  lock?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type documentContentWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  name?: string
   AND?: Prisma.documentContentWhereInput | Prisma.documentContentWhereInput[]
   OR?: Prisma.documentContentWhereInput[]
   NOT?: Prisma.documentContentWhereInput | Prisma.documentContentWhereInput[]
-  name?: Prisma.StringFilter<"documentContent"> | string
   url?: Prisma.StringNullableFilter<"documentContent"> | string | null
-  content_owner?: Prisma.StringFilter<"documentContent"> | string
-  lock?: Prisma.BoolFilter<"documentContent"> | boolean
-  assigned_role?: Prisma.EnumUserRolesFilter<"documentContent"> | $Enums.UserRoles
   bucketId?: Prisma.UuidFilter<"documentContent"> | string
   last_modified?: Prisma.DateTimeFilter<"documentContent"> | Date | string
   expiration_date?: Prisma.DateTimeFilter<"documentContent"> | Date | string
   mime_type?: Prisma.StringFilter<"documentContent"> | string
   document_status?: Prisma.EnumStatusFilter<"documentContent"> | $Enums.Status
-  document_type?: Prisma.StringFilter<"documentContent"> | string
-  favorite?: Prisma.BoolFilter<"documentContent"> | boolean
-  bucket?: Prisma.XOR<Prisma.BucketMetaScalarRelationFilter, Prisma.BucketMetaWhereInput>
-}, "id" | "id">
+  document_type?: Prisma.StringNullableFilter<"documentContent"> | string | null
+  assigned_role?: Prisma.EnumUserRolesNullableFilter<"documentContent"> | $Enums.UserRoles | null
+  content_owner?: Prisma.StringNullableFilter<"documentContent"> | string | null
+  favorite?: Prisma.BoolNullableFilter<"documentContent"> | boolean | null
+  lock?: Prisma.BoolNullableFilter<"documentContent"> | boolean | null
+}, "id" | "name">
 
 export type documentContentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   url?: Prisma.SortOrderInput | Prisma.SortOrder
-  content_owner?: Prisma.SortOrder
-  lock?: Prisma.SortOrder
-  assigned_role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   bucketId?: Prisma.SortOrder
   last_modified?: Prisma.SortOrder
   expiration_date?: Prisma.SortOrder
   mime_type?: Prisma.SortOrder
   document_status?: Prisma.SortOrder
-  document_type?: Prisma.SortOrder
-  favorite?: Prisma.SortOrder
+  document_type?: Prisma.SortOrderInput | Prisma.SortOrder
+  assigned_role?: Prisma.SortOrderInput | Prisma.SortOrder
+  content_owner?: Prisma.SortOrderInput | Prisma.SortOrder
+  favorite?: Prisma.SortOrderInput | Prisma.SortOrder
+  lock?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.documentContentCountOrderByAggregateInput
   _avg?: Prisma.documentContentAvgOrderByAggregateInput
   _max?: Prisma.documentContentMaxOrderByAggregateInput
@@ -346,152 +343,143 @@ export type documentContentScalarWhereWithAggregatesInput = {
   OR?: Prisma.documentContentScalarWhereWithAggregatesInput[]
   NOT?: Prisma.documentContentScalarWhereWithAggregatesInput | Prisma.documentContentScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"documentContent"> | number
-  name?: Prisma.StringWithAggregatesFilter<"documentContent"> | string
   url?: Prisma.StringNullableWithAggregatesFilter<"documentContent"> | string | null
-  content_owner?: Prisma.StringWithAggregatesFilter<"documentContent"> | string
-  lock?: Prisma.BoolWithAggregatesFilter<"documentContent"> | boolean
-  assigned_role?: Prisma.EnumUserRolesWithAggregatesFilter<"documentContent"> | $Enums.UserRoles
+  name?: Prisma.StringWithAggregatesFilter<"documentContent"> | string
   bucketId?: Prisma.UuidWithAggregatesFilter<"documentContent"> | string
   last_modified?: Prisma.DateTimeWithAggregatesFilter<"documentContent"> | Date | string
   expiration_date?: Prisma.DateTimeWithAggregatesFilter<"documentContent"> | Date | string
   mime_type?: Prisma.StringWithAggregatesFilter<"documentContent"> | string
   document_status?: Prisma.EnumStatusWithAggregatesFilter<"documentContent"> | $Enums.Status
-  document_type?: Prisma.StringWithAggregatesFilter<"documentContent"> | string
-  favorite?: Prisma.BoolWithAggregatesFilter<"documentContent"> | boolean
+  document_type?: Prisma.StringNullableWithAggregatesFilter<"documentContent"> | string | null
+  assigned_role?: Prisma.EnumUserRolesNullableWithAggregatesFilter<"documentContent"> | $Enums.UserRoles | null
+  content_owner?: Prisma.StringNullableWithAggregatesFilter<"documentContent"> | string | null
+  favorite?: Prisma.BoolNullableWithAggregatesFilter<"documentContent"> | boolean | null
+  lock?: Prisma.BoolNullableWithAggregatesFilter<"documentContent"> | boolean | null
 }
 
 export type documentContentCreateInput = {
-  name: string
   url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
+  name: string
+  bucketId: string
   last_modified?: Date | string
   expiration_date: Date | string
   mime_type?: string
   document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
-  bucket: Prisma.BucketMetaCreateNestedOneWithoutDocumentContentsInput
+  document_type?: string | null
+  assigned_role?: $Enums.UserRoles | null
+  content_owner?: string | null
+  favorite?: boolean | null
+  lock?: boolean | null
 }
 
 export type documentContentUncheckedCreateInput = {
   id?: number
-  name: string
   url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
+  name: string
   bucketId: string
   last_modified?: Date | string
   expiration_date: Date | string
   mime_type?: string
   document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
+  document_type?: string | null
+  assigned_role?: $Enums.UserRoles | null
+  content_owner?: string | null
+  favorite?: boolean | null
+  lock?: boolean | null
 }
 
 export type documentContentUpdateInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  bucketId?: Prisma.StringFieldUpdateOperationsInput | string
   last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mime_type?: Prisma.StringFieldUpdateOperationsInput | string
   document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  bucket?: Prisma.BucketMetaUpdateOneRequiredWithoutDocumentContentsNestedInput
+  document_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assigned_role?: Prisma.NullableEnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles | null
+  content_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  lock?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
 export type documentContentUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   bucketId?: Prisma.StringFieldUpdateOperationsInput | string
   last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mime_type?: Prisma.StringFieldUpdateOperationsInput | string
   document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  document_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assigned_role?: Prisma.NullableEnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles | null
+  content_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  lock?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
 export type documentContentCreateManyInput = {
   id?: number
-  name: string
   url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
+  name: string
   bucketId: string
   last_modified?: Date | string
   expiration_date: Date | string
   mime_type?: string
   document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
+  document_type?: string | null
+  assigned_role?: $Enums.UserRoles | null
+  content_owner?: string | null
+  favorite?: boolean | null
+  lock?: boolean | null
 }
 
 export type documentContentUpdateManyMutationInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
-  last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  mime_type?: Prisma.StringFieldUpdateOperationsInput | string
-  document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
-}
-
-export type documentContentUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
   bucketId?: Prisma.StringFieldUpdateOperationsInput | string
   last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mime_type?: Prisma.StringFieldUpdateOperationsInput | string
   document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  document_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assigned_role?: Prisma.NullableEnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles | null
+  content_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  lock?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
-export type DocumentContentListRelationFilter = {
-  every?: Prisma.documentContentWhereInput
-  some?: Prisma.documentContentWhereInput
-  none?: Prisma.documentContentWhereInput
-}
-
-export type documentContentOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type documentContentUncheckedUpdateManyInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  bucketId?: Prisma.StringFieldUpdateOperationsInput | string
+  last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mime_type?: Prisma.StringFieldUpdateOperationsInput | string
+  document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  document_type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assigned_role?: Prisma.NullableEnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles | null
+  content_owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  favorite?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  lock?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
 }
 
 export type documentContentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   url?: Prisma.SortOrder
-  content_owner?: Prisma.SortOrder
-  lock?: Prisma.SortOrder
-  assigned_role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   bucketId?: Prisma.SortOrder
   last_modified?: Prisma.SortOrder
   expiration_date?: Prisma.SortOrder
   mime_type?: Prisma.SortOrder
   document_status?: Prisma.SortOrder
   document_type?: Prisma.SortOrder
+  assigned_role?: Prisma.SortOrder
+  content_owner?: Prisma.SortOrder
   favorite?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 export type documentContentAvgOrderByAggregateInput = {
@@ -500,322 +488,137 @@ export type documentContentAvgOrderByAggregateInput = {
 
 export type documentContentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   url?: Prisma.SortOrder
-  content_owner?: Prisma.SortOrder
-  lock?: Prisma.SortOrder
-  assigned_role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   bucketId?: Prisma.SortOrder
   last_modified?: Prisma.SortOrder
   expiration_date?: Prisma.SortOrder
   mime_type?: Prisma.SortOrder
   document_status?: Prisma.SortOrder
   document_type?: Prisma.SortOrder
+  assigned_role?: Prisma.SortOrder
+  content_owner?: Prisma.SortOrder
   favorite?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 export type documentContentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
   url?: Prisma.SortOrder
-  content_owner?: Prisma.SortOrder
-  lock?: Prisma.SortOrder
-  assigned_role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   bucketId?: Prisma.SortOrder
   last_modified?: Prisma.SortOrder
   expiration_date?: Prisma.SortOrder
   mime_type?: Prisma.SortOrder
   document_status?: Prisma.SortOrder
   document_type?: Prisma.SortOrder
+  assigned_role?: Prisma.SortOrder
+  content_owner?: Prisma.SortOrder
   favorite?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 export type documentContentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type documentContentCreateNestedManyWithoutBucketInput = {
-  create?: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput> | Prisma.documentContentCreateWithoutBucketInput[] | Prisma.documentContentUncheckedCreateWithoutBucketInput[]
-  connectOrCreate?: Prisma.documentContentCreateOrConnectWithoutBucketInput | Prisma.documentContentCreateOrConnectWithoutBucketInput[]
-  createMany?: Prisma.documentContentCreateManyBucketInputEnvelope
-  connect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-}
-
-export type documentContentUncheckedCreateNestedManyWithoutBucketInput = {
-  create?: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput> | Prisma.documentContentCreateWithoutBucketInput[] | Prisma.documentContentUncheckedCreateWithoutBucketInput[]
-  connectOrCreate?: Prisma.documentContentCreateOrConnectWithoutBucketInput | Prisma.documentContentCreateOrConnectWithoutBucketInput[]
-  createMany?: Prisma.documentContentCreateManyBucketInputEnvelope
-  connect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-}
-
-export type documentContentUpdateManyWithoutBucketNestedInput = {
-  create?: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput> | Prisma.documentContentCreateWithoutBucketInput[] | Prisma.documentContentUncheckedCreateWithoutBucketInput[]
-  connectOrCreate?: Prisma.documentContentCreateOrConnectWithoutBucketInput | Prisma.documentContentCreateOrConnectWithoutBucketInput[]
-  upsert?: Prisma.documentContentUpsertWithWhereUniqueWithoutBucketInput | Prisma.documentContentUpsertWithWhereUniqueWithoutBucketInput[]
-  createMany?: Prisma.documentContentCreateManyBucketInputEnvelope
-  set?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  disconnect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  delete?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  connect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  update?: Prisma.documentContentUpdateWithWhereUniqueWithoutBucketInput | Prisma.documentContentUpdateWithWhereUniqueWithoutBucketInput[]
-  updateMany?: Prisma.documentContentUpdateManyWithWhereWithoutBucketInput | Prisma.documentContentUpdateManyWithWhereWithoutBucketInput[]
-  deleteMany?: Prisma.documentContentScalarWhereInput | Prisma.documentContentScalarWhereInput[]
-}
-
-export type documentContentUncheckedUpdateManyWithoutBucketNestedInput = {
-  create?: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput> | Prisma.documentContentCreateWithoutBucketInput[] | Prisma.documentContentUncheckedCreateWithoutBucketInput[]
-  connectOrCreate?: Prisma.documentContentCreateOrConnectWithoutBucketInput | Prisma.documentContentCreateOrConnectWithoutBucketInput[]
-  upsert?: Prisma.documentContentUpsertWithWhereUniqueWithoutBucketInput | Prisma.documentContentUpsertWithWhereUniqueWithoutBucketInput[]
-  createMany?: Prisma.documentContentCreateManyBucketInputEnvelope
-  set?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  disconnect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  delete?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  connect?: Prisma.documentContentWhereUniqueInput | Prisma.documentContentWhereUniqueInput[]
-  update?: Prisma.documentContentUpdateWithWhereUniqueWithoutBucketInput | Prisma.documentContentUpdateWithWhereUniqueWithoutBucketInput[]
-  updateMany?: Prisma.documentContentUpdateManyWithWhereWithoutBucketInput | Prisma.documentContentUpdateManyWithWhereWithoutBucketInput[]
-  deleteMany?: Prisma.documentContentScalarWhereInput | Prisma.documentContentScalarWhereInput[]
-}
-
-export type EnumUserRolesFieldUpdateOperationsInput = {
-  set?: $Enums.UserRoles
-}
-
 export type EnumStatusFieldUpdateOperationsInput = {
   set?: $Enums.Status
 }
 
-export type documentContentCreateWithoutBucketInput = {
-  name: string
-  url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
-  last_modified?: Date | string
-  expiration_date: Date | string
-  mime_type?: string
-  document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
+export type NullableEnumUserRolesFieldUpdateOperationsInput = {
+  set?: $Enums.UserRoles | null
 }
 
-export type documentContentUncheckedCreateWithoutBucketInput = {
-  id?: number
-  name: string
-  url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
-  last_modified?: Date | string
-  expiration_date: Date | string
-  mime_type?: string
-  document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
-}
-
-export type documentContentCreateOrConnectWithoutBucketInput = {
-  where: Prisma.documentContentWhereUniqueInput
-  create: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput>
-}
-
-export type documentContentCreateManyBucketInputEnvelope = {
-  data: Prisma.documentContentCreateManyBucketInput | Prisma.documentContentCreateManyBucketInput[]
-  skipDuplicates?: boolean
-}
-
-export type documentContentUpsertWithWhereUniqueWithoutBucketInput = {
-  where: Prisma.documentContentWhereUniqueInput
-  update: Prisma.XOR<Prisma.documentContentUpdateWithoutBucketInput, Prisma.documentContentUncheckedUpdateWithoutBucketInput>
-  create: Prisma.XOR<Prisma.documentContentCreateWithoutBucketInput, Prisma.documentContentUncheckedCreateWithoutBucketInput>
-}
-
-export type documentContentUpdateWithWhereUniqueWithoutBucketInput = {
-  where: Prisma.documentContentWhereUniqueInput
-  data: Prisma.XOR<Prisma.documentContentUpdateWithoutBucketInput, Prisma.documentContentUncheckedUpdateWithoutBucketInput>
-}
-
-export type documentContentUpdateManyWithWhereWithoutBucketInput = {
-  where: Prisma.documentContentScalarWhereInput
-  data: Prisma.XOR<Prisma.documentContentUpdateManyMutationInput, Prisma.documentContentUncheckedUpdateManyWithoutBucketInput>
-}
-
-export type documentContentScalarWhereInput = {
-  AND?: Prisma.documentContentScalarWhereInput | Prisma.documentContentScalarWhereInput[]
-  OR?: Prisma.documentContentScalarWhereInput[]
-  NOT?: Prisma.documentContentScalarWhereInput | Prisma.documentContentScalarWhereInput[]
-  id?: Prisma.IntFilter<"documentContent"> | number
-  name?: Prisma.StringFilter<"documentContent"> | string
-  url?: Prisma.StringNullableFilter<"documentContent"> | string | null
-  content_owner?: Prisma.StringFilter<"documentContent"> | string
-  lock?: Prisma.BoolFilter<"documentContent"> | boolean
-  assigned_role?: Prisma.EnumUserRolesFilter<"documentContent"> | $Enums.UserRoles
-  bucketId?: Prisma.UuidFilter<"documentContent"> | string
-  last_modified?: Prisma.DateTimeFilter<"documentContent"> | Date | string
-  expiration_date?: Prisma.DateTimeFilter<"documentContent"> | Date | string
-  mime_type?: Prisma.StringFilter<"documentContent"> | string
-  document_status?: Prisma.EnumStatusFilter<"documentContent"> | $Enums.Status
-  document_type?: Prisma.StringFilter<"documentContent"> | string
-  favorite?: Prisma.BoolFilter<"documentContent"> | boolean
-}
-
-export type documentContentCreateManyBucketInput = {
-  id?: number
-  name: string
-  url?: string | null
-  content_owner: string
-  lock?: boolean
-  assigned_role: $Enums.UserRoles
-  last_modified?: Date | string
-  expiration_date: Date | string
-  mime_type?: string
-  document_status?: $Enums.Status
-  document_type: string
-  favorite?: boolean
-}
-
-export type documentContentUpdateWithoutBucketInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
-  last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  mime_type?: Prisma.StringFieldUpdateOperationsInput | string
-  document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
-}
-
-export type documentContentUncheckedUpdateWithoutBucketInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
-  last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  mime_type?: Prisma.StringFieldUpdateOperationsInput | string
-  document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
-}
-
-export type documentContentUncheckedUpdateManyWithoutBucketInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  content_owner?: Prisma.StringFieldUpdateOperationsInput | string
-  lock?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  assigned_role?: Prisma.EnumUserRolesFieldUpdateOperationsInput | $Enums.UserRoles
-  last_modified?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  expiration_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  mime_type?: Prisma.StringFieldUpdateOperationsInput | string
-  document_status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  document_type?: Prisma.StringFieldUpdateOperationsInput | string
-  favorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
 }
 
 
 
 export type documentContentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   url?: boolean
-  content_owner?: boolean
-  lock?: boolean
-  assigned_role?: boolean
+  name?: boolean
   bucketId?: boolean
   last_modified?: boolean
   expiration_date?: boolean
   mime_type?: boolean
   document_status?: boolean
   document_type?: boolean
+  assigned_role?: boolean
+  content_owner?: boolean
   favorite?: boolean
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
+  lock?: boolean
 }, ExtArgs["result"]["documentContent"]>
 
 export type documentContentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   url?: boolean
-  content_owner?: boolean
-  lock?: boolean
-  assigned_role?: boolean
+  name?: boolean
   bucketId?: boolean
   last_modified?: boolean
   expiration_date?: boolean
   mime_type?: boolean
   document_status?: boolean
   document_type?: boolean
+  assigned_role?: boolean
+  content_owner?: boolean
   favorite?: boolean
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
+  lock?: boolean
 }, ExtArgs["result"]["documentContent"]>
 
 export type documentContentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
   url?: boolean
-  content_owner?: boolean
-  lock?: boolean
-  assigned_role?: boolean
+  name?: boolean
   bucketId?: boolean
   last_modified?: boolean
   expiration_date?: boolean
   mime_type?: boolean
   document_status?: boolean
   document_type?: boolean
+  assigned_role?: boolean
+  content_owner?: boolean
   favorite?: boolean
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
+  lock?: boolean
 }, ExtArgs["result"]["documentContent"]>
 
 export type documentContentSelectScalar = {
   id?: boolean
-  name?: boolean
   url?: boolean
-  content_owner?: boolean
-  lock?: boolean
-  assigned_role?: boolean
+  name?: boolean
   bucketId?: boolean
   last_modified?: boolean
   expiration_date?: boolean
   mime_type?: boolean
   document_status?: boolean
   document_type?: boolean
+  assigned_role?: boolean
+  content_owner?: boolean
   favorite?: boolean
+  lock?: boolean
 }
 
-export type documentContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "url" | "content_owner" | "lock" | "assigned_role" | "bucketId" | "last_modified" | "expiration_date" | "mime_type" | "document_status" | "document_type" | "favorite", ExtArgs["result"]["documentContent"]>
-export type documentContentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
-}
-export type documentContentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
-}
-export type documentContentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  bucket?: boolean | Prisma.BucketMetaDefaultArgs<ExtArgs>
-}
+export type documentContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "url" | "name" | "bucketId" | "last_modified" | "expiration_date" | "mime_type" | "document_status" | "document_type" | "assigned_role" | "content_owner" | "favorite" | "lock", ExtArgs["result"]["documentContent"]>
 
 export type $documentContentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "documentContent"
-  objects: {
-    bucket: Prisma.$BucketMetaPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    name: string
     url: string | null
-    content_owner: string
-    lock: boolean
-    assigned_role: $Enums.UserRoles
+    name: string
     bucketId: string
     last_modified: Date
     expiration_date: Date
     mime_type: string
     document_status: $Enums.Status
-    document_type: string
-    favorite: boolean
+    document_type: string | null
+    assigned_role: $Enums.UserRoles | null
+    content_owner: string | null
+    favorite: boolean | null
+    lock: boolean | null
   }, ExtArgs["result"]["documentContent"]>
   composites: {}
 }
@@ -1210,7 +1013,6 @@ readonly fields: documentContentFieldRefs;
  */
 export interface Prisma__documentContentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  bucket<T extends Prisma.BucketMetaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BucketMetaDefaultArgs<ExtArgs>>): Prisma.Prisma__BucketMetaClient<runtime.Types.Result.GetResult<Prisma.$BucketMetaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1241,18 +1043,18 @@ export interface Prisma__documentContentClient<T, Null = never, ExtArgs extends 
  */
 export interface documentContentFieldRefs {
   readonly id: Prisma.FieldRef<"documentContent", 'Int'>
-  readonly name: Prisma.FieldRef<"documentContent", 'String'>
   readonly url: Prisma.FieldRef<"documentContent", 'String'>
-  readonly content_owner: Prisma.FieldRef<"documentContent", 'String'>
-  readonly lock: Prisma.FieldRef<"documentContent", 'Boolean'>
-  readonly assigned_role: Prisma.FieldRef<"documentContent", 'UserRoles'>
+  readonly name: Prisma.FieldRef<"documentContent", 'String'>
   readonly bucketId: Prisma.FieldRef<"documentContent", 'String'>
   readonly last_modified: Prisma.FieldRef<"documentContent", 'DateTime'>
   readonly expiration_date: Prisma.FieldRef<"documentContent", 'DateTime'>
   readonly mime_type: Prisma.FieldRef<"documentContent", 'String'>
   readonly document_status: Prisma.FieldRef<"documentContent", 'Status'>
   readonly document_type: Prisma.FieldRef<"documentContent", 'String'>
+  readonly assigned_role: Prisma.FieldRef<"documentContent", 'UserRoles'>
+  readonly content_owner: Prisma.FieldRef<"documentContent", 'String'>
   readonly favorite: Prisma.FieldRef<"documentContent", 'Boolean'>
+  readonly lock: Prisma.FieldRef<"documentContent", 'Boolean'>
 }
     
 
@@ -1269,10 +1071,6 @@ export type documentContentFindUniqueArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * Filter, which documentContent to fetch.
    */
@@ -1292,10 +1090,6 @@ export type documentContentFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
-  /**
    * Filter, which documentContent to fetch.
    */
   where: Prisma.documentContentWhereUniqueInput
@@ -1313,10 +1107,6 @@ export type documentContentFindFirstArgs<ExtArgs extends runtime.Types.Extension
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * Filter, which documentContent to fetch.
    */
@@ -1366,10 +1156,6 @@ export type documentContentFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
-  /**
    * Filter, which documentContent to fetch.
    */
   where?: Prisma.documentContentWhereInput
@@ -1417,10 +1203,6 @@ export type documentContentFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * Filter, which documentContents to fetch.
    */
@@ -1470,10 +1252,6 @@ export type documentContentCreateArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
-  /**
    * The data needed to create a documentContent.
    */
   data: Prisma.XOR<Prisma.documentContentCreateInput, Prisma.documentContentUncheckedCreateInput>
@@ -1507,10 +1285,6 @@ export type documentContentCreateManyAndReturnArgs<ExtArgs extends runtime.Types
    */
   data: Prisma.documentContentCreateManyInput | Prisma.documentContentCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1525,10 +1299,6 @@ export type documentContentUpdateArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * The data needed to update a documentContent.
    */
@@ -1581,10 +1351,6 @@ export type documentContentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types
    * Limit how many documentContents to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1599,10 +1365,6 @@ export type documentContentUpsertArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * The filter to search for the documentContent to update in case it exists.
    */
@@ -1629,10 +1391,6 @@ export type documentContentDeleteArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
   /**
    * Filter which documentContent to delete.
    */
@@ -1665,8 +1423,4 @@ export type documentContentDefaultArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the documentContent
    */
   omit?: Prisma.documentContentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.documentContentInclude<ExtArgs> | null
 }

@@ -8,9 +8,9 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/ServiceRequests.js'
-export type * from './models/Employee.js'
-export type * from './models/BucketMeta.js'
-export type * from './models/documentContent.js'
-export type * from './models/Links.js'
-export type * from './commonInputTypes.js'
+export type * from './models/ServiceRequests.ts'
+export type * from './models/Employee.ts'
+export type * from './models/BucketMeta.ts'
+export type * from './models/documentContent.ts'
+export type * from './models/Links.ts'
+export type * from './commonInputTypes.ts'

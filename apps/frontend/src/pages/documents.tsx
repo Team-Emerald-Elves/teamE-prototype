@@ -69,7 +69,7 @@ export default function Documents() {
         }
 
         load();
-    }, [isSignedIn]);
+    }, [getToken,isSignedIn]);
 
     const [sessionToken, setSessionToken] = useState("")
 

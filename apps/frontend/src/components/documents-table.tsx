@@ -71,8 +71,6 @@ async function getDocumentLock(
 
   const data = await res.json();
 
-  console.log("YEAH    !!!!! "+ data+": " +documentID)
-
   return Boolean(data.lock);
 }
 
@@ -101,7 +99,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -20,6 +20,7 @@ export type Document = {
     name: string;
     last_modified: string;
     expiration_date: string;
+    lock: boolean;
     mime_type: string;
     document_type: string;
     assigned_role: string;

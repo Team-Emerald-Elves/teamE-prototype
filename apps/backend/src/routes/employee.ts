@@ -1,6 +1,8 @@
 import express from "express";
 import {prisma} from "../lib/prisma.ts";
 import {type Employee} from "../lib/prismadefs.ts";
+import { clerkClient } from "@clerk/express";
+import path from "path";
 
 const employeeRoute = express()
 
@@ -143,20 +145,49 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
+async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
 
+    try {
+        const employees = await prisma.employee.findMany({
+            orderBy: {
+                first_name: "asc",
+            },
+            where: eData,
+        });
 
-    prisma.employee.findMany({
-        orderBy: {
-            first_name: "asc"
-        },
-        where: eData,
-    }).then((value) => {
-        res.json(value);
-    }, (err) => {
+        const defaultImage = "/public/default-avatar.png";
+
+        const enriched = await Promise.all(
+            employees.map(async (emp) => {
+                try {
+                    if (!emp.clerkUserId) {
+                        return {
+                            ...emp,
+                            imageUrl: defaultImage,
+                        };
+                    }
+
+                    const user = await clerkClient.users.getUser(emp.clerkUserId);
+
+                    return {
+                        ...emp,
+                        imageUrl: user.imageUrl || defaultImage,
+                    };
+                } catch (err) {
+                    // fallback if Clerk user doesn't exist
+                    return {
+                        ...emp,
+                        imageUrl: defaultImage,
+                    };
+                }
+            })
+        );
+
+        return res.json(enriched);
+    } catch (err) {
         console.error("[ERROR]", err);
-        res.sendStatus(500);
-    });
+        return res.sendStatus(500);
+    }
 
 }
 

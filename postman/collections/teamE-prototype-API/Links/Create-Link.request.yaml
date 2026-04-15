@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create Link
+method: POST
+url: '{{baseUrl}}/links'
+order: 2000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "action": "create",
+      "linkData": {
+        "link_name": "Example Link",
+        "url": "https://example.com",
+        "owner": "UnderWriter"
+      }
+    }

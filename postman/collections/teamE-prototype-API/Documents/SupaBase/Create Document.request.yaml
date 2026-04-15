@@ -1,0 +1,24 @@
+$kind: http-request
+name: Create Document
+method: POST
+url: '{{baseUrl}}/api/supabase/create-document'
+order: 1776229901368
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{authToken}}'
+body:
+  type: json
+  content: |-
+    {
+      "name": "example-document.pdf",
+      "url": "documents/example-document.pdf",
+      "content_owner": "{{employeeId}}",
+      "assigned_role": "UnderWriter",
+      "mime_type": "application/pdf",
+      "expiration_date": "2027-01-01T00:00:00.000Z",
+      "document_status": "not_started",
+      "document_type": "Reference",
+      "filePayload": "{{base64FileContent}}"
+    }

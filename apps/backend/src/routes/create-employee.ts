@@ -2,22 +2,15 @@ import express from "express";
 import {prisma} from "../lib/prisma.ts";
 import { createClerkClient } from '@clerk/express';
 import { createSupabaseForRequest } from '../lib/supabase.ts'
+import type { Employee } from "../../prisma/generated/client.ts";
 
 const supabaseClient = await createSupabaseForRequest()
 
-interface IEmployee {
-    id?: string;
-    first_name: string;
-    last_name: string;
-    uname: string;
-    email?: string;
-    roles?: string[];
-}
 
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 async function createEmployeeRoute(req: express.Request, res: express.Response) {
-    const employee: IEmployee = req.body
+    const employee: Employee = req.body
     console.log("Employee: ", employee)
     let user
     try {
@@ -36,12 +29,7 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
     console.log("Clerk User: ", user);
     prisma.employee.create({
         data: {
-            clerkUserId: user!.id,
-            first_name: employee.first_name,
-            last_name: employee.last_name,
-            uname: employee.uname,
-            email: employee.email,
-            roles: employee.roles,
+            ...employee,
         }
     }).then(async (result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);
@@ -52,15 +40,19 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
             }
         })
 
-        const { data, error } = await supabaseClient
-        .storage
-        .createBucket(bucketData.id, {
-        public: false, // Set to true for a public bucket
-        fileSizeLimit: 1024 * 1024 * 10 // Optional: limit size (e.g., 1MB)
-        })
+        if (process.env.NODE_ENV != 'development') {
+            const { data, error } = await supabaseClient
+            .storage
+            .createBucket(bucketData.id, {
+            public: false, // Set to true for a public bucket
+            fileSizeLimit: 1024 * 1024 * 10 // Optional: limit size (e.g., 1MB)
+            })
 
-        if(!data || error) {
-            throw new Error("Cannot create bucket.")
+            if(!data || error) {
+                throw new Error("Cannot create bucket.")
+            }
+        } else {
+            console.error("Cannot create buckets with development db. Only records")
         }
 
 

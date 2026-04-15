@@ -17,6 +17,7 @@ import type { Links,
               linksProps
 } from './types/linkstable.d.ts';
 import {useAuth} from "@clerk/react";
+import AddLinksForm from "@/components/addlinksform.tsx";
 
 async function getLinks() {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
@@ -63,7 +64,7 @@ function LinksTable(){
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -93,21 +94,36 @@ function LinksTable(){
 
     return (
         <>
-            <div className="shadow-md">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>URL</TableHead>
+            <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="flex justify-end">
+                    <div className="pr-6 py-2 relative flex items-center">
+                        <AddLinksForm
+                            type="Add Link"
+                            name="Name"
+                            url="www.example.com"
+                            description="What is the link used for"
+                            size={true}
+                            me={me}
+                        />
+                    </div>
+                    </div>
+                <Table className="border rounded-lg overflow-hidden">
+                    <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        <TableRow >
+                            <TableHead className=" text-[#0b4461] text-left">Name</TableHead>
+                            <TableHead className=" text-[#0b4461] text-left">URL</TableHead>
+                            <TableHead className=" text-[#0b4461] text-left">Role</TableHead>
                             <TableHead></TableHead>
-                            <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
+                            <TableHead className="flex text-left items-center pl-[35px] text-[#0b4461]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {links.map((l) => (
                             <TableRow key={l.link_name}>
                                 <TableCell>{l.link_name}</TableCell>
-                                <TableCell>{l.url}</TableCell>
+                                <TableCell><a href={l.url}>{l.url}</a></TableCell>
+                                <TableCell>{l.owner}</TableCell>
                                 <TableCell></TableCell>
 
                                 <TableCell className="flex items-center gap-3">
@@ -125,6 +141,7 @@ function LinksTable(){
                         ))}
                     </TableBody>
                 </Table>
+            </div>
             </div>
         </>
     )

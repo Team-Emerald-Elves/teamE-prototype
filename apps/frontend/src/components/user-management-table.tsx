@@ -14,6 +14,9 @@ import { UserCircleIcon } from '@hugeicons/core-free-icons';
 import {useEffect, useState} from "react";
 import EmployeeForm from "@/components/employeeForm.tsx";
 import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
+import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
+import * as React from "react";
+
 
 type Employee = {
     id: string;
@@ -22,6 +25,7 @@ type Employee = {
     uname: string;
     email?: string;
     roles?: string[];
+    imageUrl: string;
 };
 
 async function getEmployees() {
@@ -50,34 +54,40 @@ function UserManagementTable(){
             .then(setEmployees)
             .catch(console.error);
     }, []);
+
+
     return (
         <>
-            <div className="shadow-md">
-            <Table>
-                <TableHeader>
+            <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="flex items-center mb-4 justify-end ml-auto">
+                        <CreateEmployeeForm />
+                    </div>
+            <Table className="border rounded-lg overflow-hidden">
+                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                     <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead className="flex text-center items-center pl-[35px]">Action</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Name</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Username</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Email</TableHead>
+                        <TableHead className=" text-[#0b4461] text-center">Role</TableHead>
+                        <TableHead className="text-[#0b4461]  flex text-center items-center pl-[35px]">Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {employees.map((emp) => (
                         <TableRow key={emp.id}>
-                            <TableCell className="font-medium">
-                                <div className="flex gap-3 items-center">
-                                    <HugeiconsIcon icon={UserCircleIcon} size={25} strokeWidth={1.5}/>
+                            <TableCell className="font-medium text-center">
+                                <div className="flex gap-3 text-center items-center">
+                                    <img className="size-8 rounded-full" src={emp.imageUrl}/>
                                     {emp.first_name} {emp.last_name}
                                 </div>
                             </TableCell>
 
-                            <TableCell>{emp.uname}</TableCell>
-                            <TableCell>{emp.email}</TableCell>
-                            <TableCell>{emp.roles?.at(0) ?? "No Roles" }</TableCell>
+                            <TableCell className="text-center">{emp.uname}</TableCell>
+                            <TableCell className="text-center">{emp.email}</TableCell>
+                            <TableCell className="text-center">{emp.roles?.at(0) ?? "No Roles" }</TableCell>
 
-                            <TableCell className="flex items-center gap-3">
+                            <TableCell className="flex items-center text-center gap-3">
                                 <div className="flex justify-end">
                                     <EmployeeForm employee={emp}/>
                                 </div>
@@ -89,6 +99,7 @@ function UserManagementTable(){
                     ))}
                 </TableBody>
             </Table>
+            </div>
             </div>
         </>
     )

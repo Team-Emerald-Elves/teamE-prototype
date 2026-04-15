@@ -56,6 +56,7 @@ model documentContent { // Must match creation details of document content.
   name            String
   url             String?
   content_owner   String
+  lock            Boolean @default(false)
   assigned_role   UserRoles
   bucketId        String   @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])
@@ -64,6 +65,7 @@ model documentContent { // Must match creation details of document content.
   mime_type       String   @default("text/plain")
   document_status Status   @default(not_started)
   document_type   String
+  favorite        Boolean @default(false)
 }
 
 model Links {

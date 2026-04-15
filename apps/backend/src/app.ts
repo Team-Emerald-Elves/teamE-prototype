@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import employeeRoute from "./routes/employee.ts";
 import linkRoute from "./routes/links.ts";
-import contentRoute from "./routes/content.ts";
 import serviceReqRoute from "./routes/servicereqs.ts";
 import assignedRoute from "./routes/assigned.ts";
 import createOldEmployeeRoute from "./routes/create-employee.ts";
@@ -11,13 +10,15 @@ import supaBaseRouter from './routes/supabase.routes.ts';
 import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, requireAuth} from '@clerk/express'
-
 import editEmployeeRoute from "./routes/edit-employee.ts";
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
 
 import linkRoleRoute from "./routes/get-link-role.ts";
+import favoriteRoute from "./routes/get-favorited.ts";
+import updateFavoriteRoute from "./routes/update-favorite.ts";
+import statsRoutes from "./routes/statistics.ts";
 
 
 const app = express();
@@ -55,11 +56,13 @@ app.use('/api/tests', APIRouter)
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 
 app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/content', contentRoute)
+app.get('/statistics', statsRoutes)
+app.get('/get-favorited', favoriteRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
 app.post('/get-link-role', linkRoleRoute)
+app.post('/update-favorite', updateFavoriteRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 

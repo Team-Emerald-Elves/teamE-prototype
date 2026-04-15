@@ -1,4 +1,4 @@
-import { prisma } from '../src/lib/prisma.ts';
+import prisma from '../index.ts';
 //import { type Employee } from '../prisma/generated/client.ts'
 /*
 const IDS = {

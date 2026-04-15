@@ -1,6 +1,8 @@
-export { Roles, UserRoles } from '../../prisma/generated/client.ts'
-import { Status } from '../../prisma/generated/client.ts'
-import type { documentContent as DocumentContent } from '../../prisma/generated/client.ts'
+export { Roles,
+         UserRoles,
+         Status,
+         documentContent as DocumentContent
+} from '@repo/database'
 
 export type IDocumentContent = DocumentContent & {
   documentID: number

@@ -1,5 +1,5 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
+import prisma from "@repo/database";
 
 interface IUpdateFavoriteRequest {
     id: number;

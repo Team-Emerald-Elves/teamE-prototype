@@ -1,13 +1,12 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
-import {type Employee} from "../lib/prismadefs.ts"
+import prisma, { UserRoles, type Employee } from "@repo/database"
 
 interface IEditEmployeeRequest {
     id: string;
     uname: string | undefined;
     first_name: string | undefined;
     last_name: string | undefined;
-    roles: string[] | undefined;
+    roles: UserRoles[] | undefined;
     email: string | undefined;
 }
 

@@ -1,6 +1,5 @@
 import express from "express";
-import type {Links} from "../lib/prismadefs.ts";
-import {prisma} from "../lib/prisma.ts";
+import prisma, { type Links } from "@repo/database";
 
 const linkRoute = express()
 

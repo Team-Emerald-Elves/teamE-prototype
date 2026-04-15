@@ -1,23 +1,14 @@
 import express from "express";
-import { prisma } from "../lib/prisma.ts"
-
-interface IServiceRequest {
-    id?: number;
-    created_at?: number;
-    assigned_at?: string;
-    assigned_id?: string;
-    creator_id?: string;
-    description: string;
-}
+import prisma, {type ServiceRequests} from "@repo/database"
 
 function serviceReqRoute(req: express.Request, res: express.Response) {
     prisma.serviceRequests.findMany({
         orderBy: {
             created_at: "asc"
         }
-    }).then((data) => {
+    }).then((data: ServiceRequests) => {
         res.json(data)
-    }).catch((err) => {
+    }).catch((err: any) => {
         console.log("Error: ", err)
     })
 }

@@ -1,6 +1,6 @@
 import Router, { request, response, type Request, type Response } from "express"
 import { requireAuth, getAuth, clerkClient } from '@clerk/express'
-import {prisma} from "../lib/prisma.ts";
+import prisma from "@repo/database";
 
 
 

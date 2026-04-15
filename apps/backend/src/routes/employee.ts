@@ -1,8 +1,6 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
-import {type Employee} from "../lib/prismadefs.ts";
+import prisma, {type Employee} from "@repo/database";
 import { clerkClient } from "@clerk/express";
-import path from "path";
 
 const employeeRoute = express()
 
@@ -158,7 +156,7 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
         const defaultImage = "/public/default-avatar.png";
 
         const enriched = await Promise.all(
-            employees.map(async (emp) => {
+            employees.map(async (emp: Employee) => {
                 try {
                     if (!emp.clerkUserId) {
                         return {

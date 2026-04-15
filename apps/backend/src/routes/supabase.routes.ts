@@ -1,10 +1,13 @@
 
 import { Router, type Request, type Response } from 'express'
 import { requireAuth, getAuth } from '@clerk/express'
-import { prisma } from '../lib/prisma.ts'
+import prisma, { Status,
+                 UserRoles,
+                 type documentContent,
+                 type Employee
+} from '@repo/database'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
-import {Status, UserRoles } from '../../prisma/generated/client.ts'
 
 const supaBaseRouter = Router()
 
@@ -128,7 +131,7 @@ supaBaseRouter.delete(
             if (!data || error) {
                 console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
             }
-        }).catch(error => {
+        }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
         })
 
@@ -220,7 +223,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
     try {
         const documents = await prisma.documentContent.findMany();
 
-        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
 
         const employees = await prisma.employee.findMany({
             where: {
@@ -234,13 +237,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         });
 
         const employeeMap = new Map(
-            employees.map(emp => [
+            employees.map((emp: Employee) => [
                 emp.id,
                 `${emp.first_name} ${emp.last_name}`
             ])
         );
 
-        const formattedDocs = documents.map(doc => ({
+        const formattedDocs = documents.map((doc: documentContent) => ({
             ...doc,
             content_owner: employeeMap.get(doc.content_owner) || "Unknown",
         }));

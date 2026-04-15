@@ -23,6 +23,7 @@ const rows = [
 function Home() {
 
     const [roles, setRoles] = useState<string[]>([]);
+    const [firstname, setfirstname] = useState("");
     const {user} = useUser()
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
@@ -44,38 +45,38 @@ function Home() {
 
             const data = await res.json();
             setMe(data);
+            setfirstname(data.first_name);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
         load();
     }, [isSignedIn]);
 
-    if (!me) {
-        return (
-            <div className ="hero-container p-40px">
-                <div className="hero-overlay"></div>
-                <div className = "hero-image"></div>
-                <div className="hero-content justify-content-start">
-                    <div className ="hero-content-top flex items-center">
-                        <UserAvatar/>
-                        <div className="hero-text px-5 justify-center text-lg/10">
-                            <h1>Hello,<br/> {user.firstName}</h1>
-                        </div>
-
-                        <div className="pl-2 flex flex-row gap-5 mt-auto">
-                            <a href="/statistics">
-                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
-                            </a>
-                            <HomepageButtons icon={TableOfContents} label="View Content"/>
-                        </div>
-                    </div>
-                    <div className = "hero-content-bottom py-5 pl-2">
-                        <SearchBar/>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    // if (!me) {
+    //     return (
+    //         <div className ="hero-container p-40px">
+    //             <div className="hero-overlay"></div>
+    //             <div className = "hero-image"></div>
+    //             <div className="hero-content justify-content-start">
+    //                 <div className ="hero-content-top flex items-center">
+    //                     <UserAvatar/>
+    //                     <div className="hero-text px-5 justify-center text-lg/10">
+    //                         <h1>Hello,<br/> {me.first_name}</h1>
+    //                     </div>
+    //
+    //                     <div className="pl-2 flex flex-row gap-5 mt-auto">
+    //                         <a href="/statistics">
+    //                             <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+    //                         </a>
+    //                     </div>
+    //                 </div>
+    //                 <div className = "hero-content-bottom py-5 pl-2">
+    //                     <SearchBar/>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // }
     if (roles.includes("businessanalyst")) {
         return (
             <>
@@ -86,11 +87,12 @@ function Home() {
                         <div className ="hero-content-top flex items-center">
                             <UserAvatar/>
                             <div className="hero-text px-5 justify-center text-lg/10">
-                                <h1>Hello,<br/> {user.firstName}</h1>
+                                <h1>Hello,<br/> {firstname}</h1>
                             </div>
                             <div className="pl-2 flex flex-row gap-5 mt-auto">
-                                <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
-                                <HomepageButtons icon={TableOfContents} label="View Content"/>
+                                <a href="/statistics">
+                                    <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
+                                </a>
                             </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
@@ -121,13 +123,12 @@ function Home() {
                         <div className ="hero-content-top flex items-center">
                             <UserAvatar/>
                             <div className="hero-text px-5 justify-center text-lg/10">
-                                <h1>Hello,<br/> {user.firstName}</h1>
+                                <h1>Hello,<br/> {firstname}</h1>
                             </div>
                             <div className="pl-2 flex flex-row gap-5 mt-auto">
                                 <a href="/statistics">
                                     <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
                                 </a>
-                                <HomepageButtons icon={TableOfContents} label="View Content"/>
                             </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
@@ -163,13 +164,12 @@ function Home() {
                         <div className ="hero-content-top flex items-center">
                             <UserAvatar/>
                             <div className="hero-text px-5 justify-center text-lg/10">
-                                <h1>Hello,<br/> {user.firstName}</h1>
+                                <h1>Hello,<br/> {firstname}</h1>
                             </div>
                             <div className="pl-2 flex flex-row gap-5 mt-auto">
                                 <a href="/statistics">
                                     <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
                                 </a>
-                                <HomepageButtons icon={TableOfContents} label="View Content"/>
                             </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">

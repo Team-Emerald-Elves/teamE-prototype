@@ -4,5 +4,5 @@ import type { documentContent as DocumentContent } from '../../prisma/generated/
 
 export type IDocumentContent = DocumentContent & {
   documentID: number
-  filePayload?: File
+  filePayload?: string
 }

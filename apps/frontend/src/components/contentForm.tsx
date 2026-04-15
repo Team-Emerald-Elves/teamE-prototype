@@ -27,6 +27,8 @@ import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 import {useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
+import FileUpload from "./fileUpload.tsx";
+import {tr} from "date-fns/locale/tr";
 
 type contentFormProps = {
     type: string,
@@ -38,7 +40,7 @@ type contentFormProps = {
     currentExpirationTime: string,
     currentStatus: string,
     currentID: number,
-    size: boolean
+    size: boolean,
 }
 
 type Employee = {
@@ -60,6 +62,7 @@ type FormDataType = {
     expirationTime: string,
     document_status: string,
     id: number,
+    filePayload?: string,
 };
 
 
@@ -151,6 +154,28 @@ function ContentForm(props: contentFormProps) {
         document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
+
+    const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve((reader.result as string).split(",")[1]); // strip data URL prefix
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+    const uploadHandler = (files: File[]) => {
+        if (!files || files.length < 1) {
+            console.error("Invalid file input");
+            return;
+        }
+        toBase64(files[0]).then(
+            (data) => {
+                setFormData((prev => ({...prev, filePayload: data})));
+            }, (err) => {
+                console.error(err);
+            }
+        )
+    }
 
     useEffect(() => {
 
@@ -324,6 +349,9 @@ function ContentForm(props: contentFormProps) {
                             </Select>
                         </Field>
                     </FieldGroup>
+
+                    <FileUpload dnd={true} show={true} onUpload={uploadHandler}/>
+
                     <p>Last Modified: {formattedDate}</p>
 
                     <DialogFooter>

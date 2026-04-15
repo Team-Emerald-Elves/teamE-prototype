@@ -62,19 +62,6 @@ type FormDataType = {
     id: number,
 };
 
-async function getRoles (sessionToken:string)
-{
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/me`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-        }
-    });
-
-    const data = await res.json();
-    const roles:string[] = data.roles
-    return roles
-}
 
 async function getEmployees(sessionToken: string) {
 

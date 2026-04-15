@@ -13,11 +13,20 @@ interface FileUploadProps {
 function FileUpload(props: FileUploadProps): ReactElement {
 
     const [files, setFiles] = useState<File[]>([]);
+    const [fileNames, setFileNames] = useState<string[]>([]);
 
     useEffect(() => {
-        console.log("Uploaded: ", files)
+        console.log("Uploaded: ", files);
+        updateFileNames();
        props.onUpload(files);
     }, [files])
+
+    function updateFileNames() {
+        setFileNames([]);
+        files.forEach((f) => {
+            setFileNames((prev) => prev.concat(f.name))
+        })
+    }
 
     const dragHandler = (e: DragEvent) => {
         console.log(e.dataTransfer);
@@ -78,7 +87,7 @@ function FileUpload(props: FileUploadProps): ReactElement {
                     <img src={fileImg} width="50rem" draggable="false" alt="file_image"/>
                 </div>
                 <p>Files:</p>
-                <p>{files.toString()}</p>
+                <p>{fileNames.join(',')}</p>
                 <br/>
             </CenterDiv>
         </> : <div hidden/>

@@ -1,8 +1,8 @@
 $kind: http-request
-name: Delete File
+name: Delete Document
 method: DELETE
-url: '{{baseUrl}}/api/supabase/delete-file'
-order: 2000
+url: '{{baseUrl}}/api/supabase/delete-document'
+order: 677286076672949
 headers:
   - key: Content-Type
     value: application/json
@@ -12,5 +12,5 @@ body:
   type: json
   content: |-
     {
-      "fileName": "example.txt"
+      "id": 1
     }

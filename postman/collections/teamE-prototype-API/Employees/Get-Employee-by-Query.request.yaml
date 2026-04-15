@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get Employee by Query
+method: GET
+url: '{{baseUrl}}/employee?action=list&first_name=John'
+order: 1500

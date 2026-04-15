@@ -1,0 +1,19 @@
+$kind: http-request
+name: Edit Link
+method: POST
+url: '{{baseUrl}}/links'
+order: 3000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "action": "edit",
+      "linkData": {
+        "id": "{{linkId}}",
+        "link_name": "Updated Link Name",
+        "url": "https://updated-example.com"
+      }
+    }

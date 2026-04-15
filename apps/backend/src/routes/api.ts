@@ -75,7 +75,7 @@ async function updateLock(req: Request, res: Response) {
 
         await prisma.documentContent.update({
             where: {
-                id
+                id: id
             },
             data: {
                 lock: status

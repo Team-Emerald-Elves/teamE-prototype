@@ -19,7 +19,6 @@ import linkRoleRoute from "./routes/get-link-role.ts";
 import favoriteRoute from "./routes/get-favorited.ts";
 import updateFavoriteRoute from "./routes/update-favorite.ts";
 import statsRoutes from "./routes/statistics.ts";
-import singleEmployeeRoute from "./routes/get-single-employee.ts";
 
 
 const app = express();
@@ -63,7 +62,6 @@ app.get('/get-favorited', favoriteRoute);
 
 app.post('/create-employee', createOldEmployeeRoute);
 app.post('/get-link-role', linkRoleRoute)
-app.post('/get-single-employee', singleEmployeeRoute)
 app.post('/update-favorite', updateFavoriteRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);

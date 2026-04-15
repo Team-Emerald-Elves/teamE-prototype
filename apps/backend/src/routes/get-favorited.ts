@@ -11,15 +11,15 @@ function favoriteRoute(req: express.Request, res: express.Response) {
                 name: "asc",
             },
         })
-        .then(async (documents: documentContent[]) => {
+        .then(async (documents) => {
             try {
                 // 1. collect unique owner IDs
-                const ownerIds = [...new Set(documents.map((d: documentContent) => d.content_owner))];
+                const ownerIds = [...new Set(documents.map((d) => d.content_owner))];
 
                 // 2. fetch all employees in one query
                 const employees = await prisma.employee.findMany({
                     where: {
-                        id: { in: ownerIds },
+                        id: { in: ownerIds as string[] },
                     },
                     select: {
                         id: true,
@@ -30,17 +30,17 @@ function favoriteRoute(req: express.Request, res: express.Response) {
 
                 // 3. build lookup map
                 const employeeMap = new Map(
-                    employees.map((emp: Employee) => [
+                    employees.map((emp) => [
                         emp.id,
                         `${emp.first_name} ${emp.last_name}`,
                     ])
                 );
 
                 // 4. attach name to documents
-                const formatted = documents.map((doc: documentContent) => ({
+                const formatted = documents.map((doc) => ({
                     ...doc,
                     content_owner:
-                        employeeMap.get(doc.content_owner) || "Unknown",
+                        employeeMap.get(doc.content_owner as string) || "Unknown",
                 }));
 
                 res.json(formatted);

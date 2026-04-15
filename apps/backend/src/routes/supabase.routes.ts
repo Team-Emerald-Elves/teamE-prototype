@@ -227,7 +227,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
 
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds },
+                id: { in: ownerIds as string[] },
             },
             select: {
                 id: true,
@@ -237,15 +237,15 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         });
 
         const employeeMap = new Map(
-            employees.map((emp: Employee) => [
+            employees.map((emp) => [
                 emp.id,
                 `${emp.first_name} ${emp.last_name}`
             ])
         );
 
-        const formattedDocs = documents.map((doc: documentContent) => ({
+        const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
+            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
         }));
 
         res.status(200).json(formattedDocs);

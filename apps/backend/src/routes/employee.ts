@@ -22,7 +22,7 @@ employeeRoute.get('/', (req: express.Request, res: express.Response)=> {
 })
 
 employeeRoute.post('/', (req: express.Request, res: express.Response) => {
-    const eReq: EmployeeRequest = req.body as EmployeeRequest;
+    const eReq: EmployeeRequest = req.body
 
     if (eReq.action == "list") {
         eReq.employeeData!.roles = undefined

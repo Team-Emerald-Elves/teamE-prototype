@@ -6,7 +6,7 @@ function serviceReqRoute(req: express.Request, res: express.Response) {
         orderBy: {
             created_at: "asc"
         }
-    }).then((data: ServiceRequests) => {
+    }).then((data) => {
         res.json(data)
     }).catch((err: any) => {
         console.log("Error: ", err)

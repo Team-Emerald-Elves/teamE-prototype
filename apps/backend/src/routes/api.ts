@@ -57,20 +57,36 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
 })
 
 async function updateLock(req: Request, res: Response) {
-    const { id, status } = req.body
+    try {
+        const { id, status } = req.body ?? {}
 
-    await prisma.documentContent.update({
-        where: {
-            id: id
-        },
-        data: {
-            lock: status as boolean
+
+        console.log("BODY:", req.body)
+        console.log("TYPES:", {
+            id: typeof req.body?.id,
+            status: typeof req.body?.status
+        })
+
+        if (typeof id !== "number" || typeof status !== "boolean") {
+            return res.status(400).json({
+                message: "Invalid body. Expected { id: number, status: boolean }"
+            })
         }
-    }).catch((error) => {
 
-    })
+        await prisma.documentContent.update({
+            where: {
+                id
+            },
+            data: {
+                lock: status
+            }
+        })
 
-    res.sendStatus(200)
+        return res.status(200).json({ id, status })
+    } catch (error) {
+        console.error("updateLock error:", error)
+        return res.status(500).json({ message: "Failed to update lock" })
+    }
 }
 
 async function getLock(req: Request, res: Response) {

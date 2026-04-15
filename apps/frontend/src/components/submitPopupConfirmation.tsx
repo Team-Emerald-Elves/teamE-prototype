@@ -40,6 +40,28 @@ export type IFile = {
   filePayload: string
 }
 
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<Boolean> {
+
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            id: documentID,
+            status: status
+        })
+    })
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
+    const data = await res.json();
+
+    return Boolean(data);
+}
+
 function buildExpirationDate(
   expirationDate?: Date,
   expirationTime?: string
@@ -120,7 +142,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {createDocument(info, sessionToken)}}>Confirm</Button>
+                        <Button type="submit" onClick={() => {createDocument(info, sessionToken); setDocumentLock(sessionToken, info.formData.id, false)}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

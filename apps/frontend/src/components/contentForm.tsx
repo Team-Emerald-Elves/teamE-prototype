@@ -62,6 +62,7 @@ type FormDataType = {
     expirationTime: string,
     document_status: string,
     id: number,
+    filePayload?: string,
 };
 
 async function getEmployees(sessionToken: string) {
@@ -100,7 +101,27 @@ function ContentForm(props: contentFormProps) {
         id: props.currentID,
     });
 
-    const uploadHandler = (files: File[])
+    const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve((reader.result as string).split(",")[1]); // strip data URL prefix
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+    const uploadHandler = (files: File[]) => {
+        if (!files || files.length < 1) {
+            console.error("Invalid file input");
+            return;
+        }
+        toBase64(files[0]).then(
+            (data) => {
+                setFormData((prev => ({...prev, filePayload: data})));
+            }, (err) => {
+                console.error(err);
+            }
+        )
+    }
 
     useEffect(() => {
 
@@ -251,7 +272,7 @@ function ContentForm(props: contentFormProps) {
                         </Field>
                     </FieldGroup>
 
-                    <FileUpload dnd={true} show={true}/>
+                    <FileUpload dnd={true} show={true} onUpload={uploadHandler}/>
 
                     <p>Last Modified: {formattedDate}</p>
 

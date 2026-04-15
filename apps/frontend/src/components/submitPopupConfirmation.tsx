@@ -23,6 +23,7 @@ type SubmitConfirmationPopupProps = {
     expirationDate?: Date
     expirationTime: string
     document_status: string
+    filePayload?: string
   }
 }
 
@@ -36,7 +37,7 @@ export type IFile = {
   assigned_role: string
   document_type: string
   document_status: string
-  filePayload?: string
+  filePayload: string
 }
 
 function buildExpirationDate(
@@ -70,7 +71,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     document_type: fileData.formData.document_type,
     document_status: fileData.formData.document_status,
     assigned_role: fileData.formData.role,
-    filePayload: "test"
+    filePayload: fileData.formData.filePayload!,
   }
 
   const endpoint =
@@ -79,7 +80,6 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
       : "/api/supabase/update-document"
 
   const method = fileData.type === "Create" ? "POST" : "PUT"
-
   const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
     method,
     headers: {

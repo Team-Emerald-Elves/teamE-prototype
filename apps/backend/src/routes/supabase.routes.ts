@@ -31,14 +31,16 @@ supaBaseRouter.post(
     "/create-document",
     //requireAuth(),
     async (req: Request, res: Response) => {
+
         const { userId, isAuthenticated } = getAuth(req)
-        console.log(userId)
+        console.log("Uid: ", userId);
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-    const document: IDocumentContent = req.body
-    const supabaseClient = await createSupabaseForRequest()
-
+        const document: IDocumentContent = req.body
+        console.log("Payload: ", document.filePayload);
+        const supabaseClient = await createSupabaseForRequest();
+    console.log("Document: ", document)
     try {
         // Get the authenticated employee.
         const employee = await prisma.employee.findFirstOrThrow({
@@ -74,20 +76,16 @@ supaBaseRouter.post(
 
             }
         })
+        const decoded = Buffer.from(document.filePayload, 'base64');
+        const payload: File = new File([decoded], document.name)
 
-        if (documentContents.url === "Local upload")
-        {
-            // Upload document to authenticated employee with supabase bucket association.
-            const { data, error } = await supabaseClient.storage
+        // Upload document to authenticated employee with supabase bucket association.
+        const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id)
-            .upload((document.url as string).trim(), document.filePayload as File)
+            .upload((document.url as string).trim(), payload)
 
-            if (!data || error) {
-                throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
-            }
-
-        } else {
-            // Implement downloading a document from the URL passed.
+        if (!data || error) {
+            throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
         }
 
     } catch (error)
@@ -160,7 +158,7 @@ supaBaseRouter.put(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-        console.log(userId)
+        console.log("Uid: ", userId);
         const document: IDocumentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
 
@@ -175,7 +173,7 @@ supaBaseRouter.put(
             })
 
             // Update contents for document.
-            await prisma.documentContent.update({
+            const newDoc = await prisma.documentContent.update({
                 where: {
                     id: document.id,
                 },
@@ -191,6 +189,8 @@ supaBaseRouter.put(
                     document_type: document.document_type ?? "Reference"
                 }
             })
+
+            console.log("New doc created: ", newDoc);
 
             const {data, error} = await supabaseClient.storage
                 .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as File)

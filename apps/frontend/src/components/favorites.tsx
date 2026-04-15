@@ -104,12 +104,6 @@ export default function Favorites() {
 
             <div className="bg-white rounded-xl shadow-sm border p-4">
 
-                <div className="flex items-center mb-4">
-                    <div className="w-1/3 mr-4">
-                        <SearchBar />
-                    </div>
-                </div>
-
 
                 <Table className="border rounded-lg overflow-hidden">
                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">

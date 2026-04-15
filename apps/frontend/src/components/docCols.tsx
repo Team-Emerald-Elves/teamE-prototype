@@ -12,6 +12,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import DocumentViewer from "@/components/docViewer.tsx";
+import {TableCell} from "@/components/ui/table.tsx";
 
 export type Document = {
     id: number;
@@ -27,11 +28,12 @@ export type Document = {
     favorite: boolean;
 };
 
+
 export const columns: ColumnDef<Document>[] = [
     // {
     //     accessorKey: "favorite",
     //     header: "Favorite",
-    // },
+
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -50,17 +52,19 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <Dialog>
-                    <DialogTrigger >
-                        <button className="hover:underline">{doc.name}</button>
+                    <DialogTrigger asChild>
+                        <button className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                            {doc.name}
+                        </button>
                     </DialogTrigger>
 
-                    <DialogContent className="2xl:max-w-2xl">
+                    <DialogContent className="2xl:max-w-2xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">
                             ✕
                         </DialogClose>
 
                         <div className="flex-1 overflow-auto flex justify-center">
-                            <div className="w-full max-w-[1400px]">
+                            <div className="w-full max-w-[1400px] h-full">
                                 <DocumentViewer doc={doc} />
                             </div>
                         </div>
@@ -97,7 +101,18 @@ export const columns: ColumnDef<Document>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const doc = row.original;
+            const date = new Date(doc.expiration_date);
+
+            return (
+                <TableCell>
+                    <p>{date.toLocaleString()}</p>
+                </TableCell>
+            );
+        },
     },
+
     {
         accessorKey: "document_status",
         header: ({ column }) => {
@@ -152,6 +167,16 @@ export const columns: ColumnDef<Document>[] = [
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const doc = row.original;
+            const date = new Date(doc.last_modified);
+
+            return (
+                <TableCell>
+                    <p>{date.toLocaleString()}</p>
+                </TableCell>
+            );
         },
     }
 ]

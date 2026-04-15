@@ -28,7 +28,6 @@ import {useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
-import {tr} from "date-fns/locale/tr";
 
 type contentFormProps = {
     type: string,
@@ -83,27 +82,6 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
-async function getDocumentLock(sessionToken: string, documentID: number) {
-
-    const metaData = {
-        id: documentID
-    }
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-        },
-        body: JSON.stringify(metaData)
-    });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-
-    const data = await res.json();
-
-    return data;
-}
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<Boolean> {
 
 
@@ -142,7 +120,7 @@ function ContentForm(props: contentFormProps) {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

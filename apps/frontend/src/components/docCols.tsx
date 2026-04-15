@@ -6,9 +6,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import DocumentViewer from "@/components/docViewer.tsx";

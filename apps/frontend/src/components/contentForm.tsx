@@ -174,12 +174,13 @@ function ContentForm(props: contentFormProps) {
     //console.log(isAdmin);
     useEffect(() => {
         if(!isAdmin && roles.length >0 ){
-            setFormData(prev => ({...prev, role: roles[0]!}))
+            roles.some(role => setFormData(prev => ({...prev, role: role})))
+
         }
     }, [isAdmin,roles]);
-    /*useEffect(() => {
+    useEffect(() => {
         console.log("Current roles:", roles);
-    }, [roles]);*/
+    }, [roles]);
     if (!sessionToken ) return;
 
 
@@ -199,7 +200,6 @@ function ContentForm(props: contentFormProps) {
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
                             <DialogTitle className="text-2xl text-primary font-sans font-bold">{props.type} Content</DialogTitle>
-
                         </div>
 
                     </DialogHeader>

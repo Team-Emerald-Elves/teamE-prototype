@@ -58,6 +58,7 @@ export const ContentEmployeeBody = z.object({
     id: z.number(),
 })
 
+//create-employee.ts
 export const CreateEmployeeBody = z.object({
     first_name: z.string(),
     last_name: z.string(),
@@ -65,8 +66,9 @@ export const CreateEmployeeBody = z.object({
     uname: z.string(),
 })
 
+//create-servicereq.ts
 export const CreateServiceReqBody = z.object({
-    uname: z.string(),
+    uname: z.string().optional(),
     description: z.string(),
 })
 

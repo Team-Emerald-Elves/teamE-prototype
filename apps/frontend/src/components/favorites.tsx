@@ -1,21 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { SearchBar } from "@/components/SearchBar";
+import { SearchBar } from "@/components/searchbar";
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx";
 
 import ContentForm from "@/components/contentForm.tsx";
-import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 
 type Document = {

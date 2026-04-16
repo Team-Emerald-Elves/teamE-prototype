@@ -27,6 +27,17 @@ function toExpirationDate(value: unknown): Date {
   return new Date(Date.now() + 24 * 60 * 60 * 1000)
 }
 
+async function getMimeFromUrl(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    // The server tells you exactly what the file is
+    return response.headers.get('Content-Type');
+  } catch (error) {
+    console.error("Failed to fetch headers:", error);
+    return null;
+  }
+}
+
 supaBaseRouter.post(
     "/create-document",
     //requireAuth(),
@@ -62,6 +73,16 @@ supaBaseRouter.post(
         ? (document.assigned_role as UserRoles)
         : UserRoles.UnderWriter
 
+        const decoded = Buffer.from(document.filePayload as string, 'base64');
+        const payload: File = new File([decoded], document.name)
+
+        let mime_type: string
+
+        if (!document.filePayload)
+            mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+        else
+            mime_type = payload.type
+
         const documentContents = await prisma.documentContent.create({
             data: {
                 name: document.name ?? "Not found.",
@@ -69,15 +90,13 @@ supaBaseRouter.post(
                 content_owner: document.content_owner ?? "Not Found.",
                 assigned_role: assignedRole,
                 bucketId: employee.bucket!.id,
-                mime_type: document.mime_type ?? "text/plain",
+                mime_type: mime_type,
                 expiration_date: expirationDate.toISOString(),
                 document_status: documentStatus,
                 document_type: document.document_type ?? "Reference"
 
             }
         })
-        const decoded = Buffer.from(document.filePayload as string, 'base64');
-        const payload: File = new File([decoded], document.name)
 
         // Upload document to authenticated employee with supabase bucket association.
         const { data, error } = await supabaseClient.storage

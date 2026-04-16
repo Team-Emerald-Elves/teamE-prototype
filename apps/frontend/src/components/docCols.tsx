@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import DocumentViewer from "@/components/docViewer.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
+import DocTag from "@/components/ui/doctag.tsx";
 
 export type Document = {
     id: number;
@@ -72,21 +73,6 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "document_type",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Content Type
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-
-    },
-    {
         accessorKey: "expiration_date",
         header: ({ column }) => {
             return (
@@ -140,20 +126,6 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "assigned_role",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Role
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
         accessorKey: "last_modified",
         header: ({ column }) => {
             return (
@@ -173,6 +145,34 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <TableCell>
                     <p>{date.toLocaleString()}</p>
+                </TableCell>
+            );
+        },
+    },
+    {
+        accessorKey: "tags",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Tags
+                    <ArrowUpDown className="ml-2 h-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const doc = row.original;
+            const type = doc.mime_type
+            const roles = doc.assigned_role;
+            const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
+
+            return (
+                <TableCell>
+                    <DocTag>{type.toLocaleString()}</DocTag>
+                    <DocTag>{roles}</DocTag>
+                    <DocTag>{status}</DocTag>
                 </TableCell>
             );
         },

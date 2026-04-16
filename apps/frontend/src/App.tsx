@@ -17,32 +17,6 @@ import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 
 function App() {
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch("http://localhost:3000/api/tests/me", {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
-    //     }
-    //
-    //     load();
-    // }, [isSignedIn, roles]);
 
     return (
         <BrowserRouter>
@@ -59,7 +33,6 @@ function App() {
             </Show>
 
             <Show when="signed-in">
-                {/* Wait for me to load */}
                     <div className="app">
                         <Navbar >
                             <UserButton />
@@ -82,7 +55,7 @@ function App() {
                     </div>
             </Show>
         </BrowserRouter>
-    );
+    )
 }
 
 

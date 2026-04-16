@@ -89,7 +89,6 @@ export default function Documents() {
             const docsData = await getDocumentsAdmin(sessionToken)
 
             setDocs(docsData);
-            console.log(docs);
         };
 
         fetchData();

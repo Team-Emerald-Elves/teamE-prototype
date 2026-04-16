@@ -136,9 +136,6 @@ export function DocumentsTable<TData extends Document, TValue>({
         },
 
     })
-    console.log(docs)
-    console.log(typeof docs)
-    console.log(Array.isArray(docs))
 
     const [docLocks, setDocLocks] = useState<Record<number, boolean>>({});
 
@@ -391,8 +388,6 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 const canEdit =
                                     (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (!doc.lock)||
                                     (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (!doc.lock)
-                                console.log(doc.assigned_role)
-                                console.log(roles.includes("businessanalyst"))
                                 return (
                                     <TableRow key={row.id}>
                                         <FavoriteStar

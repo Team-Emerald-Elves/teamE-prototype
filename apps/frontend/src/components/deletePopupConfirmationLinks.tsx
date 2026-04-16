@@ -22,23 +22,6 @@ type editlinksRequest ={
 
 }
 
-// async function updateLinks(body: editlinksRequest) {
-//     console.log(body)
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(body),
-//     });
-
-//     if (!res.ok) {
-//         const errorText = await res.text();
-//         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
-//     }
-//     return res.json();
-// }
 async function removeLink(body: editlinksRequest) {
 
     console.log(body)
@@ -59,12 +42,6 @@ async function removeLink(body: editlinksRequest) {
 }
 
 export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps) {
-
-    // const [sessionToken, setSessionToken] = useState("")
-
-    // useEffect(() => {
-    //     getToken().then(t => setSessionToken(t ?? ""))
-    // }, [])
 
     const bodyData ={
         action: "delete",

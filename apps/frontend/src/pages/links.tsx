@@ -52,7 +52,7 @@ function Links() {
                 </div>
             </div>
             <div className="px-10 py-20 ">
-                <Linkstable me={me}/>
+                <Linkstable />
             </div>
         </>
     )

@@ -30,25 +30,22 @@ interface NavbarProps {
 function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
             const data = await res.json();
-            setMe(data);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
@@ -89,12 +86,6 @@ function Navbar(props: NavbarProps) {
 
                 <NavigationMenu>
                     <NavigationMenuList className = "flex gap-4">
-
-                        {/*<NavigationMenuItem>*/}
-                        {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
-
-                        {/*</NavigationMenuItem>*/}
-
                         <NavigationMenuItem>
                             <CenterDiv>
                                 {props.children}

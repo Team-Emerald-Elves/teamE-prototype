@@ -61,25 +61,22 @@ async function updateLinks(body: editlinksRequest) {
 function AddLinksForm(props: linkProp){
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
             const data = await res.json();
-            setMe(data);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
@@ -140,7 +137,7 @@ function AddLinksForm(props: linkProp){
                                         id: props.id!,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: roles.at(0),
+                                        owner: roles.at(0) as string,
                                     }
 
                                 };

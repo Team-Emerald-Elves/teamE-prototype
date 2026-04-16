@@ -14,7 +14,6 @@ import {useEffect, useState} from "react";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
 import type { Links,
-              linksProps
 } from './types/linkstable.d.ts';
 import {useAuth} from "@clerk/react";
 
@@ -52,7 +51,7 @@ function LinksTable(){
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [links, setLinks] = useState<Links[]>([]);
-    const [me, setMe] = useState(null);
+    const [me, setMe] = useState<any>(null);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -63,7 +62,7 @@ function LinksTable(){
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -85,7 +84,7 @@ function LinksTable(){
                 .then(setLinks)
                 .catch(console.error);
         } else {
-            getRoleLinks(me.roles.at(0))
+            getRoleLinks(me?.roles.at(0))
                 .then(setLinks)
                 .catch(console.error);
         }

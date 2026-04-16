@@ -1,8 +1,8 @@
 import DocumentCard from '../components/docCard.tsx'
 import ContentForm from '../components/contentForm.tsx'
-import {SearchBar} from '../components/searchbar.tsx'
-import {useState, useEffect} from "react";
-import {getToken, useAuth} from "@clerk/react"
+import { SearchBar } from '../components/searchbar.tsx'
+import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/react"
 
 
 type Document = {
@@ -55,25 +55,22 @@ async function getDocumentsAdmin(token: string) {
 function Documents() {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
             const data = await res.json();
-            setMe(data);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
@@ -145,11 +142,6 @@ function Documents() {
                         </div>
 
                     ))}
-                    {/*<DocumentCard name="Underwriting Rules" type="Reference" />*/}
-                    {/*<DocumentCard name="Approved Filings" type="Reference" />*/}
-                    {/*<DocumentCard name="State Guidelines" type="Reference"/>*/}
-                    {/*<DocumentCard name="Use Cases" type="Reference"/>*/}
-
                 </div>
 
             </>

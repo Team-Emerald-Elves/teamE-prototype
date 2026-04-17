@@ -37,3 +37,6 @@ prisma/generated
 package-lock.json
 apps/package-lock.json
 pnpm-lock.yaml
+
+# Postman
+postman

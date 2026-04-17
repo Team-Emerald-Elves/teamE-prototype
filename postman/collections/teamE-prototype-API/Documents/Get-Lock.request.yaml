@@ -1,7 +1,0 @@
-$kind: http-request
-name: Get Lock
-method: GET
-url: "{{baseUrl}}/api/tests/get-lock?id=180"
-queryParams:
-  id: "180"
-order: 4000

@@ -1,7 +1,8 @@
 import Router, { request, response, type Request, type Response } from "express"
 import { requireAuth, getAuth, clerkClient } from '@clerk/express'
-import {prisma} from "../lib/prisma.ts";
-
+import { prisma } from "../lib/prisma.ts";
+import { UpdateLockBody, GetLockQuery } from '../lib/zod/routes.schemas.ts'
+import { validate } from "../lib/zod/middleware.ts";
 
 
 const APIRouter = Router()
@@ -109,7 +110,7 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
-APIRouter.put('/update-lock',updateLock)
-APIRouter.get('/get-lock', getLock)
+APIRouter.put('/update-lock', validate(UpdateLockBody), updateLock)
+APIRouter.get('/get-lock', validate(GetLockQuery), (getLock))
 
 export default APIRouter

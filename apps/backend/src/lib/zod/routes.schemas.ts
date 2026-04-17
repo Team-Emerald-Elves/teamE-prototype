@@ -2,10 +2,10 @@ import * as z from "zod";
 
 
 const StatusEnum = z.enum(['not_started', 'in_progress', 'needs_review', 'done', 'expired']).default('not_started')
-const UserRoleEnum = z.enum([  'Administrator', 'UnderWriter', 'BusinessAnalyst']);
+const UserRoleEnum = z.enum(['Administrator', 'UnderWriter', 'BusinessAnalyst']);
 const ActionEnum = z.enum(['list', 'create', 'edit','delete']);
 
-const EmployeeSchema = z.object({
+export const EmployeeSchema = z.object({
     id: z.string(),
     clerkUserId: z.string().optional(),
     uname: z.string(),
@@ -17,7 +17,7 @@ const EmployeeSchema = z.object({
 
 
 const documentContentSchema = z.object({
-    id: z.number().int(),
+    id: z.number(),
     name: z.string(),
     url: z.url().optional(),
     content_owner: z.string(),

@@ -12,14 +12,11 @@ const __dirname = path.dirname(__filename);
 // Load env files
 
 dotenv.config({
-    path: path.resolve(__dirname, '../../apps/backend/.env'),
-    override: true
-});
-
-dotenv.config({ 
-    path: path.resolve(__dirname, '.env'),
-    override: true
-});
+    path: [
+        path.resolve(__dirname, '../../apps/backend/.env'),
+        path.resolve(__dirname, '.env')
+    ]
+})
 
 const nodeEnv = process.env.NODE_ENV?.toUpperCase() || "DEVELOPMENT"
 const directUrlKey = `${nodeEnv}_DIRECT_URL`

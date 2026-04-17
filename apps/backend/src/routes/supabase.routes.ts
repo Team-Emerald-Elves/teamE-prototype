@@ -230,15 +230,29 @@ supaBaseRouter.put(
 )
 
 supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
-    const { isAuthenticated } = getAuth(req);
+    const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {
         return res.status(401).json({ error: "Not authenticated" });
     }
 
     try {
+        // get employee for favorites
+        const employee = await prisma.employee.findFirstOrThrow({
+            where: {
+                clerkUserId: userId,
+            },
+            select: {
+                favorites: true,
+            },
+        });
+
+        const favoriteSet = new Set(employee.favorites);
+
+        // get all documents
         const documents = await prisma.documentContent.findMany();
 
+        // get the content owner names (right now they are ids)
         const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
 
         const employees = await prisma.employee.findMany({
@@ -255,21 +269,30 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         const employeeMap = new Map(
             employees.map(emp => [
                 emp.id,
-                `${emp.first_name} ${emp.last_name}`
+                `${emp.first_name} ${emp.last_name}`,
             ])
         );
 
+        // set favorite attribute for docs (for frontend purposes)
         const formattedDocs = documents.map(doc => ({
             ...doc,
             content_owner: employeeMap.get(doc.content_owner) || "Unknown",
+            favorite: favoriteSet.has(doc.id),
         }));
 
-        res.status(200).json(formattedDocs);
+        //sort so favorites appear first
+        const sortedDocs = formattedDocs.sort((a, b) => {
+            // favorites first
+            if (a.favorite === b.favorite) return 0;
+            return a.favorite ? -1 : 1;
+        });
+
+        res.status(200).json(sortedDocs);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch documents" });
     }
 });
-
 
 export default supaBaseRouter

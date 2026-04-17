@@ -1,58 +1,72 @@
 import express from "express";
 import { prisma } from "../lib/prisma.ts";
+import { getAuth } from "@clerk/express";
 
-function favoriteRoute(req: express.Request, res: express.Response) {
-    prisma.documentContent
-        .findMany({
+async function favoriteRoute(req: express.Request, res: express.Response) {
+    const { userId, isAuthenticated } = getAuth(req);
+
+    if (!isAuthenticated) {
+        return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    try {
+        //get employee currently signed in
+        const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                favorite: true,
+                clerkUserId: userId,
             },
-            orderBy: {
-                name: "asc",
+            select: {
+                favorites: true,
             },
-        })
-        .then(async (documents) => {
-            try {
-                // 1. collect unique owner IDs
-                const ownerIds = [...new Set(documents.map(d => d.content_owner))];
-
-                // 2. fetch all employees in one query
-                const employees = await prisma.employee.findMany({
-                    where: {
-                        id: { in: ownerIds },
-                    },
-                    select: {
-                        id: true,
-                        first_name: true,
-                        last_name: true,
-                    },
-                });
-
-                // 3. build lookup map
-                const employeeMap = new Map(
-                    employees.map(emp => [
-                        emp.id,
-                        `${emp.first_name} ${emp.last_name}`,
-                    ])
-                );
-
-                // 4. attach name to documents
-                const formatted = documents.map(doc => ({
-                    ...doc,
-                    content_owner:
-                        employeeMap.get(doc.content_owner) || "Unknown",
-                }));
-
-                res.json(formatted);
-            } catch (err) {
-                console.error("[ERROR JOINING EMPLOYEES]", err);
-                res.sendStatus(500);
-            }
-        })
-        .catch((err) => {
-            console.error("[ERROR]", err);
-            res.sendStatus(500);
         });
+
+        const favoriteIds = employee.favorites;
+        //check if they have favorites
+        if (favoriteIds.length === 0) {
+            return res.json([]);
+        }
+
+
+        // get the documents that are in the favorite list
+        const documents = await prisma.documentContent.findMany({
+            where: {
+                id: { in: favoriteIds },
+            },
+        });
+
+        // get all contnet owner ids (need to convert to names)
+        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+
+        // get employees that are content owners
+        const owners = await prisma.employee.findMany({
+            where: {
+                id: { in: ownerIds },
+            },
+            select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+            },
+        });
+
+        // map ids to names for content owners
+        const ownerMap = new Map(
+            owners.map(o => [o.id, `${o.first_name} ${o.last_name}`])
+        );
+
+        // add the favorite as true (since these are all favorites)
+        const result = documents.map(doc => ({
+            ...doc,
+            content_owner: ownerMap.get(doc.content_owner) || "Unknown",
+            favorite: true,
+        }));
+
+        return res.json(result);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Failed to fetch favorites" });
+    }
 }
 
 export default favoriteRoute;

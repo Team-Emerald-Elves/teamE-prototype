@@ -9,7 +9,7 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 import { Button } from './ui/button.tsx'
-
+import { SlidersHorizontalIcon, File01Icon, X, Folder01Icon, UserGroupIcon} from "@hugeicons/core-free-icons";
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -89,7 +89,10 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [me, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
     const [token, setToken] = useState<string>();
-
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isDocumentOpen, setIsDocumentOpen] = useState(false);
+    const [isTypeOpen, setIsTypeOpen] = useState(false);
+    const [isRoleOpen, setIsRoleOpen] = useState(false);
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -184,6 +187,132 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <Search />
                                 </InputGroupAddon>
                             </InputGroup>
+                            <div className="relative inline-block text-left">
+                                <button
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                ><div className="pr-1"> <HugeiconsIcon icon={SlidersHorizontalIcon} />  </div> Filter </button>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-1">
+                                            <div className="relative inline-block text-left">
+                                                <div class="flex gap-x-0.5">
+                                                <button
+                                                    onClick={() => {
+                                                        if (isTypeOpen) {
+                                                            setIsTypeOpen(!isTypeOpen)
+                                                        }
+                                                        if (isRoleOpen) {
+                                                            setIsRoleOpen(!isRoleOpen)
+                                                        }
+                                                        setIsDocumentOpen(!isDocumentOpen)
+                                                    }}
+                                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                > <div className="pr-1"> <HugeiconsIcon icon={File01Icon} /></div> Document Type </button>
+                                                <button onClick={() => {
+                                                    if (isDocumentOpen) {
+                                                        setIsDocumentOpen(!isDocumentOpen)
+                                                        }
+                                                    }}
+                                                        className="text-black">
+                                                    <div className="ml-3"> <HugeiconsIcon icon={X} />  </div>
+                                                </button>
+                                                </div>
+
+                                                {isDocumentOpen && (
+                                                    <div className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                        <div className="py-1">
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reference</a>
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Workflow</a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="relative inline-block text-left">
+                                                <div className="flex gap-x-0.5">
+                                                    <button
+
+                                                        onClick={() => {
+                                                            if (isDocumentOpen) {
+                                                                setIsDocumentOpen(!isDocumentOpen)
+                                                            }
+                                                            if (isRoleOpen) {
+                                                                setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            setIsTypeOpen(!isTypeOpen)
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                    >
+                                                        <div className="pr-1"><HugeiconsIcon icon={Folder01Icon}/></div>
+                                                            File Type
+                                                    </button>
+                                                    <button onClick={() => {
+                                                        if (isTypeOpen) {
+                                                            setIsTypeOpen(!isTypeOpen)
+                                                        }
+                                                    }}
+                                                            className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                    </button>
+                                                </div>
+
+                                                {isTypeOpen && (
+                                                    <div
+                                                        className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                        <div className="py-1">
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.pdf</a>
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.docx</a>
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.xlsx</a>
+                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.txt</a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="relative inline-block text-left">
+                                                <div className="flex gap-x-0.5">
+                                                    <button
+                                                        onClick={() => {
+                                                            if (isTypeOpen) {
+                                                                setIsTypeOpen(!isTypeOpen)
+                                                            }
+                                                            if (isDocumentOpen) {
+                                                                setIsDropdownOpen(!isDocumentOpen)
+                                                            }
+                                                            setIsRoleOpen(!isRoleOpen)
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2 items-center justify-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                    >
+                                                        <div className="pr-1"><HugeiconsIcon icon={UserGroupIcon}/></div>
+                                                        Role
+                                                    </button>
+                                                    <button onClick={() => {
+                                                        if (isRoleOpen) {
+                                                            setIsRoleOpen(!isRoleOpen)
+                                                        }
+                                                    }}
+                                                            className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                    </button>
+                                                </div>
+
+                                                {isRoleOpen && (
+                                                    <div
+                                                        className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                        <div className="py-1">
+                                                            <a href="#"
+                                                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business Analyst</a>
+                                                            <a href="#"
+                                                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Underwriter</a>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <div className="flex justify-end ml-auto">
                                 <ContentForm
                                     type="Create"

@@ -40,7 +40,7 @@ type contentFormProps = {
     currentStatus: string,
     currentID: number,
     size: boolean,
-    lock: boolean,
+    lock: string,
 }
 
 type Employee = {
@@ -82,27 +82,6 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<Boolean> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-
-    return Boolean(data);
-}
 
 function ContentForm(props: contentFormProps) {
 
@@ -217,10 +196,7 @@ function ContentForm(props: contentFormProps) {
                 {props.size ?
                     <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
                     :
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" onClick={async () => {
-                       const token = await getToken();
-                        await setDocumentLock(token, props.currentID, !props.lock)
-                    }}><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 }
 
 

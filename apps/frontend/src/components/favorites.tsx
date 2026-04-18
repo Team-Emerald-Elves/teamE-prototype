@@ -17,6 +17,7 @@ import {
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
+import {getToken} from "@clerk/react";
 
 type Document = {
     id: number;
@@ -30,6 +31,7 @@ type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock: boolean;
 };
 const Documents: Document[] = [];
 
@@ -62,21 +64,24 @@ Documents.push(Doc2);
 
 export default function Favorites() {
     const [favorites, setFavorites] = useState<Document[]>([]);
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
-
         const getFavorites = async () => {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`);
+            const token = await getToken();
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`,{headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             if (!res.ok) {
                 throw new Error("Failed to fetch favorited docs");
             }
             const data = await res.json();
-            console.log(data)
             setFavorites(data);
         };
 
         getFavorites();
-    }, [favorites]);
+    }, [reload]);
 
 
     return (
@@ -126,19 +131,23 @@ export default function Favorites() {
                     <TableBody>
                         {favorites.map((d) => (
 
-                            <FavoritesTableEntry
+                            <FavoritesTableEntry key={d.id}
                                     d={d}
-                                    onToggle={async (doc) => {
+                                    onToggleOff={async (doc: Document) => {
+                                        const token = await getToken()
+                                        //need to send true for favorite and send the doc id and the employee id
                                     const newValue = !doc.favorite;
 
                                     await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
                                     method: "POST",
                                     headers: {
                                     "Content-Type": "application/json",
+                                        "Authorization": `Bearer ${token}`
+
                                 },
                                     body: JSON.stringify({
                                     id: doc.id,
-                                    favorite: doc.favorite, // backend expects old value (your rule)
+                                    favorite: true,
                                 }),
                                 });
 
@@ -147,7 +156,33 @@ export default function Favorites() {
                                     f.id === doc.id ? { ...f, favorite: newValue } : f
                                     )
                                     );
+                                    setReload(prev => !prev);
                                 }}
+                                    onToggleOn={async (doc: Document) => {
+                                        //need to send true for favorite and send the doc id and the employee id
+                                        const token = await getToken();
+                                        const newValue = !doc.favorite;
+
+                                        await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                    "Authorization": `Bearer ${token}`
+
+                                            },
+                                            body: JSON.stringify({
+                                                id: doc.id,
+                                                favorite: false,
+                                            }),
+                                        });
+
+                                        setFavorites(prev =>
+                                            prev.map(f =>
+                                                f.id === doc.id ? { ...f, favorite: newValue } : f
+                                            )
+                                        );
+                                        setReload(prev => !prev);
+                                    }}
                             />
 
                         ))}

@@ -31,7 +31,7 @@ import {
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
-import {useAuth} from "@clerk/react";
+import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
@@ -137,6 +137,38 @@ export function DocumentsTable<TData extends Document, TValue>({
         },
 
     })
+    const toggleFavorite = async (doc: Document, nextValue: boolean) => {
+        try {
+            const token = await getToken();
+
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        id: doc.id,
+                        favorite: nextValue,
+                    }),
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to update favorite");
+            }
+
+            setDocs((prev) =>
+                prev.map((d) =>
+                    d.id === doc.id ? { ...d, favorite: nextValue } : d
+                )
+            );
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
 
 
@@ -205,37 +237,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         <TableRow key={row.id}>
                                             <FavoriteStar
                                                 doc={doc}
-                                                onToggle={async (doc) => {
-                                                    const newValue = !doc.favorite;
-                                                    try {
-                                                        const res = await fetch(
-                                                            `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
-                                                            {
-                                                                method: "POST",
-                                                                headers: {
-                                                                    Accept: "application/json",
-                                                                    "Content-Type": "application/json",
-                                                                },
-                                                                body: JSON.stringify({
-                                                                    id: doc.id,
-                                                                    favorite: doc.favorite,
-                                                                }),
-                                                            }
-                                                        );
-
-                                                        if (!res.ok) {
-                                                            throw new Error("Failed to update favorite");
-                                                        }
-                                                        setDocs((prev) =>
-                                                            prev.map((d) =>
-                                                                d.id === doc.id ? { ...d, favorite: newValue } : d
-                                                            )
-                                                        );
-
-                                                    } catch (err) {
-                                                        console.error(err);
-                                                    }
-                                                }}
+                                                onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                                onToggleOff={(doc) => toggleFavorite(doc, true)}
                                             />
 
                                             {row.getVisibleCells().map((cell) => (
@@ -393,38 +396,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <TableRow key={row.id}>
                                         <FavoriteStar
                                             doc={doc}
-                                            onToggle={async (doc) => {
-                                                const newValue = !doc.favorite;
-
-                                                try {
-                                                    const res = await fetch(
-                                                        `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
-                                                        {
-                                                            method: "POST",
-                                                            headers: {
-                                                                Accept: "application/json",
-                                                                "Content-Type": "application/json",
-                                                            },
-                                                            body: JSON.stringify({
-                                                                id: doc.id,
-                                                                favorite: doc.favorite,
-                                                            }),
-                                                        }
-                                                    );
-
-                                                    if (!res.ok) {
-                                                        throw new Error("Failed to update favorite");
-                                                    }
-                                                    setDocs((prev) =>
-                                                        prev.map((d) =>
-                                                            d.id === doc.id ? { ...d, favorite: newValue } : d
-                                                        )
-                                                    );
-
-                                                } catch (err) {
-                                                    console.error(err);
-                                                }
-                                            }}
+                                            onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                            onToggleOff={(doc) => toggleFavorite(doc, true)}
                                         />
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id} className="px-1 py-0.5 text-center">

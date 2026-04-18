@@ -12,6 +12,15 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import type { Links } from './types/linkstable.d.ts'
 
+type Links = {
+    id: string;
+    link_name: string;
+    url: string;
+    owner: string;
+    favorite: boolean;
+};
+
+
 type deleteConfirmationPopupProps = {
     link: Links
 }

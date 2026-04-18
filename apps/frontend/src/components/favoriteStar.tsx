@@ -18,10 +18,19 @@ type Document = {
     favorite: boolean;
     lock: boolean;
 };
+
+type Links = {
+    id: string;
+    link_name: string;
+    url: string;
+    owner: string;
+    favorite: boolean;
+};
+
 type FavoriteStarProps = {
-    doc: Document;
-    onToggleOn: (doc: Document) => void;
-    onToggleOff: (doc: Document) => void;
+    doc: Document | Links;
+    onToggleOn: (doc: Document | Links) => void;
+    onToggleOff: (doc: Document | Links) => void;
 };
 
 export default function FavoriteStar({ doc, onToggleOff, onToggleOn }: FavoriteStarProps) {

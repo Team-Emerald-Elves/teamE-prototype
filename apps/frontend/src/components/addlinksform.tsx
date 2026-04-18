@@ -36,10 +36,9 @@ type linkProp = {
     type: string,
     size: boolean,
     url: string,
-    description: string,
     owner?: string
     name: string,
-    me: any
+
 }
 
 async function updateLinks(body: editlinksRequest) {

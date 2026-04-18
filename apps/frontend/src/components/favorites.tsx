@@ -80,7 +80,7 @@ export default function Favorites() {
 
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-6">
+        <div className="max-w-10xl mx-auto px-6 py-6">
 
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -104,12 +104,6 @@ export default function Favorites() {
 
             <div className="bg-white rounded-xl shadow-sm border p-4">
 
-                <div className="flex items-center mb-4">
-                    <div className="w-1/3 mr-4">
-                        <SearchBar />
-                    </div>
-                </div>
-
 
                 <Table className="border rounded-lg overflow-hidden">
                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
@@ -123,6 +117,7 @@ export default function Favorites() {
                             <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
                             <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                            <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
 
 
                         </TableRow>

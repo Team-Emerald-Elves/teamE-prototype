@@ -64,7 +64,7 @@ function LinksTable(){
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -122,7 +122,7 @@ function LinksTable(){
                         {links.map((l) => (
                             <TableRow key={l.link_name}>
                                 <TableCell>{l.link_name}</TableCell>
-                                <TableCell>{l.url}</TableCell>
+                                <TableCell><a href={l.url}>{l.url}</a></TableCell>
                                 <TableCell>{l.owner}</TableCell>
                                 <TableCell></TableCell>
 

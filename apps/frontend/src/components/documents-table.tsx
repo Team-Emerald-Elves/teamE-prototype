@@ -22,7 +22,7 @@ import {
     getSortedRowModel,
 } from "@tanstack/react-table"
 
-import { Search } from "lucide-react"
+import { Search, Lock, LockOpen } from "lucide-react"
 import {
     InputGroup,
     InputGroupAddon,
@@ -31,17 +31,17 @@ import {
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
-import {useAuth, useUser} from "@clerk/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
-import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
+import {useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Download01Icon} from "@hugeicons/core-free-icons";
 
 type Document = {
     id: number;
     url: string;
     name: string;
     last_modified: string;
+    lock: string;
     expiration_date: string;
     mime_type: string;
     document_type: string;
@@ -51,6 +51,27 @@ type Document = {
     favorite: boolean;
 };
 
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
+
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            id: documentID,
+            status: status
+        })
+    })
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
+    const data = await res.json();
+
+    return String(data);
+}
 
 interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -63,11 +84,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                              data,
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
-    const {user} = useUser()
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
-
+    const [token, setToken] = useState<string>();
+    const[empID, setEmpID] = useState("");
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -78,7 +99,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -86,6 +107,8 @@ export function DocumentsTable<TData extends Document, TValue>({
 
             const data = await res.json();
             setMe(data);
+            setEmpID(data.id);
+            setToken(token as string)
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
         load();
@@ -114,27 +137,26 @@ export function DocumentsTable<TData extends Document, TValue>({
         },
 
     })
-    console.log(docs)
-    console.log(typeof docs)
-    console.log(Array.isArray(docs))
+
+
+
     if(roles.includes("administrator")) {
         return (
             <>
-                <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
-                            <InputGroup
-                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                                     onChange={(event) =>
                                         table.getColumn("name")?.setFilterValue(event.target.value)
                                     }
-                                    className="max-w-sm"
+                                    className="w-full"
                                 />
                                 <InputGroupAddon>
-                                    <Search/>
+                                    <Search />
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="flex justify-end ml-auto">
@@ -149,6 +171,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
+                                    lock="none"
                                 />
                             </div>
                         </div>
@@ -157,7 +180,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
+                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
                                                 <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -216,13 +239,32 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             />
 
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id}>
+                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
-
+                                            {doc.lock === "none"?(
+                                                <div className="flex items-center gap-1 justify-end">
+                                            <TableCell>
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, true)
+                                                }}><Lock /></Button>
+                                            </TableCell>
+                                                </div>
+                                                ):
+                                                doc.lock === empID ?(
                                             <TableCell>
                                                 <div className="flex gap-2 justify-end">
+                                                    {doc.lock != "none" && (
                                                     <ContentForm
                                                         type="Edit"
                                                         currentID={doc.id}
@@ -234,10 +276,28 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         currentExpirationTime={doc.expiration_date}
                                                         currentStatus={doc.document_status}
                                                         size={false}
+                                                        lock={doc.lock}
                                                     />
+                                                )}
                                                     <DeleteConfirmationPopup target={doc.id}/>
+                                                    <a
+                                                        href={doc.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        <HugeiconsIcon icon={Download01Icon} />
+                                                    </a>
+                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                        const token = await getToken();
+                                                        await setDocumentLock(token, doc.id, false)
+                                                    }}><LockOpen /></Button>
+
                                                 </div>
                                             </TableCell>
+                                                    ):(
+                                                    <TableCell><p>empID</p></TableCell> )
+                                            }
                                         </TableRow>
                                     );
                                 })}
@@ -269,21 +329,20 @@ export function DocumentsTable<TData extends Document, TValue>({
     else{
         return(
             <>
-                <div className="max-w-10xl mx-auto px-6 py-6">
+                <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
-                            <InputGroup
-                                className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                                     onChange={(event) =>
                                         table.getColumn("name")?.setFilterValue(event.target.value)
                                     }
-                                    className="max-w-sm"
+                                    className="w-full"
                                 />
                                 <InputGroupAddon>
-                                    <Search/>
+                                    <Search />
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="flex justify-end ml-auto">
@@ -298,14 +357,15 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
+                                    lock="none"
                                 />
                             </div>
                         </div>
                     <Table className="border rounded-lg overflow-hidden">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">
                         {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
-                                    <TableHead className=" text-[#0b4461] text-center"> Favorites </TableHead>
+                                    <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead className=" text-[#0b4461] text-center" key={header.id}>
@@ -327,10 +387,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 const doc = row.original;
 
                                 const canEdit =
-                                    (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") ||
-                                    (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst")
-                                console.log(doc.assigned_role)
-                                console.log(roles.includes("businessanalyst"))
+                                    (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none")||
+                                    (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none")
                                 return (
                                     <TableRow key={row.id}>
                                         <FavoriteStar
@@ -369,11 +427,29 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             }}
                                         />
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
+                                            <TableCell key={cell.id} className="px-1 py-0.5 text-center">
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}
-
+                                        {doc.lock === "none"?(
+                                            <div className="flex items-center justify-end gap-2">
+                                            <TableCell>
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, true)
+                                                }}><Lock /></Button>
+                                            </TableCell>
+                                            </div>
+                                            ):
+                                            doc.lock === empID ?(
                                         <TableCell>
                                             <div className="flex gap-2 justify-end">
                                                 {canEdit && (
@@ -388,14 +464,29 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         currentExpirationTime={doc.expiration_date}
                                                         currentStatus={doc.document_status}
                                                         size={false}
+                                                        lock={doc.lock}
                                                     />
                                                 )}
 
                                                 {canEdit && (
                                                     <DeleteConfirmationPopup target={doc.id} />
                                                 )}
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, false)
+                                                }}><LockOpen /></Button>
                                             </div>
-                                        </TableCell>
+                                        </TableCell> ):(
+                                                <TableCell><p>{empID}</p></TableCell> )
+                                        }
                                     </TableRow>
                                 );
                             })}
@@ -424,264 +515,4 @@ export function DocumentsTable<TData extends Document, TValue>({
             </>
         )
     }
-    // if (roles.includes("underwriter")) {
-    //     return (
-    //         <>
-    //         <div className="max-w-10xl mx-auto px-6 py-6">
-    //             <div className="bg-white rounded-xl shadow-sm border p-4">
-    //                 <div className="flex items-center mb-4">
-    //                     <InputGroup
-    //                         className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-    //                         <InputGroupInput
-    //                             placeholder="Search"
-    //                             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-    //                             onChange={(event) =>
-    //                                 table.getColumn("name")?.setFilterValue(event.target.value)
-    //                             }
-    //                             className="max-w-sm"
-    //                         />
-    //                         <InputGroupAddon>
-    //                             <Search/>
-    //                         </InputGroupAddon>
-    //                     </InputGroup>
-    //                     <div className="flex justify-end ml-auto">
-    //                         <ContentForm
-    //                             type="Create"
-    //                             currentID={Math.trunc((Math.random() * 10000) % 10000)}
-    //                             currentName="Name..."
-    //                             currentURL="www.example.com"
-    //                             currentContentOwner="Select Content Owner"
-    //                             currentRole="Select Role"
-    //                             currentExpirationDate="Tomorrow"
-    //                             currentExpirationTime="10:30:00"
-    //                             currentStatus="Select Status"
-    //                             size={true}
-    //                         />
-    //                     </div>
-    //                 </div>
-    //
-    //                 <Table className="border rounded-lg overflow-hidden">
-    //                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-    //                         {table.getHeaderGroups().map((headerGroup) => (
-    //                             <TableRow key={headerGroup.id}>
-    //                                 {headerGroup.headers.map((header) => {
-    //                                     return (
-    //                                         <TableHead className=" text-[#0b4461] text-center" key={header.id}>
-    //                                             {header.isPlaceholder
-    //                                                 ? null
-    //                                                 : flexRender(
-    //                                                     header.column.columnDef.header,
-    //                                                     header.getContext()
-    //                                                 )}
-    //                                         </TableHead>
-    //                                     )
-    //                                 })}
-    //                                 <TableHead className="text-[#0b4461]">Actions</TableHead>
-    //                             </TableRow>
-    //                         ))}
-    //                     </TableHeader>
-    //                     <TableBody>
-    //                         {docs.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
-    //                             <TableRow
-    //                                 key={doc.id}>
-    //                                 <TableCell className="text-[#0b4461] font-medium">
-    //                                     <div className="flex gap-3 items-center">
-    //                                         {doc.favorite}
-    //                                     </div>
-    //                                 </TableCell>
-    //                                 <TableCell className="text-center">{doc.name}</TableCell>
-    //                                 <TableCell className="text-center">{doc.mime_type}</TableCell>
-    //                                 <TableCell className="text-center">{doc.expiration_date}</TableCell>
-    //                                 <TableCell className="text-center">{doc.document_status}</TableCell>
-    //                                 <TableCell className="text-center">{doc.content_owner}</TableCell>
-    //                                 <TableCell className="text-center">{doc.last_modified}</TableCell>
-    //                                 <TableCell className="flex items-center gap-3">
-    //                                     <div className="flex justify-end">
-    //                                         <ContentForm
-    //                                             type="Edit"
-    //                                             currentID={doc.id}
-    //                                             currentName={doc.name}
-    //                                             currentURL={doc.url}
-    //                                             currentContentOwner={doc.content_owner}
-    //                                             currentRole={doc.assigned_role}
-    //                                             currentExpirationDate={doc.expiration_date}
-    //                                             currentExpirationTime={doc.expiration_date}
-    //                                             currentStatus={doc.document_status}
-    //                                             size={true}
-    //                                         />
-    //                                     </div>
-    //                                     <DeleteConfirmationPopup target={"null"}/>
-    //                                 </TableCell>
-    //                             </TableRow>))}
-    //                         {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
-    //                             <TableRow key={doc.id}>
-    //                                 <TableCell className="text-[#0b4461] font-medium">
-    //                                     <div className="flex gap-3 items-center">
-    //                                         {doc.favorite}
-    //                                     </div>
-    //                                 </TableCell>
-    //                                 <TableCell className="text-center">{doc.name}</TableCell>
-    //                                 <TableCell className="text-center">{doc.mime_type}</TableCell>
-    //                                 <TableCell className="text-center">{doc.expiration_date}</TableCell>
-    //                                 <TableCell className="text-center">{doc.document_status}</TableCell>
-    //                                 <TableCell className="text-center">{doc.content_owner}</TableCell>
-    //                                 <TableCell className="text-center">{doc.last_modified}</TableCell>
-    //
-    //                             </TableRow>))}
-    //                 </TableBody>
-    //             </Table>
-    //             <div className="flex items-center justify-end space-x-2 py-4">
-    //                 <Button
-    //                     variant="outline"
-    //                     size="sm"
-    //                     onClick={() => table.previousPage()}
-    //                     disabled={!table.getCanPreviousPage()}
-    //                 >
-    //                     Previous
-    //                 </Button>
-    //                 <Button
-    //                     variant="outline"
-    //                     size="sm"
-    //                     onClick={() => table.nextPage()}
-    //                     disabled={!table.getCanNextPage()}
-    //                 >
-    //                     Next
-    //                 </Button>
-    //             </div>
-    //         </div>
-    //         </div>
-    //         </>
-    //     )
-    // }
-    // if (roles.includes("businessanalyst")) {
-    //     return (
-    //         <>
-    //             <div className="max-w-10xl mx-auto px-6 py-6">
-    //                 <div className="bg-white rounded-xl shadow-sm border p-4">
-    //                     <div className="flex items-center mb-4">
-    //                         <InputGroup
-    //                             className="max-w-md h-8 py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-    //                             <InputGroupInput
-    //                                 placeholder="Search"
-    //                                 value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-    //                                 onChange={(event) =>
-    //                                     table.getColumn("name")?.setFilterValue(event.target.value)
-    //                                 }
-    //                                 className="max-w-sm"
-    //                             />
-    //                             <InputGroupAddon>
-    //                                 <Search/>
-    //                             </InputGroupAddon>
-    //                         </InputGroup>
-    //                         <div className="flex justify-end ml-auto">
-    //                             <ContentForm
-    //                                 type="Create"
-    //                                 currentID={Math.trunc((Math.random() * 10000) % 10000)}
-    //                                 currentName="Name..."
-    //                                 currentURL="www.example.com"
-    //                                 currentContentOwner="Select Content Owner"
-    //                                 currentRole="Select Role"
-    //                                 currentExpirationDate="Tomorrow"
-    //                                 currentExpirationTime="10:30:00"
-    //                                 currentStatus="Select Status"
-    //                                 size={true}
-    //                             />
-    //                         </div>
-    //                     </div>
-    //
-    //                     <Table className="border rounded-lg overflow-hidden">
-    //                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-    //                             {table.getHeaderGroups().map((headerGroup) => (
-    //                                 <TableRow key={headerGroup.id}>
-    //                                     {headerGroup.headers.map((header) => {
-    //                                         return (
-    //                                             <TableHead className=" text-[#0b4461] text-center" key={header.id}>
-    //                                                 {header.isPlaceholder
-    //                                                     ? null
-    //                                                     : flexRender(
-    //                                                         header.column.columnDef.header,
-    //                                                         header.getContext()
-    //                                                     )}
-    //                                             </TableHead>
-    //                                         )
-    //                                     })}
-    //                                     <TableHead className="text-[#0b4461]">Actions</TableHead>
-    //                                 </TableRow>
-    //                             ))}
-    //                         </TableHeader>
-    //                         <TableBody>
-    //                             {docs.filter((doc) => doc.assigned_role === "businessanalyst").map((doc) => (
-    //                                 <TableRow key={doc.id}>
-    //                                     <TableCell className="text-[#0b4461] font-medium">
-    //                                         <div className="flex gap-3 items-center">
-    //                                             {doc.favorite}
-    //                                         </div>
-    //                                     </TableCell>
-    //                                     <TableCell className="text-center">{doc.name}</TableCell>
-    //                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
-    //                                     <TableCell className="text-center">{doc.expiration_date}</TableCell>
-    //                                     <TableCell className="text-center">{doc.document_status}</TableCell>
-    //                                     <TableCell className="text-center">{doc.content_owner}</TableCell>
-    //                                     <TableCell className="text-center">{doc.last_modified}</TableCell>
-    //                                     <TableCell className="flex items-center gap-3">
-    //                                         <div className="flex justify-end">
-    //                                             <ContentForm
-    //                                                 type="Edit"
-    //                                                 currentID={doc.id}
-    //                                                 currentName={doc.name}
-    //                                                 currentURL={doc.url}
-    //                                                 currentContentOwner={doc.content_owner}
-    //                                                 currentRole={doc.assigned_role}
-    //                                                 currentExpirationDate={doc.expiration_date}
-    //                                                 currentExpirationTime={doc.expiration_date}
-    //                                                 currentStatus={doc.document_status}
-    //                                                 size={true}
-    //                                             />
-    //                                         </div>
-    //                                         <DeleteConfirmationPopup target={"null"}/>
-    //                                     </TableCell>
-    //                                 </TableRow>))}
-    //                             {table.data.filter((doc) => doc.assigned_role === "underwriter").map((doc) => (
-    //                                 <TableRow key={doc.id}>
-    //                                     <TableCell className="text-[#0b4461] font-medium">
-    //                                         <div className="flex gap-3 items-center">
-    //                                             {doc.favorite}
-    //                                         </div>
-    //                                     </TableCell>
-    //                                     <TableCell className="text-center">{doc.name}</TableCell>
-    //                                     <TableCell className="text-center">{doc.mime_type}</TableCell>
-    //                                     <TableCell className="text-center">{doc.expiration_date}</TableCell>
-    //                                     <TableCell className="text-center">{doc.document_status}</TableCell>
-    //                                     <TableCell className="text-center">{doc.content_owner}</TableCell>
-    //                                     <TableCell className="text-center">{doc.last_modified}</TableCell>
-    //
-    //                                 </TableRow>))}
-    //                         </TableBody>
-    //                     </Table>
-    //                     <div className="flex items-center justify-end space-x-2 py-4">
-    //                         <Button
-    //                             variant="outline"
-    //                             size="sm"
-    //                             onClick={() => table.previousPage()}
-    //                             disabled={!table.getCanPreviousPage()}
-    //                         >
-    //                             Previous
-    //                         </Button>
-    //                         <Button
-    //                             variant="outline"
-    //                             size="sm"
-    //                             onClick={() => table.nextPage()}
-    //                             disabled={!table.getCanNextPage()}
-    //                         >
-    //                             Next
-    //                         </Button>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </>
-    //     )
-    // }
-    // else {
-    //
-    // }
 }

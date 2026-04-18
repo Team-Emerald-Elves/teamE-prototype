@@ -74,7 +74,7 @@ function AddLinksForm(props: linkProp){
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -142,7 +142,7 @@ function AddLinksForm(props: linkProp){
                                         id: props.id!,
                                         link_name: link.link_name,
                                         url: link.url,
-                                        owner: roles.at(0),
+                                        owner: roles.at(0) as string,
                                     }
 
                                 };

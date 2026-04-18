@@ -23,6 +23,7 @@ type SubmitConfirmationPopupProps = {
     expirationDate?: Date
     expirationTime: string
     document_status: string
+    filePayload?: string
   }
 }
 
@@ -36,7 +37,29 @@ export type IFile = {
   assigned_role: string
   document_type: string
   document_status: string
-  filePayload?: File
+  filePayload: string
+}
+
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<Boolean> {
+
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            id: documentID,
+            status: status
+        })
+    })
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
+    }
+    const data = await res.json();
+
+    return Boolean(data);
 }
 
 function buildExpirationDate(
@@ -70,7 +93,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     document_type: fileData.formData.document_type,
     document_status: fileData.formData.document_status,
     assigned_role: fileData.formData.role,
-    filePayload: "test"
+    filePayload: fileData.formData.filePayload!,
   }
 
   const endpoint =
@@ -79,7 +102,6 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
       : "/api/supabase/update-document"
 
   const method = fileData.type === "Create" ? "POST" : "PUT"
-
   const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
     method,
     headers: {
@@ -120,7 +142,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {createDocument(info, sessionToken)}}>Confirm</Button>
+                        <Button type="submit" onClick={() => {createDocument(info, sessionToken); setDocumentLock(sessionToken, info.formData.id, false)}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

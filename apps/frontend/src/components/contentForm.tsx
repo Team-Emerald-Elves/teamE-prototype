@@ -1,5 +1,5 @@
 import { Button } from './ui/button.tsx'
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {
     Dialog,
     DialogClose,
@@ -24,9 +24,10 @@ import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-import { useAuth } from '@clerk/react'
+import { useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
+import FileUpload from "./fileUpload.tsx";
 
 type contentFormProps = {
     type: string,
@@ -38,7 +39,8 @@ type contentFormProps = {
     currentExpirationTime: string,
     currentStatus: string,
     currentID: number,
-    size: boolean
+    size: boolean,
+    lock: string,
 }
 
 type Employee = {
@@ -60,7 +62,9 @@ type FormDataType = {
     expirationTime: string,
     document_status: string,
     id: number,
+    filePayload?: string,
 };
+
 
 async function getEmployees(sessionToken: string) {
 
@@ -78,47 +82,41 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
-async function getDocumentLock(sessionToken: string, documentID: number) {
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-lock?id=${documentID}`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            method: "GET",
-        },
-    });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-
-    const data = await res.json();
-
-    return data;
-}
-
-async function setDocumentLock(sessionToken: string, documentID: number, status: boolean) {
-    const metaData = {
-        id: documentID,
-        status: status
-    }
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            method: "PUT",
-        },
-        body: JSON.stringify(metaData)
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-
-    return data;
-}
 
 function ContentForm(props: contentFormProps) {
 
-    const { getToken } = useAuth();
+    const [roles, setRoles] = useState<string[]>([]);
+    const {user} = useUser()
+    const { getToken, isSignedIn } = useAuth();
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            console.log("Full response data:", data);
+
+        }
+
+        load();
+    }, [getToken,isSignedIn]);
+
+
+
+
 
     const now = new Date();
     const formattedDate = now.toLocaleString();
@@ -136,6 +134,28 @@ function ContentForm(props: contentFormProps) {
         id: props.currentID,
     });
 
+    const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve((reader.result as string).split(",")[1]); // strip data URL prefix
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+    const uploadHandler = (files: File[]) => {
+        if (!files || files.length < 1) {
+            console.error("Invalid file input");
+            return;
+        }
+        toBase64(files[0]).then(
+            (data) => {
+                setFormData((prev => ({...prev, filePayload: data})));
+            }, (err) => {
+                console.error(err);
+            }
+        )
+    }
+
     useEffect(() => {
 
         getToken().then( token => {
@@ -145,6 +165,27 @@ function ContentForm(props: contentFormProps) {
             .catch(console.error)
         })
     }, []);
+
+    const [sessionToken, setSessionToken] = useState("")
+
+    useEffect(() => {
+        getToken().then(t => setSessionToken(t ?? ""))
+    }, [getToken])
+
+    const isAdmin = roles.some(role =>
+        role.toLowerCase().startsWith("admin")
+    );
+    //console.log(isAdmin);
+    useEffect(() => {
+        if(!isAdmin && roles.length >0 ){
+            roles.some(role => setFormData(prev => ({...prev, role: role})))
+
+        }
+    }, [isAdmin,roles]);
+    useEffect(() => {
+        console.log("Current roles:", roles);
+    }, [roles]);
+    if (!sessionToken ) return;
 
 
 
@@ -163,7 +204,6 @@ function ContentForm(props: contentFormProps) {
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
                             <DialogTitle className="text-2xl text-primary font-sans font-bold">{props.type} Content</DialogTitle>
-
                         </div>
 
                     </DialogHeader>
@@ -213,6 +253,8 @@ function ContentForm(props: contentFormProps) {
                                     </SelectContent>
                                 </Select>
                             </Field>
+
+                            {isAdmin ? (
                             <Field>
                                 <Label htmlFor="role" className="text-xs font-bold">Select Role For Content</Label>
                                 <Select
@@ -223,6 +265,7 @@ function ContentForm(props: contentFormProps) {
                                         <SelectValue placeholder={props.currentRole}/>
                                     </SelectTrigger>
                                     <SelectContent>
+
                                         <SelectGroup>
                                             <SelectLabel>Roles</SelectLabel>
                                             <SelectItem value="Underwriter">Underwriter</SelectItem>
@@ -231,6 +274,7 @@ function ContentForm(props: contentFormProps) {
                                     </SelectContent>
                                 </Select>
                             </Field>
+                            ): null}
                         </div>
                         <Field>
                             <Label htmlFor="contentType" className="text-xs font-bold">Select Content Type</Label>
@@ -284,6 +328,9 @@ function ContentForm(props: contentFormProps) {
                             </Select>
                         </Field>
                     </FieldGroup>
+
+                    <FileUpload dnd={true} show={true} onUpload={uploadHandler}/>
+
                     <p>Last Modified: {formattedDate}</p>
 
                     <DialogFooter>

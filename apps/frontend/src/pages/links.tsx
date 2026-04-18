@@ -1,4 +1,3 @@
-import AddLinksForm from '@/components/addlinksform.tsx'
 import Linkstable from "@/components/linkstable.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
@@ -7,7 +6,7 @@ import PageHeader from "../components/page-header.tsx"
 function Links() {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [me, setMe] = useState<any>(null);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -18,7 +17,7 @@ function Links() {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -41,7 +40,7 @@ function Links() {
 
             </div>
             <div>
-                <Linkstable me={me}/>
+                <Linkstable />
             </div>
         </>
     )

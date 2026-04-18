@@ -27,18 +27,31 @@ function toExpirationDate(value: unknown): Date {
   return new Date(Date.now() + 24 * 60 * 60 * 1000)
 }
 
+async function getMimeFromUrl(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    // The server tells you exactly what the file is
+    return response.headers.get('Content-Type');
+  } catch (error) {
+    console.error("Failed to fetch headers:", error);
+    return null;
+  }
+}
+
 supaBaseRouter.post(
     "/create-document",
     //requireAuth(),
     async (req: Request, res: Response) => {
+
         const { userId, isAuthenticated } = getAuth(req)
-        console.log(userId)
+        console.log("Uid: ", userId);
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-    const document: IDocumentContent = req.body
-    const supabaseClient = await createSupabaseForRequest()
-
+        const document: IDocumentContent = req.body
+        console.log("Payload: ", document.filePayload);
+        const supabaseClient = await createSupabaseForRequest();
+    console.log("Document: ", document)
     try {
         // Get the authenticated employee.
         const employee = await prisma.employee.findFirstOrThrow({
@@ -60,6 +73,16 @@ supaBaseRouter.post(
         ? (document.assigned_role as UserRoles)
         : UserRoles.UnderWriter
 
+        const decoded = Buffer.from(document.filePayload as string, 'base64');
+        const payload: File = new File([decoded], document.name)
+
+        let mime_type: string
+
+        if (!document.filePayload)
+            mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+        else
+            mime_type = payload.type
+
         const documentContents = await prisma.documentContent.create({
             data: {
                 name: document.name ?? "Not found.",
@@ -67,7 +90,7 @@ supaBaseRouter.post(
                 content_owner: document.content_owner ?? "Not Found.",
                 assigned_role: assignedRole,
                 bucketId: employee.bucket!.id,
-                mime_type: document.mime_type ?? "text/plain",
+                mime_type: mime_type,
                 expiration_date: expirationDate.toISOString(),
                 document_status: documentStatus,
                 document_type: document.document_type ?? "Reference"
@@ -75,19 +98,13 @@ supaBaseRouter.post(
             }
         })
 
-        if (documentContents.url === "Local upload")
-        {
-            // Upload document to authenticated employee with supabase bucket association.
-            const { data, error } = await supabaseClient.storage
+        // Upload document to authenticated employee with supabase bucket association.
+        const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id)
-            .upload((document.url as string).trim(), document.filePayload as File)
+            .upload((document.url as string).trim(), payload)
 
-            if (!data || error) {
-                throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
-            }
-
-        } else {
-            // Implement downloading a document from the URL passed.
+        if (!data || error) {
+            throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
         }
 
     } catch (error)
@@ -160,7 +177,7 @@ supaBaseRouter.put(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-        console.log(userId)
+        console.log("Uid: ", userId);
         const document: IDocumentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
 
@@ -175,7 +192,7 @@ supaBaseRouter.put(
             })
 
             // Update contents for document.
-            await prisma.documentContent.update({
+            const newDoc = await prisma.documentContent.update({
                 where: {
                     id: document.id,
                 },
@@ -192,8 +209,10 @@ supaBaseRouter.put(
                 }
             })
 
+            console.log("New doc created: ", newDoc);
+
             const {data, error} = await supabaseClient.storage
-                .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as File)
+                .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as string)
 
             if (!data || error) {
                 throw new Error(`Failed to modify document '${document.name}' for user '${employee.uname}'.`)
@@ -210,24 +229,47 @@ supaBaseRouter.put(
     }
 )
 
-supaBaseRouter.get(
-    '/list-documents',
-    //requireAuth(),
-    async (req: Request, res: Response) => {
-        
-        const { userId, isAuthenticated } = getAuth(req)
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
-        }
+supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
+    const { isAuthenticated } = getAuth(req);
 
-        try {
-            const documents = await prisma.documentContent.findMany()
-            res.status(200).json(documents)
-        } catch(error) {
-            res.status(404).json(`{"message":"Failed to find employee: ${error}"}`)
-        }
+    if (!isAuthenticated) {
+        return res.status(401).json({ error: "Not authenticated" });
     }
-)
+
+    try {
+        const documents = await prisma.documentContent.findMany();
+
+        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+
+        const employees = await prisma.employee.findMany({
+            where: {
+                id: { in: ownerIds },
+            },
+            select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+            },
+        });
+
+        const employeeMap = new Map(
+            employees.map(emp => [
+                emp.id,
+                `${emp.first_name} ${emp.last_name}`
+            ])
+        );
+
+        const formattedDocs = documents.map(doc => ({
+            ...doc,
+            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
+        }));
+
+        res.status(200).json(formattedDocs);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to fetch documents" });
+    }
+});
 
 
 export default supaBaseRouter

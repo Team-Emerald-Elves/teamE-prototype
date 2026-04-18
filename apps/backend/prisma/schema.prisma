@@ -37,6 +37,7 @@ model Employee {
   email       String?     @unique
   bucket      BucketMeta?
   favorites   Int[]
+  favorite_links String[]
 }
 
 model BucketMeta {

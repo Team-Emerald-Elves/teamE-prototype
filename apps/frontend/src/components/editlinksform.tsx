@@ -16,7 +16,7 @@ import {HugeiconsIcon} from "@hugeicons/react";
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 
 type Links ={
-    id: number,
+    id: string,
     link_name: string,
     url: string,
     owner: string
@@ -30,7 +30,7 @@ type editlinksRequest = {
 }
 
 type linkProp = {
-    id?: number,
+    id?: string,
     type?: string,
     size?: boolean,
     description?: string,

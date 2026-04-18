@@ -22,7 +22,7 @@ import {
     getSortedRowModel,
 } from "@tanstack/react-table"
 
-import { Search } from "lucide-react"
+import { Search, Lock, LockOpen } from "lucide-react"
 import {
     InputGroup,
     InputGroupAddon,
@@ -41,7 +41,7 @@ type Document = {
     url: string;
     name: string;
     last_modified: string;
-    lock: boolean;
+    lock: string;
     expiration_date: string;
     mime_type: string;
     document_type: string;
@@ -51,28 +51,26 @@ type Document = {
     favorite: boolean;
 };
 
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
 
-async function getDocumentLock(
-  sessionToken: string,
-  documentID: number
-): Promise<boolean> {
-  const res = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/api/tests/get-lock?id=${documentID}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-      },
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+        headers: {
+            Authorization: `Bearer ${sessionToken}`,
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({
+            id: documentID,
+            status: status
+        })
+    })
+    if (!res.ok) {
+        throw new Error("Failed to fetch document.");
     }
-  );
+    const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch document.");
-  }
-
-  const data = await res.json();
-
-  return Boolean(data.lock);
+    return String(data);
 }
 
 interface DocProps<TData extends Document, TValue> {
@@ -90,6 +88,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [me, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
     const [token, setToken] = useState<string>();
+    const[empID, setEmpID] = useState("");
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -108,6 +107,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
             const data = await res.json();
             setMe(data);
+            setEmpID(data.id);
             setToken(token as string)
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
@@ -170,33 +170,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         }
     };
 
-    const [docLocks, setDocLocks] = useState<Record<number, boolean>>({});
 
-    useEffect(() => {
-        if (!token || docs.length === 0) return;
-
-        async function loadLocks() {
-            try {
-            const results = await Promise.all(
-                docs.map(async (doc) => ({
-                id: doc.id,
-                locked: await getDocumentLock(token as string, doc.id),
-                }))
-            );
-
-            const lockMap: Record<number, boolean> = {};
-            for (const result of results) {
-                lockMap[result.id] = result.locked;
-            }
-
-            setDocLocks(lockMap);
-            } catch (err) {
-            console.error("Failed to load document locks:", err);
-            }
-        }
-
-    loadLocks();
-    }, [token, docs]);
 
     if(roles.includes("administrator")) {
         return (
@@ -229,7 +203,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
-                                    lock={false}
+                                    lock="none"
                                 />
                             </div>
                         </div>
@@ -272,10 +246,28 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
-
+                                            {doc.lock === "none"?(
+                                                <div className="flex items-center gap-1 justify-end">
+                                            <TableCell>
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, true)
+                                                }}><Lock /></Button>
+                                            </TableCell>
+                                                </div>
+                                                ):
+                                                doc.lock === empID ?(
                                             <TableCell>
                                                 <div className="flex gap-2 justify-end">
-                                                    {!doc.lock && (
+                                                    {doc.lock != "none" && (
                                                     <ContentForm
                                                         type="Edit"
                                                         currentID={doc.id}
@@ -299,8 +291,16 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     >
                                                         <HugeiconsIcon icon={Download01Icon} />
                                                     </a>
+                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                        const token = await getToken();
+                                                        await setDocumentLock(token, doc.id, false)
+                                                    }}><LockOpen /></Button>
+
                                                 </div>
                                             </TableCell>
+                                                    ):(
+                                                    <TableCell><p>empID</p></TableCell> )
+                                            }
                                         </TableRow>
                                     );
                                 })}
@@ -360,7 +360,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
-                                    lock={false}
+                                    lock="none"
                                 />
                             </div>
                         </div>
@@ -390,8 +390,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 const doc = row.original;
 
                                 const canEdit =
-                                    (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (!doc.lock)||
-                                    (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (!doc.lock)
+                                    (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none")||
+                                    (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none")
                                 return (
                                     <TableRow key={row.id}>
                                         <FavoriteStar
@@ -404,7 +404,25 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}
-
+                                        {doc.lock === "none"?(
+                                            <div className="flex items-center justify-end gap-2">
+                                            <TableCell>
+                                                <a
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:underline"
+                                                >
+                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, true)
+                                                }}><Lock /></Button>
+                                            </TableCell>
+                                            </div>
+                                            ):
+                                            doc.lock === empID ?(
                                         <TableCell>
                                             <div className="flex gap-2 justify-end">
                                                 {canEdit && (
@@ -434,8 +452,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 >
                                                     <HugeiconsIcon icon={Download01Icon} />
                                                 </a>
+                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    const token = await getToken();
+                                                    await setDocumentLock(token, doc.id, false)
+                                                }}><LockOpen /></Button>
                                             </div>
-                                        </TableCell>
+                                        </TableCell> ):(
+                                                <TableCell><p>{empID}</p></TableCell> )
+                                        }
                                     </TableRow>
                                 );
                             })}

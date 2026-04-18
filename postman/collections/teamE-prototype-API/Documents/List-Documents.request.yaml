@@ -1,8 +1,0 @@
-$kind: http-request
-name: List Documents
-method: GET
-url: '{{baseUrl}}/api/supabase/list-documents'
-order: 1000
-headers:
-  - key: Authorization
-    value: 'Bearer {{authToken}}'

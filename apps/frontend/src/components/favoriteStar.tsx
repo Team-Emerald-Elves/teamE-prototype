@@ -16,13 +16,15 @@ type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock: boolean;
 };
 type FavoriteStarProps = {
     doc: Document;
-    onToggle: (doc: Document) => void;
+    onToggleOn: (doc: Document) => void;
+    onToggleOff: (doc: Document) => void;
 };
 
-export default function FavoriteStar({ doc, onToggle }: FavoriteStarProps) {
+export default function FavoriteStar({ doc, onToggleOff, onToggleOn }: FavoriteStarProps) {
     const [favorite, setFavorite] = useState(doc.favorite);
 
     return (
@@ -30,7 +32,13 @@ export default function FavoriteStar({ doc, onToggle }: FavoriteStarProps) {
             <FontAwesomeIcon
                 icon={favorite ? solidStar : regularStar}
                 onClick={() => {
-                    onToggle(doc)
+                    if (!favorite) {
+                        onToggleOff(doc)
+                    }
+                    else {
+                        onToggleOn(doc)
+                    }
+
                     setFavorite(!favorite)
                 }}
                 className="text-yellow-400 cursor-pointer"

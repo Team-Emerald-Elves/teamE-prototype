@@ -36,6 +36,7 @@ model Employee {
   roles       UserRoles[]
   email       String?     @unique
   bucket      BucketMeta?
+  favorites   Int[]
 }
 
 model BucketMeta {
@@ -51,12 +52,12 @@ model BucketMeta {
   documentContents       documentContent[]
 }
 
-model documentContent { // Must match creation details of document content.
+model documentContent {
   id              Int      @id @unique @default(autoincrement())
   name            String
   url             String?
   content_owner   String
-  lock            Boolean @default(false)
+  lock            String @default("none")
   assigned_role   UserRoles
   bucketId        String   @db.Uuid
   bucket          BucketMeta @relation(fields: [bucketId], references: [id])

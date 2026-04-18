@@ -1,8 +1,0 @@
-$kind: http-request
-name: Get All Service Requests
-method: GET
-url: '{{baseUrl}}/servicereqs'
-order: 1000
-headers:
-  - key: Authorization
-    value: 'Bearer {{authToken}}'

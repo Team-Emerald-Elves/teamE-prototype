@@ -1,5 +1,0 @@
-$kind: http-request
-name: Get Favorited Documents
-method: GET
-url: '{{baseUrl}}/get-favorited'
-order: 2000

@@ -72,15 +72,35 @@ async function updateLock(req: Request, res: Response) {
                 message: "Invalid body. Expected { id: number, status: boolean }"
             })
         }
-
-        await prisma.documentContent.update({
+        const {userId, isAuthenticated} = getAuth(req)
+        if(!isAuthenticated) {
+            return res.status(401).json({error: "Not authenticated"})
+        }
+        const employee = await prisma.employee.findFirstOrThrow({
             where: {
-                id: id
-            },
-            data: {
-                lock: status
+                clerkUserId: userId
             }
         })
+        if(status){
+            await prisma.documentContent.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    lock: employee.id
+                }
+            })
+        }
+        else{
+            await prisma.documentContent.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    lock: "none"
+                }
+            })
+        }
 
         return res.status(200).json({ id, status })
     } catch (error) {

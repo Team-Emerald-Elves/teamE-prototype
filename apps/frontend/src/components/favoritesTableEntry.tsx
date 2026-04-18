@@ -18,11 +18,13 @@ type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock: boolean;
 };
 
 type FavoriteProps = {
     d: Document;
-    onToggle: (doc: Document) => void;
+    onToggleOff: (doc: Document) => void;
+    onToggleOn: (doc: Document) => void;
 };
 
 export default function FavoritesTableEntry(props: FavoriteProps)  {
@@ -35,7 +37,8 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
         >
             <FavoriteStar
                 doc={props.d}
-                onToggle={props.onToggle}
+                onToggleOff={props.onToggleOff}
+                onToggleOn={props.onToggleOn}
             />
 
             <TableCell className="text-[14px] font-small text-gray-700">

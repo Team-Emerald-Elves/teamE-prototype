@@ -5,25 +5,24 @@ const StatusEnum = z.enum(['not_started', 'in_progress', 'needs_review', 'done',
 const UserRoleEnum = z.enum(['Administrator', 'UnderWriter', 'BusinessAnalyst']);
 const ActionEnum = z.enum(['list', 'create', 'edit','delete']);
 
-export const EmployeeSchema = z.object({
-    id: z.string(),
+const EmployeeDataModel = z.object({
+    id: z.string().optional(),
     clerkUserId: z.string().optional(),
-    uname: z.string(),
-    first_name: z.string(),
-    last_name: z.string(),
-    roles: UserRoleEnum,
+    uname: z.string().optional(),
+    first_name: z.string().optional(),
+    last_name: z.string().optional(),
+    roles: UserRoleEnum.optional(),
     email: z.email().optional(),
 })
 
 
-const documentContentSchema = z.object({
+export const DocumentContentModel = z.object({
     id: z.number(),
     name: z.string(),
     url: z.url().optional(),
     content_owner: z.string(),
     lock: z.boolean().default(false),
     assigned_role: UserRoleEnum.optional(),
-    last_modified: z.date(),
     expiration_date: z.date(),
     mime_type: z.string().default('text/plain'),
     document_status: StatusEnum.default('not_started'),
@@ -35,7 +34,7 @@ const documentContentSchema = z.object({
 })
 
 
-const LinkSchema = z.object({
+const LinkDataModel = z.object({
     id: z.uuid().optional(),
     link_name: z.string().optional(),
     url: z.url().optional(),
@@ -54,12 +53,12 @@ export const GetLockQuery = z.object({
 })
 
 //content-employee-route.ts
-export const ContentEmployeeBody = z.object({
+export const ContentEmployeeModel = z.object({
     id: z.number(),
 })
 
 //create-employee.ts
-export const CreateEmployeeBody = z.object({
+export const CreateEmployeeModel = z.object({
     first_name: z.string(),
     last_name: z.string(),
     email: z.email(),
@@ -67,14 +66,14 @@ export const CreateEmployeeBody = z.object({
 })
 
 //create-servicereq.ts
-export const CreateServiceReqBody = z.object({
+export const CreateServiceReqModel = z.object({
     uname: z.string().optional(),
     description: z.string(),
 })
 
 //edit-employee.ts
-export const EditEmployeeBody = z.object({
-    id: z.string(),
+export const EditEmployeeModel = z.object({
+    id: z.uuid(),
     uname: z.string().optional(),
     first_name: z.string().optional(),
     last_name: z.string().optional(),
@@ -83,9 +82,9 @@ export const EditEmployeeBody = z.object({
 })
 
 
-//employee.ts
-export const ListEmployeesQuery = z.object({
-    action: ActionEnum.optional(),
+//employee.ts //to test
+export const ListEmployeesModel = z.object({
+    action: z.literal('list').optional(),
     id: z.string().optional(),
     uname: z.string().optional(),
     first_name: z.string().optional(),
@@ -94,40 +93,30 @@ export const ListEmployeesQuery = z.object({
 
 })
 
-// export const ListEmployeesBody = z.object({
-//
-// })
+export const EmployeeRequestModel = z.object({
+    action: ActionEnum,
+    employeeData: EmployeeDataModel.optional(),
+})
+
 
 //get-link-role.ts
-export const LinkRoleBody = z.object({
+export const LinkRoleModel = z.object({
     owner: z.string(),
 })
 
 //links.ts
+export const LinkRequestGetModel = z.object({
+    action: z.literal('list').optional(),
+    link_name: z.string().optional(),
+})
 
-// export const LinkRequestQuery = z.object({
-// })
-//
-// export const LinkRequestBody = z.object({
-//
-// })
 
-//supabase.routes.ts
+export const LinkRequestPostModel = z.object({
+    action: ActionEnum,
+    linkData: LinkDataModel.optional(),
+})
 
-// export const CreateDocBody = z.object({
-//
-// })
-//
-// export const DeleteDocBody = z.object({
-//
-// })
-//
-//
-// const UpdateDocBody = z.object({
-//
-// })
-
-export const UpdateFavoriteBody = z.object({
+export const UpdateFavoriteModel = z.object({
     id: z.number(),
     favorite: z.boolean(),
 })

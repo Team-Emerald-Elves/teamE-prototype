@@ -2,6 +2,8 @@ import express from "express";
 import {prisma} from "../lib/prisma.ts";
 import {type Employee} from "../lib/prismadefs.ts"
 
+
+
 interface IEditEmployeeRequest {
     id: string;
     uname: string | undefined;

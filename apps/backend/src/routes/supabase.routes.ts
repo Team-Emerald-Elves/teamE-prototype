@@ -6,6 +6,9 @@ import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 import {Status, UserRoles } from '../../prisma/generated/client.ts'
 
+import { DocumentContentModel } from '../lib/zod/routes.schemas.ts';
+import { validate } from '../lib/zod/middleware.ts';
+
 const supaBaseRouter = Router()
 
 // const clerkClient = createClerkClient({
@@ -40,6 +43,7 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
 
 supaBaseRouter.post(
     "/create-document",
+    validate(DocumentContentModel),
     //requireAuth(),
     async (req: Request, res: Response) => {
 
@@ -115,6 +119,7 @@ supaBaseRouter.post(
 
 supaBaseRouter.delete(
     '/delete-document',
+    validate(DocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         
@@ -170,6 +175,7 @@ supaBaseRouter.delete(
 
 supaBaseRouter.put(
     '/update-document',
+    validate(DocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)

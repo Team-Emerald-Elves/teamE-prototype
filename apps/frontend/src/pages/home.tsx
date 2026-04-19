@@ -8,6 +8,8 @@ import {UserAvatar} from '@clerk/react'
 import {HomepageButtons} from "@/components/homepageButtons.tsx";
 import {ChartArea, TableOfContents} from "lucide-react";
 import Favorites from "@/components/favorites.tsx";
+import { ChartAreaInteractive } from "@/components/area-chart.tsx"
+import {UserLogs} from "@/components/user-logs.tsx";
 
 
 const rows = [
@@ -107,7 +109,14 @@ function Home() {
                         {/*<Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                         <Favorites />
                     {/*</div>*/}
+                    <div className = "mx-6">
+                        <ChartAreaInteractive/>
+                        <UserLogs/>
+                    </div>
+
+
                 </div>
+
                 <DisclaimerFooter/>
             </>
         )
@@ -134,6 +143,7 @@ function Home() {
                         <div className = "hero-content-bottom py-5 pl-2">
                             <SearchBar/>
                         </div>
+
                     </div>
                 </div>
 
@@ -149,6 +159,11 @@ function Home() {
                     {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                         <Favorites />
                     {/*</div>*/}
+                    <div className = "mx-6">
+                        <ChartAreaInteractive/>
+                        <UserLogs/>
+                    </div>
+
                 </div>
                 <DisclaimerFooter/>
             </>
@@ -189,6 +204,10 @@ function Home() {
                     {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                     <Favorites />
                     {/*</div>*/}
+                    <div className = "mx-6">
+                        <ChartAreaInteractive/>
+                        <UserLogs/>
+                    </div>
                 </div>
             <DisclaimerFooter/>
             </>

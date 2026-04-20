@@ -1,6 +1,6 @@
 import express from "express";
-import type {Links} from "../lib/prismadefs.ts";
-import {prisma} from "../lib/prisma.ts";
+import prisma, { type Links } from "@repo/database";
+import { getAuth } from '@clerk/express'
 
 import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
 import { validate } from '../lib/zod/middleware.ts';
@@ -18,7 +18,7 @@ linkRoute.get('/', validate(LinkRequestGetModel), (req: express.Request, res: ex
     const {action} = req.query;
     const {link_name} = req.query as Links;
     if (!action || action === 'list') {
-        listLinks({link_name}, res);
+        listLinks(req, {link_name}, res);
         return;
     }
     res.status(200).json({
@@ -38,7 +38,7 @@ linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: 
 
 
     if (lReq.action == "list") {
-        listLinks(lReq.linkData!, res);
+        listLinks(req, lReq.linkData!, res);
         return;
     }
 
@@ -75,21 +75,51 @@ linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: 
 
 })
 
-async function listLinks(lData: Partial<Links> | undefined, res: express.Response) {
+async function listLinks(req: express.Request, lData: Partial<Links> | undefined, res: express.Response) {
     try {
+        const { userId, isAuthenticated } = getAuth(req);
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        // 1. Get employee (for favorites)
+        const employee = await prisma.employee.findFirst({
+            where: {
+                clerkUserId: userId
+            },
+            select: { favorite_links: true }
+        });
+
+        const favoritedIds = employee?.favorite_links || [];
+
+        // 2. Get all links
         const links: Links[] = await prisma.links.findMany({
             where: lData,
             orderBy: {
                 link_name: 'asc'
             }
-        })
+        });
 
-        res.status(200).json(links)
+        // 3. Annotate with favorite flag
+        const annotatedLinks = links.map(link => ({
+            ...link,
+            favorite: favoritedIds.includes(link.id)
+        }));
+
+        // 4. Sort: favorites first, then others (both already alphabetically sorted)
+        annotatedLinks.sort((a, b) => {
+            if (a.favorite === b.favorite) return 0;
+            return a.favorite ? -1 : 1;
+        });
+
+        res.status(200).json(annotatedLinks);
+
     } catch (error) {
         console.log(error);
         res.status(400).json({
             error: "INVALID_LINKS_QUERY"
-        })
+        });
     }
 }
 

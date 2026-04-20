@@ -27,6 +27,8 @@ import linkRoleRoute from "./routes/get-link-role.ts";
 import favoriteRoute from "./routes/get-favorited.ts";
 import updateFavoriteRoute from "./routes/update-favorite.ts";
 import statsRoutes from "./routes/statistics.ts";
+import updateFavoriteLinksRoute from "./routes/update-favorite-link.ts";
+import favoriteLinksRoute from "./routes/get-favorited-links.ts";
 
 
 const app = express();
@@ -66,11 +68,13 @@ app.get('/servicereqs', requireAuth(), serviceReqRoute)
 app.get('/assigned', requireAuth(), assignedRoute);
 app.get('/statistics', statsRoutes)
 app.get('/get-favorited', favoriteRoute);
+app.get('/get-favorited-links', favoriteLinksRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 
-app.post('/create-employee', validate(CreateEmployeeModel), createOldEmployeeRoute);
-app.post('/get-link-role', validate(LinkRoleModel), linkRoleRoute)
-app.post('/update-favorite', validate(UpdateFavoriteModel), updateFavoriteRoute);
+app.post('/create-employee', createOldEmployeeRoute);
+app.post('/get-link-role', linkRoleRoute)
+app.post('/update-favorite', updateFavoriteRoute);
+app.post('/update-favorite-link', updateFavoriteLinksRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 

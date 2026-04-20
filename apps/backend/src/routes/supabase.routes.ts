@@ -1,19 +1,17 @@
 
 import { Router, type Request, type Response } from 'express'
-import { requireAuth, getAuth } from '@clerk/express'
-import { prisma } from '../lib/prisma.ts'
+import { getAuth } from '@clerk/express'
+import prisma, { Status,
+                 UserRoles,
+                 type documentContent,
+} from '@repo/database'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
-import {Status, UserRoles } from '../../prisma/generated/client.ts'
 
 import { DocumentContentModel } from '../lib/zod/routes.schemas.ts';
 import { validate } from '../lib/zod/middleware.ts';
 
 const supaBaseRouter = Router()
-
-// const clerkClient = createClerkClient({
-//     secretKey: process.env.CLERK_SECRET_KEY
-// })
 
 function toExpirationDate(value: unknown): Date {
   if (value instanceof Date && !isNaN(value.getTime())) {
@@ -152,7 +150,7 @@ supaBaseRouter.delete(
             if (!data || error) {
                 console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
             }
-        }).catch(error => {
+        }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
         })
 
@@ -236,20 +234,33 @@ supaBaseRouter.put(
 )
 
 supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
-    const { isAuthenticated } = getAuth(req);
+    const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {
         return res.status(401).json({ error: "Not authenticated" });
     }
 
     try {
+        // get employee for favorites
+        const employee = await prisma.employee.findFirstOrThrow({
+            where: {
+                clerkUserId: userId,
+            },
+            select: {
+                favorites: true,
+            },
+        });
+
+        const favoriteSet = new Set(employee.favorites);
+
+        // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
 
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds },
+                id: { in: ownerIds as string[] },
             },
             select: {
                 id: true,
@@ -259,23 +270,30 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         });
 
         const employeeMap = new Map(
-            employees.map(emp => [
+            employees.map((emp) => [
                 emp.id,
-                `${emp.first_name} ${emp.last_name}`
+                `${emp.first_name} ${emp.last_name}`,
             ])
         );
 
-        const formattedDocs = documents.map(doc => ({
+        const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
+            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
         }));
 
-        res.status(200).json(formattedDocs);
+        //sort so favorites appear first
+        const sortedDocs = formattedDocs.sort((a, b) => {
+            // favorites first
+            if (a.favorite === b.favorite) return 0;
+            return a.favorite ? -1 : 1;
+        });
+
+        res.status(200).json(sortedDocs);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch documents" });
     }
 });
-
 
 export default supaBaseRouter

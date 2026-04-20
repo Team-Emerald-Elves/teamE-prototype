@@ -1,8 +1,0 @@
-$kind: http-request
-name: Get Assigned Service Requests
-method: GET
-url: '{{baseUrl}}/assigned'
-order: 2000
-headers:
-  - key: Authorization
-    value: 'Bearer {{authToken}}'

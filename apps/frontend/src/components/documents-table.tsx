@@ -245,46 +245,56 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                ><div className="pr-1"> <HugeiconsIcon icon={SlidersHorizontalIcon} />  </div> Filter </button>
+                                >
+                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
+                                    Filter
+                                </button>
 
                                 {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div
+                                        className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-1">
                                             <div className="relative inline-block text-left">
                                                 <div className="flex gap-x-0.5">
-                                                <button
-                                                    onClick={() => {
-                                                        if (isTypeOpen) {
-                                                            setIsTypeOpen(!isTypeOpen)
+                                                    <button
+                                                        onClick={() => {
+                                                            if (isTypeOpen) {
+                                                                setIsTypeOpen(!isTypeOpen)
+                                                            }
+                                                            if (isRoleOpen) {
+                                                                setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            setIsDocumentOpen(!isDocumentOpen)
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36">
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={File01Icon}/></div>
+                                                        Document Type
+                                                    </button>
+                                                    <button onClick={() => {
+                                                        if (isDocumentOpen) {
+                                                            setIsDocumentOpen(!isDocumentOpen)
                                                         }
-                                                        if (isRoleOpen) {
-                                                            setIsRoleOpen(!isRoleOpen)
-                                                        }
-                                                        setIsDocumentOpen(!isDocumentOpen)
                                                     }}
-                                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
-                                                > <div className="pr-1"> <HugeiconsIcon icon={File01Icon} /></div> Document Type </button>
-                                                <button onClick={() => {
-                                                    if (isDocumentOpen) {
-                                                        setIsDocumentOpen(!isDocumentOpen)
-                                                        }
-                                                    }}
-                                                        className="text-black">
-                                                    <div className="ml-3"> <HugeiconsIcon icon={X} />  </div>
-                                                </button>
+                                                            className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
+                                                    </button>
                                                 </div>
 
                                                 {isDocumentOpen && (
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {docFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -306,10 +316,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }
                                                             setIsTypeOpen(!isTypeOpen)
                                                         }}
-                                                        className="flex px-4 py-1 ml-2 justify-center items-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
                                                     >
-                                                        <div className="pr-1"><HugeiconsIcon icon={Folder01Icon}/></div>
-                                                            File Type
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={Folder01Icon}/></div>
+                                                        File Type
                                                     </button>
                                                     <button onClick={() => {
                                                         if (isTypeOpen) {
@@ -317,21 +327,25 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         }
                                                     }}
                                                             className="text-black">
-                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
                                                     </button>
                                                 </div>
 
                                                 {isTypeOpen && (
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {fileFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -351,9 +365,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }
                                                             setIsRoleOpen(!isRoleOpen)
                                                         }}
-                                                        className="flex px-4 py-1 ml-2 items-center justify-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
                                                     >
-                                                        <div className="pr-1"><HugeiconsIcon icon={UserGroupIcon}/></div>
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={UserGroupIcon}/>
+                                                        </div>
                                                         Role
                                                     </button>
                                                     <button onClick={() => {
@@ -362,22 +377,26 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         }
                                                     }}
                                                             className="text-black">
-                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
                                                     </button>
                                                 </div>
 
                                                 {isRoleOpen && (
 
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-46 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-46 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {roleFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}

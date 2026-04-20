@@ -1,5 +1,5 @@
 import express, {type Express} from "express";
-import {prisma} from "../lib/prisma.ts";
+import prisma from "@repo/database";
 
 interface IEmployeeID {
     id: string;

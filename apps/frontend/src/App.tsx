@@ -8,8 +8,10 @@ import Navbar from './components/navbar.tsx'
 import Links from './pages/links.tsx'
 import LoginSignup from './pages/login-signup.tsx'
 import NotFound from './pages/not-found.tsx'
+import Footer from './components/footer.tsx'
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+
 
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";

@@ -2,14 +2,19 @@ import express from "express";
 import prisma, { type Links } from "@repo/database";
 import { getAuth } from '@clerk/express'
 
+import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
+import { validate } from '../lib/zod/middleware.ts';
+
 const linkRoute = express()
+
+
 
 interface LinkRequest {
     action: 'list' | 'create' | 'edit' | 'delete';
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.get('/', (req: express.Request, res: express.Response)=> {
+linkRoute.get('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {link_name} = req.query as Links;
     if (!action || action === 'list') {
@@ -21,7 +26,7 @@ linkRoute.get('/', (req: express.Request, res: express.Response)=> {
     })
 })
 
-linkRoute.post('/', (req: express.Request, res: express.Response) => {
+linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response) => {
     console.log("BODY: ", req.body)
     const lReq: LinkRequest = req.body as LinkRequest;
 

@@ -2,6 +2,11 @@ import express from "express";
 import prisma, {type Employee} from "@repo/database";
 import { clerkClient } from "@clerk/express";
 
+import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.schemas.ts';
+import { validate } from '../lib/zod/middleware.ts';
+
+import path from "path";
+
 const employeeRoute = express()
 
 interface EmployeeRequest{
@@ -9,7 +14,7 @@ interface EmployeeRequest{
     employeeData: Partial<Employee> | undefined;
 }
 
-employeeRoute.get('/', (req: express.Request, res: express.Response)=> {
+employeeRoute.get('/', validate(ListEmployeesModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
     if (!action || action === 'list') {
@@ -21,8 +26,8 @@ employeeRoute.get('/', (req: express.Request, res: express.Response)=> {
     })
 })
 
-employeeRoute.post('/', (req: express.Request, res: express.Response) => {
-    const eReq: EmployeeRequest = req.body
+employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, res: express.Response) => {
+    const eReq: EmployeeRequest = req.body as EmployeeRequest;
 
     if (eReq.action == "list") {
         eReq.employeeData!.roles = undefined
@@ -187,5 +192,6 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
     }
 
 }
+
 
 export default employeeRoute;

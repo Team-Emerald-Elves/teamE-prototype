@@ -29,6 +29,7 @@ import updateFavoriteRoute from "./routes/update-favorite.ts";
 import statsRoutes from "./routes/statistics.ts";
 import updateFavoriteLinksRoute from "./routes/update-favorite-link.ts";
 import favoriteLinksRoute from "./routes/get-favorited-links.ts";
+import eventsRoute from "./routes/get-events.ts";
 
 
 const app = express();
@@ -68,6 +69,7 @@ app.get('/servicereqs', requireAuth(), serviceReqRoute)
 app.get('/assigned', requireAuth(), assignedRoute);
 app.get('/statistics', statsRoutes)
 app.get('/get-favorited', favoriteRoute);
+app.get('/get-events', eventsRoute);
 app.get('/get-favorited-links', favoriteLinksRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 

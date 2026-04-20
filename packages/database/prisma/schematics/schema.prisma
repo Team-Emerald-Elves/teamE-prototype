@@ -64,6 +64,15 @@ model Links {
   owner     String?
 }
 
+model CalendarEvents {
+  id        BigInt   @id @default(autoincrement())
+  title     String
+  start_date DateTime?
+  end_date   DateTime?
+  all_day    Boolean?
+  emp_id    String?
+}
+
 enum Roles {
   UnderWriter
   BusinessAnalyst

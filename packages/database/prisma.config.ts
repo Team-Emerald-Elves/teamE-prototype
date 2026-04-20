@@ -2,7 +2,6 @@ import 'dotenv/config';
 import path from "node:path";
 import { defineConfig, env } from 'prisma/config';
 import { enviroments } from './lib/env.ts';
-
 const dataBaseURL: string | null = env('NODE_ENV') in enviroments ? env(env('NODE_ENV').toUpperCase() + '_DIRECT_URL') : null
 
 console.log("Primsa> DB URL from config: " + dataBaseURL)

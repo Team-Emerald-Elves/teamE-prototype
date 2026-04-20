@@ -13,6 +13,8 @@ const EmployeeDataModel = z.object({
     last_name: z.string().optional(),
     roles: UserRoleEnum.optional(),
     email: z.email().optional(),
+    favorites: z.array(z.number()),
+    favorite_links: z.array(z.string())
 })
 
 
@@ -45,7 +47,7 @@ const LinkDataModel = z.object({
 //api.ts
 export const UpdateLockBody = z.object({
     id: z.number(),
-    status: z.boolean(),
+    status: z.string(),
 });
 
 export const GetLockQuery = z.object({

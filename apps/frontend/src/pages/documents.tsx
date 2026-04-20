@@ -1,29 +1,9 @@
 
-import {useState, useEffect} from "react";
-import {getToken, useAuth} from "@clerk/react"
-import {DocumentsTable} from "../components/documents-table.tsx"
+import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/react"
+import { DocumentsTable } from "../components/documents-table.tsx"
 import { columns, type Document } from "../components/docCols.tsx"
 import PageHeader from "../components/page-header.tsx"
-
-
-
-
-async function getDocuments(token: string):Promise<Document[]> {
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
-        {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        }
-    )
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch docs")
-    }
-
-    return await res.json()
-}
 
 async function getDocumentsAdmin(token: string) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,

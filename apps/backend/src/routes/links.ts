@@ -1,19 +1,24 @@
 import express from "express";
-import type {Links} from "../lib/prismadefs.ts";
-import {prisma} from "../lib/prisma.ts";
+import prisma, { type Links } from "@repo/database";
+import { getAuth } from '@clerk/express'
+
+import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
+import { validate } from '../lib/zod/middleware.ts';
 
 const linkRoute = express()
+
+
 
 interface LinkRequest {
     action: 'list' | 'create' | 'edit' | 'delete';
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.get('/', (req: express.Request, res: express.Response)=> {
+linkRoute.get('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {link_name} = req.query as Links;
     if (!action || action === 'list') {
-        listLinks({link_name}, res);
+        listLinks(req, {link_name}, res);
         return;
     }
     res.status(200).json({
@@ -21,7 +26,7 @@ linkRoute.get('/', (req: express.Request, res: express.Response)=> {
     })
 })
 
-linkRoute.post('/', (req: express.Request, res: express.Response) => {
+linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response) => {
     console.log("BODY: ", req.body)
     const lReq: LinkRequest = req.body as LinkRequest;
 
@@ -33,7 +38,7 @@ linkRoute.post('/', (req: express.Request, res: express.Response) => {
 
 
     if (lReq.action == "list") {
-        listLinks(lReq.linkData!, res);
+        listLinks(req, lReq.linkData!, res);
         return;
     }
 
@@ -70,21 +75,51 @@ linkRoute.post('/', (req: express.Request, res: express.Response) => {
 
 })
 
-async function listLinks(lData: Partial<Links> | undefined, res: express.Response) {
+async function listLinks(req: express.Request, lData: Partial<Links> | undefined, res: express.Response) {
     try {
+        const { userId, isAuthenticated } = getAuth(req);
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        // 1. Get employee (for favorites)
+        const employee = await prisma.employee.findFirst({
+            where: {
+                clerkUserId: userId
+            },
+            select: { favorite_links: true }
+        });
+
+        const favoritedIds = employee?.favorite_links || [];
+
+        // 2. Get all links
         const links: Links[] = await prisma.links.findMany({
             where: lData,
             orderBy: {
                 link_name: 'asc'
             }
-        })
+        });
 
-        res.status(200).json(links)
+        // 3. Annotate with favorite flag
+        const annotatedLinks = links.map(link => ({
+            ...link,
+            favorite: favoritedIds.includes(link.id)
+        }));
+
+        // 4. Sort: favorites first, then others (both already alphabetically sorted)
+        annotatedLinks.sort((a, b) => {
+            if (a.favorite === b.favorite) return 0;
+            return a.favorite ? -1 : 1;
+        });
+
+        res.status(200).json(annotatedLinks);
+
     } catch (error) {
         console.log(error);
         res.status(400).json({
             error: "INVALID_LINKS_QUERY"
-        })
+        });
     }
 }
 

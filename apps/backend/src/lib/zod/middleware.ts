@@ -6,10 +6,6 @@ export const validate = (schema: ZodObject) =>
     try {
       // Validate body, query, and params at once if needed
       
-      console.log(req.body)
-      console.log(req.query)
-      console.log(req.params)
-      
       schema.parse({
         ...req.body,
         ...req.query,

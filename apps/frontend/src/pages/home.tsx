@@ -1,6 +1,5 @@
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
-import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";

@@ -92,7 +92,26 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
+    const [filters, setFilters] = useState<string[]>([]);
     const[empID, setEmpID] = useState("");
+
+
+    const docFilters = [
+        {id: 'workflow', label: 'Workflow'},
+        {id: 'reference', label: 'Reference'},
+    ]
+
+    const fileFilters = [
+        {id: 'pdf', label: '.pdf'},
+        {id: 'docx', label: '.docx'},
+        {id: 'xlsx', label: '.xlsx'},
+        {id: 'txt', label: '.txt'},
+    ]
+
+    const roleFilters = [
+        {id: 'analyst', label: 'Business Analyst'},
+        {id: 'underwriter', label: 'Underwriter'},
+    ]
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -175,7 +194,16 @@ export function DocumentsTable<TData extends Document, TValue>({
     };
 
 
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {id, checked} = e.target;
 
+        if (checked) {
+            setFilters((filter) => [...filter, id])
+        }
+        else {
+            setFilters((filter) => filter.filter((filterId) => filterId !== id));
+        }
+    }
     if(roles.includes("administrator")) {
         return (
             <>
@@ -229,10 +257,19 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
 
                                                 {isDocumentOpen && (
-                                                    <div className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reference</a>
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Workflow</a>
+                                                            {docFilters.map((option) => (
+                                                                <div key={option.id} className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                    <input
+                                                                        id={option.id}
+                                                                        type="checkbox"
+                                                                        onChange={handleCheckbox}
+                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                    />
+                                                                </div>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 )}
@@ -286,7 +323,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 setIsTypeOpen(!isTypeOpen)
                                                             }
                                                             if (isDocumentOpen) {
-                                                                setIsDropdownOpen(!isDocumentOpen)
+                                                                setIsDocumentOpen(!isDocumentOpen)
                                                             }
                                                             setIsRoleOpen(!isRoleOpen)
                                                         }}

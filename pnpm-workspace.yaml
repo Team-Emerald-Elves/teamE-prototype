@@ -3,7 +3,9 @@ packages:
   - apps/backend
 allowBuilds:
   '@clerk/shared': true
+  '@iamjariwala/react-doc-viewer': false
   '@prisma/engines': true
+  canvas: false
   esbuild: false
   msw: false
   prisma: true

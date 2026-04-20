@@ -204,7 +204,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             setFilters((filter) => filter.filter((filterId) => filterId !== id));
         }
     }
-    if(roles.includes("administrator")) {
+    if(roles.includes("Administrator")) {
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">

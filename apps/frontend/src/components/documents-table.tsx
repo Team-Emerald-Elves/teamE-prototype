@@ -30,12 +30,12 @@ import {
 } from "@/components/ui/input-group"
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-
+import {useLinks} from "../pages/links.tsx"
 type Document = {
     id: number;
     url: string;
@@ -197,7 +197,6 @@ export function DocumentsTable<TData extends Document, TValue>({
 
     loadLocks();
     }, [token, docs]);
-
     if(roles.includes("administrator")) {
         return (
             <>

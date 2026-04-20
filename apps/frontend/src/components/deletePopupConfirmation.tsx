@@ -12,7 +12,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { getToken } from '@clerk/react'
 import { useEffect, useState } from "react";
-
+import {useLinks} from "../pages/links.tsx"
 type deleteConfirmationPopupProps = {
     target: number
 }
@@ -41,7 +41,7 @@ async function removeDocument(documentID: number, token: string) {
 export function DeleteConfirmationPopup(props: deleteConfirmationPopupProps) {
 
     const [sessionToken, setSessionToken] = useState("")
-
+    const reload = useLinks();
     useEffect(() => {
         getToken().then(t => setSessionToken(t ?? ""))
     }, [])
@@ -62,7 +62,7 @@ export function DeleteConfirmationPopup(props: deleteConfirmationPopupProps) {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => removeDocument(props.target, sessionToken)}>Confirm</Button>
+                        <Button type="submit" onClick={() => {removeDocument(props.target, sessionToken);reload()}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

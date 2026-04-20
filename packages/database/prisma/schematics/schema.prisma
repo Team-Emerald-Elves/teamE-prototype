@@ -1,21 +1,10 @@
-datasource db {
-  provider = "postgresql"
-}
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/"
 }
 
-enum Roles {
-  UnderWriter
-  BusinessAnalyst
-}
-
-enum UserRoles {
-  Administrator
-  UnderWriter
-  BusinessAnalyst
+datasource db {
+  provider = "postgresql"
 }
 
 model ServiceRequests {
@@ -28,46 +17,44 @@ model ServiceRequests {
 }
 
 model Employee {
-  id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId String?
-  uname       String      @unique @default("uname")
-  first_name  String      @default("fname")
-  last_name   String      @default("lname")
-  roles       UserRoles[]
-  email       String?     @unique
-  bucket      BucketMeta?
-  favorites   Int[]
+  id             String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkUserId    String?
+  uname          String      @unique @default("uname")
+  first_name     String      @default("fname")
+  last_name      String      @default("lname")
+  email          String?     @unique
+  favorites      Int[]
   favorite_links String[]
+  roles          UserRoles[]
+  bucket         BucketMeta?
 }
 
 model BucketMeta {
-  id                 String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  public             Boolean       @default(false)
-  type               String        @default("STANDARD")
-  file_size_limit    Int           @default(10485760)
-  allowed_mime_types String[]      @default([])
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
-  employeeId         String        @unique @db.Uuid
-  employee           Employee      @relation(fields: [employeeId], references: [id])
-  documentContents       documentContent[]
+  id                 String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  public             Boolean  @default(false)
+  type               String   @default("STANDARD")
+  file_size_limit    Int      @default(10485760)
+  allowed_mime_types String[] @default([])
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  employeeId         String   @unique @db.Uuid
+  employee           Employee @relation(fields: [employeeId], references: [id])
 }
 
 model documentContent {
-  id              Int      @id @unique @default(autoincrement())
-  name            String
+  id              Int        @id(map: "FileContent_pkey") @default(autoincrement())
   url             String?
-  content_owner   String
-  lock            String @default("none")
-  assigned_role   UserRoles
-  bucketId        String   @db.Uuid
-  bucket          BucketMeta @relation(fields: [bucketId], references: [id])
-  last_modified   DateTime @updatedAt
+  name            String
+  bucketId        String     @db.Uuid
+  last_modified   DateTime   @updatedAt
   expiration_date DateTime
-  mime_type       String   @default("text/plain")
-  document_status Status   @default(not_started)
-  document_type   String
-  favorite        Boolean @default(false)
+  mime_type       String     @default("text/plain")
+  document_status Status     @default(not_started)
+  document_type   String?    @default("")
+  assigned_role   UserRoles?
+  content_owner   String?
+  favorite        Boolean?   @default(false)
+  lock            String?    @default("none")
 }
 
 model Links {
@@ -75,6 +62,23 @@ model Links {
   link_name String
   url       String
   owner     String?
+}
+
+enum Roles {
+  UnderWriter
+  BusinessAnalyst
+  ActuarialAnalyst
+  ExcelOperator
+  BusinessOperator
+}
+
+enum UserRoles {
+  Administrator
+  UnderWriter
+  BusinessAnalyst
+  ActuarialAnalyst
+  ExcelOperator
+  BusinessOperator
 }
 
 enum Status {

@@ -51,63 +51,67 @@ supaBaseRouter.post(
             return res.status(401).json({ error: "Not authenticated" })
         }
         const document: IDocumentContent = req.body
-        console.log("Payload: ", document.filePayload);
         const supabaseClient = await createSupabaseForRequest();
-    console.log("Document: ", document)
-    try {
-        // Get the authenticated employee.
-        const employee = await prisma.employee.findFirstOrThrow({
-            where: {
-                clerkUserId: userId
-            },
-            include: {
-                bucket: true
+
+        try {
+            // Get the authenticated employee.
+            const employee = await prisma.employee.findFirstOrThrow({
+                where: {
+                    clerkUserId: userId
+                },
+                include: {
+                    bucket: true
+                }
+            })
+
+            // Create contents for document.
+
+            const expirationDate = toExpirationDate(document.expiration_date)
+            
+            const documentStatus = Object.values(Status).includes(document.document_status as Status)
+            ? (document.document_status as Status)
+            : Status.not_started
+
+            const assignedRole = Object.values(UserRoles).includes(document.assigned_role as UserRoles)
+            ? (document.assigned_role as UserRoles)
+            : UserRoles.UnderWriter
+
+
+            let mime_type: string
+
+            if (!document.filePayload) {
+                console.log('Document source file is streamed.')
+                mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+            } else {
+                console.log('Document source file is being uploaded.')
+                const decoded = Buffer.from(document.filePayload as string, 'base64');
+                const payload: File = new File([decoded], document.name)
+                mime_type = payload.type
+
+                // Upload document to authenticated employee with supabase bucket association.
+                const { data, error } = await supabaseClient.storage
+                    .from(employee.bucket!.id)
+                    .upload((document.url as string).trim(), payload)
+
+                if (!data || error) {
+                    throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
+                }
             }
-        })
+            
+            const documentContents = await prisma.documentContent.create({
+                data: {
+                    name: document.name ?? "Not found.",
+                    url: document.url ?? "Local upload",
+                    content_owner: document.content_owner ?? "Not Found.",
+                    assigned_role: assignedRole,
+                    bucketId: employee.bucket!.id,
+                    mime_type: mime_type,
+                    expiration_date: expirationDate.toISOString(),
+                    document_status: documentStatus,
+                    document_type: document.document_type ?? "Reference"
 
-        // Create contents for document.
-
-        const expirationDate = toExpirationDate(document.expiration_date)
-        const documentStatus = Object.values(Status).includes(document.document_status as Status)
-        ? (document.document_status as Status)
-        : Status.not_started
-        const assignedRole = Object.values(UserRoles).includes(document.assigned_role as UserRoles)
-        ? (document.assigned_role as UserRoles)
-        : UserRoles.UnderWriter
-
-        const decoded = Buffer.from(document.filePayload as string, 'base64');
-        const payload: File = new File([decoded], document.name)
-
-        let mime_type: string
-
-        if (!document.filePayload)
-            mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
-        else
-            mime_type = payload.type
-
-        const documentContents = await prisma.documentContent.create({
-            data: {
-                name: document.name ?? "Not found.",
-                url: document.url ?? "Local upload",
-                content_owner: document.content_owner ?? "Not Found.",
-                assigned_role: assignedRole,
-                bucketId: employee.bucket!.id,
-                mime_type: mime_type,
-                expiration_date: expirationDate.toISOString(),
-                document_status: documentStatus,
-                document_type: document.document_type ?? "Reference"
-
-            }
-        })
-
-        // Upload document to authenticated employee with supabase bucket association.
-        const { data, error } = await supabaseClient.storage
-            .from(employee.bucket!.id)
-            .upload((document.url as string).trim(), payload)
-
-        if (!data || error) {
-            throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
-        }
+                }
+            })
 
     } catch (error)
     {

@@ -49,8 +49,8 @@ export function UserLogs(){
     const grouped = groupByDate(activity)
     return (
         <>
-            <Card className= "my-5">
-                <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row bg-white">
+            <Card className= "w-[40%] h-full">
+                <CardHeader className="flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-lg text-[#12324b]">User Activity</CardTitle>
                         <CardDescription>
@@ -61,7 +61,7 @@ export function UserLogs(){
                 <CardContent className="p-0">
                     {Object.entries(grouped).map(([date, logs]) => (
                         <div key={date}>
-                            <p className="text-center text-sm font-semibold text-gray-500 pt-2 pb-4">
+                            <p className="text-center text-xs font-semibold text-gray-500 py-1">
                                 {date}
                             </p>
                             <Table>

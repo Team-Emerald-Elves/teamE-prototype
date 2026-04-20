@@ -59,7 +59,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function ChartAreaInteractive() {
+export function HitCounts() {
     const [timeRange, setTimeRange] = React.useState("90d")
 
     const filteredData = chartData.filter((item) => {
@@ -77,7 +77,7 @@ export function ChartAreaInteractive() {
     })
 
     return (
-        <Card className="pt-0">
+        <Card className="pt-0 w-[60%] h-full">
             <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1">
                     <CardTitle className = "text-lg text-[#12324b]">Document Hit Counts</CardTitle>
@@ -108,7 +108,7 @@ export function ChartAreaInteractive() {
             <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[250px] w-full"
+                    className="aspect-auto h-[400px] w-full"
                 >
                     <AreaChart data={filteredData}>
                         <defs>

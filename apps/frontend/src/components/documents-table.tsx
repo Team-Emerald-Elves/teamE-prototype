@@ -408,6 +408,33 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     </div>
                                 )}
                             </div>
+                            <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+                                {filters.map((option) => (
+                                    <div key={option} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                        <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option}</p>
+                                        <button onClick={() => {
+                                            setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                                            setDocFilters(dcFilters =>
+                                                dcFilters.map(filter =>
+                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                )
+                                            );
+                                            setFileFilters(fiFilters =>
+                                                fiFilters.map(filter =>
+                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                )
+                                            );
+                                            setRoleFilters(rlFilters =>
+                                                rlFilters.map(filter =>
+                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                )
+                                            );
+                                        }} className="text-black pr-2">
+                                            <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
                             <div className="flex justify-end ml-auto">
                                 <ContentForm
                                     type="Create"
@@ -751,8 +778,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option} className=" flex w-24 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                    <p className="flex px-2 py-1 text-gray-800 rounded-md text-xs w-16"> {option}</p>
+                                <div key={option} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
                                         setDocFilters(dcFilters =>
@@ -770,8 +797,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 filter.id === option ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
-                                    }} className="text-black">
-                                        <div className="ml-2"><HugeiconsIcon size={16} icon={X}/></div>
+                                    }} className="text-black pr-2">
+                                        <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
                                     </button>
                                 </div>
                             ))}

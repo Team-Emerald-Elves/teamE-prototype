@@ -10,13 +10,6 @@ import {ChartArea, TableOfContents} from "lucide-react";
 import Favorites from "@/components/favorites.tsx";
 
 
-const rows = [
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
-    { docTitle: "Notes.docx", docDate: "2024-01-02", docStatus: "Draft" },
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
-    { docTitle: "Notes.docx", docDate: "2024-01-02", docStatus: "Draft" },
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" }
-];
 
 
 

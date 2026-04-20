@@ -12,6 +12,9 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+
 
 import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 import {getToken} from "@clerk/react";
@@ -45,7 +48,8 @@ export default function Favorites() {
     const [favoriteLinks, setFavoriteLinks] = useState<Links[]>([]);
     const [reload, setReload] = useState(false);
 
-    const currentFavorite: string = "links";
+    //const currentFavorite: string = "links";
+    const [currentFavorite, setCurrentFavorite] = useState<string>("docs");
 
     useEffect(() => {
         const getFavorites = async () => {
@@ -74,10 +78,9 @@ export default function Favorites() {
         getFavorites();
     }, [reload]);
 
-    if (currentFavorite === "docs") {
+    //if (currentFavorite === "docs") {
         return (
             <div className="max-w-10xl mx-auto px-6 py-6">
-
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon
@@ -90,47 +93,120 @@ export default function Favorites() {
                     </div>
 
                     <Link className="text-sm text-blue-900 hover:underline"
-                          to="/documents"
-
+                          //to="/documents"
+                          to={currentFavorite === "docs" ? "/documents" : "/links"}
                     >
                         View All
                     </Link>
                 </div>
 
+                <Tabs value={currentFavorite} onValueChange={setCurrentFavorite}>
+                    <TabsList>
+                        <TabsTrigger value="docs">Documents</TabsTrigger>
+                        <TabsTrigger value="links">Links</TabsTrigger>
+                    </TabsList>
 
-                <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <TabsContent value="docs">
+                        <div className="bg-white rounded-xl shadow-sm border p-4">
+                            <Table className="border rounded-lg overflow-hidden">
+                                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                    <TableRow>
+                                        <TableHead
+                                            className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {favoriteDocs.map((d) => (
+                                        <FavoritesTableEntry key={d.id}
+                                             d={d}
+                                             onToggleOff={async (doc: Document) => {
+                                                 const token = await getToken()
+                                                 //need to send true for favorite and send the doc id and the employee id
+                                                 const newValue = !doc.favorite;
 
+                                                 await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                                     method: "POST",
+                                                     headers: {
+                                                         "Content-Type": "application/json",
+                                                         "Authorization": `Bearer ${token}`
 
-                    <Table className="border rounded-lg overflow-hidden">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                            <TableRow>
+                                                     },
+                                                     body: JSON.stringify({
+                                                         id: doc.id,
+                                                         favorite: true,
+                                                     }),
+                                                 });
 
-                                <TableHead
-                                    className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
-                                <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
+                                                 setFavoriteDocs(prev =>
+                                                     prev.map(f =>
+                                                         f.id === doc.id ? {...f, favorite: newValue} : f
+                                                     )
+                                                 );
+                                                 setReload(prev => !prev);
+                                             }}
+                                             onToggleOn={async (doc: Document) => {
+                                                 //need to send true for favorite and send the doc id and the employee id
+                                                 const token = await getToken();
+                                                 const newValue = !doc.favorite;
 
+                                                 await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                                     method: "POST",
+                                                     headers: {
+                                                         "Content-Type": "application/json",
+                                                         "Authorization": `Bearer ${token}`
 
-                            </TableRow>
-                        </TableHeader>
+                                                     },
+                                                     body: JSON.stringify({
+                                                         id: doc.id,
+                                                         favorite: false,
+                                                     }),
+                                                 });
+                                                 setFavoriteDocs(prev =>
+                                                     prev.map(f =>
+                                                         f.id === doc.id ? {...f, favorite: newValue} : f
+                                                     )
+                                                 );
+                                                 setReload(prev => !prev);
+                                             }}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </TabsContent>
 
-                        <TableBody>
-                            {favoriteDocs.map((d) => (
+                    <TabsContent value = "links">
+                        <div className="bg-white rounded-xl shadow-sm border p-4">
 
-                                <FavoritesTableEntry key={d.id}
-                                                     d={d}
-                                                     onToggleOff={async (doc: Document) => {
+                                    <Table className="border rounded-lg overflow-hidden">
+                                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                            <TableRow>
+                                                <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+
+                                        <TableBody>
+                                            {favoriteLinks.map((l) => (
+
+                                                <FavoritesTableEntryLink key={l.id}
+                                                     l={l}
+                                                     onToggleOff={async (link: Links) => {
                                                          const token = await getToken()
                                                          //need to send true for favorite and send the doc id and the employee id
-                                                         const newValue = !doc.favorite;
+                                                         const newValue = !link.favorite;
 
-                                                         await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                                         await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite-link`, {
                                                              method: "POST",
                                                              headers: {
                                                                  "Content-Type": "application/json",
@@ -138,24 +214,24 @@ export default function Favorites() {
 
                                                              },
                                                              body: JSON.stringify({
-                                                                 id: doc.id,
+                                                                 id: link.id,
                                                                  favorite: true,
                                                              }),
                                                          });
 
-                                                         setFavoriteDocs(prev =>
+                                                         setFavoriteLinks(prev =>
                                                              prev.map(f =>
-                                                                 f.id === doc.id ? {...f, favorite: newValue} : f
+                                                                 f.id === link.id ? { ...f, favorite: newValue } : f
                                                              )
                                                          );
                                                          setReload(prev => !prev);
                                                      }}
-                                                     onToggleOn={async (doc: Document) => {
+                                                     onToggleOn={async (link: Links) => {
                                                          //need to send true for favorite and send the doc id and the employee id
                                                          const token = await getToken();
-                                                         const newValue = !doc.favorite;
+                                                         const newValue = !link.favorite;
 
-                                                         await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite`, {
+                                                         await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite-link`, {
                                                              method: "POST",
                                                              headers: {
                                                                  "Content-Type": "application/json",
@@ -163,128 +239,25 @@ export default function Favorites() {
 
                                                              },
                                                              body: JSON.stringify({
-                                                                 id: doc.id,
+                                                                 id: link.id,
                                                                  favorite: false,
                                                              }),
                                                          });
 
-                                                         setFavoriteDocs(prev =>
+                                                         setFavoriteLinks(prev =>
                                                              prev.map(f =>
-                                                                 f.id === doc.id ? {...f, favorite: newValue} : f
+                                                                 f.id === link.id ? { ...f, favorite: newValue } : f
                                                              )
                                                          );
                                                          setReload(prev => !prev);
                                                      }}
-                                />
-
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                                                />
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                    </TabsContent>
+                </Tabs>
             </div>
         );
-    }
-
-        if (currentFavorite === "links") {
-            return (
-                <div className="max-w-10xl mx-auto px-6 py-6">
-
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <FontAwesomeIcon
-                                icon={solidStar }
-                                className="text-yellow-400 cursor-pointer"
-                            />
-                            <h4 className="text-lg font-semibold text-gray-800">
-                                Favorited
-                            </h4>
-                        </div>
-
-                        <Link className="text-sm text-blue-900 hover:underline"
-                              to="/links"
-
-                        >
-                            View All
-                        </Link>
-                    </div>
-
-
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
-
-
-                        <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                <TableRow>
-
-                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-
-                                </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                                {favoriteLinks.map((l) => (
-
-                                    <FavoritesTableEntryLink key={l.id}
-                                                         l={l}
-                                                         onToggleOff={async (link: Links) => {
-                                                             const token = await getToken()
-                                                             //need to send true for favorite and send the doc id and the employee id
-                                                             const newValue = !link.favorite;
-
-                                                             await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite-link`, {
-                                                                 method: "POST",
-                                                                 headers: {
-                                                                     "Content-Type": "application/json",
-                                                                     "Authorization": `Bearer ${token}`
-
-                                                                 },
-                                                                 body: JSON.stringify({
-                                                                     id: link.id,
-                                                                     favorite: true,
-                                                                 }),
-                                                             });
-
-                                                             setFavoriteLinks(prev =>
-                                                                 prev.map(f =>
-                                                                     f.id === link.id ? { ...f, favorite: newValue } : f
-                                                                 )
-                                                             );
-                                                             setReload(prev => !prev);
-                                                         }}
-                                                         onToggleOn={async (link: Links) => {
-                                                             //need to send true for favorite and send the doc id and the employee id
-                                                             const token = await getToken();
-                                                             const newValue = !link.favorite;
-
-                                                             await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-favorite-link`, {
-                                                                 method: "POST",
-                                                                 headers: {
-                                                                     "Content-Type": "application/json",
-                                                                     "Authorization": `Bearer ${token}`
-
-                                                                 },
-                                                                 body: JSON.stringify({
-                                                                     id: link.id,
-                                                                     favorite: false,
-                                                                 }),
-                                                             });
-
-                                                             setFavoriteLinks(prev =>
-                                                                 prev.map(f =>
-                                                                     f.id === link.id ? { ...f, favorite: newValue } : f
-                                                                 )
-                                                             );
-                                                             setReload(prev => !prev);
-                                                         }}
-                                    />
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                </div>
-            );
-        }
     }

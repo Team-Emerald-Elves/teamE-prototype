@@ -304,13 +304,19 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
 
                                                 {isTypeOpen && (
-                                                    <div
-                                                        className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.pdf</a>
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.docx</a>
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.xlsx</a>
-                                                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">.txt</a>
+                                                            {fileFilters.map((option) => (
+                                                                <div key={option.id} className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                    <input
+                                                                        id={option.id}
+                                                                        type="checkbox"
+                                                                        onChange={handleCheckbox}
+                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                    />
+                                                                </div>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 )}
@@ -343,13 +349,20 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
 
                                                 {isRoleOpen && (
-                                                    <div
-                                                        className="absolute left-full top-0 z-10 mt-2 ml-3.5 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+
+                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-46 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
-                                                            <a href="#"
-                                                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business Analyst</a>
-                                                            <a href="#"
-                                                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Underwriter</a>
+                                                            {roleFilters.map((option) => (
+                                                                <div key={option.id} className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                    <input
+                                                                        id={option.id}
+                                                                        type="checkbox"
+                                                                        onChange={handleCheckbox}
+                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                    />
+                                                                </div>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 )}

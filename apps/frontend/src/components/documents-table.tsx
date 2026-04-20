@@ -95,23 +95,24 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [filters, setFilters] = useState<string[]>([]);
     const[empID, setEmpID] = useState("");
 
+    const [docFilters, setDocFilters] = useState([
+        {id: 'Workflow', state: false},
+        {id: 'Reference', state: false},
+    ]);
 
-    const docFilters = [
-        {id: 'workflow', label: 'Workflow'},
-        {id: 'reference', label: 'Reference'},
-    ]
+    const [fileFilters, setFileFilters] = useState([
+        {id: '.pdf', state: false},
+        {id: '.docx', state: false},
+        {id: '.xlsx', state: false},
+        {id: '.txt', state: false},
+        {id: '.pptx', state: false},
+        {id: '.png', state: false},
+    ]);
 
-    const fileFilters = [
-        {id: 'pdf', label: '.pdf'},
-        {id: 'docx', label: '.docx'},
-        {id: 'xlsx', label: '.xlsx'},
-        {id: 'txt', label: '.txt'},
-    ]
-
-    const roleFilters = [
-        {id: 'analyst', label: 'Business Analyst'},
-        {id: 'underwriter', label: 'Underwriter'},
-    ]
+    const [roleFilters, setRoleFilters] = useState( [
+        {id: 'Business Analyst', state: false},
+        {id: 'Underwriter', state: false},
+    ]);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -199,10 +200,27 @@ export function DocumentsTable<TData extends Document, TValue>({
 
         if (checked) {
             setFilters((filter) => [...filter, id])
+            console.log(filters)
         }
         else {
             setFilters((filter) => filter.filter((filterId) => filterId !== id));
+            console.log(filters)
         }
+        setDocFilters(dcFilters =>
+            dcFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+        setFileFilters(fiFilters =>
+            fiFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+        setRoleFilters(rlFilters =>
+            rlFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
     }
     if(roles.includes("Administrator")) {
         return (
@@ -233,7 +251,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-1">
                                             <div className="relative inline-block text-left">
-                                                <div class="flex gap-x-0.5">
+                                                <div className="flex gap-x-0.5">
                                                 <button
                                                     onClick={() => {
                                                         if (isTypeOpen) {
@@ -576,10 +594,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 <div key={option.id}
                                                                      className="flex items-center justify-between">
                                                                     <label htmlFor={option.id}
-                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.label}</label>
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
@@ -626,12 +645,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 <div key={option.id}
                                                                      className="flex items-center justify-between">
                                                                     <label htmlFor={option.id}
-                                                                           className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -676,12 +696,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 <div key={option.id}
                                                                      className="flex items-center justify-between">
                                                                     <label htmlFor={option.id}
-                                                                           className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
+                                                                        checked={option.state}
                                                                         onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -708,6 +729,33 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     lock="none"
                                 />
                             </div>
+                        </div>
+                        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+                            {filters.map((option) => (
+                                <div key={option} className=" flex w-24 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className="flex px-2 py-1 text-gray-800 rounded-md text-xs w-16"> {option}</p>
+                                    <button onClick={() => {
+                                        setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                                        setDocFilters(dcFilters =>
+                                            dcFilters.map(filter =>
+                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setFileFilters(fiFilters =>
+                                            fiFilters.map(filter =>
+                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setRoleFilters(rlFilters =>
+                                            rlFilters.map(filter =>
+                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                    }} className="text-black">
+                                        <div className="ml-2"><HugeiconsIcon size={16} icon={X}/></div>
+                                    </button>
+                                </div>
+                            ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">

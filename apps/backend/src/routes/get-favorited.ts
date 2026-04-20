@@ -1,6 +1,6 @@
 import express from "express";
-import { prisma } from "../lib/prisma.ts";
 import { getAuth } from "@clerk/express";
+import prisma from "@repo/database";
 
 async function favoriteRoute(req: express.Request, res: express.Response) {
     const { userId, isAuthenticated } = getAuth(req);

@@ -1,5 +1,5 @@
 import express from "express";
-import { prisma } from "../lib/prisma.ts";
+import prisma from "@repo/database";
 import { getAuth } from "@clerk/express";
 
 async function favoriteLinksRoute(req: express.Request, res: express.Response) {

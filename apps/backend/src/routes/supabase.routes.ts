@@ -1,16 +1,14 @@
 
 import { Router, type Request, type Response } from 'express'
-import { requireAuth, getAuth } from '@clerk/express'
-import { prisma } from '../lib/prisma.ts'
+import { getAuth } from '@clerk/express'
+import prisma, { Status,
+                 UserRoles,
+                 type documentContent,
+} from '@repo/database'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
-import {Status, UserRoles } from '../../prisma/generated/client.ts'
 
 const supaBaseRouter = Router()
-
-// const clerkClient = createClerkClient({
-//     secretKey: process.env.CLERK_SECRET_KEY
-// })
 
 function toExpirationDate(value: unknown): Date {
   if (value instanceof Date && !isNaN(value.getTime())) {
@@ -147,7 +145,7 @@ supaBaseRouter.delete(
             if (!data || error) {
                 console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
             }
-        }).catch(error => {
+        }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
         })
 
@@ -252,12 +250,11 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        // get the content owner names (right now they are ids)
-        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
 
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds },
+                id: { in: ownerIds as string[] },
             },
             select: {
                 id: true,
@@ -267,17 +264,15 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         });
 
         const employeeMap = new Map(
-            employees.map(emp => [
+            employees.map((emp) => [
                 emp.id,
                 `${emp.first_name} ${emp.last_name}`,
             ])
         );
 
-        // set favorite attribute for docs (for frontend purposes)
-        const formattedDocs = documents.map(doc => ({
+        const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
-            favorite: favoriteSet.has(doc.id),
+            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
         }));
 
         //sort so favorites appear first

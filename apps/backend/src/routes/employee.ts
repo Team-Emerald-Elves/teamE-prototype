@@ -1,8 +1,6 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
-import {type Employee} from "../lib/prismadefs.ts";
+import prisma, {type Employee} from "@repo/database";
 import { clerkClient } from "@clerk/express";
-import path from "path";
 
 const employeeRoute = express()
 
@@ -24,7 +22,7 @@ employeeRoute.get('/', (req: express.Request, res: express.Response)=> {
 })
 
 employeeRoute.post('/', (req: express.Request, res: express.Response) => {
-    const eReq: EmployeeRequest = req.body as EmployeeRequest;
+    const eReq: EmployeeRequest = req.body
 
     if (eReq.action == "list") {
         eReq.employeeData!.roles = undefined
@@ -152,13 +150,12 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
             orderBy: {
                 first_name: "asc",
             },
-            where: eData,
         });
 
         const defaultImage = "/public/default-avatar.png";
 
         const enriched = await Promise.all(
-            employees.map(async (emp) => {
+            employees.map(async (emp: Employee) => {
                 try {
                     if (!emp.clerkUserId) {
                         return {

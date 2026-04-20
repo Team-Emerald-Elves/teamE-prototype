@@ -1,7 +1,6 @@
 import express from "express";
-import type {Links} from "../lib/prismadefs.ts";
-import {prisma} from "../lib/prisma.ts";
-import {getAuth} from "@clerk/express";
+import prisma, { type Links } from "@repo/database";
+import { getAuth } from '@clerk/express'
 
 const linkRoute = express()
 
@@ -34,7 +33,7 @@ linkRoute.post('/', (req: express.Request, res: express.Response) => {
 
 
     if (lReq.action == "list") {
-        listLinks(lReq.linkData!, res);
+        listLinks(req, lReq.linkData!, res);
         return;
     }
 

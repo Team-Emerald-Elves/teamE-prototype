@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import {useState} from "react";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
-
+import {useLinks} from "../pages/links.tsx"
 type Links ={
     id: string,
     link_name: string,
@@ -62,7 +62,7 @@ function EditLinksForm(props: linkProp){
         url: props.url,
         owner: props.owner,
     });
-
+   const reloadLinks = useLinks();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLink({
             ...link,
@@ -122,7 +122,8 @@ function EditLinksForm(props: linkProp){
                                 } catch (err) {
                                     console.error(err);
                                     console.log("Failed to update links");
-                                }
+                                };
+                                reloadLinks()
                             }}>
                                 Submit
                             </Button> }/>

@@ -51,7 +51,8 @@ export default function Favorites() {
         const getFavorites = async () => {
             const token = await getToken();
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited`,{headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
             });
             if (!res.ok) {
@@ -61,7 +62,8 @@ export default function Favorites() {
             setFavoriteDocs(docData);
 
             const res2 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-favorited-links`,{headers: {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 }
             });
             if (!res2.ok) {

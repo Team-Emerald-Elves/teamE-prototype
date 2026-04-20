@@ -1,6 +1,6 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
 import {getAuth} from "@clerk/express";
+import prisma from "@repo/database";
 
 interface IUpdateFavoriteRequest {
     id: number;

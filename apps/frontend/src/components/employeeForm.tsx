@@ -149,9 +149,14 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="Business Analyst">BusinessAnalyst</SelectItem>
-                                        <SelectItem value="Underwriter">UnderWriter</SelectItem>
-                                        <SelectItem value="Admin">Administrator</SelectItem>
+                                        <SelectItem value="BusinessAnalyst">Business Analyst</SelectItem>
+                                        <SelectItem value="UnderWriter">Underwriter</SelectItem>
+
+                                        <SelectItem value="ActuarialAnalyst">ActuarialAnalyst</SelectItem>
+                                        <SelectItem value="ExcelOperator">ExcelOperator</SelectItem>
+                                        <SelectItem value="BusinessOperator">BusinessOperator</SelectItem>
+
+                                        <SelectItem value="Administrator">Admin</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

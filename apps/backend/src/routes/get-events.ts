@@ -1,8 +1,8 @@
 import express from "express";
-import prisma from "@repo/database";
 import { getAuth } from "@clerk/express";
+import prisma from "@repo/database";
 
-async function favoriteLinksRoute(req: express.Request, res: express.Response) {
+async function eventsRoute(req: express.Request, res: express.Response) {
     const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {
@@ -15,29 +15,23 @@ async function favoriteLinksRoute(req: express.Request, res: express.Response) {
             where: {
                 clerkUserId: userId,
             },
-            select: {
-                favorite_links: true,
-            },
         });
 
-        const favoriteIds = employee.favorite_links;
-        //check if they have favorites
-        if (favoriteIds.length === 0) {
-            return res.json([]);
-        }
+       const employee_id = employee.id;
 
 
-        // get the documents that are in the favorite list
-        const links = await prisma.links.findMany({
+        const result = await prisma.calendarEvents.findMany({
             where: {
-                id: { in: favoriteIds },
+                OR: [
+                    {
+                        emp_id: employee_id,
+                    },
+                    {
+                        emp_id: null,
+                    },
+                ],
             },
         });
-
-        const result = links.map(link => ({
-            ...link,
-            favorite: true,
-        }));
 
         return res.json(result);
 
@@ -47,4 +41,4 @@ async function favoriteLinksRoute(req: express.Request, res: express.Response) {
     }
 }
 
-export default favoriteLinksRoute;
+export default eventsRoute;

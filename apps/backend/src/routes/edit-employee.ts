@@ -1,5 +1,5 @@
 import express from "express";
-import prisma, { UserRoles, type Employee } from "@repo/database/"
+import prisma, { UserRoles, type Employee } from "@repo/database"
 
 interface IEditEmployeeRequest {
     id: string;

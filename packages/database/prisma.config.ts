@@ -18,8 +18,5 @@ export default defineConfig({
     },
     datasource: {
         url: dataBaseURL
-    },
-    generated: {
-        
     }
 })

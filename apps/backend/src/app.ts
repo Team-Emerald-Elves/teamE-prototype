@@ -11,6 +11,14 @@ import bodyParser from "body-parser";
 import createServiceReqRoute from "./routes/create-servicereq.ts";
 import { clerkMiddleware, requireAuth} from '@clerk/express'
 import editEmployeeRoute from "./routes/edit-employee.ts";
+import {
+    CreateEmployeeModel,
+    CreateServiceReqModel,
+    EditEmployeeModel,
+    LinkRoleModel,
+    UpdateFavoriteModel
+} from './lib/zod/routes.schemas.ts'
+import { validate } from './lib/zod/middleware.ts'
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
@@ -19,6 +27,8 @@ import linkRoleRoute from "./routes/get-link-role.ts";
 import favoriteRoute from "./routes/get-favorited.ts";
 import updateFavoriteRoute from "./routes/update-favorite.ts";
 import statsRoutes from "./routes/statistics.ts";
+import updateFavoriteLinksRoute from "./routes/update-favorite-link.ts";
+import favoriteLinksRoute from "./routes/get-favorited-links.ts";
 
 
 const app = express();
@@ -49,8 +59,8 @@ app.get('/', (req, res) => {
     res.sendStatus(200);
 })
 
-app.use('/employee', employeeRoute);
-app.use('/links', linkRoute)
+app.use('/employee', employeeRoute); //validated in employee.ts
+app.use('/links', linkRoute) //validated in links.ts
 app.use('/api/tests', APIRouter)
 
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
@@ -58,17 +68,20 @@ app.get('/servicereqs', requireAuth(), serviceReqRoute)
 app.get('/assigned', requireAuth(), assignedRoute);
 app.get('/statistics', statsRoutes)
 app.get('/get-favorited', favoriteRoute);
+app.get('/get-favorited-links', favoriteLinksRoute);
 //app.get('/content-employee',contentEmployeeRoute)
 
 app.post('/create-employee', createOldEmployeeRoute);
 app.post('/get-link-role', linkRoleRoute)
 app.post('/update-favorite', updateFavoriteRoute);
+app.post('/update-favorite-link', updateFavoriteLinksRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 
-app.post('/edit-employee', editEmployeeRoute);
 
-app.post('/create-srvreq', createServiceReqRoute);
+app.post('/edit-employee', validate(EditEmployeeModel), editEmployeeRoute);
+
+app.post('/create-srvreq', validate(CreateServiceReqModel), createServiceReqRoute);
 
 app.post('/create-srvreq', createServiceReqRoute);
 

@@ -1,5 +1,5 @@
 import express, {type Express} from "express";
-import {prisma} from "../lib/prisma.ts";
+import prisma from "@repo/database";
 
 interface IEmployeeID {
     id: string;
@@ -12,15 +12,28 @@ interface IEmployeeID {
 
 function contentEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: IEmployeeID = req.body as IEmployeeID;
-    prisma.documentContent.findMany({
+    // prisma.documentContent.findMany({
+    //     where: {
+    //         bucketId: {
+    //             employeeId: employee.bucket!.id
+    //         }
+    //     }
+    // })
+
+    prisma.employee.findFirst({
         where: {
-            bucket: {
-                employeeId: employee.id
-            }
+            id: employee.id
+        },
+        select: {
+            bucket: true
         }
-    })
-        .then((data) => {
-        res.json(data)
+    }).then(async (data) => {
+        const documents = await prisma.documentContent.findMany({
+            where: {
+                bucketId: data?.bucket?.id
+            }
+        })
+        res.status(200).json(documents)
     }).catch((err) => {
         console.log("Error: ", err)
     });

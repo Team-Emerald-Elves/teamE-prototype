@@ -479,7 +479,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
                                             </TableCell>
                                                     ):(
-                                                    <TableCell><p>empID</p></TableCell> )
+                                                    <TableCell><p>{empID}</p></TableCell> )
                                             }
                                         </TableRow>
                                     );

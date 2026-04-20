@@ -1,5 +1,5 @@
 import Router, { type Request, type Response } from "express"
-import { requireAuth, getAuth, clerkClient } from '@clerk/express'
+import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBody, GetLockQuery } from '../lib/zod/routes.schemas.ts'
 import { validate } from "../lib/zod/middleware.ts";
 
@@ -34,13 +34,13 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
             create: {
                 clerkUserId: userId,
                 uname: clerkUser.username as string,
-                first_name: "admin",
-                last_name: "1",
-                roles: ["UnderWriter"],
+                first_name: clerkUser.firstName as string,
+                last_name: clerkUser.lastName as string,
+                roles: [ "UnderWriter" ],
                 bucket: {
                     create: {}
                 },
-                email: clerkUser.emailAddresses[0]?.emailAddress
+                email: clerkUser.primaryEmailAddress?.emailAddress
             }
         })
 

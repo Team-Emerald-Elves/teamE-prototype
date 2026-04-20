@@ -1,8 +1,7 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
+import prisma, { type Employee } from "@repo/database";
 import { createClerkClient } from '@clerk/express';
 import { createSupabaseForRequest } from '../lib/supabase.ts'
-import type { Employee } from "../../prisma/generated/client.ts";
 
 const supabaseClient = await createSupabaseForRequest()
 

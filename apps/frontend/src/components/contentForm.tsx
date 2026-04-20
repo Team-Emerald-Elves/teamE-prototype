@@ -128,7 +128,7 @@ function ContentForm(props: contentFormProps) {
             });
             const data = await res.json();
             setMe(data);
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            setRoles((data.roles as string[]))
             console.log("Full response data:", data);
 
         }
@@ -336,7 +336,7 @@ function ContentForm(props: contentFormProps) {
                             <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
                                 value={formData.document_status}
-                                onValueChange={(value) => setFormData(prev => ({...prev, documnet_status: value!}))}
+                                onValueChange={(value) => setFormData(prev => ({...prev, document_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">
                                     <SelectValue placeholder={props.currentStatus} />
@@ -344,11 +344,11 @@ function ContentForm(props: contentFormProps) {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Status</SelectLabel>
-                                        <SelectItem value="NotStarted">Not Started</SelectItem>
-                                        <SelectItem value="InProgress">In Progress</SelectItem>
-                                        <SelectItem value="Needs Review">Needs Review</SelectItem>
-                                        <SelectItem value="Done">Done</SelectItem>
-                                        <SelectItem value="Expired">Expired</SelectItem>
+                                        <SelectItem value="not_started">Not Started</SelectItem>
+                                        <SelectItem value="in_progress">In Progress</SelectItem>
+                                        <SelectItem value="needs_review">Needs Review</SelectItem>
+                                        <SelectItem value="done">Done</SelectItem>
+                                        <SelectItem value="expired">Expired</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

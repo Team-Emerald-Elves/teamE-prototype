@@ -1,11 +1,14 @@
 packages:
-  - apps/frontend
-  - apps/backend
+  - 'apps/*'
+  - 'packages/*'
 allowBuilds:
   '@clerk/shared': true
-  '@iamjariwala/react-doc-viewer': false
+  '@iamjariwala/react-doc-viewer': true
   '@prisma/engines': true
-  canvas: false
+  canvas: true
   esbuild: false
   msw: false
   prisma: true
+catalogs:
+  prisma:
+    prisma: latest

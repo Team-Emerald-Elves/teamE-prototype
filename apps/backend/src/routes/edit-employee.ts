@@ -1,13 +1,14 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
-import {type Employee} from "../lib/prismadefs.ts"
+import prisma, { Prisma, type UserRoles, type Employee } from "@repo/database"
+
+
 
 interface IEditEmployeeRequest {
     id: string;
     uname: string | undefined;
     first_name: string | undefined;
     last_name: string | undefined;
-    roles: string[] | undefined;
+    roles: UserRoles[] | undefined;
     email: string | undefined;
 }
 
@@ -29,7 +30,8 @@ async function editEmployeeRoute(req: express.Request, res: express.Response) {
 
         res.status(200).send(employee);
     } catch (error) {
-        res.status(400).send(error);
+        if (error instanceof Prisma.PrismaClientKnownRequestError)
+        res.status(400).send(error.message);
     }
 }
 

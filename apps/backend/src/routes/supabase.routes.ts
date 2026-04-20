@@ -1,16 +1,17 @@
 
 import { Router, type Request, type Response } from 'express'
-import { requireAuth, getAuth } from '@clerk/express'
-import { prisma } from '../lib/prisma.ts'
+import { getAuth } from '@clerk/express'
+import prisma, { Status,
+                 UserRoles,
+                 type documentContent,
+} from '@repo/database'
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
-import {Status, UserRoles } from '../../prisma/generated/client.ts'
+
+import { DocumentContentModel } from '../lib/zod/routes.schemas.ts';
+import { validate } from '../lib/zod/middleware.ts';
 
 const supaBaseRouter = Router()
-
-// const clerkClient = createClerkClient({
-//     secretKey: process.env.CLERK_SECRET_KEY
-// })
 
 function toExpirationDate(value: unknown): Date {
   if (value instanceof Date && !isNaN(value.getTime())) {
@@ -40,6 +41,7 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
 
 supaBaseRouter.post(
     "/create-document",
+    validate(DocumentContentModel),
     //requireAuth(),
     async (req: Request, res: Response) => {
 
@@ -49,63 +51,67 @@ supaBaseRouter.post(
             return res.status(401).json({ error: "Not authenticated" })
         }
         const document: IDocumentContent = req.body
-        console.log("Payload: ", document.filePayload);
         const supabaseClient = await createSupabaseForRequest();
-    console.log("Document: ", document)
-    try {
-        // Get the authenticated employee.
-        const employee = await prisma.employee.findFirstOrThrow({
-            where: {
-                clerkUserId: userId
-            },
-            include: {
-                bucket: true
+
+        try {
+            // Get the authenticated employee.
+            const employee = await prisma.employee.findFirstOrThrow({
+                where: {
+                    clerkUserId: userId
+                },
+                include: {
+                    bucket: true
+                }
+            })
+
+            // Create contents for document.
+
+            const expirationDate = toExpirationDate(document.expiration_date)
+            
+            const documentStatus = Object.values(Status).includes(document.document_status as Status)
+            ? (document.document_status as Status)
+            : Status.not_started
+
+            const assignedRole = Object.values(UserRoles).includes(document.assigned_role as UserRoles)
+            ? (document.assigned_role as UserRoles)
+            : UserRoles.UnderWriter
+
+
+            let mime_type: string
+
+            if (!document.filePayload) {
+                console.log('Document source file is streamed.')
+                mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+            } else {
+                console.log('Document source file is being uploaded.')
+                const decoded = Buffer.from(document.filePayload as string, 'base64');
+                const payload: File = new File([decoded], document.name)
+                mime_type = payload.type
+
+                // Upload document to authenticated employee with supabase bucket association.
+                const { data, error } = await supabaseClient.storage
+                    .from(employee.bucket!.id)
+                    .upload((document.url as string).trim(), payload)
+
+                if (!data || error) {
+                    throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
+                }
             }
-        })
+            
+            const documentContents = await prisma.documentContent.create({
+                data: {
+                    name: document.name ?? "Not found.",
+                    url: document.url ?? "Local upload",
+                    content_owner: document.content_owner ?? "Not Found.",
+                    assigned_role: assignedRole,
+                    bucketId: employee.bucket!.id,
+                    mime_type: mime_type,
+                    expiration_date: expirationDate.toISOString(),
+                    document_status: documentStatus,
+                    document_type: document.document_type ?? "Reference"
 
-        // Create contents for document.
-
-        const expirationDate = toExpirationDate(document.expiration_date)
-        const documentStatus = Object.values(Status).includes(document.document_status as Status)
-        ? (document.document_status as Status)
-        : Status.not_started
-        const assignedRole = Object.values(UserRoles).includes(document.assigned_role as UserRoles)
-        ? (document.assigned_role as UserRoles)
-        : UserRoles.UnderWriter
-
-        const decoded = Buffer.from(document.filePayload as string, 'base64');
-        const payload: File = new File([decoded], document.name)
-
-        let mime_type: string
-
-        if (!document.filePayload)
-            mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
-        else
-            mime_type = payload.type
-
-        const documentContents = await prisma.documentContent.create({
-            data: {
-                name: document.name ?? "Not found.",
-                url: document.url ?? "Local upload",
-                content_owner: document.content_owner ?? "Not Found.",
-                assigned_role: assignedRole,
-                bucketId: employee.bucket!.id,
-                mime_type: mime_type,
-                expiration_date: expirationDate.toISOString(),
-                document_status: documentStatus,
-                document_type: document.document_type ?? "Reference"
-
-            }
-        })
-
-        // Upload document to authenticated employee with supabase bucket association.
-        const { data, error } = await supabaseClient.storage
-            .from(employee.bucket!.id)
-            .upload((document.url as string).trim(), payload)
-
-        if (!data || error) {
-            throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
-        }
+                }
+            })
 
     } catch (error)
     {
@@ -115,6 +121,7 @@ supaBaseRouter.post(
 
 supaBaseRouter.delete(
     '/delete-document',
+    validate(DocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         
@@ -147,7 +154,7 @@ supaBaseRouter.delete(
             if (!data || error) {
                 console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
             }
-        }).catch(error => {
+        }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
         })
 
@@ -170,6 +177,7 @@ supaBaseRouter.delete(
 
 supaBaseRouter.put(
     '/update-document',
+    validate(DocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         const { userId, isAuthenticated } = getAuth(req)
@@ -252,12 +260,11 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        // get the content owner names (right now they are ids)
-        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
 
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds },
+                id: { in: ownerIds as string[] },
             },
             select: {
                 id: true,
@@ -267,17 +274,15 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         });
 
         const employeeMap = new Map(
-            employees.map(emp => [
+            employees.map((emp) => [
                 emp.id,
                 `${emp.first_name} ${emp.last_name}`,
             ])
         );
 
-        // set favorite attribute for docs (for frontend purposes)
-        const formattedDocs = documents.map(doc => ({
+        const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner) || "Unknown",
-            favorite: favoriteSet.has(doc.id),
+            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
         }));
 
         //sort so favorites appear first

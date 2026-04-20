@@ -1,4 +1,4 @@
-export function Footer() {
+function Footer() {
     return (
         <footer className="border-t bg-primary mt-16">
             <div className="max-w-7xl mx-auto px-6 py-12">

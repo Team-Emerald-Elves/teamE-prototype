@@ -7,8 +7,6 @@ import { Pie, PieChart } from "recharts"
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -22,11 +20,11 @@ import {
 export const description = "A pie chart with no separator"
 
 const chartData = [
-    { role: "Underwriters:", employees: 275, fill: "rgb(118,139,108)" },
-    { role: "Business Analyst:", employees: 200, fill: "rgb(231,166,102)" },
-    { role: "Actuarial Analyst:", employees: 187, fill: "rgb(194,210,207)" },
-    { role: "EXL Operations:", employees: 173, fill: "rgb(41,103,55)" },
-    { role: "Business Ops Rating Teams:", employees: 90, fill: "rgb(172,122,69)" },
+    { role: "Underwriters:", employees: 275, fill: "#d2eafc"},
+    { role: "Business Analyst:", employees: 200, fill: "#b4dcfa" },
+    { role: "Actuarial Analyst:", employees: 187, fill: "#96cdf7" },
+    { role: "EXL Operations:", employees: 173, fill: "#87c6f6" },
+    { role: "Business Ops Rating Teams:", employees: 90, fill: "#69b8f4" },
 ]
 
 const chartConfig = {
@@ -59,15 +57,14 @@ export function ChartPieSeparatorNone() {
     return (
         <Card className="flex flex-col h-full">
             <CardHeader className="items-center pb-0">
-                <CardTitle>Employees At Hanover</CardTitle>
-                <CardDescription>An overview of employee breakdown by role.</CardDescription>
+                <CardTitle>Employees by Role</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 flex items-center justify-center pb-0">
                 <ChartContainer
                     config={chartConfig}
                     className="w-full h-full"
                 >
-                    <PieChart>
+                    <PieChart className ="pb-5">
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
@@ -76,7 +73,8 @@ export function ChartPieSeparatorNone() {
                             data={chartData}
                             dataKey="employees"
                             nameKey="role"
-                            stroke="none"
+                            strokeWidth={3}
+                            stroke="White"
                             outerRadius={90}
                         />
                     </PieChart>

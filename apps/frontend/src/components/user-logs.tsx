@@ -50,9 +50,9 @@ export function UserLogs(){
     return (
         <>
             <Card className= "w-[40%] h-full">
-                <CardHeader className="flex items-center gap-2 space-y-0 border-b py-2 sm:flex-row bg-white">
+                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
-                        <CardTitle className="text-lg text-[#12324b]">User Activity</CardTitle>
+                        <CardTitle className="text-2xl text-[#12324b]">User Activity</CardTitle>
                         <CardDescription>
                             Track actions performed by users, including creations, edits, logins, and more.
                         </CardDescription>

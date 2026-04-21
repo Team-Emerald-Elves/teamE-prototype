@@ -84,7 +84,7 @@ async function listLinks(req: express.Request, lData: Partial<Links> | undefined
             return res.status(401).json({ error: "Not authenticated" });
         }
 
-        const whereClauseFav = buildWhereClause(req.body, userId)
+        const whereClauseFav = buildWhereClause(req.body, {clerkUserId: userId})
         const whereClauseReg = buildWhereClause(req.body, lData)
 
         // 1. Get employee (for favorites)
@@ -95,7 +95,6 @@ async function listLinks(req: express.Request, lData: Partial<Links> | undefined
 
         const favoritedIds = employee?.favorite_links || [];
 
-        whereClauseReg.clerkUserId = lData
         // 2. Get all links
         const links: Links[] = await prisma.links.findMany({
             where: whereClauseReg,

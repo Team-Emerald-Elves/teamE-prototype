@@ -92,28 +92,47 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
-    const [filters, setFilters] = useState<string[]>([]);
+    const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const[empID, setEmpID] = useState("");
 
-    const [docFilters, setDocFilters] = useState([
-        {id: 'Workflow', state: false},
-        {id: 'Reference', state: false},
+    const [docFilters, setDocFilters] =  useState([
+        {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
+        {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
     ]);
 
-    const [fileFilters, setFileFilters] = useState([
-        {id: '.pdf', state: false},
-        {id: '.docx', state: false},
-        {id: '.xlsx', state: false},
-        {id: '.txt', state: false},
-        {id: '.pptx', state: false},
-        {id: '.png', state: false},
+    const [fileFilters, setFileFilters] =  useState([
+        {key: 'mime_type', value: 'pdf', id: '.pdf', state: false},
+        {key: 'mime_type', value: 'pdf', id: '.docx', state: false},
+        {key: 'mime_type', value: 'pdf', id: '.xlsx', state: false},
+        {key: 'mime_type', value: 'pdf', id: '.txt', state: false},
+        {key: 'mime_type', value: 'pdf', id: '.pptx', state: false},
+        {key: 'mime_type', value: 'pdf', id: '.png', state: false},
     ]);
 
-    const [roleFilters, setRoleFilters] = useState( [
-        {id: 'Business Analyst', state: false},
-        {id: 'Underwriter', state: false},
+    const [roleFilters, setRoleFilters] =  useState( [
+        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
+        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
     ]);
 
+    const getActive = () => {
+        const payload: Record<string, string[]> = {};
+
+        const docs = filters.filter(item => item.key === 'document_type');
+        const files = filters.filter(item => item.key === 'mime_type');
+        const roles = filters.filter(item => item.key === 'assigned_role');
+
+        if (docs.length > 0) {
+            payload['document_type'] = docs.map(d => d.value);
+        }
+        if (files.length > 0) {
+            payload['mime_type'] = files.map(d => d.value);
+        }
+        if (roles.length > 0) {
+            payload['assigned_role'] = roles.map(d => d.value);
+        }
+
+        return JSON.stringify(payload);
+    };
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -136,7 +155,6 @@ export function DocumentsTable<TData extends Document, TValue>({
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
         load();
-
     }, [isSignedIn]);
     useEffect(() => {
         setDocs(data);
@@ -195,15 +213,15 @@ export function DocumentsTable<TData extends Document, TValue>({
     };
 
 
-    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
         const {id, checked} = e.target;
 
         if (checked) {
-            setFilters((filter) => [...filter, id])
+            setFilters((filter) => [...filter, option])
             console.log(filters)
         }
         else {
-            setFilters((filter) => filter.filter((filterId) => filterId !== id));
+            setFilters((filter) => filter.filter((item) => item.id !== option.id));
             console.log(filters)
         }
         setDocFilters(dcFilters =>
@@ -293,7 +311,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -344,7 +362,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -395,7 +413,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -645,7 +663,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -696,7 +714,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -747,7 +765,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -778,23 +796,23 @@ export function DocumentsTable<TData extends Document, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option}</p>
+                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
                                         setDocFilters(dcFilters =>
                                             dcFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                         setFileFilters(fiFilters =>
                                             fiFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                     }} className="text-black pr-2">

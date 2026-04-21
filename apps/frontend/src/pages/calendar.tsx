@@ -11,14 +11,20 @@ export default function CalendarPage() {
         <>
             <h1>Calendar</h1>
 
-            <AddEventButton setOpen={setOpen} />
+
 
             <EventForm open={open}
                        setOpen={setOpen}
                        selectedEvent={selectedEvent}
                        setSelectedEvent={setSelectedEvent}/>
-            <div className="h-[800px] w-full p-5">
-                <FullCalendarComponent setOpen={setOpen} setSelectedEvent={setSelectedEvent} />
+            <div className="pr-7 pl-7 pt-2" >
+                <div className=" p-5 h-[800px] w-full bg-white rounded-xl shadow-sm border">
+                    <div className="pl-315 pb-3">
+                        <AddEventButton setOpen={setOpen} />
+                    </div>
+
+                    <FullCalendarComponent setOpen={setOpen} setSelectedEvent={setSelectedEvent} />
+                </div>
             </div>
 
         </>

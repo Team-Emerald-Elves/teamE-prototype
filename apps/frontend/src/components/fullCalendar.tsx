@@ -81,9 +81,13 @@ export default function FullCalendarComponent({
                     setOpen(true);
                 }
             }}
+            dayHeaderClassNames={() => [
+                "bg-[#ecf4f9]",
+                "text-[#0b4461]",
+            ]}
 
             events={events}
-            height="100%"
+            contentHeight="auto"
             stickyHeaderDates={true}
         />
     );

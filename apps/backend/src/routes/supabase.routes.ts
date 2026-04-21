@@ -146,12 +146,25 @@ supaBaseRouter.delete(
         }
 
     try {
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId
             },
             include: {
                 bucket: true
+            }
+        })
+
+        const event = await prisma.calendarEvents.findFirstOrThrow({
+            where: {
+                doc_id: document.id
+            }
+        })
+
+        await prisma.calendarEvents.delete({
+            where: {
+                id: event.id
             }
         })
 
@@ -200,6 +213,7 @@ supaBaseRouter.put(
         console.log("Uid: ", userId);
         const document: IDocumentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
+
 
         try {
             const employee = await prisma.employee.findFirstOrThrow({

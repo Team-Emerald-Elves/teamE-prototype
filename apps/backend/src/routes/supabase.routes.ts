@@ -113,6 +113,18 @@ supaBaseRouter.post(
                 }
             })
 
+            await prisma.calendarEvents.create({
+                data: {
+                    title: documentContents.name,
+                    start_date: new Date(),
+                    end_date: documentContents.expiration_date,
+                    all_day: false,
+                    emp_id: null,
+                    lock: "none",
+                    doc_id: documentContents.id
+                }
+            })
+
     } catch (error)
     {
         res.status(401).json(`{"message":"Error creating document in bucket: ${error}"}`)
@@ -214,6 +226,20 @@ supaBaseRouter.put(
                     expiration_date: toExpirationDate(document.expiration_date).toISOString(),
                     document_status: document.document_status,
                     document_type: document.document_type ?? "Reference"
+                }
+            })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: document.id
+                }
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    title: newDoc.name,
+                    end_date: newDoc.expiration_date,
                 }
             })
 

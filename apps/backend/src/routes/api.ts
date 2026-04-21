@@ -87,11 +87,39 @@ async function updateLock(req: Request, res: Response) {
                     lock: employee.id
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                    where: {
+                        doc_id: id
+                    }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    lock: employee.id
+                }
+            })
         }
         else{
             await prisma.documentContent.update({
                 where: {
                     id: id
+                },
+                data: {
+                    lock: "none"
+                }
+            })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: id
+                }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
                 },
                 data: {
                     lock: "none"

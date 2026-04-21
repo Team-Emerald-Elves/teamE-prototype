@@ -9,15 +9,27 @@ import {Button} from "@/components/ui/button";
 import {Field, FieldContent, FieldGroup, FieldLabel} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import DateAndTime from './date.tsx'
+import DateAndTime from './dateCalendar.tsx'
 import {useEffect, useState} from "react";
 import { Switch } from "@/components/ui/switch"
+import {getToken} from "@clerk/react";
 
 type EventFormProps = {
     open: boolean;
     setOpen: (open: boolean) => void;
     selectedEvent: any;
     setSelectedEvent: (event: any) => void;
+};
+
+type AddEventRequest = {
+    title: string;
+    start_date: string;
+    end_date: string;
+    all_day: boolean;
+};
+
+type EditEventRequest = AddEventRequest & {
+    id: number;
 };
 
 export default function EventForm({ open, setOpen, selectedEvent, setSelectedEvent }: EventFormProps) {
@@ -33,6 +45,47 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
 
     const getTime = (date: Date) =>
         date.toTimeString().slice(0, 5);
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const token = await getToken();
+        const isEdit = !!selectedEvent;
+
+        const basePayload = {
+            title,
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+            all_day: allDay,
+        };
+
+        const payload = isEdit
+            ? ({
+                id: selectedEvent.id,
+                ...basePayload,
+            } as EditEventRequest)
+            : (basePayload as AddEventRequest);
+
+        const res = await fetch(
+            isEdit ? `${import.meta.env.VITE_BACKEND_URL}/update-event` : `${import.meta.env.VITE_BACKEND_URL}/add-event`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            }
+        );
+
+        if (!res.ok) {
+            console.error("Failed to save event");
+            return;
+        }
+
+        setOpen(false);
+        setSelectedEvent(null);
+    }
 
     useEffect(() => {
         if (selectedEvent) {
@@ -89,7 +142,7 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
                     </DialogTitle>
                 </DialogHeader>
 
-                <form>
+                <form onSubmit={async (e) => handleSubmit(e)}>
                     <Field className="p-1">
                         <FieldLabel htmlFor="eventTitle">Event Title</FieldLabel>
                         <Input
@@ -112,8 +165,8 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
                         <DateAndTime
                             id="startDate"
                             date={startDate}
-                            time={getTime(startDate)}
                             disableTime={allDay}
+                            onDateChange={setStartDate}
                         />
                     </Field>
                     <Field>
@@ -121,11 +174,11 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
                         <DateAndTime
                             id="endDate"
                             date={endDate}
-                            time={getTime(endDate)}
                             disableTime={allDay}
+                            onDateChange={setEndDate}
                         />
                     </Field>
-                    <Button type="submit">{selectedEvent ? "Save Changes" : "Add"}</Button>
+                    <Button type="submit" >{selectedEvent ? "Save Changes" : "Add"}</Button>
                 </form>
             </DialogContent>
         </Dialog>

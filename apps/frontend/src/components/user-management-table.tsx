@@ -199,28 +199,6 @@ export default function EmployeeTable<TData extends Employee, TValue>({
             return;
         }
 
-    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
-        const {id, checked} = e.target;
-
-        if (checked) {
-            setFilters((filter) => [...filter, option])
-            console.log(filters)
-        }
-        else {
-            setFilters((filter) => filter.filter((item) => item.id !== option.id));
-            console.log(filters)
-        }
-
-        setRoleFilters(rlFilters =>
-            rlFilters.map(filter =>
-                filter.id === id ? { ...filter, state: !filter.state } : filter
-            )
-        );
-    }
-    return (
-        <>
-            
-
         async function load() {
             const token = await getToken();
 
@@ -261,6 +239,26 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         },
 
     })
+
+
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
+        const {id, checked} = e.target;
+
+        if (checked) {
+            setFilters((filter) => [...filter, option])
+            console.log(filters)
+        }
+        else {
+            setFilters((filter) => filter.filter((item) => item.id !== option.id));
+            console.log(filters)
+        }
+
+        setRoleFilters(rlFilters =>
+            rlFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+    }
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">
@@ -279,57 +277,58 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                     <Search />
                                 </InputGroupAddon>
                             </InputGroup>
-                            <div className="relative text-left justify-start flex items-center">
-                        <button
-                            onClick={() => setIsRoleOpen(!isRoleOpen)}
-                            className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600">
-                            <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
-                            Filter </button>
-                            {isRoleOpen && (
-                                <div className="absolute left-0 mt-22 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                                    <div className="py-1">
-                                        {roleFilters.map((option) => (
-                                            <div key={option.id}
-                                                 className="flex items-center justify-between">
-                                                <label htmlFor={option.id}
-                                                       className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
-                                                <input
-                                                    id={option.id}
-                                                    type="checkbox"
-                                                    checked={option.state}
-                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                    className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
-                                                />
-                                            </div>
-                                        ))}
+                            <div className="relative inline-block text-left">
+                                <button
+                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
+                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                >
+                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
+                                    Filter
+                                </button>
+                                {isRoleOpen && (
+                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-1">
+                                            {roleFilters.map((option) => (
+                                                <div key={option.id}
+                                                     className="flex items-center justify-between">
+                                                    <label htmlFor={option.id}
+                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                    <input
+                                                        id={option.id}
+                                                        type="checkbox"
+                                                        checked={option.state}
+                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                            
-                        </div>
+                                )}
+                            </div>
                             <div className="flex justify-end ml-auto">
                                 <CreateEmployeeForm />
                             </div>
                             
                         </div>
-                            <div className="py-1 ml-2 flex flex-row flex-wrap gap-2">
-                                {filters.map((option) => (
-                                    <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                        <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
-                                        <button onClick={() => {
-                                            setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+                            {filters.map((option) => (
+                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
+                                    <button onClick={() => {
+                                        setFilters((filter) => filter.filter((filterId) => filterId !== option));
 
-                                            setRoleFilters(rlFilters =>
-                                                rlFilters.map(filter =>
-                                                    filter.id === option.id ? { ...filter, state: !filter.state } : filter
-                                                )
-                                            );
-                                        }} className="text-black pr-2">
-                                            <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
+                                        setRoleFilters(rlFilters =>
+                                            rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                    }} className="text-black pr-2">
+                                        <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (

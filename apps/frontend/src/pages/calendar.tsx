@@ -6,25 +6,23 @@ import {useState} from "react";
 export default function CalendarPage() {
     const [open, setOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [reload, setReload] = useState(false);
 
     return (
         <>
             <h1>Calendar</h1>
-
-
-
             <EventForm open={open}
                        setOpen={setOpen}
                        selectedEvent={selectedEvent}
-                       setSelectedEvent={setSelectedEvent}/>
+                       setSelectedEvent={setSelectedEvent} setReload={setReload}/>
             <div className="pr-7 pl-7 pt-2" >
                 <div className=" p-5 h-[800px] w-full bg-white rounded-xl shadow-sm border">
                     <h3></h3>
-                    <div className="pl-315 pb-3">
+                    <div className="pb-3">
                         <AddEventButton setOpen={setOpen} />
                     </div>
 
-                    <FullCalendarComponent setOpen={setOpen} setSelectedEvent={setSelectedEvent} />
+                    <FullCalendarComponent setOpen={setOpen} setSelectedEvent={setSelectedEvent} reload={reload} setReload={setReload}/>
                 </div>
             </div>
 

@@ -7,11 +7,13 @@ import { useAuth } from "@clerk/react"
 type FullCalendarComponentProps = {
     setOpen: (open: boolean) => void;
     setSelectedEvent: (event: any) => void;
+    reload: boolean;
+    setReload: (reload: any) => void;
 };
 
 export default function FullCalendarComponent({
                                                   setOpen,
-                                                  setSelectedEvent,
+                                                  setSelectedEvent, reload
                                               }: FullCalendarComponentProps) {
 
     const [events, setEvents] = useState<any[]>([]);
@@ -41,7 +43,7 @@ export default function FullCalendarComponent({
         }
 
         load();
-    }, [getToken,isSignedIn]);
+    }, [getToken, isSignedIn]);
 
     useEffect(() => {
         async function fetchEvents() {
@@ -63,7 +65,7 @@ export default function FullCalendarComponent({
         }
 
         fetchEvents();
-    }, [getToken]);
+    }, [getToken, reload]);
 
     return (
         <FullCalendar

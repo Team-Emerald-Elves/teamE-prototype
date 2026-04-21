@@ -113,6 +113,17 @@ supaBaseRouter.post(
                 }
             })
 
+            const ROLE_COLORS: Record<string, string> = {
+                Administrator: "#8b5cf6",      // purple
+                BusinessAnalyst: "#ef4444",    // red
+                UnderWriter: "#ec4899",        // pink
+                ExcelOperator: "#22c55e",      // green
+                BusinessOperator: "#f97316",   // orange
+                ActuarialAnalyst: "#eab308",   // yellow
+            };
+
+            const color = ROLE_COLORS[assignedRole] ?? "#6b7280"; // fallback gray
+
             await prisma.calendarEvents.create({
                 data: {
                     title: documentContents.name,
@@ -121,7 +132,8 @@ supaBaseRouter.post(
                     all_day: false,
                     emp_id: null,
                     lock: "none",
-                    doc_id: documentContents.id
+                    doc_id: documentContents.id,
+                    color: color,
                 }
             })
 

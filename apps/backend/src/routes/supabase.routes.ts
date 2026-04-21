@@ -260,11 +260,21 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
+        // ✅ collect BOTH content_owner and lock IDs
+        const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
+        const lockIds = documents
+            .map((doc: documentContent) => doc.lock)
+            .filter((id) => id && id !== "none");
+
+        const allEmployeeIds = [
+            ...new Set([...ownerIds, ...lockIds])
+        ];
+
+        // ✅ fetch all relevant employees
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds as string[] },
+                id: { in: allEmployeeIds as string[] },
             },
             select: {
                 id: true,
@@ -273,6 +283,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
+        // ✅ build lookup map
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
@@ -280,14 +291,23 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             ])
         );
 
+        // ✅ format documents (add lock_name)
         const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
+            content_owner:
+                employeeMap.get(doc.content_owner as string) || "Unknown",
+
+            lock_name:
+                doc.lock === "none"
+                    ? "Unlocked"
+                    : employeeMap.get(doc.lock as string) || "Unknown",
+
+            // keep favorite flag consistent
+            favorite: favoriteSet.has(doc.id),
         }));
 
-        //sort so favorites appear first
+        // sort so favorites appear first
         const sortedDocs = formattedDocs.sort((a, b) => {
-            // favorites first
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;
         });

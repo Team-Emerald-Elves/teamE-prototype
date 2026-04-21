@@ -49,6 +49,7 @@ type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock_name: string;
 };
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
@@ -364,6 +365,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     return (
+                                        (doc.lock === "none" || doc.lock === empID) ? (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
                                                 doc={doc}
@@ -429,9 +431,42 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
                                             </TableCell>
                                                     ):(
-                                                    <TableCell><p>{empID}</p></TableCell> )
+                                                    <TableCell><p>{doc.lock_name}</p></TableCell> )
                                             }
-                                        </TableRow>
+                                        </TableRow> ) : (
+                                            <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                                <FavoriteStar
+                                                    doc={doc}
+                                                    onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                                    onToggleOff={(doc) => toggleFavorite(doc, true)}
+                                                />
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                <TableCell>
+                                                    <div className="flex items-center justify-end gap-3">
+
+                                                        <div className="flex flex-col text-right">
+                                                            <p className="text-xs">Checked out by:</p>
+                                                            <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                        </div>
+
+                                                        <a
+                                                            href={doc.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="hover:underline"
+                                                        >
+                                                            <HugeiconsIcon icon={Download01Icon} />
+                                                        </a>
+
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+
+                                        )
                                     );
                                 })}
                             </TableBody>
@@ -663,17 +698,19 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     const canEdit =
-                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none")) ||
-                                        ((roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock = "none")) ||
-                                        ((roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst") && (doc.lock != "none")) ||
-                                        ((roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator") && (doc.lock != "none")) ||
-                                        ((roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator") && (doc.lock != "none"))
-                                    console.log(roles)
-                                    console.log(doc.assigned_role)
-                                    console.log(doc.lock)
-                                    console.log(canEdit)
+                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter")) ||
+                                        ((roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst")) ||
+                                        ((roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst")) ||
+                                        ((roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator")) ||
+                                        ((roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator"))
+                                    console.log("User role: " , roles)
+                                    console.log("Doc Role: " ,doc.assigned_role)
+                                    console.log("Lock status" , doc.lock)
+                                    console.log("Can edit: " , canEdit)
+                                    console.log("This emploee ID" , empID)
 
                                     return (
+                                        (doc.lock === "none" || doc.lock === empID) ? (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
                                                 doc={doc}
@@ -755,9 +792,42 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
-                                                    <TableCell><p>{empID}</p></TableCell>)
+                                                    <TableCell><p>{doc.lock_name}</p></TableCell>)
                                             }
                                         </TableRow>
+                                            ): (
+                                                <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                                    <FavoriteStar
+                                                        doc={doc}
+                                                        onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                                        onToggleOff={(doc) => toggleFavorite(doc, true)}
+                                                    />
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    ))}
+                                                    <TableCell>
+                                                        <div className="flex items-center justify-end gap-3">
+
+                                                            <div className="flex flex-col text-right">
+                                                                <p className="text-xs">Checked out by:</p>
+                                                                <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                            </div>
+
+                                                            <a
+                                                                href={doc.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="hover:underline"
+                                                            >
+                                                                <HugeiconsIcon icon={Download01Icon} />
+                                                            </a>
+
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                        )
                                     );
                                 })}
                             </TableBody>

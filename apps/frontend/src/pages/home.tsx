@@ -10,7 +10,8 @@ import {HitCounts} from "@/components/hit-counts.tsx"
 import {UserLogs} from "@/components/user-logs.tsx";
 import { NumericalStats } from "@/components/numerical-stats.tsx";
 import PageHeader from "@/components/page-header.tsx"
-
+import { ChartPieSeparatorNone} from "@/components/piechartroles.tsx";
+import { ChartPieStacked} from "@/components/piechartdocuments.tsx";
 
 function Home() {
 
@@ -188,8 +189,18 @@ function Home() {
 
                     <div className = "mx-5">
                         <PageHeader title="Dashboard"/>
-                        <div className = "flex flex-row gap-4 mx-5 mt-3">
-                            <NumericalStats/>
+                        <div className = "flex gap-4 mx-5 mt-3 items-stretch h-[270px]">
+                            <div className="w-[45%]">
+                                <NumericalStats/>
+                            </div>
+                            <div className="w-[25%]">
+                                <ChartPieSeparatorNone/>
+                            </div>
+                            <div className="w-[25%]">
+                                <ChartPieStacked/>
+                            </div>
+
+
                         </div>
                         <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
                             <UserLogs/>

@@ -24,6 +24,7 @@ type SubmitConfirmationPopupProps = {
     expirationTime: string
     document_status: string
     filePayload?: string
+    fileName?: string
   }
   refresh?: () => void
   open: (arg:boolean) => void
@@ -39,7 +40,8 @@ export type IFile = {
   assigned_role: string
   document_type: string
   document_status: string
-  filePayload: string
+  filePayload?: string
+  fileName?: string
 }
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
@@ -81,7 +83,6 @@ function buildExpirationDate(
 }
 
 async function createDocument(fileData: SubmitConfirmationPopupProps, token: string) {
-  console.log("TOKEN SENT:", token)
 
   const data: IFile = {
     id: fileData.formData.id,
@@ -95,7 +96,8 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     document_type: fileData.formData.document_type,
     document_status: fileData.formData.document_status,
     assigned_role: fileData.formData.role,
-    filePayload: fileData.formData.filePayload!,
+    filePayload: fileData.formData.filePayload,
+    fileName: fileData.formData.fileName
   }
 
   const endpoint =

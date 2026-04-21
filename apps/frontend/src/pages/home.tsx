@@ -8,6 +8,7 @@ import {UserAvatar} from '@clerk/react'
 import {HomepageButtons} from "@/components/homepageButtons.tsx";
 import {ChartArea, TableOfContents} from "lucide-react";
 import Favorites from "@/components/favorites.tsx";
+import CalendarWeek from "@/components/calendarWeekComponent.tsx";
 
 
 const rows = [
@@ -150,6 +151,7 @@ function Home() {
                         <Favorites />
                     {/*</div>*/}
                 </div>
+                <CalendarWeek />
                 <DisclaimerFooter/>
             </>
         )
@@ -190,6 +192,7 @@ function Home() {
                     <Favorites />
                     {/*</div>*/}
                 </div>
+                <CalendarWeek />
             <DisclaimerFooter/>
             </>
         )

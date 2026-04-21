@@ -40,30 +40,31 @@ type contentFormProps = {
     currentStatus: string,
     currentID: number,
     size: boolean,
-    lock: boolean,
+    lock: string,
     refresh?: () => void,
 }
 
 type Employee = {
     id: string;
-    first_name: string;
-    last_name: string;
-    username: string;
-    email?: string;
-    roles?: string[];
+    first_name: string
+    last_name: string
+    username: string
+    email?: string
+    roles?: string[]
 };
 
 type FormDataType = {
-    name: string,
-    url: string,
-    contentOwner: string,
-    role: string,
-    document_type: string,
-    expirationDate: Date | undefined,
-    expirationTime: string,
-    document_status: string,
-    id: number,
-    filePayload?: string,
+    name: string
+    url: string
+    contentOwner: string
+    role: string
+    document_type: string
+    expirationDate: Date | undefined
+    expirationTime: string
+    document_status: string
+    id: number
+    filePayload?: string
+    fileName?: string
 };
 
 
@@ -83,27 +84,6 @@ async function getEmployees(sessionToken: string) {
     return data;
 }
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-
-    return Boolean(data);
-}
 
 function ContentForm(props: contentFormProps) {
 
@@ -172,7 +152,7 @@ function ContentForm(props: contentFormProps) {
         }
         toBase64(files[0]).then(
             (data) => {
-                setFormData((prev => ({...prev, filePayload: data})));
+                setFormData((prev => ({...prev, filePayload: data, fileName: files[0].name})));
             }, (err) => {
                 console.error(err);
             }
@@ -219,10 +199,7 @@ function ContentForm(props: contentFormProps) {
                 {props.size ?
                     <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
                     :
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" onClick={async () => {
-                       const token = await getToken();
-                        await setDocumentLock(token, props.currentID, !props.lock)
-                    }}><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 }
 
 
@@ -261,11 +238,11 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={formData.contentOwner || props.currentContentOwner}
+                                    value={formData.contentOwner}
                                     onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
-                                        <SelectValue placeholder={"happy"}/>
+                                        <SelectValue placeholder={props.currentContentOwner}/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>

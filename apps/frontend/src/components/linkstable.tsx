@@ -354,7 +354,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461]">Actions</TableHead>
+                                        <TableHead className="text-[#0b4461] text-center">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -376,7 +376,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableCell>
                                             ))}
 
-                                            <TableCell>
+                                            <TableCell className="px-1 py-0.5 text-center">
                                                 <div className="flex gap-2 justify-end">
                                                     <Editlinksform
                                                         id={link.id}
@@ -462,7 +462,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461]">Actions</TableHead>
+                                        <TableHead className="text-[#0b4461] text-center">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -486,7 +486,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableCell>
                                             ))}
 
-                                            <TableCell>
+                                            <TableCell className="px-1 py-0.5 text-center">
                                                 <div className="flex gap-2 justify-end">
                                                     {canEdit && (
                                                         <Editlinksform

@@ -11,11 +11,11 @@ import {
 import {Field, FieldGroup} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {PlusSignIcon} from "@hugeicons/core-free-icons";
-
+import {useLinks} from "../pages/links.tsx"
 type Links = {
     id: number
     link_name: string,
@@ -63,7 +63,7 @@ function AddLinksForm(props: linkProp){
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
-
+    const reload = useLinks()
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -152,7 +152,8 @@ function AddLinksForm(props: linkProp){
                                     console.error(err);
                                     console.log("Failed to update links");
                                 }
-                            }}>
+                            ;reload()}}
+                            >
                                 Submit
                             </Button> }/>
                     </DialogFooter>

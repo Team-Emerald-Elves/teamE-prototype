@@ -43,7 +43,7 @@ async function getDocumentsAdmin(token: string) {
 
 const reloadContext= createContext <(() => Promise<void>) | null>(null);
 
-function useReload(){
+export const useReload = () => {
     const context= useContext(reloadContext);
     if (!context) console.error("useReload() called outside Documents");
     return context;

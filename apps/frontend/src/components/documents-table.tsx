@@ -35,7 +35,7 @@ import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-import {useLinks} from "../pages/links.tsx"
+import {useReload} from "../pages/documents.tsx"
 type Document = {
     id: number;
     url: string;

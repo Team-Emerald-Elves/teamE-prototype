@@ -79,7 +79,8 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
         action: "delete",
         linkData: props.link
     }
-    const reload = useLinks();
+
+    const reload =  useLinks();
     return (
         <Dialog>
             <DialogTrigger >

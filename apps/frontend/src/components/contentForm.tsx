@@ -261,17 +261,17 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={formData.contentOwner}
-                                    onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value!}))}
+                                    value={formData.contentOwner || props.currentContentOwner}
+                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
-                                        <SelectValue placeholder={props.currentContentOwner}/>
+                                        <SelectValue placeholder={"happy"}/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
                                             <SelectLabel>Employees</SelectLabel>
                                             {employees.map((emp) => (
-                                                <SelectItem key={emp.id} value={emp.id}>
+                                                <SelectItem key={emp.id} value={String(emp.id)}>
                                                     {emp.first_name} {emp.last_name}
                                                 </SelectItem>
                                             ))}

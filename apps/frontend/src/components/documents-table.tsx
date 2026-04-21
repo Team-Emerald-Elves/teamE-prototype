@@ -30,12 +30,12 @@ import {
 } from "@/components/ui/input-group"
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
-import {useEffect, useState} from "react";
-import { useAuth } from "@clerk/react";
+import {useCallback, useEffect, useState} from "react";
+import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-
+import {useReload} from "../pages/documents.tsx"
 type Document = {
     id: number;
     url: string;
@@ -76,12 +76,14 @@ async function setDocumentLock(sessionToken: string | null, documentID: number, 
 interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    reload: () => void
 }
 
 
 export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
                                              data,
+                                                                   reload,
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -120,14 +122,17 @@ export function DocumentsTable<TData extends Document, TValue>({
             return;
         }
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            async function load() {
+                if(!isSignedIn) {
+                    return;
                 }
-            });
+                const token = await getToken();
+
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
             const data = await res.json();
             setMe(data);
@@ -390,6 +395,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 )}
                             </div>
                             <div className="flex justify-end ml-auto">
+                                <Button type="button" onClick={() => reload()}> Refresh </Button>
                                 <ContentForm
                                     type="Create"
                                     currentID={Math.trunc((Math.random() * 10000) % 10000)}
@@ -402,6 +408,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentStatus="Select Status"
                                     size={true}
                                     lock="none"
+                                    refresh={reload}
                                 />
                             </div>
                         </div>
@@ -715,6 +722,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 )}
                             </div>
                             <div className="flex justify-end ml-auto">
+                                <Button type="button" onClick={() => load()}> Refresh </Button>
                                 <ContentForm
                                     type="Create"
                                     currentID={Math.trunc((Math.random() * 10000) % 10000)}

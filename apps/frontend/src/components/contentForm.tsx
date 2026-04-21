@@ -24,23 +24,24 @@ import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-import { useAuth, useUser} from '@clerk/react'
+import {useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
 
 type contentFormProps = {
-    type: string
-    currentName: string
-    currentURL: string
-    currentContentOwner: string
-    currentRole: string
-    currentExpirationDate: string
-    currentExpirationTime: string
-    currentStatus: string
-    currentID: number
-    size: boolean
-    lock: string
+    type: string,
+    currentName: string,
+    currentURL: string,
+    currentContentOwner: string,
+    currentRole: string,
+    currentExpirationDate: string,
+    currentExpirationTime: string,
+    currentStatus: string,
+    currentID: number,
+    size: boolean,
+    lock: string,
+    refresh?: () => void,
 }
 
 type Employee = {
@@ -123,6 +124,7 @@ function ContentForm(props: contentFormProps) {
     const formattedDate = now.toLocaleString();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
+    const [open, setOpen] = useState<boolean>(false);
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
@@ -191,7 +193,7 @@ function ContentForm(props: contentFormProps) {
 
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen} >
             <form>
 
                 {props.size ?
@@ -237,7 +239,7 @@ function ContentForm(props: contentFormProps) {
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
                                     value={formData.contentOwner}
-                                    onValueChange={(value) => setFormData(prev => ({...prev, contentOwner: value!}))}
+                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue placeholder={props.currentContentOwner}/>
@@ -246,7 +248,7 @@ function ContentForm(props: contentFormProps) {
                                         <SelectGroup>
                                             <SelectLabel>Employees</SelectLabel>
                                             {employees.map((emp) => (
-                                                <SelectItem key={emp.id} value={emp.id}>
+                                                <SelectItem key={emp.id} value={String(emp.id)}>
                                                     {emp.first_name} {emp.last_name}
                                                 </SelectItem>
                                             ))}
@@ -337,7 +339,7 @@ function ContentForm(props: contentFormProps) {
                     <DialogFooter>
                         <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} type={props.type}/>
+                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh} open={setOpen} />
                     </DialogFooter>
                 </DialogContent>
             </form>

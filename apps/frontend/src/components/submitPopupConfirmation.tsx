@@ -26,6 +26,8 @@ type SubmitConfirmationPopupProps = {
     filePayload?: string
     fileName?: string
   }
+  refresh?: () => void
+  open: (arg:boolean) => void
 }
 
 export type IFile = {
@@ -42,7 +44,7 @@ export type IFile = {
   fileName?: string
 }
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<Boolean> {
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
 
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
@@ -115,6 +117,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
 
   if (!response.ok) {
     const errorText = await response.text()
+      console.error(errorText)
     throw new Error(errorText || "Network response was not ok")
   }
 
@@ -124,15 +127,15 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
 
     const [sessionToken, setSessionToken] = useState("")
-
+    const [open, setOpen] = useState(false)
     useEffect(() => {
         getToken().then(t => setSessionToken(t ?? ""))
     }, [])
 
 
     return (
-        <Dialog>
-            <DialogTrigger >
+        <Dialog open={open} onClose={() => {setOpen(false)}} onOpenChange={setOpen}>
+            <DialogTrigger>
                 <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
@@ -141,10 +144,19 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose >
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {createDocument(info, sessionToken); setDocumentLock(sessionToken, info.formData.id, false)}}>Confirm</Button>
+                        <Button type="button" onClick={() => {
+                            try{
+                                createDocument(info, sessionToken);console.log("submitted sucsessfully!");
+                                setDocumentLock(sessionToken, info.formData.id, false);
+                                info.open(false);
+                                console.log("closed ready for refresh");
+                                info.refresh?.();}
+                        catch (error) {
+                                console.error("broke at",error)
+                        }}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

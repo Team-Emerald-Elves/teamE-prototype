@@ -34,13 +34,13 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
             create: {
                 clerkUserId: userId,
                 uname: clerkUser.username as string,
-                first_name: clerkUser.firstName as string,
-                last_name: clerkUser.lastName as string,
+                first_name: clerkUser.firstName ?? "firstname",
+                last_name: clerkUser.lastName ?? "lastname",
                 roles: [ "UnderWriter" ],
                 bucket: {
                     create: {}
                 },
-                email: clerkUser.primaryEmailAddress?.emailAddress
+                email: clerkUser.primaryEmailAddress?.emailAddress ?? "email"
             }
         })
 
@@ -49,7 +49,7 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             console.log(error.code, error.message)
         }
-        res.status(403).json({"message":"Employee in clerk but missing supabase record."})
+        res.status(403).json({"message":`Employee in clerk but missing supabase record. (${error})`})
     }
 })
 

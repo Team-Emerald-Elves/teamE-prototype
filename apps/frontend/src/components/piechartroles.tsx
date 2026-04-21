@@ -77,6 +77,7 @@ export function ChartPieSeparatorNone() {
                             dataKey="employees"
                             nameKey="role"
                             stroke="none"
+                            outerRadius={90}
                         />
                     </PieChart>
                 </ChartContainer>

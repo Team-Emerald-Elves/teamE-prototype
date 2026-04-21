@@ -25,6 +25,7 @@ export type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock_name: string;
 };
 
 

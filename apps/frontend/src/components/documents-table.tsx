@@ -49,6 +49,7 @@ type Document = {
     content_owner: string;
     document_status: string;
     favorite: boolean;
+    lock_name: string;
 };
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
@@ -227,7 +228,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             )
         );
     }
-    if(roles.includes("Administrator")) {
+    if(roles.includes("administrator")) {
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">
@@ -439,6 +440,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     return (
+                                        (doc.lock === "none" || doc.lock === empID) ? (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
                                                 doc={doc}
@@ -452,22 +454,22 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </TableCell>
                                             ))}
                                             {doc.lock === "none"?(
-                                                <div className="flex items-center gap-1 justify-end">
                                             <TableCell>
-                                                <a
-                                                    href={doc.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="hover:underline"
-                                                >
-                                                    <HugeiconsIcon icon={Download01Icon} />
-                                                </a>
-                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
-                                                    const token = await getToken();
-                                                    await setDocumentLock(token, doc.id, true)
-                                                }}><Lock /></Button>
-                                            </TableCell>
+                                                <div className="flex items-center gap-1 justify-end">
+                                                    <a
+                                                        href={doc.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        <HugeiconsIcon icon={Download01Icon} />
+                                                    </a>
+                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                        const token = await getToken();
+                                                        await setDocumentLock(token, doc.id, true)
+                                                    }}><Lock /></Button>
                                                 </div>
+                                            </TableCell>
                                                 ):
                                                 doc.lock === empID ?(
                                             <TableCell>
@@ -504,9 +506,42 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </div>
                                             </TableCell>
                                                     ):(
-                                                    <TableCell><p>{empID}</p></TableCell> )
+                                                    <TableCell><p>{doc.lock_name}</p></TableCell> )
                                             }
-                                        </TableRow>
+                                        </TableRow> ) : (
+                                            <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                                <FavoriteStar
+                                                    doc={doc}
+                                                    onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                                    onToggleOff={(doc) => toggleFavorite(doc, true)}
+                                                />
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                <TableCell>
+                                                    <div className="flex items-center justify-end gap-3">
+
+                                                        <div className="flex flex-col text-right">
+                                                            <p className="text-xs">Checked out by:</p>
+                                                            <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                        </div>
+
+                                                        <a
+                                                            href={doc.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="hover:underline"
+                                                        >
+                                                            <HugeiconsIcon icon={Download01Icon} />
+                                                        </a>
+
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+
+                                        )
                                     );
                                 })}
                             </TableBody>
@@ -722,7 +757,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 )}
                             </div>
                             <div className="flex justify-end ml-auto">
-                                <Button type="button" onClick={() => load()}> Refresh </Button>
+                                <Button type="button" onClick={() => reload()}> Refresh </Button>
                                 <ContentForm
                                     type="Create"
                                     currentID={Math.trunc((Math.random() * 10000) % 10000)}
@@ -791,9 +826,19 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     const canEdit =
-                                        (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none") ||
-                                        (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none")
+                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter")) ||
+                                        ((roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst")) ||
+                                        ((roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst")) ||
+                                        ((roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator")) ||
+                                        ((roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator"))
+                                    console.log("User role: " , roles)
+                                    console.log("Doc Role: " ,doc.assigned_role)
+                                    console.log("Lock status" , doc.lock)
+                                    console.log("Can edit: " , canEdit)
+                                    console.log("This emploee ID" , empID)
+
                                     return (
+                                        (doc.lock === "none" || doc.lock === empID) ? (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
                                                 doc={doc}
@@ -805,26 +850,39 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
-                                            {doc.lock === "none" ? (
+                                            {!canEdit ? (
                                                 <TableCell>
-                                                    {/*padding right is weird*/}
-                                                    <div className="flex items-center justify-end gap-2 pr-22.5">
-                                                    <a
-                                                        href={doc.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="hover:underline"
-                                                    >
-                                                        <HugeiconsIcon icon={Download01Icon}/>
-                                                    </a>
-                                                    <Button variant="outline" size="icon"
-                                                            className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                            onClick={async () => {
-                                                                const token = await getToken();
-                                                                await setDocumentLock(token, doc.id, true)
-                                                            }}><Lock/></Button>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <a
+                                                            href={doc.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="hover:underline"
+                                                        >
+                                                            <HugeiconsIcon icon={Download01Icon}/>
+                                                        </a>
                                                     </div>
-                                                </TableCell>
+                                                </TableCell> ) :
+                                            doc.lock === "none" ? (
+                                                        <TableCell>
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <a
+                                                                    href={doc.url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="hover:underline"
+                                                                >
+                                                                    <HugeiconsIcon icon={Download01Icon}/>
+                                                                </a>
+                                                                <Button variant="outline" size="icon"
+                                                                        className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                        onClick={async () => {
+                                                                            const token = await getToken();
+                                                                            await setDocumentLock(token, doc.id, true)
+                                                                            console.log("Lock Changed", doc.lock)
+                                                                        }}><Lock/></Button>
+                                                            </div>
+                                                        </TableCell>
                                                 ) :
                                                 doc.lock === empID ? (
                                                     <TableCell>
@@ -846,7 +904,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             )}
 
                                                             {canEdit && (
-                                                                <DeleteConfirmationPopup target={doc.id}/>
+                                                                <DeleteConfirmationPopup target={doc.id} />
                                                             )}
                                                             <a
                                                                 href={doc.url}
@@ -854,19 +912,50 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 rel="noopener noreferrer"
                                                                 className="hover:underline"
                                                             >
-                                                                <HugeiconsIcon icon={Download01Icon}/>
+                                                                <HugeiconsIcon icon={Download01Icon} />
                                                             </a>
-                                                            <Button variant="outline" size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                                    onClick={async () => {
-                                                                        const token = await getToken();
-                                                                        await setDocumentLock(token, doc.id, false)
-                                                                    }}><LockOpen/></Button>
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                const token = await getToken();
+                                                                await setDocumentLock(token, doc.id, false)
+                                                            }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
-                                                    <TableCell><p>{empID}</p></TableCell>)
+                                                    <TableCell><p>{doc.lock_name}</p></TableCell>)
                                             }
                                         </TableRow>
+                                            ): (
+                                                <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                                    <FavoriteStar
+                                                        doc={doc}
+                                                        onToggleOn={(doc) => toggleFavorite(doc, false)}
+                                                        onToggleOff={(doc) => toggleFavorite(doc, true)}
+                                                    />
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    ))}
+                                                    <TableCell>
+                                                        <div className="flex items-center justify-end gap-3">
+
+                                                            <div className="flex flex-col text-right">
+                                                                <p className="text-xs">Checked out by:</p>
+                                                                <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                            </div>
+
+                                                            <a
+                                                                href={doc.url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="hover:underline"
+                                                            >
+                                                                <HugeiconsIcon icon={Download01Icon} />
+                                                            </a>
+
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                        )
                                     );
                                 })}
                             </TableBody>

@@ -8,8 +8,8 @@ function Footer() {
 
                     {/* company */}
                     <div>
-                        <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
-                        <ul className="space-y-2 text-sm text-gray-600">
+                        <h3 className="font-semibold text-[#E9A565] mb-4">Company</h3>
+                        <ul className="space-y-2 text-sm text-white">
                             <li><a href="#">About Us</a></li>
                             <li><a href="#">Careers</a></li>
                             <li><a href="#">Press</a></li>
@@ -19,8 +19,8 @@ function Footer() {
 
                     {/* insurance */}
                     <div>
-                        <h3 className="font-semibold text-gray-900 mb-4">Insurance</h3>
-                        <ul className="space-y-2 text-sm text-gray-600">
+                        <h3 className="font-semibold text-[#E9A565] mb-4">Insurance</h3>
+                        <ul className="space-y-2 text-sm text-white">
                             <li><a href="#">Auto Insurance</a></li>
                             <li><a href="#">Home Insurance</a></li>
                             <li><a href="#">Business Insurance</a></li>
@@ -30,8 +30,8 @@ function Footer() {
 
                     {/* resources */}
                     <div>
-                        <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
-                        <ul className="space-y-2 text-sm text-gray-600">
+                        <h3 className="font-semibold text-[#E9A565] mb-4">Resources</h3>
+                        <ul className="space-y-2 text-sm text-white">
                             <li><a href="#">File a Claim</a></li>
                             <li><a href="#">Find an Agent</a></li>
                             <li><a href="#">Help Center</a></li>
@@ -41,8 +41,8 @@ function Footer() {
 
                     {/* legal */}
                     <div>
-                        <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
-                        <ul className="space-y-2 text-sm text-gray-600">
+                        <h3 className="font-semibold text-[#E9A565] mb-4">Legal</h3>
+                        <ul className="space-y-2 text-sm text-white">
                             <li><a href="#">Privacy Policy</a></li>
                             <li><a href="#">Terms of Use</a></li>
                             <li><a href="#">Accessibility</a></li>
@@ -54,9 +54,9 @@ function Footer() {
                 {/* bottom bar */}
                 <div className="mt-10 pt-6 border-t flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
                     <div className="flex gap-4 mt-3 sm:mt-0">
-                        <a href="#" className="hover:text-gray-900">Privacy</a>
-                        <a href="#" className="hover:text-gray-900">Terms</a>
-                        <a href="#" className="hover:text-gray-900">Security</a>
+                        <a href="#" className="hover:text-white">Privacy</a>
+                        <a href="#" className="hover:text-white">Terms</a>
+                        <a href="#" className="hover:text-white">Security</a>
                     </div>
 
                 </div>

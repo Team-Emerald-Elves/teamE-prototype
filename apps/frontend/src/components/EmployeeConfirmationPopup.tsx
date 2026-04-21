@@ -10,18 +10,19 @@ import {
 } from "@/components/ui/dialog"
 
 
-type CreateConfirmationPopupProps = {
+type ConfirmationPopupProps = {
     onConfirm: () => void
+    triggerLabel?: string
 }
 
 
-export function CreateConfirmationPopup({ onConfirm }: CreateConfirmationPopupProps) {
+export function ConfirmationPopup({ onConfirm, triggerLabel }: ConfirmationPopupProps) {
     return (
         <Dialog>
             <DialogTrigger
                 render={
                     <Button className="bg-secondary text-background p-3">
-                        Submit
+                        {triggerLabel}
                     </Button>
                 }
             />
@@ -30,7 +31,7 @@ export function CreateConfirmationPopup({ onConfirm }: CreateConfirmationPopupPr
                     <DialogTitle>Are you sure?</DialogTitle>
                 </DialogHeader>
                 <p className="text-sm text-muted-foreground">
-                    Are you sure you want to create this employee?
+                    Are you sure you want to continue?
                 </p>
                 <DialogFooter>
                     <DialogClose render={<Button variant="outline">Cancel</Button>} />
@@ -48,4 +49,4 @@ export function CreateConfirmationPopup({ onConfirm }: CreateConfirmationPopupPr
 }
 
 
-export default CreateConfirmationPopup
+export default ConfirmationPopup

@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
-import CreateConfirmationPopup from "@/components/createEmployeeConfirmationPopup.tsx";
+import ConfirmationPopup from "@/components/EmployeeConfirmationPopup.tsx";
 
 type CreateEmployeeRequest = {
     uname?: string,
@@ -178,7 +178,7 @@ function CreateEmployeeForm() {
                         <DialogClose
                             render={<Button variant="outline">Cancel</Button>}
                         />
-                        <CreateConfirmationPopup
+                        <ConfirmationPopup
                             onConfirm={async () => {
                                 const bodyData: CreateEmployeeRequest = {
                                     uname: user.username,

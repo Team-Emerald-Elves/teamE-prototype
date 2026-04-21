@@ -663,12 +663,16 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     const canEdit =
-                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none") ||
-                                        (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none") ||
-                                        (roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst") && (doc.lock != "none") ||
-                                        (roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator") && (doc.lock != "none") ||
-                                        (roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator") && (doc.lock != "none"))
+                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none")) ||
+                                        ((roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock = "none")) ||
+                                        ((roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst") && (doc.lock != "none")) ||
+                                        ((roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator") && (doc.lock != "none")) ||
+                                        ((roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator") && (doc.lock != "none"))
                                     console.log(roles)
+                                    console.log(doc.assigned_role)
+                                    console.log(doc.lock)
+                                    console.log(canEdit)
+
                                     return (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
@@ -681,7 +685,20 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
-                                            {doc.lock === "none" && canEdit? (
+                                            {!canEdit ? (
+                                                <TableCell>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <a
+                                                            href={doc.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="hover:underline"
+                                                        >
+                                                            <HugeiconsIcon icon={Download01Icon}/>
+                                                        </a>
+                                                    </div>
+                                                </TableCell> ) :
+                                            doc.lock === "none" ? (
                                                         <TableCell>
                                                             <div className="flex items-center justify-end gap-2">
                                                             <a
@@ -697,6 +714,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     onClick={async () => {
                                                                         const token = await getToken();
                                                                         await setDocumentLock(token, doc.id, true)
+                                                                        console.log("Lock Changed", doc.lock)
                                                                     }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>
@@ -704,6 +722,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 doc.lock === empID ? (
                                                     <TableCell>
                                                         <div className="flex gap-2 justify-end">
+                                                            {canEdit && (
                                                                 <ContentForm
                                                                     type="Edit"
                                                                     currentID={doc.id}
@@ -717,22 +736,23 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     size={false}
                                                                     lock={doc.lock}
                                                                 />
+                                                            )}
 
-                                                                <DeleteConfirmationPopup target={doc.id}/>
+                                                            {canEdit && (
+                                                                <DeleteConfirmationPopup target={doc.id} />
+                                                            )}
                                                             <a
                                                                 href={doc.url}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="hover:underline"
                                                             >
-                                                                <HugeiconsIcon icon={Download01Icon}/>
+                                                                <HugeiconsIcon icon={Download01Icon} />
                                                             </a>
-                                                            <Button variant="outline" size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                                    onClick={async () => {
-                                                                        const token = await getToken();
-                                                                        await setDocumentLock(token, doc.id, false)
-                                                                    }}><LockOpen/></Button>
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                const token = await getToken();
+                                                                await setDocumentLock(token, doc.id, false)
+                                                            }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
                                                     <TableCell><p>{empID}</p></TableCell>)

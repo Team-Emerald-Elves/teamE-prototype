@@ -86,7 +86,7 @@ export const EditEmployeeModel = z.object({
 
 //employee.ts //to test
 export const ListEmployeesModel = z.object({
-    action: z.literal('list').optional(),
+    action: z.string().optional(),
     id: z.string().optional(),
     uname: z.string().optional(),
     first_name: z.string().optional(),
@@ -97,7 +97,9 @@ export const ListEmployeesModel = z.object({
 
 export const EmployeeRequestModel = z.object({
     action: ActionEnum,
-    employeeData: EmployeeDataModel.optional(),
+    employeeData: z.object({
+        id: z.string()
+    })
 })
 
 

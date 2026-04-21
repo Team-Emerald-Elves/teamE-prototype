@@ -34,6 +34,7 @@ prisma/migrations
 # Package locks
 package-lock.json
 pnpm-lock.yaml
+bun.lock
 
 # Finder (MacOS) folder config
 .DS_Store

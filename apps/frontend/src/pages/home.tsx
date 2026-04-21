@@ -102,10 +102,7 @@ function Home() {
                             <HitCounts/>
                         </div>
                     </div>
-
-
                 </div>
-
                 <DisclaimerFooter/>
             </>
         )
@@ -150,7 +147,6 @@ function Home() {
                             <HitCounts/>
                         </div>
                     </div>
-
                 </div>
                 <DisclaimerFooter/>
             </>

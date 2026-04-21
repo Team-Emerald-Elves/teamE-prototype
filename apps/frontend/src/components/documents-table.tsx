@@ -31,7 +31,7 @@ import {
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
-import {getToken, useAuth, useUser} from "@clerk/react";
+import { useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
@@ -176,7 +176,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
 
 
-    if(roles.includes("Administrator")) {
+    if(roles.includes("administrator")) {
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">
@@ -205,7 +205,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-1">
                                             <div className="relative inline-block text-left">
-                                                <div class="flex gap-x-0.5">
+                                                <div className="flex gap-x-0.5">
                                                 <button
                                                     onClick={() => {
                                                         if (isTypeOpen) {
@@ -377,8 +377,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </TableCell>
                                             ))}
                                             {doc.lock === "none"?(
-                                                <div className="flex items-center gap-1 justify-end">
                                             <TableCell>
+                                                <div className="flex items-center gap-1 justify-end">
                                                 <a
                                                     href={doc.url}
                                                     target="_blank"
@@ -391,8 +391,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     const token = await getToken();
                                                     await setDocumentLock(token, doc.id, true)
                                                 }}><Lock /></Button>
-                                            </TableCell>
                                                 </div>
+                                            </TableCell>
                                                 ):
                                                 doc.lock === empID ?(
                                             <TableCell>
@@ -663,8 +663,12 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     const doc = row.original;
 
                                     const canEdit =
-                                        (roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none") ||
-                                        (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none")
+                                        ((roles.includes("underwriter") && doc.assigned_role === "UnderWriter") && (doc.lock != "none") ||
+                                        (roles.includes("businessanalyst") && doc.assigned_role === "BusinessAnalyst") && (doc.lock != "none") ||
+                                        (roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst") && (doc.lock != "none") ||
+                                        (roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator") && (doc.lock != "none") ||
+                                        (roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator") && (doc.lock != "none"))
+                                    console.log(roles)
                                     return (
                                         <TableRow key={row.id}>
                                             <FavoriteStar
@@ -677,9 +681,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
-                                            {doc.lock === "none" ? (
-                                                    <div className="flex items-center justify-end gap-2">
+                                            {doc.lock === "none" && canEdit? (
                                                         <TableCell>
+                                                            <div className="flex items-center justify-end gap-2">
                                                             <a
                                                                 href={doc.url}
                                                                 target="_blank"
@@ -694,13 +698,12 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         const token = await getToken();
                                                                         await setDocumentLock(token, doc.id, true)
                                                                     }}><Lock/></Button>
+                                                            </div>
                                                         </TableCell>
-                                                    </div>
                                                 ) :
                                                 doc.lock === empID ? (
                                                     <TableCell>
                                                         <div className="flex gap-2 justify-end">
-                                                            {canEdit && (
                                                                 <ContentForm
                                                                     type="Edit"
                                                                     currentID={doc.id}
@@ -714,11 +717,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     size={false}
                                                                     lock={doc.lock}
                                                                 />
-                                                            )}
 
-                                                            {canEdit && (
                                                                 <DeleteConfirmationPopup target={doc.id}/>
-                                                            )}
                                                             <a
                                                                 href={doc.url}
                                                                 target="_blank"

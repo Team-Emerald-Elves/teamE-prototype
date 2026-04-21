@@ -21,7 +21,7 @@ const EmployeeDataModel = z.object({
 export const DocumentContentModel = z.object({
     id: z.number(),
     name: z.string(),
-    url: z.url().optional(),
+    url: z.union([z.url().optional(), z.string().optional()]),
     content_owner: z.string(),
     lock: z.boolean().default(false),
     assigned_role: UserRoleEnum.optional(),

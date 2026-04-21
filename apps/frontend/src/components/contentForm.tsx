@@ -30,39 +30,40 @@ import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
 
 type contentFormProps = {
-    type: string,
-    currentName: string,
-    currentURL: string,
-    currentContentOwner: string,
-    currentRole: string,
-    currentExpirationDate: string,
-    currentExpirationTime: string,
-    currentStatus: string,
-    currentID: number,
-    size: boolean,
-    lock: string,
+    type: string
+    currentName: string
+    currentURL: string
+    currentContentOwner: string
+    currentRole: string
+    currentExpirationDate: string
+    currentExpirationTime: string
+    currentStatus: string
+    currentID: number
+    size: boolean
+    lock: string
 }
 
 type Employee = {
     id: string;
-    first_name: string;
-    last_name: string;
-    username: string;
-    email?: string;
-    roles?: string[];
+    first_name: string
+    last_name: string
+    username: string
+    email?: string
+    roles?: string[]
 };
 
 type FormDataType = {
-    name: string,
-    url: string,
-    contentOwner: string,
-    role: string,
-    document_type: string,
-    expirationDate: Date | undefined,
-    expirationTime: string,
-    document_status: string,
-    id: number,
-    filePayload?: string,
+    name: string
+    url: string
+    contentOwner: string
+    role: string
+    document_type: string
+    expirationDate: Date | undefined
+    expirationTime: string
+    document_status: string
+    id: number
+    filePayload?: string
+    fileName?: string
 };
 
 
@@ -149,7 +150,7 @@ function ContentForm(props: contentFormProps) {
         }
         toBase64(files[0]).then(
             (data) => {
-                setFormData((prev => ({...prev, filePayload: data})));
+                setFormData((prev => ({...prev, filePayload: data, fileName: files[0].name})));
             }, (err) => {
                 console.error(err);
             }

@@ -1,6 +1,5 @@
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
-import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
@@ -12,6 +11,11 @@ import { NumericalStats } from "@/components/numerical-stats.tsx";
 import PageHeader from "@/components/page-header.tsx"
 import { ChartPieSeparatorNone} from "@/components/piechartroles.tsx";
 import { ChartPieStacked} from "@/components/piechartdocuments.tsx";
+import CalendarWeek from "@/components/calendarWeekComponent.tsx";
+
+
+
+
 
 function Home() {
 
@@ -30,7 +34,7 @@ function Home() {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -103,7 +107,7 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <DisclaimerFooter/>
+                {/* <Footer/> */}
             </>
         )
     }
@@ -148,7 +152,8 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <DisclaimerFooter/>
+                {/* <Footer/> */}
+                <CalendarWeek />
             </>
         )
     }
@@ -204,7 +209,8 @@ function Home() {
                         </div>
                     </div>
                 </div>
-            <DisclaimerFooter/>
+                {/* <Footer/> */}
+                <CalendarWeek />
             </>
         )
     }

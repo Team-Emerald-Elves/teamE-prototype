@@ -1,8 +1,7 @@
 import express from "express";
-import {prisma} from "../lib/prisma.ts";
+import prisma, { type Employee } from "@repo/database";
 import { createClerkClient } from '@clerk/express';
 import { createSupabaseForRequest } from '../lib/supabase.ts'
-import type { Employee } from "../../prisma/generated/client.ts";
 
 const supabaseClient = await createSupabaseForRequest()
 
@@ -30,6 +29,7 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
     prisma.employee.create({
         data: {
             ...employee,
+            clerkUserId: user!.id
         }
     }).then(async (result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);

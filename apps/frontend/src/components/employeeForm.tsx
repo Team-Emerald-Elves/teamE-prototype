@@ -25,6 +25,7 @@ import {FieldGroup, Field} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { type JSX, useState} from "react";
+import { ConfirmationPopup } from "@/components/EmployeeConfirmationPopup"
 
 type EditEmployeeRequest = {
     id: string,
@@ -149,9 +150,14 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="Business Analyst">Business Analyst</SelectItem>
-                                        <SelectItem value="Underwriter">Underwriter</SelectItem>
-                                        <SelectItem value="Admin">Admin</SelectItem>
+                                        <SelectItem value="BusinessAnalyst">Business Analyst</SelectItem>
+                                        <SelectItem value="UnderWriter">Underwriter</SelectItem>
+
+                                        <SelectItem value="ActuarialAnalyst">ActuarialAnalyst</SelectItem>
+                                        <SelectItem value="ExcelOperator">ExcelOperator</SelectItem>
+                                        <SelectItem value="BusinessOperator">BusinessOperator</SelectItem>
+
+                                        <SelectItem value="Administrator">Admin</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -159,27 +165,27 @@ function EmployeeForm(props: empProps): JSX.Element {
                     </FieldGroup>
                     <DialogFooter className="mt-4 justify-end gap-2">
                         <DialogClose render={<Button variant="secondary">Cancel</Button>} />
-                        <DialogClose render={
-                        <Button onClick={async () => {
-                            const array: string[] | undefined = user.role ? [user.role] : undefined
-                            const bodyData: EditEmployeeRequest = {
-                                id: employee!.id,
-                                uname: user.username,
-                                email: user.email ? user.email : undefined,
-                                first_name: user.firstname,
-                                last_name: user.lastname,
-                                roles: array,
-                            };
-                            try {
-                                await updateEmployee(bodyData);
-                                console.log("Employee updated successfully");
-                            } catch (err) {
-                                console.error(err);
-                                console.log("Failed to update employee");
-                            }
-                        }}>
-                            Save
-                        </Button> }/>
+                        <ConfirmationPopup
+                            triggerLabel="Save"
+                            onConfirm={async () => {
+                                const array: string[] | undefined = user.role ? [user.role] : undefined
+                                const bodyData: EditEmployeeRequest = {
+                                    id: employee!.id,
+                                    uname: user.username,
+                                    email: user.email ? user.email : undefined,
+                                    first_name: user.firstname,
+                                    last_name: user.lastname,
+                                    roles: array,
+                                };
+                                try {
+                                    await updateEmployee(bodyData);
+                                    console.log("Employee updated successfully");
+                                } catch (err) {
+                                    console.error(err);
+                                    console.log("Failed to update employee");
+                                }
+                            }}
+                        />
                     </DialogFooter>
                 </DialogContent>
             </form>
@@ -187,3 +193,28 @@ function EmployeeForm(props: empProps): JSX.Element {
     )
 }
 export default EmployeeForm;
+
+
+
+
+
+{/*    <Button onClick={async () => {*/}
+{/*    const array: string[] | undefined = user.role ? [user.role] : undefined*/}
+{/*    const bodyData: EditEmployeeRequest = {*/}
+{/*        id: employee!.id,*/}
+{/*        uname: user.username,*/}
+{/*        email: user.email ? user.email : undefined,*/}
+{/*        first_name: user.firstname,*/}
+{/*        last_name: user.lastname,*/}
+{/*        roles: array,*/}
+{/*    };*/}
+{/*    try {*/}
+{/*        await updateEmployee(bodyData);*/}
+{/*        console.log("Employee updated successfully");*/}
+{/*    } catch (err) {*/}
+{/*        console.error(err);*/}
+{/*        console.log("Failed to update employee");*/}
+{/*    }*/}
+{/*}}>*/}
+{/*    Save*/}
+{/*</Button> }/>*/}

@@ -10,6 +10,7 @@ import LoginSignup from './pages/login-signup.tsx'
 import NotFound from './pages/not-found.tsx'
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+import Footer from "./components/footer.tsx";
 
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
@@ -17,6 +18,7 @@ import StatisticsPage from "./pages/statisticsPage.tsx";
 
 import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
+import CalendarPage from "@/pages/calendar.tsx";
 
 function App() {
     // const [roles, setRoles] = useState<string[]>([]);
@@ -83,8 +85,10 @@ function App() {
                                 <Route path="*" element={<NotFound />} />
                                 <Route path="/favorites" element={<FavoritesPage />} />
                                 <Route path="/statistics" element={<StatisticsPage />} />
+                                <Route path="/calendar" element={<CalendarPage />} />
                             </Routes>
                         </main>
+                        <Footer />
                     </div>
 
             </Show>

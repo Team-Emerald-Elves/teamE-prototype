@@ -7,13 +7,7 @@ type DocTagProps = {
 function DocTag(props: DocTagProps) {
     return (
         <>
-            <div style={{
-                borderRadius: "15em",
-                padding: "0.5em",
-                borderColor: "#00355f",
-                borderStyle: "solid",
-                borderWidth: "medium",
-            }}>
+            <div className = "text-[10px] bg-gray-100 rounded px-1.5 py-0.5 whitespace-nowrap">
                 {props.children}
             </div>
         </>

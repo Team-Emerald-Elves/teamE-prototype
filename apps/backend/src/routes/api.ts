@@ -1,8 +1,9 @@
-import Router, { request, response, type Request, type Response } from "express"
-import { requireAuth, getAuth, clerkClient } from '@clerk/express'
-import {prisma} from "../lib/prisma.ts";
+import Router, { type Request, type Response } from "express"
+import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
+import { UpdateLockBody, GetLockQuery } from '../lib/zod/routes.schemas.ts'
+import { validate } from "../lib/zod/middleware.ts";
 
-
+import prisma, { Prisma, type Employee } from "@repo/database"
 
 const APIRouter = Router()
 
@@ -11,7 +12,6 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
     // Use `getAuth()` to get the user's `userId`
     const { userId, isAuthenticated } = getAuth(req)
     const clerkUser = await clerkClient.users.getUser(userId as string)
-    console.log(userId)
 
     if (!isAuthenticated) {
         return res.status(401).json({ error: "Not authenticated" })
@@ -25,35 +25,35 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
     // roles: UserRoles[];
     // email: string | null;
 
-    let currentUser = null
-
     try {
-        currentUser = await prisma.employee.findFirstOrThrow({
-            where: { clerkUserId: userId }
-        })
-    } catch(error) {
-
         if(!clerkUser) throw new Error("Authenticated user doesn't exist in clerk.")
 
-        currentUser = await prisma.employee.create({
-            data: {
+        const currentUser: Employee = await prisma.employee.upsert({
+            where: { clerkUserId: userId, uname: clerkUser.username as string },
+            update: {},
+            create: {
                 clerkUserId: userId,
                 uname: clerkUser.username as string,
-                first_name: "admin",
-                last_name: "1",
-                roles: ["UnderWriter"],
+                first_name: clerkUser.firstName ?? "firstname",
+                last_name: clerkUser.lastName ?? "lastname",
+                roles: [ "UnderWriter" ],
                 bucket: {
-                    create: {}
+                    create: {
+                        public: true, // Resources avaliable to public.
+                        file_size_limit: 52428800 // 50MB
+                    }
                 },
-                email: clerkUser.emailAddresses[0]?.emailAddress
+                email: clerkUser.primaryEmailAddress?.emailAddress ?? "example@email.com"
             }
         })
-    }
 
-  if(currentUser)
-    res.status(200).json(currentUser)
-  else
-    res.sendStatus(403).json({"message":"Employee in clerk but missing supabase record."})
+        return res.status(200).json(currentUser)
+    } catch(error: any) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            console.log(error.code, error.message)
+        }
+        res.status(403).json({"message":`Employee in clerk but missing supabase record. (${error})`})
+    }
 })
 
 async function updateLock(req: Request, res: Response) {
@@ -90,6 +90,20 @@ async function updateLock(req: Request, res: Response) {
                     lock: employee.id
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                    where: {
+                        doc_id: id
+                    }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    lock: employee.id
+                }
+            })
         }
         else{
             await prisma.documentContent.update({
@@ -100,11 +114,24 @@ async function updateLock(req: Request, res: Response) {
                     lock: "none"
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: id
+                }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    lock: "none"
+                }
+            })
         }
 
         return res.status(200).json({ id, status })
     } catch (error) {
-        console.error("updateLock error:", error)
         return res.status(500).json({ message: "Failed to update lock" })
     }
 }
@@ -129,7 +156,7 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
-APIRouter.put('/update-lock',updateLock)
-APIRouter.get('/get-lock', getLock)
+APIRouter.put('/update-lock', validate(UpdateLockBody), updateLock)
+APIRouter.get('/get-lock', validate(GetLockQuery), (getLock))
 
 export default APIRouter

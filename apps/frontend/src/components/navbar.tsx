@@ -43,7 +43,7 @@ function Navbar(props: NavbarProps) {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -75,6 +75,11 @@ function Navbar(props: NavbarProps) {
 
                         <NavigationMenuItem>
                             <NavigationMenuLink render={<Link to="/links">Links</Link>} className={navigationMenuTriggerStyle()}>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+
+                        <NavigationMenuItem>
+                            <NavigationMenuLink render={<Link to="/calendar">Calendar</Link>} className={navigationMenuTriggerStyle()}>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 

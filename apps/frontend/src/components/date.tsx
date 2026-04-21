@@ -50,8 +50,9 @@ export default function DateAndTime(props: DateAndTimeProps) {
                     </PopoverContent>
                 </Popover>
             </Field>
+            {!props.disableTime && (
             <Field className="w-32">
-                <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+               <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
                 <Input
                     type="time"
                     id="time-picker-optional"
@@ -59,7 +60,9 @@ export default function DateAndTime(props: DateAndTimeProps) {
                     defaultValue={props.time}
                     className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                 />
+
             </Field>
+            )}
         </FieldGroup>
     )
 }

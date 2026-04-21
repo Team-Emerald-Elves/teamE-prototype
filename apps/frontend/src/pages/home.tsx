@@ -1,5 +1,6 @@
 import "./home.css";
 import {SearchBar} from "@/components/searchbar.tsx";
+import DisclaimerFooter from "@/components/disclaimerFooter.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
@@ -7,16 +8,9 @@ import {UserAvatar} from '@clerk/react'
 import {HomepageButtons} from "@/components/homepageButtons.tsx";
 import {ChartArea, TableOfContents} from "lucide-react";
 import Favorites from "@/components/favorites.tsx";
-import Footer from "@/components/footer.tsx";
+import CalendarWeek from "@/components/calendarWeekComponent.tsx";
 
 
-const rows = [
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
-    { docTitle: "Notes.docx", docDate: "2024-01-02", docStatus: "Draft" },
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" },
-    { docTitle: "Notes.docx", docDate: "2024-01-02", docStatus: "Draft" },
-    { docTitle: "Report.pdf", docDate: "2024-01-01", docStatus: "Draft" }
-];
 
 
 
@@ -37,7 +31,7 @@ function Home() {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -151,6 +145,7 @@ function Home() {
                     {/*</div>*/}
                 </div>
                 {/* <Footer/> */}
+                <CalendarWeek />
             </>
         )
     }
@@ -191,6 +186,7 @@ function Home() {
                     {/*</div>*/}
                 </div>
                 {/* <Footer/> */}
+                <CalendarWeek />
             </>
         )
     }

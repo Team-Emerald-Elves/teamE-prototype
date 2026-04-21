@@ -1,5 +1,5 @@
 import express from "express";
-import prisma, { UserRoles, type Employee } from "@repo/database"
+import prisma, { Prisma, type UserRoles, type Employee } from "@repo/database"
 
 
 
@@ -30,7 +30,8 @@ async function editEmployeeRoute(req: express.Request, res: express.Response) {
 
         res.status(200).send(employee);
     } catch (error) {
-        res.status(400).send(error);
+        if (error instanceof Prisma.PrismaClientKnownRequestError)
+        res.status(400).send(error.message);
     }
 }
 

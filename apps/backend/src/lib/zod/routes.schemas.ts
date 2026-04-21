@@ -1,8 +1,8 @@
 import * as z from "zod";
-
+import { UserRoles } from "@repo/database";
 
 const StatusEnum = z.enum(['not_started', 'in_progress', 'needs_review', 'done', 'expired']).default('not_started')
-const UserRoleEnum = z.enum(['Administrator', 'UnderWriter', 'BusinessAnalyst']);
+const UserRoleEnum = z.enum(UserRoles);
 const ActionEnum = z.enum(['list', 'create', 'edit','delete']);
 
 const EmployeeDataModel = z.object({
@@ -21,17 +21,17 @@ const EmployeeDataModel = z.object({
 export const DocumentContentModel = z.object({
     id: z.number(),
     name: z.string(),
-    url: z.url().optional(),
+    url: z.union([z.url().optional(), z.string().optional()]),
     content_owner: z.string(),
     lock: z.boolean().default(false),
     assigned_role: UserRoleEnum.optional(),
-    expiration_date: z.date(),
+    expiration_date: z.date().optional(),
     mime_type: z.string().default('text/plain'),
     document_status: StatusEnum.default('not_started'),
     document_type: z.string(),
     favorite: z.boolean().default(false),
     //IDocumentContent
-    documentID: z.number(),
+    documentID: z.number().optional(),
     filePayload: z.string().optional(),
 })
 
@@ -47,11 +47,11 @@ const LinkDataModel = z.object({
 //api.ts
 export const UpdateLockBody = z.object({
     id: z.number(),
-    status: z.string(),
+    status: z.boolean(),
 });
 
 export const GetLockQuery = z.object({
-    id: z.string(),
+    id: z.boolean(),
 })
 
 //content-employee-route.ts
@@ -86,7 +86,7 @@ export const EditEmployeeModel = z.object({
 
 //employee.ts //to test
 export const ListEmployeesModel = z.object({
-    action: z.literal('list').optional(),
+    action: z.string().optional(),
     id: z.string().optional(),
     uname: z.string().optional(),
     first_name: z.string().optional(),
@@ -97,7 +97,9 @@ export const ListEmployeesModel = z.object({
 
 export const EmployeeRequestModel = z.object({
     action: ActionEnum,
-    employeeData: EmployeeDataModel.optional(),
+    employeeData: z.object({
+        id: z.string()
+    })
 })
 
 

@@ -76,7 +76,7 @@ function CreateEmployeeForm() {
                 <div className="flex justify-end w-full">
                     <DialogTrigger
                         render={
-                            <Button className="ml-auto px-4 py-3 text-base bg-[#5f935a] text-secondary-foreground">
+                            <Button className="ml-auto px-4 py-4 text-base bg-[#5f935a] text-secondary-foreground">
                                 <HugeiconsIcon icon={PlusSignIcon} /> Create Employee
                             </Button>
                         }
@@ -161,9 +161,12 @@ function CreateEmployeeForm() {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="Business Analyst">Business Analyst</SelectItem>
-                                        <SelectItem value="Underwriter">Underwriter</SelectItem>
-                                        <SelectItem value="Admin">Admin</SelectItem>
+                                        <SelectItem value="BusinessAnalyst">Business Analyst</SelectItem>
+                                        <SelectItem value="UnderWriter">Underwriter</SelectItem>
+                                        <SelectItem value="ActuarialAnalyst">ActuarialAnalyst</SelectItem>
+                                        <SelectItem value="ExcelOperator">ExcelOperator</SelectItem>
+                                        <SelectItem value="BusinessOperator">BusinessOperator</SelectItem>
+                                        <SelectItem value="Administrator">Administrator</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

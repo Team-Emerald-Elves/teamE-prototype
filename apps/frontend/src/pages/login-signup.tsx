@@ -1,11 +1,13 @@
 import { SignIn } from '@clerk/react';
 import { SignUpButton } from '@clerk/react';
+import DisclaimerPopup from "@/components/disclaimerPopup.tsx";
 
 
 
 function LoginSignup(){
     return (
         <>
+            <DisclaimerPopup />
             <div className = "flex h-screen w-full overflow-hidden">
                 <div className="img-container w-1/2 h-screen">
                     <img className = "h-full w-full object-cover object-center" src = "/hanover-login-img.jpg"/>

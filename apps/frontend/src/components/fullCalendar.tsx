@@ -81,6 +81,13 @@ export default function FullCalendarComponent({
                     setOpen(true);
                 }
             }}
+            headerToolbar={
+                {
+                    start: 'title',
+                    center: '',
+                    end: 'prev today next'
+                }
+            }
             dayHeaderClassNames={() => [
                 "bg-[#ecf4f9]",
                 "text-[#0b4461]",

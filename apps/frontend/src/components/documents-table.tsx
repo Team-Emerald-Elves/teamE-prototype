@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import mime from 'mime'
 import {
     Table,
     TableBody,
@@ -99,24 +100,26 @@ export function DocumentsTable<TData extends Document, TValue>({
     const[empID, setEmpID] = useState("");
 
     const [docFilters, setDocFilters] =  useState([
-        {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
         {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
+        {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
     ]);
 
     const [fileFilters, setFileFilters] =  useState([
-        {key: 'mime_type', value: 'pdf', id: '.pdf', state: false},
-        {key: 'mime_type', value: 'docx', id: '.docx', state: false},
-        {key: 'mime_type', value: 'xlsx', id: '.xlsx', state: false},
-        {key: 'mime_type', value: 'txt', id: '.txt', state: false},
-        {key: 'mime_type', value: 'pptx', id: '.pptx', state: false},
-        {key: 'mime_type', value: 'png', id: '.png', state: false},
+        {key: 'mime_type', value: mime.getType('docx'), id: '.docx', state: false},
+        {key: 'mime_type', value: mime.getType('jpeg'), id: '.jpeg', state: false},
+        {key: 'mime_type', value: mime.getType('pdf'), id: '.pdf', state: false},
+        {key: 'mime_type', value: mime.getType('png'), id: '.png', state: false},
+        {key: 'mime_type', value: mime.getType('pptx'), id: '.pptx', state: false},
+        {key: 'mime_type', value: mime.getType('txt'), id: '.txt', state: false},
+        {key: 'mime_type', value: mime.getType('xlsx'), id: '.xlsx', state: false},
     ]);
 
     const [roleFilters, setRoleFilters] =  useState( [
-        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
-        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
-        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
         {key: 'assigned_role', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
+        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
+        {key: 'assigned_role', value: 'BusinessOperator', id: 'Business Operator', state: false},
+        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
+        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
     ]);
 
     const getActive = () => {
@@ -434,9 +437,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     </div>
                                 )}
                             </div>
-
+                            <div className="relative inline-block text-left">
+                                <Button type="button" onClick={() => reload()} className="flex px-4 py-4 ml-2 "> Refresh </Button>
+                            </div>
                             <div className="flex justify-end ml-auto">
-                                <Button type="button" onClick={() => reload()}> Refresh </Button>
                                 <ContentForm
                                     type="Create"
                                     currentID={Math.trunc((Math.random() * 10000) % 10000)}

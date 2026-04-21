@@ -236,10 +236,10 @@ export default function LinksTable<TData extends Links, TValue>({
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const getActive = () => {
         const payload: Record<string, string[]> = {};
-        const roles = filters.filter(item => item.key === 'assigned_role');
 
-        if (roles.length > 0) {
-            payload['assigned_role'] = roles.map(d => d.value);
+
+        if (filters.length > 0) {
+            payload['assigned_role'] = filters.map(d => d.value);
         }
 
         return JSON.stringify(payload);

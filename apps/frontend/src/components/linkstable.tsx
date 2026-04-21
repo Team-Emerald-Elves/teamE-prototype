@@ -231,6 +231,9 @@ export default function LinksTable<TData extends Links, TValue>({
     const [roleFilters, setRoleFilters] =  useState( [
         {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
         {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
+        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
+        {key: 'assigned_role', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
+        {key: 'assigned_role', value: 'Administrator', id: 'Administrator', state: false},
     ]);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);

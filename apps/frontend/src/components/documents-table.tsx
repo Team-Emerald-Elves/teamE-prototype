@@ -95,28 +95,49 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
-    const [filters, setFilters] = useState<string[]>([]);
+    const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const[empID, setEmpID] = useState("");
 
-    const [docFilters, setDocFilters] = useState([
-        {id: 'Workflow', state: false},
-        {id: 'Reference', state: false},
+    const [docFilters, setDocFilters] =  useState([
+        {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
+        {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
     ]);
 
-    const [fileFilters, setFileFilters] = useState([
-        {id: '.pdf', state: false},
-        {id: '.docx', state: false},
-        {id: '.xlsx', state: false},
-        {id: '.txt', state: false},
-        {id: '.pptx', state: false},
-        {id: '.png', state: false},
+    const [fileFilters, setFileFilters] =  useState([
+        {key: 'mime_type', value: 'pdf', id: '.pdf', state: false},
+        {key: 'mime_type', value: 'docx', id: '.docx', state: false},
+        {key: 'mime_type', value: 'xlsx', id: '.xlsx', state: false},
+        {key: 'mime_type', value: 'txt', id: '.txt', state: false},
+        {key: 'mime_type', value: 'pptx', id: '.pptx', state: false},
+        {key: 'mime_type', value: 'png', id: '.png', state: false},
     ]);
 
-    const [roleFilters, setRoleFilters] = useState( [
-        {id: 'Business Analyst', state: false},
-        {id: 'Underwriter', state: false},
+    const [roleFilters, setRoleFilters] =  useState( [
+        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
+        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
+        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
+        {key: 'assigned_role', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
     ]);
 
+    const getActive = () => {
+        const payload: Record<string, string[]> = {};
+
+        const docs = filters.filter(item => item.key === 'document_type');
+        const files = filters.filter(item => item.key === 'mime_type');
+        const roles = filters.filter(item => item.key === 'assigned_role');
+
+        if (docs.length > 0) {
+            payload['document_type'] = docs.map(d => d.value);
+        }
+        if (files.length > 0) {
+            payload['mime_type'] = files.map(d => d.value);
+        }
+        if (roles.length > 0) {
+            payload['assigned_role'] = roles.map(d => d.value);
+        }
+
+        return JSON.stringify(payload);
+    };
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -142,7 +163,6 @@ export function DocumentsTable<TData extends Document, TValue>({
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
         load();
-
     }, [isSignedIn]);
     useEffect(() => {
         setDocs(data);
@@ -201,15 +221,15 @@ export function DocumentsTable<TData extends Document, TValue>({
     };
 
 
-    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
         const {id, checked} = e.target;
 
         if (checked) {
-            setFilters((filter) => [...filter, id])
+            setFilters((filter) => [...filter, option])
             console.log(filters)
         }
         else {
-            setFilters((filter) => filter.filter((filterId) => filterId !== id));
+            setFilters((filter) => filter.filter((item) => item.id !== option.id));
             console.log(filters)
         }
         setDocFilters(dcFilters =>
@@ -251,46 +271,56 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                ><div className="pr-1"> <HugeiconsIcon icon={SlidersHorizontalIcon} />  </div> Filter </button>
+                                >
+                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
+                                    Filter
+                                </button>
 
                                 {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div
+                                        className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-1">
                                             <div className="relative inline-block text-left">
                                                 <div className="flex gap-x-0.5">
-                                                <button
-                                                    onClick={() => {
-                                                        if (isTypeOpen) {
-                                                            setIsTypeOpen(!isTypeOpen)
+                                                    <button
+                                                        onClick={() => {
+                                                            if (isTypeOpen) {
+                                                                setIsTypeOpen(!isTypeOpen)
+                                                            }
+                                                            if (isRoleOpen) {
+                                                                setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            setIsDocumentOpen(!isDocumentOpen)
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36">
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={File01Icon}/></div>
+                                                        Document Type
+                                                    </button>
+                                                    <button onClick={() => {
+                                                        if (isDocumentOpen) {
+                                                            setIsDocumentOpen(!isDocumentOpen)
                                                         }
-                                                        if (isRoleOpen) {
-                                                            setIsRoleOpen(!isRoleOpen)
-                                                        }
-                                                        setIsDocumentOpen(!isDocumentOpen)
                                                     }}
-                                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
-                                                > <div className="pr-1"> <HugeiconsIcon icon={File01Icon} /></div> Document Type </button>
-                                                <button onClick={() => {
-                                                    if (isDocumentOpen) {
-                                                        setIsDocumentOpen(!isDocumentOpen)
-                                                        }
-                                                    }}
-                                                        className="text-black">
-                                                    <div className="ml-3"> <HugeiconsIcon icon={X} />  </div>
-                                                </button>
+                                                            className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
+                                                    </button>
                                                 </div>
 
                                                 {isDocumentOpen && (
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {docFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
-                                                                        onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        checked={option.state}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -312,10 +342,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }
                                                             setIsTypeOpen(!isTypeOpen)
                                                         }}
-                                                        className="flex px-4 py-1 ml-2 justify-center items-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
                                                     >
-                                                        <div className="pr-1"><HugeiconsIcon icon={Folder01Icon}/></div>
-                                                            File Type
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={Folder01Icon}/></div>
+                                                        File Type
                                                     </button>
                                                     <button onClick={() => {
                                                         if (isTypeOpen) {
@@ -323,21 +353,25 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         }
                                                     }}
                                                             className="text-black">
-                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
                                                     </button>
                                                 </div>
 
                                                 {isTypeOpen && (
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {fileFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
-                                                                        onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        checked={option.state}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -357,9 +391,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }
                                                             setIsRoleOpen(!isRoleOpen)
                                                         }}
-                                                        className="flex px-4 py-1 ml-2 items-center justify-center bg-gray-400 text-white rounded-md hover:bg-gray-600 text-sm w-42"
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
                                                     >
-                                                        <div className="pr-1"><HugeiconsIcon icon={UserGroupIcon}/></div>
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={UserGroupIcon}/>
+                                                        </div>
                                                         Role
                                                     </button>
                                                     <button onClick={() => {
@@ -368,22 +403,26 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         }
                                                     }}
                                                             className="text-black">
-                                                        <div className="ml-3"><HugeiconsIcon icon={X}/></div>
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
                                                     </button>
                                                 </div>
 
                                                 {isRoleOpen && (
 
-                                                    <div className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-46 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <div
+                                                        className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-46 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                         <div className="py-1">
                                                             {roleFilters.map((option) => (
-                                                                <div key={option.id} className="flex items-center justify-between">
-                                                                    <label htmlFor={option.id} className="text-base font-medium text-gray-700 cursor-pointer ml-2">{option.label}</label>
+                                                                <div key={option.id}
+                                                                     className="flex items-center justify-between">
+                                                                    <label htmlFor={option.id}
+                                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                     <input
                                                                         id={option.id}
                                                                         type="checkbox"
-                                                                        onChange={handleCheckbox}
-                                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer mr-3"
+                                                                        checked={option.state}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -395,6 +434,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     </div>
                                 )}
                             </div>
+
                             <div className="flex justify-end ml-auto">
                                 <Button type="button" onClick={() => reload()}> Refresh </Button>
                                 <ContentForm
@@ -413,7 +453,33 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 />
                             </div>
                         </div>
-
+                        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+                            {filters.map((option) => (
+                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
+                                    <button onClick={() => {
+                                        setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                                        setDocFilters(dcFilters =>
+                                            dcFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setFileFilters(fiFilters =>
+                                            fiFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setRoleFilters(rlFilters =>
+                                            rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                    }} className="text-black pr-2">
+                                        <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (
@@ -641,7 +707,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -692,7 +758,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -743,7 +809,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         id={option.id}
                                                                         type="checkbox"
                                                                         checked={option.state}
-                                                                        onChange={handleCheckbox}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
                                                                     />
                                                                 </div>
@@ -775,27 +841,27 @@ export function DocumentsTable<TData extends Document, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option} className=" flex w-24 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                    <p className="flex px-2 py-1 text-gray-800 rounded-md text-xs w-16"> {option}</p>
+                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
                                         setDocFilters(dcFilters =>
                                             dcFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                         setFileFilters(fiFilters =>
                                             fiFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
-                                                filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
-                                    }} className="text-black">
-                                        <div className="ml-2"><HugeiconsIcon size={16} icon={X}/></div>
+                                    }} className="text-black pr-2">
+                                        <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
                                     </button>
                                 </div>
                             ))}

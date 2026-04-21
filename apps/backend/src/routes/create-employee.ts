@@ -29,6 +29,7 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
     prisma.employee.create({
         data: {
             ...employee,
+            clerkUserId: user!.id
         }
     }).then(async (result) => {
         console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);

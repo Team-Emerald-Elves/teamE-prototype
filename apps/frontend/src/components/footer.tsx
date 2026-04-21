@@ -54,9 +54,9 @@ function Footer() {
                 {/* bottom bar */}
                 <div className="mt-10 pt-6 border-t flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
                     <div className="flex gap-4 mt-3 sm:mt-0">
-                        <a href="#" className="hover:text-white">Privacy</a>
-                        <a href="#" className="hover:text-white">Terms</a>
-                        <a href="#" className="hover:text-white">Security</a>
+                        <a href="#" className="text-white">Privacy</a>
+                        <a href="#" className="text-white">Terms</a>
+                        <a href="#" className="text-white">Security</a>
                     </div>
 
                 </div>

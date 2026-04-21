@@ -3,6 +3,8 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import {Link} from "react-router-dom";
+import {useAuth} from "@clerk/react";
+import {useEffect, useState} from "react";
 
 function getCurrentWeekLabel() {
     const now = new Date();
@@ -28,6 +30,31 @@ function getCurrentWeekLabel() {
 }
 
 export default function CalendarWeek() {
+    const { getToken } = useAuth();
+    const [events, setEvents] = useState<any[]>([]);
+
+    useEffect(() => {
+        async function fetchEvents() {
+            const token = await getToken();
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-events`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error("Error fetching events.");
+            }
+
+            const data = await res.json();
+            console.log(data);
+            setEvents(data);
+        }
+
+        fetchEvents();
+    }, [getToken]);
+
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
 
@@ -47,31 +74,7 @@ export default function CalendarWeek() {
                     ]}
 
                     contentHeight="auto"
-                    events={[
-                        {
-                            title: 'All Day Event',
-                            start: '2026-04-20T00:00:00',
-                            allDay: true,
-                        },
-                        {
-                            title: 'Timed Meeting',
-                            start: '2026-04-21T10:00:00',
-                            end: '2026-04-21T11:30:00',
-                            allDay: false,
-                        },
-                        {
-                            title: 'Multi-Day Event',
-                            start: '2026-04-22',
-                            end: '2026-04-24',
-                            allDay: true,
-                        },
-                        {
-                            title: 'Short Event',
-                            start: '2026-04-23T14:00:00',
-                            end: '2026-04-23T15:00:00',
-                            allDay: false,
-                        }
-                    ]}
+                    events={events}
                 />
             </div>
         </div>

@@ -4,9 +4,13 @@ import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
 import {UserAvatar} from '@clerk/react'
-import {HomepageButtons} from "@/components/homepageButtons.tsx";
-import {ChartArea, TableOfContents} from "lucide-react";
 import Favorites from "@/components/favorites.tsx";
+import {HitCounts} from "@/components/hit-counts.tsx"
+import {UserLogs} from "@/components/user-logs.tsx";
+import { NumericalStats } from "@/components/numerical-stats.tsx";
+import PageHeader from "@/components/page-header.tsx"
+import { ChartPieSeparatorNone} from "@/components/piechartroles.tsx";
+import { ChartPieStacked} from "@/components/piechartdocuments.tsx";
 import CalendarWeek from "@/components/calendarWeekComponent.tsx";
 
 
@@ -82,11 +86,6 @@ function Home() {
                             <div className="hero-text px-5 justify-center text-lg/10">
                                 <h1>Hello,<br/> {firstname}</h1>
                             </div>
-                            <div className="pl-2 flex flex-row gap-5 mt-auto">
-                                <a href="/statistics">
-                                    <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
-                                </a>
-                            </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
                             <SearchBar/>
@@ -100,6 +99,13 @@ function Home() {
                         {/*<Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                         <Favorites />
                     {/*</div>*/}
+                    <div className = "mx-5">
+                        <PageHeader title="Dashboard"/>
+                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
+                            <UserLogs/>
+                            <HitCounts/>
+                        </div>
+                    </div>
                 </div>
                 {/* <Footer/> */}
             </>
@@ -118,15 +124,11 @@ function Home() {
                             <div className="hero-text px-5 justify-center text-lg/10">
                                 <h1>Hello,<br/> {firstname}</h1>
                             </div>
-                            <div className="pl-2 flex flex-row gap-5 mt-auto">
-                                <a href="/statistics">
-                                    <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
-                                </a>
-                            </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
                             <SearchBar/>
                         </div>
+
                     </div>
                 </div>
 
@@ -142,6 +144,13 @@ function Home() {
                     {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                         <Favorites />
                     {/*</div>*/}
+                    <div className = "mx-5">
+                        <PageHeader title="Dashboard"/>
+                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
+                            <UserLogs/>
+                            <HitCounts/>
+                        </div>
+                    </div>
                 </div>
                 {/* <Footer/> */}
                 <CalendarWeek />
@@ -159,11 +168,6 @@ function Home() {
                             <UserAvatar/>
                             <div className="hero-text px-5 justify-center text-lg/10">
                                 <h1>Hello,<br/> {firstname}</h1>
-                            </div>
-                            <div className="pl-2 flex flex-row gap-5 mt-auto">
-                                <a href="/statistics">
-                                    <HomepageButtons icon={ChartArea} label="Reports & Statistics"/>
-                                </a>
                             </div>
                         </div>
                         <div className = "hero-content-bottom py-5 pl-2">
@@ -183,6 +187,27 @@ function Home() {
                     {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                     <Favorites />
                     {/*</div>*/}
+
+                    <div className = "mx-5">
+                        <PageHeader title="Dashboard"/>
+                        <div className = "flex gap-4 mx-5 mt-3 items-stretch h-[270px]">
+                            <div className="w-[45%]">
+                                <NumericalStats/>
+                            </div>
+                            <div className="w-110">
+                                <ChartPieSeparatorNone/>
+                            </div>
+                            <div className="w-110">
+                                <ChartPieStacked/>
+                            </div>
+
+
+                        </div>
+                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
+                            <UserLogs/>
+                            <HitCounts/>
+                        </div>
+                    </div>
                 </div>
                 {/* <Footer/> */}
                 <CalendarWeek />

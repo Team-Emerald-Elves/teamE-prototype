@@ -179,6 +179,7 @@ function CreateEmployeeForm() {
                             render={<Button variant="outline">Cancel</Button>}
                         />
                         <ConfirmationPopup
+                            triggerLabel="Submit"
                             onConfirm={async () => {
                                 const bodyData: CreateEmployeeRequest = {
                                     uname: user.username,

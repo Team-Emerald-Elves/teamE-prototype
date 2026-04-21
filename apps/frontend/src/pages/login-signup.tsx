@@ -10,7 +10,7 @@ function LoginSignup(){
             <DisclaimerPopup />
             <div className = "flex h-screen w-full overflow-hidden">
                 <div className="img-container w-1/2 h-screen">
-                    <img className = "h-full w-full object-cover object-center" src = "/hanover-login-img.jpg"/>
+                    <img className = "h-full w-full object-cover object-center" alt ="Hanover Login" src = "/hanover-login-img.jpg"/>
                 </div>
                 <div className="w-1/2 h-screen text-left flex flex-col justify-center items-center bg-[url('/geometric-background.png')] bg-cover bg-no-repeat text-white p-2">
                     <div className="flex flex-col gap-4 justify-center items-center">

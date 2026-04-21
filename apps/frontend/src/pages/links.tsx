@@ -1,5 +1,5 @@
 import LinksTable from "@/components/linkstable.tsx";
-import {useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import PageHeader from "../components/page-header.tsx"
 import { columns, type Links } from "../components/linksCols.tsx"
@@ -7,7 +7,12 @@ import { columns, type Links } from "../components/linksCols.tsx"
 
 
 
-
+const linkContext = createContext <(() => Promise<void>) | null>(null);
+export const useLinks = () => {
+    const context= useContext(linkContext);
+    if (!context) console.error("uselinks() called outside Documents");
+    return context;
+};
 function Links() {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -36,9 +41,6 @@ function Links() {
 
         load();
     }, [isSignedIn, roles]);
-
-    useEffect(() => {
-
         async function getLinks() {
             const token = await getToken();
 
@@ -56,19 +58,25 @@ function Links() {
             setLinks(data)
             return data;
         }
-            getLinks()
 
+    useEffect(() => {
+        getLinks();
     }, []);
+
+
 
     return (
         <>
             <PageHeader title="Links" description="View your links or modify them by adding, deleting, or updating existing ones."/>
             <div className="relative w-full flex items-center">
 
+
             </div>
+            <linkContext.Provider value={getLinks}>
             <div>
                 <LinksTable columns={columns} data={links}/>
             </div>
+            </linkContext.Provider>
         </>
     )
 }

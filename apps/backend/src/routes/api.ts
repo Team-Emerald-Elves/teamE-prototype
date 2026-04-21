@@ -38,9 +38,12 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
                 last_name: clerkUser.lastName ?? "lastname",
                 roles: [ "UnderWriter" ],
                 bucket: {
-                    create: {}
+                    create: {
+                        public: true, // Resources avaliable to public.
+                        file_size_limit: 52428800 // 50MB
+                    }
                 },
-                email: clerkUser.primaryEmailAddress?.emailAddress ?? "email"
+                email: clerkUser.primaryEmailAddress?.emailAddress ?? "example@email.com"
             }
         })
 
@@ -49,7 +52,7 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             console.log(error.code, error.message)
         }
-        res.status(403).json({"message":"Employee in clerk but missing supabase record."})
+        res.status(403).json({"message":`Employee in clerk but missing supabase record. (${error})`})
     }
 })
 
@@ -87,6 +90,20 @@ async function updateLock(req: Request, res: Response) {
                     lock: employee.id
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                    where: {
+                        doc_id: id
+                    }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    lock: employee.id
+                }
+            })
         }
         else{
             await prisma.documentContent.update({
@@ -97,11 +114,24 @@ async function updateLock(req: Request, res: Response) {
                     lock: "none"
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: id
+                }
+
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    lock: "none"
+                }
+            })
         }
 
         return res.status(200).json({ id, status })
     } catch (error) {
-        console.error("updateLock error:", error)
         return res.status(500).json({ message: "Failed to update lock" })
     }
 }

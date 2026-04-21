@@ -102,11 +102,11 @@ export function DocumentsTable<TData extends Document, TValue>({
 
     const [fileFilters, setFileFilters] =  useState([
         {key: 'mime_type', value: 'pdf', id: '.pdf', state: false},
-        {key: 'mime_type', value: 'pdf', id: '.docx', state: false},
-        {key: 'mime_type', value: 'pdf', id: '.xlsx', state: false},
-        {key: 'mime_type', value: 'pdf', id: '.txt', state: false},
-        {key: 'mime_type', value: 'pdf', id: '.pptx', state: false},
-        {key: 'mime_type', value: 'pdf', id: '.png', state: false},
+        {key: 'mime_type', value: 'docx', id: '.docx', state: false},
+        {key: 'mime_type', value: 'xlsx', id: '.xlsx', state: false},
+        {key: 'mime_type', value: 'txt', id: '.txt', state: false},
+        {key: 'mime_type', value: 'pptx', id: '.pptx', state: false},
+        {key: 'mime_type', value: 'png', id: '.png', state: false},
     ]);
 
     const [roleFilters, setRoleFilters] =  useState( [

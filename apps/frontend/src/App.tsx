@@ -10,6 +10,7 @@ import LoginSignup from './pages/login-signup.tsx'
 import NotFound from './pages/not-found.tsx'
 import './App.css'
 import UserManagementPage from "@/pages/user-management-page.tsx";
+import Footer from "./components/footer.tsx";
 
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
@@ -87,6 +88,7 @@ function App() {
                                 <Route path="/calendar" element={<CalendarPage />} />
                             </Routes>
                         </main>
+                        <Footer />
                     </div>
 
             </Show>

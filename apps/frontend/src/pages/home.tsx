@@ -102,7 +102,7 @@ function Home() {
                         <Favorites />
                     {/*</div>*/}
                 </div>
-                <DisclaimerFooter/>
+                {/* <Footer/> */}
             </>
         )
     }
@@ -144,8 +144,8 @@ function Home() {
                         <Favorites />
                     {/*</div>*/}
                 </div>
+                {/* <Footer/> */}
                 <CalendarWeek />
-                <DisclaimerFooter/>
             </>
         )
     }
@@ -185,8 +185,8 @@ function Home() {
                     <Favorites />
                     {/*</div>*/}
                 </div>
+                {/* <Footer/> */}
                 <CalendarWeek />
-            <DisclaimerFooter/>
             </>
         )
     }

@@ -22,11 +22,11 @@ import {
 export const description = "A pie chart with no separator"
 
 const chartData = [
-    { role: "Underwriters:", employees: 275, fill: "rgb(147, 197, 253)" },
-    { role: "Business Analyst:", employees: 200, fill: "rgb(253, 186, 116)" },
-    { role: "Actuarial Analyst:", employees: 187, fill: "rgb(191, 219, 254)" },
-    { role: "EXL Operations:", employees: 173, fill: "rgb(254, 215, 170)" },
-    { role: "Business Ops Rating Teams:", employees: 90, fill: "rgb(209, 213, 219)" },
+    { role: "Underwriters:", employees: 275, fill: "rgb(118,139,108)" },
+    { role: "Business Analyst:", employees: 200, fill: "rgb(231,166,102)" },
+    { role: "Actuarial Analyst:", employees: 187, fill: "rgb(194,210,207)" },
+    { role: "EXL Operations:", employees: 173, fill: "rgb(41,103,55)" },
+    { role: "Business Ops Rating Teams:", employees: 90, fill: "rgb(172,122,69)" },
 ]
 
 const chartConfig = {
@@ -59,8 +59,8 @@ export function ChartPieSeparatorNone() {
     return (
         <Card className="flex flex-col h-full">
             <CardHeader className="items-center pb-0">
-                <CardTitle>Employee Breakdown by Role</CardTitle>
-                <CardDescription>Employee Breakdown by Role</CardDescription>
+                <CardTitle>Employees At Hanover</CardTitle>
+                <CardDescription>An overview of employee breakdown by role.</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 flex items-center justify-center pb-0">
                 <ChartContainer

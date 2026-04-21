@@ -20,16 +20,16 @@ import {
 export const description = "A pie chart with stacked sections"
 
 const statusData = [
-    { Status: "Not Started", Count: 186, fill: "rgb(254, 202, 202)" },
-    { Status: "In Progress", Count: 305, fill: "rgb(255, 251, 235)" },
-    { Status: "Needs Review", Count: 237, fill: "rgb(254, 243, 199)" },
-    { Status: "Done", Count: 173, fill: "rgb(167, 243, 208)" },
-    { Status: "Expired", Count: 209, fill: "rgb(254, 202, 202)" },
+    { Status: "Not Started", Count: 186, fill: "rgb(172,122,69)" },
+    { Status: "In Progress", Count: 305, fill: "rgb(248,203,151)" },
+    { Status: "Needs Review", Count: 237, fill: "rgb(79,174,124)" },
+    { Status: "Done", Count: 173, fill: "rgb(41,103,55)" },
+    { Status: "Expired", Count: 209, fill: "rgb(194,210,207)" },
 ]
 
 const docData = [
-    { Doc: "Workflow", Count: 80, fill: "rgb(191, 219, 254)" },
-    { Doc: "Reference", Count: 200, fill: "rgb(254, 215, 170)" },
+    { Doc: "Workflow", Count: 80, fill: "rgb(118,139,108)" },
+    { Doc: "Reference", Count: 200, fill: "rgb(223,177,125)" },
 ]
 
 const chartConfig = {
@@ -68,8 +68,8 @@ export function ChartPieStacked() {
     return (
         <Card className="flex flex-col h-full">
             <CardHeader className="items-center pb-0">
-                <CardTitle>Document Information</CardTitle>
-                <CardDescription>Status and Type</CardDescription>
+                <CardTitle>Document Details</CardTitle>
+                <CardDescription>An overview of document types and status. </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 flex items-center justify-center pb-0">
                 <ChartContainer

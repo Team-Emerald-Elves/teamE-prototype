@@ -428,23 +428,23 @@ export function DocumentsTable<TData extends Document, TValue>({
                             </div>
                             <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                                 {filters.map((option) => (
-                                    <div key={option} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                        <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option}</p>
+                                    <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                        <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                         <button onClick={() => {
                                             setFilters((filter) => filter.filter((filterId) => filterId !== option));
                                             setDocFilters(dcFilters =>
                                                 dcFilters.map(filter =>
-                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                    filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                                 )
                                             );
                                             setFileFilters(fiFilters =>
                                                 fiFilters.map(filter =>
-                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                    filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                                 )
                                             );
                                             setRoleFilters(rlFilters =>
                                                 rlFilters.map(filter =>
-                                                    filter.id === option ? { ...filter, state: !filter.state } : filter
+                                                    filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                                 )
                                             );
                                         }} className="text-black pr-2">

@@ -78,6 +78,11 @@ function Navbar(props: NavbarProps) {
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 
+                        <NavigationMenuItem>
+                            <NavigationMenuLink render={<Link to="/calendar">Calendar</Link>} className={navigationMenuTriggerStyle()}>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+
                         {roles.includes("administrator") && (
                             <NavigationMenuItem>
                                 <NavigationMenuLink

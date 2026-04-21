@@ -8,8 +8,9 @@ import prisma, { Status,
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 
-import { DocumentContentModel } from '../lib/zod/routes.schemas.ts';
-import { validate } from '../lib/zod/middleware.ts';
+import { DocumentContentModel } from '../lib/zod/routes.schemas.ts'
+import { validate } from '../lib/zod/middleware.ts'
+import mime from 'mime'
 
 const supaBaseRouter = Router()
 
@@ -37,6 +38,15 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
     console.error("Failed to fetch headers:", error);
     return null;
   }
+}
+
+function base64ToArrayBuffer(base64: string) {
+    var binaryString = atob(base64);
+    var bytes = new Uint8Array(binaryString.length);
+    for (var i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
 }
 
 supaBaseRouter.post(
@@ -76,36 +86,47 @@ supaBaseRouter.post(
             ? (document.assigned_role as UserRoles)
             : UserRoles.UnderWriter
 
-
-            let mime_type: string
-
             if (!document.filePayload) {
+
                 console.log('Document source file is streamed.')
-                mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+                document.mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
+
             } else {
+            
                 console.log('Document source file is being uploaded.')
-                const decoded = Buffer.from(document.filePayload as string, 'base64');
-                const payload: File = new File([decoded], document.name)
-                mime_type = payload.type
+                const decoded: ArrayBuffer = base64ToArrayBuffer(document.filePayload)
+                document.mime_type = mime.getType(document.fileName)
 
                 // Upload document to authenticated employee with supabase bucket association.
+
+                console.log(`File name: ${document.fileName}, mimetype: ${document.mime_type}`)
+
                 const { data, error } = await supabaseClient.storage
                     .from(employee.bucket!.id)
-                    .upload((document.url as string).trim(), payload)
+                    .upload(document.fileName, decoded, {
+                        contentType: document.mime_type,
+                        upsert: true
+                    })
 
                 if (!data || error) {
-                    throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'.`)
+                    throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'. (${error})`)
+                } else {
+                    const { data } = await supabaseClient.storage
+                        .from(employee.bucket!.id)
+                        .getPublicUrl(document.fileName);
+                    document.url = data.publicUrl
+                    console.log("Public file URL: " + document.url)
                 }
             }
             
             const documentContents = await prisma.documentContent.create({
                 data: {
                     name: document.name ?? "Not found.",
-                    url: document.url ?? "Local upload",
+                    url: document.url ?? "Not found.",
                     content_owner: document.content_owner ?? "Not Found.",
                     assigned_role: assignedRole,
                     bucketId: employee.bucket!.id,
-                    mime_type: mime_type,
+                    mime_type: document.mime_type ?? "text/plain",
                     expiration_date: expirationDate.toISOString(),
                     document_status: documentStatus,
                     document_type: document.document_type ?? "Reference"
@@ -113,6 +134,19 @@ supaBaseRouter.post(
                 }
             })
 
+            await prisma.calendarEvents.create({
+                data: {
+                    title: documentContents.name,
+                    start_date: documentContents.expiration_date,
+                    end_date: new Date(documentContents.expiration_date.getTime() + 1000 * 60 * 60),
+                    all_day: false,
+                    emp_id: null,
+                    lock: "none",
+                    doc_id: documentContents.id
+                }
+            })
+
+            res.sendStatus(200)
     } catch (error)
     {
         res.status(401).json(`{"message":"Error creating document in bucket: ${error}"}`)
@@ -216,6 +250,21 @@ supaBaseRouter.put(
                     document_type: document.document_type ?? "Reference"
                 }
             })
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: document.id
+                }
+            })
+            await prisma.calendarEvents.update({
+                where: {
+                    id: event.id
+                },
+                data: {
+                    title: newDoc.name,
+                    start_date: newDoc.expiration_date,
+                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60)
+                }
+            })
 
             console.log("New doc created: ", newDoc);
 
@@ -260,11 +309,21 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        const ownerIds = [...new Set(documents.map((doc: documentContent) => doc.content_owner))];
+        // ✅ collect BOTH content_owner and lock IDs
+        const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
+        const lockIds = documents
+            .map((doc: documentContent) => doc.lock)
+            .filter((id) => id && id !== "none");
+
+        const allEmployeeIds = [
+            ...new Set([...ownerIds, ...lockIds])
+        ];
+
+        // ✅ fetch all relevant employees
         const employees = await prisma.employee.findMany({
             where: {
-                id: { in: ownerIds as string[] },
+                id: { in: allEmployeeIds as string[] },
             },
             select: {
                 id: true,
@@ -273,6 +332,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
+        // ✅ build lookup map
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
@@ -280,14 +340,23 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             ])
         );
 
+        // ✅ format documents (add lock_name)
         const formattedDocs = documents.map((doc) => ({
             ...doc,
-            content_owner: employeeMap.get(doc.content_owner as string) || "Unknown",
+            content_owner:
+                employeeMap.get(doc.content_owner as string) || "Unknown",
+
+            lock_name:
+                doc.lock === "none"
+                    ? "Unlocked"
+                    : employeeMap.get(doc.lock as string) || "Unknown",
+
+            // keep favorite flag consistent
+            favorite: favoriteSet.has(doc.id),
         }));
 
-        //sort so favorites appear first
+        // sort so favorites appear first
         const sortedDocs = formattedDocs.sort((a, b) => {
-            // favorites first
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;
         });

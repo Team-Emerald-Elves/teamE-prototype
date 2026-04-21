@@ -17,6 +17,7 @@ import StatisticsPage from "./pages/statisticsPage.tsx";
 
 import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
+import CalendarPage from "@/pages/calendar.tsx";
 
 function App() {
     // const [roles, setRoles] = useState<string[]>([]);
@@ -83,6 +84,7 @@ function App() {
                                 <Route path="*" element={<NotFound />} />
                                 <Route path="/favorites" element={<FavoritesPage />} />
                                 <Route path="/statistics" element={<StatisticsPage />} />
+                                <Route path="/calendar" element={<CalendarPage />} />
                             </Routes>
                         </main>
                     </div>

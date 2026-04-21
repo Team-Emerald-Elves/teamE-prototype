@@ -39,6 +39,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0 min-w-[250px]"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Title
@@ -52,7 +53,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
                             {doc.name}
                         </button>
                     </DialogTrigger>
@@ -78,6 +79,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Expiration Date
@@ -90,9 +92,7 @@ export const columns: ColumnDef<Document>[] = [
             const date = new Date(doc.expiration_date);
 
             return (
-                <TableCell>
-                    <p>{date.toLocaleString()}</p>
-                </TableCell>
+                <p>{date.toLocaleString()}</p>
             );
         },
     },
@@ -103,6 +103,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Status
@@ -117,6 +118,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Content Owner
@@ -131,6 +133,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Last Modified
@@ -143,9 +146,7 @@ export const columns: ColumnDef<Document>[] = [
             const date = new Date(doc.last_modified);
 
             return (
-                <TableCell>
-                    <p>{date.toLocaleString()}</p>
-                </TableCell>
+                <p>{date.toLocaleString()}</p>
             );
         },
     },
@@ -155,6 +156,7 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <Button
                     variant="ghost"
+                    className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Tags
@@ -169,11 +171,11 @@ export const columns: ColumnDef<Document>[] = [
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
 
             return (
-                <TableCell>
+                <div className="flex flex-wrap gap-1">
                     <DocTag>{type.toLocaleString()}</DocTag>
                     <DocTag>{roles}</DocTag>
                     <DocTag>{status}</DocTag>
-                </TableCell>
+                </div>
             );
         },
     }

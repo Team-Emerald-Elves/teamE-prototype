@@ -410,10 +410,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
+                                        <TableHead className=" text-[#0b4461] text-left px-5"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                <TableHead className=" text-[#0b4461] text-left px-5" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -423,7 +423,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461]">Actions</TableHead>
+                                        <TableHead className="text-[#0b4461] px-5 text-right">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -440,7 +440,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             />
 
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
@@ -758,13 +758,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                             ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">
+                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-left">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
+                                        <TableHead className=" text-[#0b4461] text-left px-5"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                <TableHead className=" text-[#0b4461] text-left px-5" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -774,7 +774,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461]">Actions</TableHead>
+                                        <TableHead className="text-[#0b4461] px-5 text-right pr-30">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -793,29 +793,30 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 onToggleOff={(doc) => toggleFavorite(doc, true)}
                                             />
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
                                             {doc.lock === "none" ? (
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        <TableCell>
-                                                            <a
-                                                                href={doc.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="hover:underline"
-                                                            >
-                                                                <HugeiconsIcon icon={Download01Icon}/>
-                                                            </a>
-                                                            <Button variant="outline" size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                                    onClick={async () => {
-                                                                        const token = await getToken();
-                                                                        await setDocumentLock(token, doc.id, true)
-                                                                    }}><Lock/></Button>
-                                                        </TableCell>
+                                                <TableCell>
+                                                    {/*padding right is weird*/}
+                                                    <div className="flex items-center justify-end gap-2 pr-22.5">
+                                                    <a
+                                                        href={doc.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="hover:underline"
+                                                    >
+                                                        <HugeiconsIcon icon={Download01Icon}/>
+                                                    </a>
+                                                    <Button variant="outline" size="icon"
+                                                            className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                            onClick={async () => {
+                                                                const token = await getToken();
+                                                                await setDocumentLock(token, doc.id, true)
+                                                            }}><Lock/></Button>
                                                     </div>
+                                                </TableCell>
                                                 ) :
                                                 doc.lock === empID ? (
                                                     <TableCell>

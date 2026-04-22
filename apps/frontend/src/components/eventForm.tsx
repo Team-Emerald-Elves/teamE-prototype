@@ -19,6 +19,7 @@ type EventFormProps = {
     setOpen: (open: boolean) => void;
     selectedEvent: any;
     setSelectedEvent: (event: any) => void;
+    setReload: (reload: any) => void;
 };
 
 type AddEventRequest = {
@@ -32,7 +33,7 @@ type EditEventRequest = AddEventRequest & {
     id: number;
 };
 
-export default function EventForm({ open, setOpen, selectedEvent, setSelectedEvent }: EventFormProps) {
+export default function EventForm({ open, setOpen, selectedEvent, setSelectedEvent, setReload }: EventFormProps) {
     const [startDate, setStartDate] = useState(() => new Date());
     const [allDay, setAllDay] = useState(false);
     const [title, setTitle] = useState("");
@@ -83,8 +84,50 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
             return;
         }
 
+
         setOpen(false);
         setSelectedEvent(null);
+        setReload(prev => !prev);
+
+    }
+
+    async function deleteEvent() {
+        if (!selectedEvent?.id) {
+            console.error("No event selected for deletion");
+            return;
+        }
+
+        try {
+            const token = await getToken();
+
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/delete-event`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        id: selectedEvent.id,
+                    }),
+                }
+            );
+
+            if (!res.ok) {
+                console.error("Failed to delete event");
+                return;
+            }
+
+            // reset UI state
+
+            setOpen(false);
+            setSelectedEvent(null);
+            setReload(prev => !prev);
+
+        } catch (err) {
+            console.error("Delete error:", err);
+        }
     }
 
     useEffect(() => {
@@ -179,6 +222,9 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
                         />
                     </Field>
                     <Button type="submit" >{selectedEvent ? "Save Changes" : "Add"}</Button>
+                    {selectedEvent && (
+                        <Button onClick={async () => { await deleteEvent() }}>Delete</Button>
+                    )}
                 </form>
             </DialogContent>
         </Dialog>

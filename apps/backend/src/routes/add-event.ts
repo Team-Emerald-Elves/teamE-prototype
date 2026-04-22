@@ -39,6 +39,7 @@ async function addEventRoute(req: express.Request, res: express.Response) {
                 all_day: all_day ?? false,
                 emp_id: employee_id,
                 lock: employee_id,
+                color: "#3b82f6",
             },
         });
 

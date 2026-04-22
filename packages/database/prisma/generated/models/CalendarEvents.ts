@@ -45,6 +45,7 @@ export type CalendarEventsMinAggregateOutputType = {
   emp_id: string | null
   lock: string | null
   doc_id: number | null
+  color: string | null
 }
 
 export type CalendarEventsMaxAggregateOutputType = {
@@ -56,6 +57,7 @@ export type CalendarEventsMaxAggregateOutputType = {
   emp_id: string | null
   lock: string | null
   doc_id: number | null
+  color: string | null
 }
 
 export type CalendarEventsCountAggregateOutputType = {
@@ -67,6 +69,7 @@ export type CalendarEventsCountAggregateOutputType = {
   emp_id: number
   lock: number
   doc_id: number
+  color: number
   _all: number
 }
 
@@ -90,6 +93,7 @@ export type CalendarEventsMinAggregateInputType = {
   emp_id?: true
   lock?: true
   doc_id?: true
+  color?: true
 }
 
 export type CalendarEventsMaxAggregateInputType = {
@@ -101,6 +105,7 @@ export type CalendarEventsMaxAggregateInputType = {
   emp_id?: true
   lock?: true
   doc_id?: true
+  color?: true
 }
 
 export type CalendarEventsCountAggregateInputType = {
@@ -112,6 +117,7 @@ export type CalendarEventsCountAggregateInputType = {
   emp_id?: true
   lock?: true
   doc_id?: true
+  color?: true
   _all?: true
 }
 
@@ -210,6 +216,7 @@ export type CalendarEventsGroupByOutputType = {
   emp_id: string | null
   lock: string | null
   doc_id: number | null
+  color: string | null
   _count: CalendarEventsCountAggregateOutputType | null
   _avg: CalendarEventsAvgAggregateOutputType | null
   _sum: CalendarEventsSumAggregateOutputType | null
@@ -244,6 +251,7 @@ export type CalendarEventsWhereInput = {
   emp_id?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
   lock?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
   doc_id?: Prisma.IntNullableFilter<"CalendarEvents"> | number | null
+  color?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
 }
 
 export type CalendarEventsOrderByWithRelationInput = {
@@ -255,6 +263,7 @@ export type CalendarEventsOrderByWithRelationInput = {
   emp_id?: Prisma.SortOrderInput | Prisma.SortOrder
   lock?: Prisma.SortOrderInput | Prisma.SortOrder
   doc_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type CalendarEventsWhereUniqueInput = Prisma.AtLeast<{
@@ -269,6 +278,7 @@ export type CalendarEventsWhereUniqueInput = Prisma.AtLeast<{
   emp_id?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
   lock?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
   doc_id?: Prisma.IntNullableFilter<"CalendarEvents"> | number | null
+  color?: Prisma.StringNullableFilter<"CalendarEvents"> | string | null
 }, "id">
 
 export type CalendarEventsOrderByWithAggregationInput = {
@@ -280,6 +290,7 @@ export type CalendarEventsOrderByWithAggregationInput = {
   emp_id?: Prisma.SortOrderInput | Prisma.SortOrder
   lock?: Prisma.SortOrderInput | Prisma.SortOrder
   doc_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CalendarEventsCountOrderByAggregateInput
   _avg?: Prisma.CalendarEventsAvgOrderByAggregateInput
   _max?: Prisma.CalendarEventsMaxOrderByAggregateInput
@@ -299,6 +310,7 @@ export type CalendarEventsScalarWhereWithAggregatesInput = {
   emp_id?: Prisma.StringNullableWithAggregatesFilter<"CalendarEvents"> | string | null
   lock?: Prisma.StringNullableWithAggregatesFilter<"CalendarEvents"> | string | null
   doc_id?: Prisma.IntNullableWithAggregatesFilter<"CalendarEvents"> | number | null
+  color?: Prisma.StringNullableWithAggregatesFilter<"CalendarEvents"> | string | null
 }
 
 export type CalendarEventsCreateInput = {
@@ -309,6 +321,7 @@ export type CalendarEventsCreateInput = {
   emp_id?: string | null
   lock?: string | null
   doc_id?: number | null
+  color?: string | null
 }
 
 export type CalendarEventsUncheckedCreateInput = {
@@ -320,6 +333,7 @@ export type CalendarEventsUncheckedCreateInput = {
   emp_id?: string | null
   lock?: string | null
   doc_id?: number | null
+  color?: string | null
 }
 
 export type CalendarEventsUpdateInput = {
@@ -330,6 +344,7 @@ export type CalendarEventsUpdateInput = {
   emp_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doc_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CalendarEventsUncheckedUpdateInput = {
@@ -341,6 +356,7 @@ export type CalendarEventsUncheckedUpdateInput = {
   emp_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doc_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CalendarEventsCreateManyInput = {
@@ -352,6 +368,7 @@ export type CalendarEventsCreateManyInput = {
   emp_id?: string | null
   lock?: string | null
   doc_id?: number | null
+  color?: string | null
 }
 
 export type CalendarEventsUpdateManyMutationInput = {
@@ -362,6 +379,7 @@ export type CalendarEventsUpdateManyMutationInput = {
   emp_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doc_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CalendarEventsUncheckedUpdateManyInput = {
@@ -373,6 +391,7 @@ export type CalendarEventsUncheckedUpdateManyInput = {
   emp_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doc_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CalendarEventsCountOrderByAggregateInput = {
@@ -384,6 +403,7 @@ export type CalendarEventsCountOrderByAggregateInput = {
   emp_id?: Prisma.SortOrder
   lock?: Prisma.SortOrder
   doc_id?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type CalendarEventsAvgOrderByAggregateInput = {
@@ -400,6 +420,7 @@ export type CalendarEventsMaxOrderByAggregateInput = {
   emp_id?: Prisma.SortOrder
   lock?: Prisma.SortOrder
   doc_id?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type CalendarEventsMinOrderByAggregateInput = {
@@ -411,6 +432,7 @@ export type CalendarEventsMinOrderByAggregateInput = {
   emp_id?: Prisma.SortOrder
   lock?: Prisma.SortOrder
   doc_id?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type CalendarEventsSumOrderByAggregateInput = {
@@ -437,6 +459,7 @@ export type CalendarEventsSelect<ExtArgs extends runtime.Types.Extensions.Intern
   emp_id?: boolean
   lock?: boolean
   doc_id?: boolean
+  color?: boolean
 }, ExtArgs["result"]["calendarEvents"]>
 
 export type CalendarEventsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -448,6 +471,7 @@ export type CalendarEventsSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   emp_id?: boolean
   lock?: boolean
   doc_id?: boolean
+  color?: boolean
 }, ExtArgs["result"]["calendarEvents"]>
 
 export type CalendarEventsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -459,6 +483,7 @@ export type CalendarEventsSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   emp_id?: boolean
   lock?: boolean
   doc_id?: boolean
+  color?: boolean
 }, ExtArgs["result"]["calendarEvents"]>
 
 export type CalendarEventsSelectScalar = {
@@ -470,9 +495,10 @@ export type CalendarEventsSelectScalar = {
   emp_id?: boolean
   lock?: boolean
   doc_id?: boolean
+  color?: boolean
 }
 
-export type CalendarEventsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "start_date" | "end_date" | "all_day" | "emp_id" | "lock" | "doc_id", ExtArgs["result"]["calendarEvents"]>
+export type CalendarEventsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "start_date" | "end_date" | "all_day" | "emp_id" | "lock" | "doc_id" | "color", ExtArgs["result"]["calendarEvents"]>
 
 export type $CalendarEventsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CalendarEvents"
@@ -486,6 +512,7 @@ export type $CalendarEventsPayload<ExtArgs extends runtime.Types.Extensions.Inte
     emp_id: string | null
     lock: string | null
     doc_id: number | null
+    color: string | null
   }, ExtArgs["result"]["calendarEvents"]>
   composites: {}
 }
@@ -917,6 +944,7 @@ export interface CalendarEventsFieldRefs {
   readonly emp_id: Prisma.FieldRef<"CalendarEvents", 'String'>
   readonly lock: Prisma.FieldRef<"CalendarEvents", 'String'>
   readonly doc_id: Prisma.FieldRef<"CalendarEvents", 'Int'>
+  readonly color: Prisma.FieldRef<"CalendarEvents", 'String'>
 }
     
 

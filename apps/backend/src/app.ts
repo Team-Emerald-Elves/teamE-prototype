@@ -33,6 +33,7 @@ import eventsRoute from "./routes/get-events.ts";
 import addEventRoute from "./routes/add-event.ts";
 import updateEventRoute from "./routes/update-event.ts";
 import CheckoutLinks from "./routes/checkin-checkout-links.ts";
+import deleteEventRoute from "./routes/delete-event.ts";
 
 
 const app = express();
@@ -88,6 +89,7 @@ app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
 app.post('/edit-employee', validate(EditEmployeeModel), editEmployeeRoute);
 app.post('/add-event', addEventRoute);
 app.post('/update-event', updateEventRoute);
+app.delete('/delete-event', deleteEventRoute);
 
 app.post('/create-srvreq', validate(CreateServiceReqModel), createServiceReqRoute);
 

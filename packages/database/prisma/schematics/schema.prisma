@@ -74,6 +74,7 @@ model CalendarEvents {
   emp_id    String?
   lock      String?    @default("none")
   doc_id    Int?      @default(-1)
+  color     String?
 }
 
 enum Roles {

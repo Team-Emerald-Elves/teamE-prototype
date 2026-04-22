@@ -14,7 +14,7 @@ interface EmployeeRequest{
     employeeData: Partial<Employee> | undefined;
 }
 
-employeeRoute.get('/', validate(ListEmployeesModel), (req: express.Request, res: express.Response)=> {
+employeeRoute.get('/', (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
     if (!action || action === 'list') {

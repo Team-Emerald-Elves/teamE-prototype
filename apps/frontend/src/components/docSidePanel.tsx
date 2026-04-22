@@ -2,16 +2,21 @@ import {type ReactElement, useEffect, useState} from "react";
 import {Button} from "@/components/ui/button.tsx";
 import {type Document} from "@/components/docCols.tsx"
 import DocTag from "@/components/doctag.tsx"
+import FavoriteStar from "@/components/favoriteStar.tsx";
+import ContentForm from "@/components/contentForm.tsx";
+import CenterDiv from "@/components/center-div.tsx";
 
 type DocSidePanelProps = {
     className?: string;
-    doc?: Partial<Document>
+    doc?: Document
 }
 
 function DocSidePanel(props: DocSidePanelProps): ReactElement {
     const [tagList, setTagList] = useState<string[]>([]);
     const [allowSave, setAllowSave] = useState(false);
-    const [currDoc, setCurrDoc] = useState<Partial<Document>>({})
+    const [currDoc, setCurrDoc] = useState<Document>({
+        ...props.doc!
+    });
 
     useEffect(() => {
         if (props.doc) {
@@ -61,8 +66,34 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                         </div>
                     </>
                 ) : ""}
-                <FavoriteStar></FavoriteStar>
-                <Button disabled={!allowSave}>Save</Button>
+                <div className="float-left">
+                    <ContentForm
+                        type="Edit"
+                        currentID={currDoc.id}
+                        currentName={currDoc.name}
+                        currentURL={currDoc.url}
+                        currentContentOwner={currDoc.content_owner}
+                        currentRole={currDoc.assigned_role}
+                        currentExpirationDate={currDoc.expiration_date}
+                        currentExpirationTime={currDoc.expiration_date}
+                        currentStatus={currDoc.document_status}
+                        size={false}
+                        lock={currDoc.lock_name}
+                    />
+                </div>
+                <FavoriteStar doc={currDoc}
+                              onToggleOn={() => {
+                                  setCurrDoc((prev) => ({...prev, favorite: true}))
+                              }}
+                              onToggleOff={() => {
+                                  setCurrDoc((prev) => ({...prev, favorite: false}))
+                              }}
+                              className="float-right"
+                />
+                <br/>
+                <CenterDiv>
+                    <Button disabled={!allowSave}>Save</Button>
+                </CenterDiv>
             </div>
         </>
     )

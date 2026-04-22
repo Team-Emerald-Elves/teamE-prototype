@@ -226,11 +226,9 @@ export function DocumentsTable<TData extends Document, TValue>({
 
         if (checked) {
             setFilters((filter) => [...filter, option])
-            console.log(filters)
         }
         else {
             setFilters((filter) => filter.filter((item) => item.id !== option.id));
-            console.log(filters)
         }
         setDocFilters(dcFilters =>
             dcFilters.map(filter =>
@@ -897,11 +895,6 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         ((roles.includes("actuarialanalyst") && doc.assigned_role === "ActuarialAnalyst")) ||
                                         ((roles.includes("exceloperator") && doc.assigned_role === "ExcelOperator")) ||
                                         ((roles.includes("businessoperator") && doc.assigned_role === "BusinessOperator"))
-                                    console.log("User role: " , roles)
-                                    console.log("Doc Role: " ,doc.assigned_role)
-                                    console.log("Lock status" , doc.lock)
-                                    console.log("Can edit: " , canEdit)
-                                    console.log("This emploee ID" , empID)
 
                                     return (
                                         (doc.lock === "none" || doc.lock === empID) ? (
@@ -945,7 +938,6 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         onClick={async () => {
                                                                             const token = await getToken();
                                                                             await setDocumentLock(token, doc.id, true)
-                                                                            console.log("Lock Changed", doc.lock)
                                                                         }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>

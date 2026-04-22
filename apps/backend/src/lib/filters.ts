@@ -5,17 +5,17 @@ export const buildWhereClause = (filters: any, additional: any) => {
      if (Object.entries(additional).length > 0) {
         whereClause.AND.push(additional);
     }
-        for (const [key, value] of Object.entries(filters)) {
-            if (value) {
-                const tempJSON: any = {OR: []};
-                for (const v of Object.entries(value)) {
-                    const pushObject: any = {}
-                    pushObject[key] = {contains: v[1]};
-                    tempJSON.OR.push(pushObject)
-                }
-                whereClause.AND.push(tempJSON)
+    for (const [key, value] of Object.entries(filters)) {
+        if (value) {
+            const tempJSON: any = {key: {hasSome: []}};
+            for (const v of Object.entries(value)) {
+                const pushObject: any = {}
+                pushObject[key] = v[1];
+                tempJSON[key].hasSome.push(pushObject)
             }
+            whereClause.AND.push(tempJSON)
         }
+    }
 
     return whereClause;
 };

@@ -7,7 +7,7 @@ type DocTagProps = {
 function DocTag(props: DocTagProps) {
     return (
         <>
-            <div className = "text-[10px] bg-gray-100 rounded px-1.5 py-0.5 whitespace-nowrap">
+            <div className="max-w-[130px] text-[10px] bg-gray-100 rounded px-1.5 py-0.5 whitespace-normal break-words">
                 {props.children}
             </div>
         </>

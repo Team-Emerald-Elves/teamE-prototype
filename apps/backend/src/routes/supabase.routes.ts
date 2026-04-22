@@ -192,7 +192,7 @@ supaBaseRouter.delete(
 
         const event = await prisma.calendarEvents.findFirstOrThrow({
             where: {
-                doc_id: document.id
+                doc_id: id
             }
         })
 

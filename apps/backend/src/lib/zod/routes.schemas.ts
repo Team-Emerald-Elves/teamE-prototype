@@ -96,15 +96,12 @@ export const EditEmployeeModel = z.object({
 
 //employee.ts //to test
 export const ListEmployeesModel = z.object({
-    body: ({
         action: z.string().optional(),
         id: z.string().optional(),
         uname: z.string().optional(),
         first_name: z.string().optional(),
         last_name: z.string().optional(),
         email: z.string().optional(),
-        })
-
 })
 
 export const EmployeeRequestModel = z.object({

@@ -10,7 +10,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
                 const tempJSON: any = {OR: []};
                 for (const v of Object.entries(value)) {
                     const pushObject: any = {}
-                    pushObject[key] = {contains: v[1]};
+                    pushObject[key] = v[1];
                     tempJSON.OR.push(pushObject)
                 }
                 whereClause.AND.push(tempJSON)
@@ -32,14 +32,14 @@ export const buildWhereClausesEmployee = (filters: any, additional: any) => {
             if (key == "roles" && filters.roles.length > 0) {
                 const tempJSON: any = {roles: {hasSome: []}}
                 for (const v of Object.entries(filters)) {
-                    tempJSON.hasSome.push(v[1])
+                    tempJSON.roles.hasSome.push(<string>v[1])
                 }
                 whereClause.AND.push(tempJSON)
             } else {
                 const tempJSON: any = {OR: []};
                 for (const v of Object.entries(value)) {
                     const pushObject: any = {}
-                    pushObject[key] = {contains: v[1]};
+                    pushObject[key] = v[1];
                     tempJSON.OR.push(pushObject)
                 }
                 whereClause.AND.push(tempJSON)

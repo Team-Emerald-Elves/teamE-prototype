@@ -8,6 +8,7 @@ type DocViewerProps ={
 }
 
 export default function DocumentViewer(props: DocViewerProps) {
+    console.log(props.doc.url)
     const docs = [
         { uri: props.doc.url },
     ];

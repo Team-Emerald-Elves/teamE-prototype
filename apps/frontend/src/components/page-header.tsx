@@ -1,6 +1,6 @@
 type PageHeaderProps = {
     title: string;
-    description: string;
+    description?: string;
 }
 
 function PageHeader({ title, description }: PageHeaderProps) {
@@ -15,4 +15,4 @@ function PageHeader({ title, description }: PageHeaderProps) {
     )
 }
 
-export default PageHeader
+export default PageHeader;

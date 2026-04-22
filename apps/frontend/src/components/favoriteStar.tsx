@@ -31,9 +31,10 @@ type FavoriteStarProps = {
     doc: Document | Links;
     onToggleOn: (doc: Document | Links) => void;
     onToggleOff: (doc: Document | Links) => void;
+    className?: string
 };
 
-export default function FavoriteStar({ doc, onToggleOff, onToggleOn }: FavoriteStarProps) {
+export default function FavoriteStar({ doc, onToggleOff, onToggleOn, className }: FavoriteStarProps) {
     const [favorite, setFavorite] = useState(doc.favorite);
 
     return (
@@ -50,7 +51,7 @@ export default function FavoriteStar({ doc, onToggleOff, onToggleOn }: FavoriteS
 
                     setFavorite(!favorite)
                 }}
-                className="text-yellow-400 cursor-pointer"
+                className={"text-yellow-400 cursor-pointer " + (className ? className : "")}
             />
         </TableCell>
     );

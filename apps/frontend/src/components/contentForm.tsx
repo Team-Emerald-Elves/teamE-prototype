@@ -35,7 +35,7 @@ type contentFormProps = {
     currentURL: string,
     currentContentOwner: string,
     currentRole: string,
-    currentExpirationDate: string,
+    currentExpirationDate: Date,
     currentExpirationTime: string,
     currentStatus: string,
     currentID: number,
@@ -132,7 +132,7 @@ function ContentForm(props: contentFormProps) {
         contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
         role: props.currentRole ?? "",
         document_type: "",
-        expirationDate: undefined,
+        expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
         document_status: props.currentStatus ?? "",
         id: props.currentID,
@@ -307,6 +307,12 @@ function ContentForm(props: contentFormProps) {
                                 id="expiration"
                                 date={formData.expirationDate}
                                 time={formData.expirationTime}
+                                setDate={(date) =>
+                                    setFormData(prev => ({ ...prev, expirationDate: date }))
+                                }
+                                setTime={(time) =>
+                                    setFormData(prev => ({ ...prev, expirationTime: time }))
+                                }
                             />
                         </Field>
                         <Field>

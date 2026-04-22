@@ -388,7 +388,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;
         });
-        const keyToMatch: string = "UnderWriter"
+        const keyToMatch: string = employee.roles[0] as string;
 
         sortedDocs.sort((a,b) => {
             if (a.assigned_role === b.assigned_role) return 0

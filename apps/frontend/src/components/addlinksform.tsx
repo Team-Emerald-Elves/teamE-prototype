@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from './ui/button.tsx'
 import {
     Dialog,
@@ -13,7 +11,8 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useEffect, useState } from "react"
+import {useCallback, useEffect, useState} from "react";
+import {useLinks} from "../pages/links.tsx"
 import { useAuth } from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
@@ -51,6 +50,7 @@ type linkProp = {
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator"];
 
 async function updateLinks(body: editlinksRequest) {
+    console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: 'POST',
         headers: {
@@ -80,6 +80,8 @@ function AddLinksForm(props: linkProp) {
         owner: props.owner,
     });
 
+    const [me, setMe] = useState(null);
+    const reload = useLinks()
     useEffect(() => {
         if (!isSignedIn) return;
 
@@ -212,48 +214,34 @@ function AddLinksForm(props: linkProp) {
                     </FieldGroup>
 
                     <DialogFooter>
-                        <DialogClose
-                            render={
-                                <Button variant="outline" size="lg">
-                                    Cancel
-                                </Button>
-                            }
-                        />
+                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <DialogClose render={
+                            <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
+                                const finalRole =
+                                    isAdmin
+                                        ? selectedRole
+                                        : roles[0];
+                                const bodyData: editlinksRequest = {
+                                    action: "create",
+                                    linkData: {
+                                        id: props.id!,
+                                        link_name: link.link_name,
+                                        url: link.url,
+                                        owner: finalRole,
+                                    }
 
-                        <DialogClose
-                            render={
-                                <Button
-                                    type="submit"
-                                    className="bg-secondary text-secondary-foreground"
-                                    size="lg"
-                                    onClick={async () => {
-                                        const finalRole =
-                                            isAdmin
-                                                ? selectedRole
-                                                : roles[0];
-
-                                        const bodyData: editlinksRequest = {
-                                            action: "create",
-                                            linkData: {
-                                                id: props.id!,
-                                                link_name: link.link_name,
-                                                url: link.url,
-                                                owner: finalRole,
-                                            }
-                                        };
-
-                                        try {
-                                            await updateLinks(bodyData);
-                                            console.log("link updated successfully");
-                                        } catch (err) {
-                                            console.error(err);
-                                        }
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            }
-                        />
+                                };
+                                try {
+                                    await updateLinks(bodyData);
+                                    console.log("link updated successfully");
+                                } catch (err) {
+                                    console.error(err);
+                                    console.log("Failed to update links");
+                                }
+                                ;reload()}}
+                            >
+                                Submit
+                            </Button> }/>
                     </DialogFooter>
                 </DialogContent>
             </form>

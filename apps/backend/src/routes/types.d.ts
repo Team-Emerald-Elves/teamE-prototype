@@ -7,4 +7,5 @@ export { Roles,
 export type IDocumentContent = DocumentContent & {
   documentID: number
   filePayload?: string
+  fileName?: string
 }

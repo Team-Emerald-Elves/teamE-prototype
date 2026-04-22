@@ -24,7 +24,10 @@ type SubmitConfirmationPopupProps = {
     expirationTime: string
     document_status: string
     filePayload?: string
+    fileName?: string
   }
+  refresh?: () => void
+  open: (arg:boolean) => void
 }
 
 export type IFile = {
@@ -37,7 +40,8 @@ export type IFile = {
   assigned_role: string
   document_type: string
   document_status: string
-  filePayload: string
+  filePayload?: string
+  fileName?: string
 }
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
@@ -79,7 +83,6 @@ function buildExpirationDate(
 }
 
 async function createDocument(fileData: SubmitConfirmationPopupProps, token: string) {
-  console.log("TOKEN SENT:", token)
 
   const data: IFile = {
     id: fileData.formData.id,
@@ -93,7 +96,8 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     document_type: fileData.formData.document_type,
     document_status: fileData.formData.document_status,
     assigned_role: fileData.formData.role,
-    filePayload: fileData.formData.filePayload!,
+    filePayload: fileData.formData.filePayload,
+    fileName: fileData.formData.fileName
   }
 
   const endpoint =
@@ -113,6 +117,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
 
   if (!response.ok) {
     const errorText = await response.text()
+      console.error(errorText)
     throw new Error(errorText || "Network response was not ok")
   }
 
@@ -122,15 +127,15 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
 
     const [sessionToken, setSessionToken] = useState("")
-
+    const [open, setOpen] = useState(false)
     useEffect(() => {
         getToken().then(t => setSessionToken(t ?? ""))
     }, [])
 
 
     return (
-        <Dialog>
-            <DialogTrigger >
+        <Dialog open={open} onClose={() => {setOpen(false)}} onOpenChange={setOpen}>
+            <DialogTrigger>
                 <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
@@ -139,10 +144,18 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose >
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {createDocument(info, sessionToken)}}>Confirm</Button>
+                        <Button type="button" onClick={() => {
+                            try{
+                                createDocument(info, sessionToken);console.log("submitted sucsessfully!");
+                                info.open(false);
+                                console.log("closed ready for refresh");
+                                info.refresh?.();}
+                        catch (error) {
+                                console.error("broke at",error)
+                        }}}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

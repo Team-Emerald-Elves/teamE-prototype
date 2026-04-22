@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from './ui/button.tsx'
 import {
     Dialog,
@@ -13,6 +11,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {useLinks} from "../pages/links.tsx"
 import { useEffect, useState } from "react"
 import { useAuth } from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -49,6 +48,7 @@ type linkProp = {
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator"];
 
 async function updateLinks(body: editlinksRequest) {
+    console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: 'POST',
         headers: {
@@ -76,6 +76,7 @@ function EditLinksForm(props: linkProp) {
         link_name: props.name,
         url: props.url,
     });
+   const reloadLinks = useLinks();
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -244,6 +245,7 @@ function EditLinksForm(props: linkProp) {
                                         } catch (err) {
                                             console.error(err);
                                         }
+                                        reloadLinks()
                                     }}
                                 >
                                     Submit

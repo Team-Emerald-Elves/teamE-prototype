@@ -38,9 +38,12 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
                 last_name: clerkUser.lastName ?? "lastname",
                 roles: [ "UnderWriter" ],
                 bucket: {
-                    create: {}
+                    create: {
+                        public: true, // Resources avaliable to public.
+                        file_size_limit: 52428800 // 50MB
+                    }
                 },
-                email: clerkUser.primaryEmailAddress?.emailAddress ?? "email"
+                email: clerkUser.primaryEmailAddress?.emailAddress ?? "example@email.com"
             }
         })
 
@@ -129,7 +132,6 @@ async function updateLock(req: Request, res: Response) {
 
         return res.status(200).json({ id, status })
     } catch (error) {
-        console.error("updateLock error:", error)
         return res.status(500).json({ message: "Failed to update lock" })
     }
 }

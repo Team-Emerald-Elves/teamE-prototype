@@ -12,6 +12,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import type { Links } from './types/linkstable.d.ts'
 import {useLinks} from "../pages/links.tsx"
+
 type Links = {
     id: string;
     link_name: string;
@@ -80,7 +81,8 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
         linkData: props.link
     }
 
-    const reload =  useLinks();
+
+
     return (
         <Dialog>
             <DialogTrigger >
@@ -97,7 +99,7 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {removeLink(bodyData); reload()}}>Confirm</Button>
+                        <Button type="submit" onClick={() => {removeLink(bodyData); }}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

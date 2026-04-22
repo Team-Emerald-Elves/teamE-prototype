@@ -139,7 +139,8 @@ export const LinksScalarFieldEnum = {
   id: 'id',
   link_name: 'link_name',
   url: 'url',
-  owner: 'owner'
+  owner: 'owner',
+  lock: 'lock'
 } as const
 
 export type LinksScalarFieldEnum = (typeof LinksScalarFieldEnum)[keyof typeof LinksScalarFieldEnum]

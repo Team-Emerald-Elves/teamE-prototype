@@ -29,6 +29,7 @@ export type LinksMinAggregateOutputType = {
   link_name: string | null
   url: string | null
   owner: string | null
+  lock: string | null
 }
 
 export type LinksMaxAggregateOutputType = {
@@ -36,6 +37,7 @@ export type LinksMaxAggregateOutputType = {
   link_name: string | null
   url: string | null
   owner: string | null
+  lock: string | null
 }
 
 export type LinksCountAggregateOutputType = {
@@ -43,6 +45,7 @@ export type LinksCountAggregateOutputType = {
   link_name: number
   url: number
   owner: number
+  lock: number
   _all: number
 }
 
@@ -52,6 +55,7 @@ export type LinksMinAggregateInputType = {
   link_name?: true
   url?: true
   owner?: true
+  lock?: true
 }
 
 export type LinksMaxAggregateInputType = {
@@ -59,6 +63,7 @@ export type LinksMaxAggregateInputType = {
   link_name?: true
   url?: true
   owner?: true
+  lock?: true
 }
 
 export type LinksCountAggregateInputType = {
@@ -66,6 +71,7 @@ export type LinksCountAggregateInputType = {
   link_name?: true
   url?: true
   owner?: true
+  lock?: true
   _all?: true
 }
 
@@ -146,6 +152,7 @@ export type LinksGroupByOutputType = {
   link_name: string
   url: string
   owner: string | null
+  lock: string | null
   _count: LinksCountAggregateOutputType | null
   _min: LinksMinAggregateOutputType | null
   _max: LinksMaxAggregateOutputType | null
@@ -174,6 +181,7 @@ export type LinksWhereInput = {
   link_name?: Prisma.StringFilter<"Links"> | string
   url?: Prisma.StringFilter<"Links"> | string
   owner?: Prisma.StringNullableFilter<"Links"> | string | null
+  lock?: Prisma.StringNullableFilter<"Links"> | string | null
 }
 
 export type LinksOrderByWithRelationInput = {
@@ -181,6 +189,7 @@ export type LinksOrderByWithRelationInput = {
   link_name?: Prisma.SortOrder
   url?: Prisma.SortOrder
   owner?: Prisma.SortOrderInput | Prisma.SortOrder
+  lock?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type LinksWhereUniqueInput = Prisma.AtLeast<{
@@ -191,6 +200,7 @@ export type LinksWhereUniqueInput = Prisma.AtLeast<{
   link_name?: Prisma.StringFilter<"Links"> | string
   url?: Prisma.StringFilter<"Links"> | string
   owner?: Prisma.StringNullableFilter<"Links"> | string | null
+  lock?: Prisma.StringNullableFilter<"Links"> | string | null
 }, "id">
 
 export type LinksOrderByWithAggregationInput = {
@@ -198,6 +208,7 @@ export type LinksOrderByWithAggregationInput = {
   link_name?: Prisma.SortOrder
   url?: Prisma.SortOrder
   owner?: Prisma.SortOrderInput | Prisma.SortOrder
+  lock?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LinksCountOrderByAggregateInput
   _max?: Prisma.LinksMaxOrderByAggregateInput
   _min?: Prisma.LinksMinOrderByAggregateInput
@@ -211,6 +222,7 @@ export type LinksScalarWhereWithAggregatesInput = {
   link_name?: Prisma.StringWithAggregatesFilter<"Links"> | string
   url?: Prisma.StringWithAggregatesFilter<"Links"> | string
   owner?: Prisma.StringNullableWithAggregatesFilter<"Links"> | string | null
+  lock?: Prisma.StringNullableWithAggregatesFilter<"Links"> | string | null
 }
 
 export type LinksCreateInput = {
@@ -218,6 +230,7 @@ export type LinksCreateInput = {
   link_name: string
   url: string
   owner?: string | null
+  lock?: string | null
 }
 
 export type LinksUncheckedCreateInput = {
@@ -225,6 +238,7 @@ export type LinksUncheckedCreateInput = {
   link_name: string
   url: string
   owner?: string | null
+  lock?: string | null
 }
 
 export type LinksUpdateInput = {
@@ -232,6 +246,7 @@ export type LinksUpdateInput = {
   link_name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LinksUncheckedUpdateInput = {
@@ -239,6 +254,7 @@ export type LinksUncheckedUpdateInput = {
   link_name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LinksCreateManyInput = {
@@ -246,6 +262,7 @@ export type LinksCreateManyInput = {
   link_name: string
   url: string
   owner?: string | null
+  lock?: string | null
 }
 
 export type LinksUpdateManyMutationInput = {
@@ -253,6 +270,7 @@ export type LinksUpdateManyMutationInput = {
   link_name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LinksUncheckedUpdateManyInput = {
@@ -260,6 +278,7 @@ export type LinksUncheckedUpdateManyInput = {
   link_name?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   owner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lock?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type LinksCountOrderByAggregateInput = {
@@ -267,6 +286,7 @@ export type LinksCountOrderByAggregateInput = {
   link_name?: Prisma.SortOrder
   url?: Prisma.SortOrder
   owner?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 export type LinksMaxOrderByAggregateInput = {
@@ -274,6 +294,7 @@ export type LinksMaxOrderByAggregateInput = {
   link_name?: Prisma.SortOrder
   url?: Prisma.SortOrder
   owner?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 export type LinksMinOrderByAggregateInput = {
@@ -281,6 +302,7 @@ export type LinksMinOrderByAggregateInput = {
   link_name?: Prisma.SortOrder
   url?: Prisma.SortOrder
   owner?: Prisma.SortOrder
+  lock?: Prisma.SortOrder
 }
 
 
@@ -290,6 +312,7 @@ export type LinksSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   link_name?: boolean
   url?: boolean
   owner?: boolean
+  lock?: boolean
 }, ExtArgs["result"]["links"]>
 
 export type LinksSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -297,6 +320,7 @@ export type LinksSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   link_name?: boolean
   url?: boolean
   owner?: boolean
+  lock?: boolean
 }, ExtArgs["result"]["links"]>
 
 export type LinksSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -304,6 +328,7 @@ export type LinksSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   link_name?: boolean
   url?: boolean
   owner?: boolean
+  lock?: boolean
 }, ExtArgs["result"]["links"]>
 
 export type LinksSelectScalar = {
@@ -311,9 +336,10 @@ export type LinksSelectScalar = {
   link_name?: boolean
   url?: boolean
   owner?: boolean
+  lock?: boolean
 }
 
-export type LinksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "link_name" | "url" | "owner", ExtArgs["result"]["links"]>
+export type LinksOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "link_name" | "url" | "owner" | "lock", ExtArgs["result"]["links"]>
 
 export type $LinksPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Links"
@@ -323,6 +349,7 @@ export type $LinksPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     link_name: string
     url: string
     owner: string | null
+    lock: string | null
   }, ExtArgs["result"]["links"]>
   composites: {}
 }
@@ -750,6 +777,7 @@ export interface LinksFieldRefs {
   readonly link_name: Prisma.FieldRef<"Links", 'String'>
   readonly url: Prisma.FieldRef<"Links", 'String'>
   readonly owner: Prisma.FieldRef<"Links", 'String'>
+  readonly lock: Prisma.FieldRef<"Links", 'String'>
 }
     
 

@@ -32,6 +32,7 @@ import favoriteLinksRoute from "./routes/get-favorited-links.ts";
 import eventsRoute from "./routes/get-events.ts";
 import addEventRoute from "./routes/add-event.ts";
 import updateEventRoute from "./routes/update-event.ts";
+import CheckoutLinks from "./routes/checkin-checkout-links.ts";
 import deleteEventRoute from "./routes/delete-event.ts";
 
 
@@ -66,6 +67,7 @@ app.get('/', (req, res) => {
 app.use('/employee', employeeRoute); //validated in employee.ts
 app.use('/links', linkRoute) //validated in links.ts
 app.use('/api/tests', APIRouter)
+app.use('/checkin-checkout-links', CheckoutLinks)
 
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 

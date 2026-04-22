@@ -76,7 +76,11 @@ linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: 
 
 })
 
-async function listLinks(req: express.Request, lData: Partial<Links> | undefined, res: express.Response) {
+async function listLinks(
+    req: express.Request,
+    lData: Partial<Links> | undefined,
+    res: express.Response
+) {
     try {
         const { userId, isAuthenticated } = getAuth(req);
 
@@ -103,13 +107,46 @@ async function listLinks(req: express.Request, lData: Partial<Links> | undefined
             }
         });
 
-        // 3. Annotate with favorite flag
+        // 3. Collect UNIQUE lock IDs (ignore "none")
+        const lockIds = [
+            ...new Set(
+                links
+                    .map(link => link.lock)
+                    .filter(lock => lock && lock !== "none")
+            )
+        ];
+
+        // 4. Fetch employees for those lock IDs
+        const lockEmployees = await prisma.employee.findMany({
+            where: {
+                id: { in: lockIds as string[] }
+            },
+            select: {
+                id: true,
+                first_name: true,
+                last_name: true
+            }
+        });
+
+        // 5. Build lookup map
+        const lockMap = new Map(
+            lockEmployees.map(emp => [
+                emp.id,
+                `${emp.first_name} ${emp.last_name}`
+            ])
+        );
+
+        // 6. Annotate links with favorite + lock_name
         const annotatedLinks = links.map(link => ({
             ...link,
-            favorite: favoritedIds.includes(link.id)
+            favorite: favoritedIds.includes(link.id),
+            lock_name:
+                link.lock && link.lock !== "none"
+                    ? lockMap.get(link.lock) || "Unknown"
+                    : null
         }));
 
-        // 4. Sort: favorites first, then others (both already alphabetically sorted)
+        // 7. Sort favorites first
         annotatedLinks.sort((a, b) => {
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;

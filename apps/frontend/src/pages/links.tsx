@@ -40,7 +40,29 @@ function Links() {
         }
 
         load();
-    }, []);
+        }, []);
+        
+        async function getLinks() {
+            const token = await getToken();
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch links");
+            }
+            const data = await res.json();
+            setLinks(data)
+            return data;
+        }
+
+        useEffect(() => {
+            getLinks();
+        }, []);
 
 
 

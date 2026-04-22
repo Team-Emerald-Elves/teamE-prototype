@@ -35,6 +35,11 @@ export const DocumentContentModel = z.object({
     filePayload: z.string().optional(),
 })
 
+export const DeleteDocumentContentModel = z.object({
+    id: z.number(),
+    name: z.string().optional(),
+})
+
 
 const LinkDataModel = z.object({
     id: z.uuid().optional(),
@@ -49,6 +54,11 @@ export const UpdateLockBody = z.object({
     id: z.number(),
     status: z.boolean(),
 });
+
+export const UpdateLockBodyLink = z.object({
+    id: z.string(),
+    status: z.boolean(),
+})
 
 export const GetLockQuery = z.object({
     id: z.boolean(),
@@ -86,13 +96,12 @@ export const EditEmployeeModel = z.object({
 
 //employee.ts //to test
 export const ListEmployeesModel = z.object({
-    action: z.string().optional(),
-    id: z.string().optional(),
-    uname: z.string().optional(),
-    first_name: z.string().optional(),
-    last_name: z.string().optional(),
-    email: z.string().optional(),
-
+        action: z.string().optional(),
+        id: z.string().optional(),
+        uname: z.string().optional(),
+        first_name: z.string().optional(),
+        last_name: z.string().optional(),
+        email: z.string().optional(),
 })
 
 export const EmployeeRequestModel = z.object({

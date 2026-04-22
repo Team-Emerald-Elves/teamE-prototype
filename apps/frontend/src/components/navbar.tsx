@@ -43,7 +43,7 @@ function Navbar(props: NavbarProps) {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch("http://localhost:3000/api/tests/me", {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -55,7 +55,7 @@ function Navbar(props: NavbarProps) {
         }
 
         load();
-    }, [isSignedIn]);
+    }, []);
     return (
         <header className="w-full bg-[#013C5A] text-white">
             <div className="w-full flex items-center justify-between px-6 py-2">

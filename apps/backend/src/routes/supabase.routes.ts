@@ -8,7 +8,7 @@ import prisma, { Status,
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 
-import { DocumentContentModel } from '../lib/zod/routes.schemas.ts'
+import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
 import { validate } from '../lib/zod/middleware.ts'
 import mime from 'mime'
 import {buildWhereClause} from "../lib/filters.ts";
@@ -135,6 +135,17 @@ supaBaseRouter.post(
                 }
             })
 
+            const ROLE_COLORS: Record<string, string> = {
+                Administrator: "#8b5cf6",      // purple
+                BusinessAnalyst: "#ef4444",    // red
+                UnderWriter: "#ec4899",        // pink
+                ExcelOperator: "#22c55e",      // green
+                BusinessOperator: "#f97316",   // orange
+                ActuarialAnalyst: "#eab308",   // yellow
+            };
+
+            const color = ROLE_COLORS[assignedRole] ?? "#6b7280"; // fallback gray
+
             await prisma.calendarEvents.create({
                 data: {
                     title: documentContents.name,
@@ -143,7 +154,8 @@ supaBaseRouter.post(
                     all_day: false,
                     emp_id: null,
                     lock: "none",
-                    doc_id: documentContents.id
+                    doc_id: documentContents.id,
+                    color: color,
                 }
             })
 
@@ -156,12 +168,12 @@ supaBaseRouter.post(
 
 supaBaseRouter.delete(
     '/delete-document',
-    validate(DocumentContentModel),
+    validate(DeleteDocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         
         const { userId, isAuthenticated } = getAuth(req)
-        const document: IDocumentContent = req.body
+        const { id, name } = req.body;
         const supabaseClient = await createSupabaseForRequest()
 
         if (!isAuthenticated) {
@@ -169,6 +181,7 @@ supaBaseRouter.delete(
         }
 
     try {
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId
@@ -178,16 +191,28 @@ supaBaseRouter.delete(
             }
         })
 
+        const event = await prisma.calendarEvents.findFirstOrThrow({
+            where: {
+                doc_id: id
+            }
+        })
+
+        await prisma.calendarEvents.delete({
+            where: {
+                id: event.id
+            }
+        })
+
         prisma.documentContent.findFirst({
             where: {
-                id: document.id
+                id: id
             }
         }).then( async (d) => {
             const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id).remove([(d?.name as string).trim()])
 
             if (!data || error) {
-                console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
+                console.error(`Failed to delete document '${name}' for user '${employee.uname}'.`)
             }
         }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
@@ -197,7 +222,7 @@ supaBaseRouter.delete(
         // delete existing content for document.
         await prisma.documentContent.delete({
             where: {
-                id: document.id
+                id: id
             },
         }).catch((error) => {
             console.error("Couldn't delete document meta infomation.")
@@ -223,6 +248,7 @@ supaBaseRouter.put(
         console.log("Uid: ", userId);
         const document: IDocumentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
+
 
         try {
             const employee = await prisma.employee.findFirstOrThrow({
@@ -302,6 +328,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             },
             select: {
                 favorites: true,
+                roles: true
             },
         });
 
@@ -314,6 +341,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
                 where: whereClauseReg
             }
         );
+
 
         // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
@@ -366,7 +394,13 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;
         });
+        const keyToMatch: string = employee.roles[0] as string;
 
+        sortedDocs.sort((a,b) => {
+            if (a.assigned_role === b.assigned_role) return 0
+            return (a.assigned_role === keyToMatch) ? -1 : 1
+        })
+        console.log(sortedDocs);
         res.status(200).json(sortedDocs);
 
     } catch (error) {

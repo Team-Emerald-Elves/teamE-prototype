@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
+import ConfirmationPopup from "@/components/EmployeeConfirmationPopup.tsx";
 
 type CreateEmployeeRequest = {
     uname?: string,
@@ -177,7 +178,27 @@ function CreateEmployeeForm() {
                         <DialogClose
                             render={<Button variant="outline">Cancel</Button>}
                         />
-
+                        <ConfirmationPopup
+                            triggerLabel="Submit"
+                            onConfirm={async () => {
+                                const bodyData: CreateEmployeeRequest = {
+                                    uname: user.username,
+                                    first_name: user.fname,
+                                    last_name: user.lname,
+                                    email: user.email || undefined,
+                                    roles: user.roles ? [user.roles] : undefined,
+                                };
+                                try {
+                                    const res = await createEmployee(bodyData);
+                                    console.log(res);
+                                    console.log("Employee created successfully");
+                                    setUser({ fname: "", lname: "", username: "", email: "", roles: "" });
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                            }}
+                        />
+                        {/*
                         <Button
                             type="submit"
                             className="bg-secondary text-background p-3"
@@ -212,6 +233,7 @@ function CreateEmployeeForm() {
                         >
                             Submit
                         </Button>
+                        */}
                     </DialogFooter>
                 </DialogContent>
             </form>

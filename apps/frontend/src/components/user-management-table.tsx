@@ -236,8 +236,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         }
         load();
 
-    }, [isSignedIn]);
-
+    }, []);
     useEffect(() => {
         getEmployees()
             .then(setEmployees)

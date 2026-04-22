@@ -324,9 +324,7 @@ export default function LinksTable<TData extends Links, TValue>({
         load();
 
     }, []);
-    useEffect(() => {
-        setLinks(data);
-    }, [data]);
+
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

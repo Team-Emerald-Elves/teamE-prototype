@@ -39,6 +39,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
             start: event.start_date,
             end: event.end_date,
             allDay: event.all_day,
+            color: event.color,
             extendedProps: {
                 lock: event.lock,
                 emp_id: event.emp_id,

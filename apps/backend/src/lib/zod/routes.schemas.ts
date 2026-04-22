@@ -55,6 +55,11 @@ export const UpdateLockBody = z.object({
     status: z.boolean(),
 });
 
+export const UpdateLockBodyLink = z.object({
+    id: z.string(),
+    status: z.boolean(),
+})
+
 export const GetLockQuery = z.object({
     id: z.boolean(),
 })

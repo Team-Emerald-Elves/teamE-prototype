@@ -134,6 +134,17 @@ supaBaseRouter.post(
                 }
             })
 
+            const ROLE_COLORS: Record<string, string> = {
+                Administrator: "#8b5cf6",      // purple
+                BusinessAnalyst: "#ef4444",    // red
+                UnderWriter: "#ec4899",        // pink
+                ExcelOperator: "#22c55e",      // green
+                BusinessOperator: "#f97316",   // orange
+                ActuarialAnalyst: "#eab308",   // yellow
+            };
+
+            const color = ROLE_COLORS[assignedRole] ?? "#6b7280"; // fallback gray
+
             await prisma.calendarEvents.create({
                 data: {
                     title: documentContents.name,
@@ -142,7 +153,8 @@ supaBaseRouter.post(
                     all_day: false,
                     emp_id: null,
                     lock: "none",
-                    doc_id: documentContents.id
+                    doc_id: documentContents.id,
+                    color: color,
                 }
             })
 
@@ -168,12 +180,25 @@ supaBaseRouter.delete(
         }
 
     try {
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId
             },
             include: {
                 bucket: true
+            }
+        })
+
+        const event = await prisma.calendarEvents.findFirstOrThrow({
+            where: {
+                doc_id: document.id
+            }
+        })
+
+        await prisma.calendarEvents.delete({
+            where: {
+                id: event.id
             }
         })
 
@@ -222,6 +247,7 @@ supaBaseRouter.put(
         console.log("Uid: ", userId);
         const document: IDocumentContent = req.body
         const supabaseClient = await createSupabaseForRequest()
+
 
         try {
             const employee = await prisma.employee.findFirstOrThrow({
@@ -301,6 +327,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             },
             select: {
                 favorites: true,
+                roles: true
             },
         });
 
@@ -309,6 +336,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
+        const keyToMatch: string = employee.roles[0] as string
+
+        documents.sort((a,b) => {
+            if (a.assigned_role === keyToMatch) return 1
+            if (b.assigned_role === keyToMatch) return -1
+            return 0
+        })
         // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 

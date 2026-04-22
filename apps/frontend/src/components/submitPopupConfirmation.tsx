@@ -150,7 +150,6 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                         <Button type="button" onClick={() => {
                             try{
                                 createDocument(info, sessionToken);console.log("submitted sucsessfully!");
-                                setDocumentLock(sessionToken, info.formData.id, false);
                                 info.open(false);
                                 console.log("closed ready for refresh");
                                 info.refresh?.();}

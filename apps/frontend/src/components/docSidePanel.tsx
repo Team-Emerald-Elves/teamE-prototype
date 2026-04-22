@@ -10,6 +10,7 @@ type DocSidePanelProps = {
 
 function DocSidePanel(props: DocSidePanelProps): ReactElement {
     const [tagList, setTagList] = useState<string[]>([]);
+    const [allowSave, setAllowSave] = useState(false);
     const [currDoc, setCurrDoc] = useState<Partial<Document>>({})
 
     useEffect(() => {
@@ -26,7 +27,7 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
 
     return (
         <>
-            <div className={"float-right inline w-60 mt-6 bg-(--dark-blue)" + props.className ? props.className : ""}>
+            <div className={"float-right inline w-60 mt-6 bg-muted/20 rounded-xs " + (props.className ? props.className : "")}>
                 <div>
                     Tags
                     <br/>
@@ -60,6 +61,8 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                         </div>
                     </>
                 ) : ""}
+                <FavoriteStar></FavoriteStar>
+                <Button disabled={!allowSave}>Save</Button>
             </div>
         </>
     )

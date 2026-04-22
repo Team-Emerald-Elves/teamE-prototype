@@ -71,9 +71,12 @@ type FormDataType = {
 async function getEmployees(sessionToken: string) {
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+        method: "POST",
         headers: {
             Authorization: `Bearer ${sessionToken}`,
-        }
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({})
     });
 
     if (!res.ok) {

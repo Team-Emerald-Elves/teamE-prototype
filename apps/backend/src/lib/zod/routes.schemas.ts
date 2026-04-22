@@ -105,10 +105,10 @@ export const ListEmployeesModel = z.object({
 })
 
 export const EmployeeRequestModel = z.object({
-    action: ActionEnum,
+    action: ActionEnum.optional(),
     employeeData: z.object({
         id: z.string()
-    })
+    }).optional()
 })
 
 

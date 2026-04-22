@@ -40,7 +40,8 @@ function Links() {
         }
 
         load();
-    }, []);
+        }, []);
+        
         async function getLinks() {
             const token = await getToken();
 
@@ -59,9 +60,10 @@ function Links() {
             return data;
         }
 
-    useEffect(() => {
-        getLinks();
-    }, []);
+        useEffect(() => {
+            getLinks();
+        }, []);
+
 
 
 
@@ -72,9 +74,9 @@ function Links() {
 
 
             </div>
-            <linkContext.Provider value={getLinks}>
+            <linkContext.Provider>
             <div>
-                <LinksTable columns={columns} data={links}/>
+                <LinksTable columns={columns} />
             </div>
             </linkContext.Provider>
         </>

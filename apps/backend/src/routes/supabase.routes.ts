@@ -11,6 +11,7 @@ import type { IDocumentContent } from './types.d.ts'
 import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
 import { validate } from '../lib/zod/middleware.ts'
 import mime from 'mime'
+import {buildWhereClause} from "../lib/filters.ts";
 
 const supaBaseRouter = Router()
 
@@ -312,7 +313,7 @@ supaBaseRouter.put(
     }
 )
 
-supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
+supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {
@@ -333,8 +334,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
 
         const favoriteSet = new Set(employee.favorites);
 
+        const whereClauseReg = buildWhereClause(req.body, {})
+        
         // get all documents
-        const documents = await prisma.documentContent.findMany();
+        const documents = await prisma.documentContent.findMany({
+                where: whereClauseReg
+            }
+        );
 
 
         // ✅ collect BOTH content_owner and lock IDs

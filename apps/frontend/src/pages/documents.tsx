@@ -60,7 +60,7 @@ export default function Documents() {
                 <PageHeader title="Documents" description="View your documents or modify them by adding, deleting, or updating existing ones."/>
                     <div>
 
-                        <DocumentsTable columns={columns} data={docs} reload={refreshDocs} />
+                        <DocumentsTable columns={columns} reload={refreshDocs} />
                     </div>
             </reloadContext.Provider>
         </>

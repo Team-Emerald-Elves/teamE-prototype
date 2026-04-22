@@ -2,7 +2,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
     const whereClause: any = {AND: [
 
         ]};
-    whereClause.AND.push(additional);
+    // whereClause.AND.push(additional);
 
     for (const [key, value] of Object.entries(filters)) {
         if (value) {

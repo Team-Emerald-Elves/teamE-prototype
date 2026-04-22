@@ -215,13 +215,11 @@ type Document = {
 
 interface LinkProps<TData extends Links, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
 }
 
 
 export default function LinksTable<TData extends Links, TValue>({
                                                                    columns,
-                                                                   data,
                                                                }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -229,26 +227,52 @@ export default function LinksTable<TData extends Links, TValue>({
     const[links, setLinks] = useState<Links[]>([]);
     const [token, setToken] = useState<string>();
     const [roleFilters, setRoleFilters] =  useState( [
-        {key: 'assigned_role', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
-        {key: 'assigned_role', value: 'Administrator', id: 'Administrator', state: false},
-        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
-        {key: 'assigned_role', value: 'BusinessOperator', id: 'Business Operator', state: false},
-        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
-        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
+        {key: 'owner', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
+        {key: 'owner', value: 'Administrator', id: 'Administrator', state: false},
+        {key: 'owner', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
+        {key: 'owner', value: 'BusinessOperator', id: 'Business Operator', state: false},
+        {key: 'owner', value: 'ExcelOperator', id: 'Excel Operator', state: false},
+        {key: 'owner', value: 'UnderWriter', id: 'Underwriter', state: false},
 
     ]);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
-    const getActive = () => {
+
+
+    async function getLinks() {
+        const token = await getToken();
         const payload: Record<string, string[]> = {};
 
 
         if (filters.length > 0) {
-            payload['assigned_role'] = filters.map(d => d.value);
+            payload['owner'] = filters.map(d => d.value);
         }
 
-        return JSON.stringify(payload);
-    };
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch links");
+        }
+        const data = await res.json();
+        setLinks(data)
+        return data;
+    }
+    
+    useEffect(() => {
+        getLinks()
+            .then(setLinks)
+            .catch(console.error);
+    }, [filters]);
+    
+
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -261,7 +285,8 @@ export default function LinksTable<TData extends Links, TValue>({
 
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+
                 }
             });
 
@@ -273,9 +298,7 @@ export default function LinksTable<TData extends Links, TValue>({
         load();
 
     }, [isSignedIn]);
-    useEffect(() => {
-        setLinks(data);
-    }, [data]);
+
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

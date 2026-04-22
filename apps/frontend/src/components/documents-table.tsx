@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/input-group"
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
-import {useCallback, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
@@ -77,14 +77,12 @@ async function setDocumentLock(sessionToken: string | null, documentID: number, 
 
 interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
     reload: () => void
 }
 
 
 export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
-                                             data,
                                                                    reload,
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
@@ -122,7 +120,8 @@ export function DocumentsTable<TData extends Document, TValue>({
         {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
     ]);
 
-    const getActive = () => {
+    async function getDocumentsAdmin() {
+        const token = await getToken();
         const payload: Record<string, string[]> = {};
 
         const docs = filters.filter(item => item.key === 'document_type');
@@ -138,9 +137,28 @@ export function DocumentsTable<TData extends Document, TValue>({
         if (roles.length > 0) {
             payload['assigned_role'] = roles.map(d => d.value);
         }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload)
+            });
+        
+        if (!res.ok) {
+            throw new Error("Failed to fetch docs")
+        }
+        const data = await res.json()
+        return data
+    }
+    useEffect(() => {
+        getDocumentsAdmin()
+            .then(setDocs)
+            .catch(console.error);
+    }, [filters]);
 
-        return JSON.stringify(payload);
-    };
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -167,9 +185,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         }
         load();
     }, [isSignedIn]);
-    useEffect(() => {
-        setDocs(data);
-    }, [data]);
+
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

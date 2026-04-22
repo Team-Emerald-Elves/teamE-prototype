@@ -6,6 +6,7 @@ import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.sche
 import { validate } from '../lib/zod/middleware.ts';
 
 import path from "path";
+import {buildWhereClause} from "../lib/filters.ts";
 
 const employeeRoute = express()
 
@@ -18,7 +19,7 @@ employeeRoute.get('/', validate(ListEmployeesModel), (req: express.Request, res:
     const {action} = req.query;
     const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
     if (!action || action === 'list') {
-        listEmployees({id, uname, first_name, last_name, email}, res);
+        listEmployees({id, uname, first_name, last_name, email}, req, res);
         return;
     }
     res.status(200).json({
@@ -31,7 +32,7 @@ employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, r
 
     if (eReq.action == "list") {
         eReq.employeeData!.roles = undefined
-        listEmployees(eReq.employeeData!, res);
+        listEmployees(eReq.employeeData!, req, res);
         return;
     }
 
@@ -148,9 +149,11 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
+async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, req: express.Request, res: express.Response) {
 
     try {
+
+
         const employees = await prisma.employee.findMany({
             orderBy: {
                 first_name: "asc",

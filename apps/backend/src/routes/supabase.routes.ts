@@ -307,7 +307,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
 
         const favoriteSet = new Set(employee.favorites);
 
-        const whereClauseReg = buildWhereClause(req.body, {undefined})
+        const whereClauseReg = buildWhereClause(req.body, {})
         
         // get all documents
         const documents = await prisma.documentContent.findMany({

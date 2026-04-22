@@ -47,9 +47,10 @@ type Employee = {
 
 type empProps = {
     employee?: Employee;
+    reload: (any) => void
 }
 
-async function updateEmployee(body: EditEmployeeRequest) {
+async function updateEmployee(body: EditEmployeeRequest, reload: (any) => void) {
     console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/edit-employee`, {
         method: 'POST',
@@ -64,6 +65,7 @@ async function updateEmployee(body: EditEmployeeRequest) {
         const errorText = await res.text();
         throw new Error(`Failed to update employee (status ${res.status}): ${errorText}`);
     }
+    reload(prev => !prev)
     return res.json();
 }
 function EmployeeForm(props: empProps): JSX.Element {
@@ -76,6 +78,7 @@ function EmployeeForm(props: empProps): JSX.Element {
         email: employee!.email,
         role: employee!.roles ? employee!.roles.at(0) : "None",
     });
+    const [open, setOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({
@@ -84,10 +87,18 @@ function EmployeeForm(props: empProps): JSX.Element {
         });
     };
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <div className="flex justify-end">
-                    <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black"><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
+                    <DialogTrigger asChild>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="px-4 py-3 text-base bg-gray-300 text-black"
+                        >
+                            <HugeiconsIcon icon={Edit03Icon} size={20} />
+                        </Button>
+                    </DialogTrigger>
                 </div>
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
@@ -165,7 +176,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                     </FieldGroup>
                     <DialogFooter className="mt-4 justify-end gap-2">
                         <DialogClose render={<Button variant="secondary">Cancel</Button>} />
-                        <ConfirmationPopup
+                      <ConfirmationPopup
                             triggerLabel="Save"
                             onConfirm={async () => {
                                 const array: string[] | undefined = user.role ? [user.role] : undefined
@@ -178,8 +189,10 @@ function EmployeeForm(props: empProps): JSX.Element {
                                     roles: array,
                                 };
                                 try {
-                                    await updateEmployee(bodyData);
+                                    await updateEmployee(bodyData, props.reload);
                                     console.log("Employee updated successfully");
+
+                                    setOpen(false)
                                 } catch (err) {
                                     console.error(err);
                                     console.log("Failed to update employee");

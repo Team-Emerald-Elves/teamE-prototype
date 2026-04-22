@@ -35,7 +35,7 @@ type CreateEmployeeRequest = {
     roles?: string[],
 }
 
-async function createEmployee(body: CreateEmployeeRequest) {
+async function createEmployee(body: CreateEmployeeRequest, reload: (any) => void) {
     console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-employee`, {
         method: 'POST',
@@ -50,12 +50,14 @@ async function createEmployee(body: CreateEmployeeRequest) {
         const errorText = await res.text();
         throw new Error(`Failed to create employee (status ${res.status}): ${errorText}`);
     }
-
+    reload(prev => !prev)
     return res;
 }
-
-function CreateEmployeeForm() {
-
+type Props = {
+    reload: (any) => void;
+}
+function CreateEmployeeForm(props: Props) {
+    const [open, setOpen] = useState(false);
     const [user, setUser] = useState({
         fname: "",
         lname: "",
@@ -72,7 +74,7 @@ function CreateEmployeeForm() {
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <div className="flex justify-end w-full">
                     <DialogTrigger
@@ -189,10 +191,11 @@ function CreateEmployeeForm() {
                                     roles: user.roles ? [user.roles] : undefined,
                                 };
                                 try {
-                                    const res = await createEmployee(bodyData);
+                                    const res = await createEmployee(bodyData, props.reload);
                                     console.log(res);
                                     console.log("Employee created successfully");
                                     setUser({ fname: "", lname: "", username: "", email: "", roles: "" });
+                                    setOpen(false)
                                 } catch (err) {
                                     console.error(err);
                                 }

@@ -25,11 +25,11 @@ async function getDocumentsAdmin(token: string) {
 
 const reloadContext= createContext <(() => Promise<void>) | null>(null);
 
-export const useReload = () => {
-    const context= useContext(reloadContext);
-    if (!context) console.error("useReload() called outside Documents");
-    return context;
-}
+// export const useReload = () => {
+//     const context= useContext(reloadContext);
+//     if (!context) console.error("useReload() called outside Documents");
+//     return context;
+// }
 
 export default function Documents() {
     const { getToken, isSignedIn } = useAuth();
@@ -52,13 +52,13 @@ export default function Documents() {
 
     return (
         <>
-            <reloadContext.Provider value={refreshDocs} >
+
                 <PageHeader title="Documents" description="View your documents or modify them by adding, deleting, or updating existing ones."/>
                     <div>
 
-                        <DocumentsTable columns={columns} reload={refreshDocs} />
+                        <DocumentsTable columns={columns}  />
                     </div>
-            </reloadContext.Provider>
+
         </>
     )
 

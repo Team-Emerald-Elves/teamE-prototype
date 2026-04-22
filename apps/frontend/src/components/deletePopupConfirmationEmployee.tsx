@@ -22,10 +22,11 @@ import {useEffect, useState} from "react";
 //     roles?: string[];
 // };
 type deleteConfirmationPopupProps = {
-    target: string
+    target: string,
+    reload: (any) => void
 }
 
-async function removeEmployee(employeeID: string, token: string) {
+async function removeEmployee(employeeID: string, token: string, reload: (any) => void) {
 
     const data = {
         action: "delete",
@@ -44,6 +45,7 @@ async function removeEmployee(employeeID: string, token: string) {
         const errorText = await res.text();
         throw new Error(`Failed to delete employee (status ${res.status}): ${errorText}`);
     }
+    reload(prev => !prev)
     return res.json();
 }
 export function EmployeeConfirmationPopup(props: deleteConfirmationPopupProps) {
@@ -70,7 +72,7 @@ export function EmployeeConfirmationPopup(props: deleteConfirmationPopupProps) {
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => removeEmployee(props.target, sessionToken)}>Confirm</Button>
+                        <Button type="submit" onClick={() => removeEmployee(props.target, sessionToken, props.reload)}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

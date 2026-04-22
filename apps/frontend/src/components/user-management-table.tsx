@@ -183,6 +183,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
     ]);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
+    const [reload, setReload] = useState<boolean>(false);
 
     async function getEmployees() {
         const payload: Record<string, string[]> = {};
@@ -241,7 +242,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         getEmployees()
             .then(setEmployees)
             .catch(console.error);
-    }, [filters]);
+    }, [filters, reload]);
 
 
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -329,7 +330,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                 )}
                             </div>
                             <div className="flex justify-end ml-auto">
-                                <CreateEmployeeForm />
+                                <CreateEmployeeForm reload={setReload}/>
                             </div>
                             
                         </div>
@@ -388,9 +389,9 @@ export default function EmployeeTable<TData extends Employee, TValue>({
 
                                             <TableCell className="px-1 py-0.5">
                                                 <div className="flex gap-2 justify-center">
-                                                    <EmployeeForm employee={emp}/>
+                                                    <EmployeeForm employee={emp} reload={setReload}/>
 
-                                                    <EmployeeConfirmationPopup target={emp.id} />
+                                                    <EmployeeConfirmationPopup target={emp.id} reload={setReload}/>
                                                 </div>
                                             </TableCell>
                                         </TableRow>

@@ -12,7 +12,6 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useCallback, useEffect, useState} from "react";
-import {useLinks} from "../pages/links.tsx"
 import { useAuth } from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
@@ -45,11 +44,12 @@ type linkProp = {
     url: string,
     owner?: string
     name: string,
+    reload: (any) => void,
 }
 
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
-async function updateLinks(body: editlinksRequest, token: string) {
+async function updateLinks(body: editlinksRequest, token: string | null, reload: (any) => void) {
     console.log(body)
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
@@ -66,11 +66,13 @@ async function updateLinks(body: editlinksRequest, token: string) {
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+    reload(prev => !prev)
     return res.json();
 }
 
 function AddLinksForm(props: linkProp) {
     const { getToken, isSignedIn } = useAuth();
+    const token =  getToken()
 
     const [roles, setRoles] = useState<string[]>([]);      // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
@@ -235,7 +237,7 @@ function AddLinksForm(props: linkProp) {
                                 };
                                 try {
 
-                                    await updateLinks(bodyData);
+                                    await updateLinks(bodyData, token, props.reload);
                                     console.log("link updated successfully");
                                 } catch (err) {
                                     console.error(err);

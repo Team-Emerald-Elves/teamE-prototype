@@ -1,6 +1,7 @@
 import FullCalendarComponent from "@/components/fullCalendar.tsx";
 import AddEventButton from "@/components/addEventButton.tsx";
 import EventForm from "@/components/eventForm.tsx";
+import PageHeader from "@/components/page-header.tsx";
 import {useState} from "react";
 
 export default function CalendarPage() {
@@ -10,7 +11,7 @@ export default function CalendarPage() {
 
     return (
         <>
-            <h1>Calendar</h1>
+            <PageHeader title="Calendar" description="Keep track of important events here."></PageHeader>
             <EventForm open={open}
                        setOpen={setOpen}
                        selectedEvent={selectedEvent}

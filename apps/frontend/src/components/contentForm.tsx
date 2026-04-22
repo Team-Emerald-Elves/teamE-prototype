@@ -195,20 +195,16 @@ function ContentForm(props: contentFormProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen} >
             <form>
-
                 {props.size ?
                     <DialogTrigger render={<Button variant="outline" className= "px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground" ><HugeiconsIcon icon={PlusSignIcon} /> {props.type}</Button>} />
                     :
                     <DialogTrigger render={<Button variant="outline" size="icon" className="px-4 py-3 text-base bg-gray-300 text-black" ><HugeiconsIcon icon={Edit03Icon} size={20} /></Button>} />
                 }
-
-
                 <DialogContent className="lg:max-w-lg">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
                             <DialogTitle className="text-2xl text-primary font-sans font-bold">{props.type} Content</DialogTitle>
                         </div>
-
                     </DialogHeader>
                     <FieldGroup>
                         <div className="grid grid-cols-2 gap-4">
@@ -238,9 +234,10 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={formData.contentOwner}
-                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
+                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner).first_name) + " " + (employees.find(u => u.id === formData.contentOwner).last_name)) : "Select"}
+                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
+
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue placeholder={props.currentContentOwner}/>
                                     </SelectTrigger>
@@ -248,7 +245,7 @@ function ContentForm(props: contentFormProps) {
                                         <SelectGroup>
                                             <SelectLabel>Employees</SelectLabel>
                                             {employees.map((emp) => (
-                                                <SelectItem key={emp.id} value={String(emp.id)}>
+                                                <SelectItem key={emp.id} value={emp.id}>
                                                     {emp.first_name} {emp.last_name}
                                                 </SelectItem>
                                             ))}

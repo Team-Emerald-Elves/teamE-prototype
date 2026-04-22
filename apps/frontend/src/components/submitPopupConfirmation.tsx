@@ -43,6 +43,7 @@ export type IFile = {
   filePayload?: string
   fileName?: string
 }
+import {useReload} from "../pages/documents.tsx";
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
 
@@ -125,7 +126,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
-
+    const reload = useReload();
     const [sessionToken, setSessionToken] = useState("")
     const [open, setOpen] = useState(false)
     useEffect(() => {
@@ -153,7 +154,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                                 setDocumentLock(sessionToken, info.formData.id, false);
                                 info.open(false);
                                 console.log("closed ready for refresh");
-                                info.refresh?.();}
+                                reload?.();}
                         catch (error) {
                                 console.error("broke at",error)
                         }}}>Confirm</Button>

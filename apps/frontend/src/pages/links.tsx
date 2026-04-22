@@ -50,7 +50,7 @@ function Links() {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+            console.log("refreshed Links")
             if (!res.ok) {
                 throw new Error("Failed to fetch links");
             }

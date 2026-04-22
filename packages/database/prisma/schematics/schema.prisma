@@ -62,6 +62,7 @@ model Links {
   link_name String
   url       String
   owner     String?
+  lock      String?
 }
 
 model CalendarEvents {

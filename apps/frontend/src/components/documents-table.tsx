@@ -516,7 +516,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     onToggleOff={(doc) => toggleFavorite(doc, true)}
                                                 />
                                                 {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </TableCell>
                                                 ))}
@@ -920,7 +920,10 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
-                                                    <TableCell><p>{doc.lock_name}</p></TableCell>)
+                                                    <div className="flex flex-col text-right">
+                                                        <p className="text-xs">Checked out by:</p>
+                                                        <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                    </div>)
                                             }
                                         </TableRow>
                                             ): (
@@ -931,7 +934,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         onToggleOff={(doc) => toggleFavorite(doc, true)}
                                                     />
                                                     {row.getVisibleCells().map((cell) => (
-                                                        <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                        <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                         </TableCell>
                                                     ))}

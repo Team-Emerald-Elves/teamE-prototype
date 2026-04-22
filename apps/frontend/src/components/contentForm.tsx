@@ -238,8 +238,8 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={formData.contentOwner}
-                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
+                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner).first_name) + " " + (employees.find(u => u.id === formData.contentOwner).last_name)) : "Select"}
+                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue placeholder={props.currentContentOwner}/>
@@ -312,7 +312,7 @@ function ContentForm(props: contentFormProps) {
                         <Field>
                             <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
-                                value={formData.document_status}
+                                value={formData.document_status.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
                                 onValueChange={(value) => setFormData(prev => ({...prev, document_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">

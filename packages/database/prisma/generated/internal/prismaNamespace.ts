@@ -971,8 +971,7 @@ export const CalendarEventsScalarFieldEnum = {
   all_day: 'all_day',
   emp_id: 'emp_id',
   lock: 'lock',
-  doc_id: 'doc_id',
-  color: 'color'
+  doc_id: 'doc_id'
 } as const
 
 export type CalendarEventsScalarFieldEnum = (typeof CalendarEventsScalarFieldEnum)[keyof typeof CalendarEventsScalarFieldEnum]

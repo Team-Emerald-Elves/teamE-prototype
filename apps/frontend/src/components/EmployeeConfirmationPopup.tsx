@@ -12,11 +12,11 @@ import {
 
 type ConfirmationPopupProps = {
     onConfirm: () => void
-    triggerLabel?: string
+    triggerLabel?: string,
 }
 
 
-export function ConfirmationPopup({ onConfirm, triggerLabel }: ConfirmationPopupProps) {
+export function ConfirmationPopup({ onConfirm, triggerLabel}: ConfirmationPopupProps) {
     return (
         <Dialog>
             <DialogTrigger

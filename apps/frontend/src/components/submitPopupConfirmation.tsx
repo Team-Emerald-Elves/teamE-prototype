@@ -26,7 +26,7 @@ type SubmitConfirmationPopupProps = {
     filePayload?: string
     fileName?: string
   }
-  refresh?: () => void
+  refresh: (any) => void
   open: (arg:boolean) => void
 }
 
@@ -82,7 +82,7 @@ function buildExpirationDate(
   return date.toISOString()
 }
 
-async function createDocument(fileData: SubmitConfirmationPopupProps, token: string) {
+async function createDocument(fileData: SubmitConfirmationPopupProps, token: string, refresh: (any: any) => void) {
 
   const data: IFile = {
     id: fileData.formData.id,
@@ -120,6 +120,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
       console.error(errorText)
     throw new Error(errorText || "Network response was not ok")
   }
+  refresh(prev => !prev)
 
   return await response.json()
 }
@@ -149,10 +150,10 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                     <DialogClose>
                         <Button type="button" onClick={() => {
                             try{
-                                createDocument(info, sessionToken);console.log("submitted sucsessfully!");
+                                createDocument(info, sessionToken, info.refresh);console.log("submitted sucsessfully!");
                                 info.open(false);
                                 console.log("closed ready for refresh");
-                                info.refresh?.();}
+                               }
                         catch (error) {
                                 console.error("broke at",error)
                         }}}>Confirm</Button>

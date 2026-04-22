@@ -11,7 +11,6 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import type { Links } from './types/linkstable.d.ts'
-import {useLinks} from "../pages/links.tsx"
 
 type Links = {
     id: string;
@@ -23,7 +22,8 @@ type Links = {
 
 
 type deleteConfirmationPopupProps = {
-    link: Links
+    link: Links,
+    reload: (any) => void
 }
 
 type editlinksRequest ={
@@ -49,7 +49,7 @@ type editlinksRequest ={
 //     }
 //     return res.json();
 // }
-async function removeLink(body: editlinksRequest) {
+async function removeLink(body: editlinksRequest, reload: (any) => void) {
 
     console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
@@ -65,6 +65,7 @@ async function removeLink(body: editlinksRequest) {
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+    reload(prev => !prev)
     return res.json();
 }
 
@@ -99,7 +100,7 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {removeLink(bodyData); }}>Confirm</Button>
+                        <Button type="submit" onClick={() => {removeLink(bodyData, props.reload); }}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

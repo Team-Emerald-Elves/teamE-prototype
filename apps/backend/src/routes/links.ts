@@ -4,6 +4,7 @@ import { getAuth } from '@clerk/express'
 
 import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
 import { validate } from '../lib/zod/middleware.ts';
+import {buildWhereClause} from "../lib/filters.ts";
 
 const linkRoute = express()
 
@@ -14,7 +15,7 @@ interface LinkRequest {
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.get('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
+linkRoute.post('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {link_name} = req.query as Links;
     if (!action || action === 'list') {
@@ -86,12 +87,13 @@ async function listLinks(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" });
         }
+        const body = req.body
+        console.log(body)
+        const whereClauseReg = buildWhereClause(body, lData)
 
         // 1. Get employee (for favorites)
         const employee = await prisma.employee.findFirst({
-            where: {
-                clerkUserId: userId
-            },
+            where: {clerkUserId: userId},
             select: { favorite_links: true }
         });
 
@@ -99,7 +101,7 @@ async function listLinks(
 
         // 2. Get all links
         const links: Links[] = await prisma.links.findMany({
-            where: lData,
+            where: whereClauseReg,
             orderBy: {
                 link_name: 'asc'
             }

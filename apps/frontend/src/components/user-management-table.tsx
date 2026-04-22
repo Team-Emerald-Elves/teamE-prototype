@@ -162,12 +162,10 @@ type Employee = {
 
 interface EmployeeProps<TData extends Employee, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
 }
 
 export default function EmployeeTable<TData extends Employee, TValue>({
                                                                     columns,
-                                                                    data,
                                                                 }: EmployeeProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -175,24 +173,47 @@ export default function EmployeeTable<TData extends Employee, TValue>({
     const [token, setToken] = useState<string>();
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [roleFilters, setRoleFilters] =  useState( [
-        {key: 'assigned_role', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
-        {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
-        {key: 'assigned_role', value: 'ExcelOperator', id: 'Excel Operator', state: false},
-        {key: 'assigned_role', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
-        {key: 'assigned_role', value: 'Administrator', id: 'Administrator', state: false},
+        {key: 'roles', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
+        {key: 'roles', value: 'Administrator', id: 'Administrator', state: false},
+        {key: 'roles', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
+        {key: 'roles', value: 'BusinessOperator', id: 'Business Operator', state: false},
+        {key: 'roles', value: 'ExcelOperator', id: 'Excel Operator', state: false},
+        {key: 'roles', value: 'UnderWriter', id: 'Underwriter', state: false},
+
     ]);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
 
-    const getActive = () => {
+    async function getEmployees() {
         const payload: Record<string, string[]> = {};
 
         if (filters.length > 0) {
-            payload['assigned_role'] = filters.map(d => d.value);
+            payload['roles'] = filters.map(d => [d.value]);
+        }
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
+            window.location.replace("/");
         }
 
-        return JSON.stringify(payload);
-    };
+        if (!res.ok) {
+            throw new Error("Failed to fetch employees");
+        }
+        const data = await res.json();
+        console.log(data)
+
+        return data;
+    }
+
+
+
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
@@ -217,8 +238,11 @@ export default function EmployeeTable<TData extends Employee, TValue>({
 
     }, []);
     useEffect(() => {
-        setEmployees(data);
-    }, [data]);
+        getEmployees()
+            .then(setEmployees)
+            .catch(console.error);
+    }, [filters]);
+
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -246,11 +270,9 @@ export default function EmployeeTable<TData extends Employee, TValue>({
 
         if (checked) {
             setFilters((filter) => [...filter, option])
-            console.log(filters)
         }
         else {
             setFilters((filter) => filter.filter((item) => item.id !== option.id));
-            console.log(filters)
         }
 
         setRoleFilters(rlFilters =>

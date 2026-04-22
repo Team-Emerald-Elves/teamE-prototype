@@ -8,9 +8,11 @@ import PageHeader from "../components/page-header.tsx"
 async function getDocumentsAdmin(token: string) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
+            method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         }
     )
 
@@ -54,7 +56,7 @@ export default function Documents() {
                 <PageHeader title="Documents" description="View your documents or modify them by adding, deleting, or updating existing ones."/>
                     <div>
 
-                        <DocumentsTable columns={columns} data={docs} reload={refreshDocs} />
+                        <DocumentsTable columns={columns} reload={refreshDocs} />
                     </div>
             </reloadContext.Provider>
         </>

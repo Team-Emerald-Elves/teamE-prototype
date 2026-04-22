@@ -71,9 +71,12 @@ type FormDataType = {
 async function getEmployees(sessionToken: string) {
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
+        method: "POST",
         headers: {
             Authorization: `Bearer ${sessionToken}`,
-        }
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({})
     });
 
     if (!res.ok) {
@@ -126,7 +129,7 @@ function ContentForm(props: contentFormProps) {
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: props.currentContentOwner ?? "",
+        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
         role: props.currentRole ?? "",
         document_type: "",
         expirationDate: undefined,
@@ -235,11 +238,11 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={formData.contentOwner}
-                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!}))}}
+                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner).first_name) + " " + (employees.find(u => u.id === formData.contentOwner).last_name)) : "Select"}
+                                    onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
-                                        <SelectValue placeholder={props.currentContentOwner}/>
+                                        <SelectValue placeholder="5c129c4b-658f-47c1-9afb-e28734f66e46"/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
@@ -309,7 +312,7 @@ function ContentForm(props: contentFormProps) {
                         <Field>
                             <Label htmlFor="status" className="text-xs font-bold">Select Current Status</Label>
                             <Select
-                                value={formData.document_status}
+                                value={formData.document_status.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
                                 onValueChange={(value) => setFormData(prev => ({...prev, document_status: value!}))}
                             >
                                 <SelectTrigger className="w-full max-w-48">

@@ -9,7 +9,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
             const tempJSON: any = {OR: []};
             for (const v of Object.entries(value)) {
                 const pushObject: any = {}
-                pushObject[key] = v;
+                pushObject[key] = v[1];
                 tempJSON.OR.push(pushObject)
             }
             whereClause.AND.push(tempJSON)

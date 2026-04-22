@@ -47,7 +47,7 @@ function Home() {
         }
 
         load();
-    }, [isSignedIn]);
+    }, []);
 
     // if (!me) {
     //     return (

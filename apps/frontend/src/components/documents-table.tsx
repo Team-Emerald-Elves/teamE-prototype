@@ -163,7 +163,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
         load();
-    }, [isSignedIn]);
+    }, []);
     useEffect(() => {
         setDocs(data);
     }, [data]);

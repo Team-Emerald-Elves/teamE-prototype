@@ -39,15 +39,9 @@ export default function Documents() {
             const token = await getToken();
         if (!token) return;
 
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setRoles((data.roles as string[]).map((r: string) => r.toLowerCase()));
-
         const docsData = await getDocumentsAdmin(token);
         setDocs(docsData);
-    }, [isSignedIn, getToken]);
+    }, [getToken]);
 
     useEffect(() => {
         refreshDocs();

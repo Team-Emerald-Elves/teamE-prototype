@@ -42,7 +42,7 @@ type Document = {
     name: string;
     last_modified: string;
     lock: string;
-    expiration_date: string;
+    expiration_date: Date;
     mime_type: string;
     document_type: string;
     assigned_role: string;
@@ -475,7 +475,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 )}
                             </div>
                             <div className="relative inline-block text-left">
-                                <Button type="button" onClick={() => reload()} className="flex px-4 py-4 ml-2 "> Refresh </Button>
+                                <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-4 py-4 ml-2 "> Refresh </Button>
                             </div>
                             <div className="flex justify-end ml-auto">
                                 <ContentForm
@@ -485,7 +485,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentURL="www.example.com"
                                     currentContentOwner="Select Content Owner"
                                     currentRole="Select Role"
-                                    currentExpirationDate="Tomorrow"
+                                    currentExpirationDate={new Date()}
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
@@ -594,7 +594,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         currentContentOwner={doc.content_owner}
                                                         currentRole={doc.assigned_role}
                                                         currentExpirationDate={doc.expiration_date}
-                                                        currentExpirationTime={doc.expiration_date}
+                                                        currentExpirationTime={"10:30:00"}
                                                         currentStatus={doc.document_status}
                                                         size={false}
                                                         lock={doc.lock}
@@ -877,7 +877,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 )}
                             </div>
                             <div className="flex justify-end ml-auto">
-                                <Button type="button" onClick={() => reload()}> Refresh </Button>
+                                <Button type="button" onClick={() => setReload(prev => !prev)}> Refresh </Button>
                                 <ContentForm
                                     type="Create"
                                     currentID={Math.trunc((Math.random() * 10000) % 10000)}
@@ -885,7 +885,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentURL="www.example.com"
                                     currentContentOwner="Select Content Owner"
                                     currentRole="Select Role"
-                                    currentExpirationDate="Tomorrow"
+                                    currentExpirationDate={new Date()}
                                     currentExpirationTime="10:30:00"
                                     currentStatus="Select Status"
                                     size={true}
@@ -1019,7 +1019,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     currentContentOwner={doc.content_owner}
                                                                     currentRole={doc.assigned_role}
                                                                     currentExpirationDate={doc.expiration_date}
-                                                                    currentExpirationTime={doc.expiration_date}
+                                                                    currentExpirationTime="10:30:00"
                                                                     currentStatus={doc.document_status}
                                                                     size={false}
                                                                     lock={doc.lock}

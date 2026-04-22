@@ -19,49 +19,40 @@ import type { DateAndTimeProps } from './types/date.d.ts'
 
 export default function DateAndTime(props: DateAndTimeProps) {
     const [open, setOpen] = React.useState(false)
-    const [date, setDate] = React.useState<Date | undefined>(props.date)
 
     return (
-        <FieldGroup className=" max-w-xs flex flex-row " id={props.id}>
-            <Field >
-                <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+        <FieldGroup className="max-w-xs flex flex-row" id={props.id}>
+            <Field>
+                <FieldLabel>Date</FieldLabel>
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger>
-                        <Button
-                            variant="outline"
-                            id="date-picker-optional"
-                            className="w-50 justify-between bg-background font-normal"
-                        >
-                            {date ? format(date, "PPP") : "Select Date"}
-                            {/*<ChevronDownIcon />*/}
+                        <Button variant="outline" className="w-50 justify-between">
+                            {props.date ? format(props.date, "PPP") : "Select Date"}
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+
+                    <PopoverContent className="w-auto p-0">
                         <Calendar
                             mode="single"
-                            selected={date}
-                            captionLayout="dropdown"
-                            defaultMonth={date}
+                            selected={props.date}
                             onSelect={(date) => {
-                                setDate(date)
+                                props.setDate(date)
                                 setOpen(false)
                             }}
                         />
                     </PopoverContent>
                 </Popover>
             </Field>
-            {!props.disableTime && (
-            <Field className="w-32">
-               <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
-                <Input
-                    type="time"
-                    id="time-picker-optional"
-                    step="1"
-                    defaultValue={props.time}
-                    className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                />
 
-            </Field>
+            {!props.disableTime && (
+                <Field className="w-32">
+                    <FieldLabel>Time</FieldLabel>
+                    <Input
+                        type="time"
+                        value={props.time}
+                        onChange={(e) => props.setTime(e.target.value)}
+                    />
+                </Field>
             )}
         </FieldGroup>
     )

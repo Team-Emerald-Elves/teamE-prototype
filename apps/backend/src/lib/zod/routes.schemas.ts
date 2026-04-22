@@ -25,7 +25,7 @@ export const DocumentContentModel = z.object({
     content_owner: z.string(),
     lock: z.boolean().default(false),
     assigned_role: UserRoleEnum.optional(),
-    expiration_date: z.date().optional(),
+    expiration_date: z.coerce.date().optional(),
     mime_type: z.string().default('text/plain'),
     document_status: StatusEnum.default('not_started'),
     document_type: z.string(),

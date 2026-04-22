@@ -125,7 +125,7 @@ export const LinkRequestGetModel = z.object({
 
 
 export const LinkRequestPostModel = z.object({
-    action: ActionEnum,
+    action: ActionEnum.optional(),
     linkData: LinkDataModel.optional(),
 })
 

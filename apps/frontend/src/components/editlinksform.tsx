@@ -45,7 +45,7 @@ type linkProp = {
     name: string
 }
 
-const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator"];
+const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
 async function updateLinks(body: editlinksRequest) {
     console.log(body)
@@ -76,7 +76,7 @@ function EditLinksForm(props: linkProp) {
         link_name: props.name,
         url: props.url,
     });
-   const reloadLinks = useLinks();
+
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -245,7 +245,7 @@ function EditLinksForm(props: linkProp) {
                                         } catch (err) {
                                             console.error(err);
                                         }
-                                        reloadLinks()
+
                                     }}
                                 >
                                     Submit

@@ -47,15 +47,17 @@ type linkProp = {
     name: string,
 }
 
-const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator"];
+const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
-async function updateLinks(body: editlinksRequest) {
+async function updateLinks(body: editlinksRequest, token: string) {
     console.log(body)
+
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(body),
     });
@@ -81,7 +83,7 @@ function AddLinksForm(props: linkProp) {
     });
 
     const [me, setMe] = useState(null);
-    const reload = useLinks()
+
     useEffect(() => {
         if (!isSignedIn) return;
 
@@ -232,13 +234,14 @@ function AddLinksForm(props: linkProp) {
 
                                 };
                                 try {
+
                                     await updateLinks(bodyData);
                                     console.log("link updated successfully");
                                 } catch (err) {
                                     console.error(err);
                                     console.log("Failed to update links");
                                 }
-                                ;reload()}}
+                                }}
                             >
                                 Submit
                             </Button> }/>

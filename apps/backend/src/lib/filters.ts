@@ -5,7 +5,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
     if (Object.entries(additional).length > 0) {
         whereClause.AND.push(additional);
     }
-    if (Object.entries(filters).length > 0) {
+    if (filters && filters.length > 0) {
         for (const [key, value] of Object.entries(filters)) {
             if (value) {
                 const tempJSON: any = {OR: []};

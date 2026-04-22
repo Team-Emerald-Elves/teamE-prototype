@@ -11,7 +11,10 @@
 
 export const Roles = {
   UnderWriter: 'UnderWriter',
-  BusinessAnalyst: 'BusinessAnalyst'
+  BusinessAnalyst: 'BusinessAnalyst',
+  ActuarialAnalyst: 'ActuarialAnalyst',
+  ExcelOperator: 'ExcelOperator',
+  BusinessOperator: 'BusinessOperator'
 } as const
 
 export type Roles = (typeof Roles)[keyof typeof Roles]
@@ -20,7 +23,10 @@ export type Roles = (typeof Roles)[keyof typeof Roles]
 export const UserRoles = {
   Administrator: 'Administrator',
   UnderWriter: 'UnderWriter',
-  BusinessAnalyst: 'BusinessAnalyst'
+  BusinessAnalyst: 'BusinessAnalyst',
+  ActuarialAnalyst: 'ActuarialAnalyst',
+  ExcelOperator: 'ExcelOperator',
+  BusinessOperator: 'BusinessOperator'
 } as const
 
 export type UserRoles = (typeof UserRoles)[keyof typeof UserRoles]

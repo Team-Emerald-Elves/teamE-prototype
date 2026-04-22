@@ -481,7 +481,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                             />
 
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
@@ -522,7 +522,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                     onToggleOff={(link) => toggleFavorite(link, true)}
                                                 />
                                                 {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </TableCell>
                                                 ))}
@@ -681,7 +681,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 onToggleOff={(link) => toggleFavorite(link, true)}
                                             />
                                             {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             ))}
@@ -739,7 +739,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                     onToggleOff={(link) => toggleFavorite(link, true)}
                                                 />
                                                 {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="px-1 py-0.5 text-center">
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </TableCell>
                                                 ))}

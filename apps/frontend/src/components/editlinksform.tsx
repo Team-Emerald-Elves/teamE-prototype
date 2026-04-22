@@ -11,7 +11,6 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useLinks} from "../pages/links.tsx"
 import { useEffect, useState } from "react"
 import { useAuth } from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -42,12 +41,13 @@ type linkProp = {
     id?: string,
     url: string,
     owner?: string,
-    name: string
+    name: string,
+    reload: (any) => void
 }
 
-const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator"];
+const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
-async function updateLinks(body: editlinksRequest) {
+async function updateLinks(body: editlinksRequest, reload: (any) => void) {
     console.log(body)
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: 'POST',
@@ -62,6 +62,7 @@ async function updateLinks(body: editlinksRequest) {
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+    reload(prev => !prev)
     return res.json();
 }
 
@@ -76,7 +77,7 @@ function EditLinksForm(props: linkProp) {
         link_name: props.name,
         url: props.url,
     });
-   const reloadLinks = useLinks();
+
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -240,12 +241,12 @@ function EditLinksForm(props: linkProp) {
                                         };
 
                                         try {
-                                            await updateLinks(bodyData);
+                                            await updateLinks(bodyData, props.reload);
                                             console.log("link updated successfully");
                                         } catch (err) {
                                             console.error(err);
                                         }
-                                        reloadLinks()
+
                                     }}
                                 >
                                     Submit

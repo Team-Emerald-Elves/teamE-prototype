@@ -36,7 +36,6 @@ import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-import {useReload} from "../pages/documents.tsx"
 type Document = {
     id: number;
     url: string;
@@ -53,7 +52,31 @@ type Document = {
     lock_name: string;
 };
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
+const handleDownload = async (doc: Document) => {
+    try {
+        const response = await fetch(doc.url);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch file");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = doc.name || "download";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean, setReload: (any) => void): Promise<string> {
 
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
@@ -71,7 +94,7 @@ async function setDocumentLock(sessionToken: string | null, documentID: number, 
         throw new Error("Failed to fetch document.");
     }
     const data = await res.json();
-
+    setReload(prev => !prev);
     return String(data);
 }
 
@@ -83,7 +106,6 @@ interface DocProps<TData extends Document, TValue> {
 
 export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
-                                                                   reload,
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -96,6 +118,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const[empID, setEmpID] = useState("");
+    const[reload, setReload] = useState<boolean>(false);
 
     const [docFilters, setDocFilters] =  useState([
         {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
@@ -157,7 +180,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         getDocumentsAdmin()
             .then(setDocs)
             .catch(console.error);
-    }, [filters]);
+    }, [filters, reload]);
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -467,7 +490,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentStatus="Select Status"
                                     size={true}
                                     lock="none"
-                                    refresh={reload}
+                                    refresh={setReload}
                                 />
                             </div>
                         </div>
@@ -540,17 +563,21 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             {doc.lock === "none"?(
                                             <TableCell>
                                                 <div className="flex items-center gap-1 justify-end">
-                                                    <a
-                                                        href={doc.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="hover:underline"
-                                                    >
+                                                    {/*<a*/}
+                                                    {/*    href={doc.url}*/}
+                                                    {/*    target="_blank"*/}
+                                                    {/*    rel="noopener noreferrer"*/}
+                                                    {/*    className="hover:underline"*/}
+                                                    {/*    download*/}
+                                                    {/*>*/}
+                                                    {/*    <HugeiconsIcon icon={Download01Icon} />*/}
+                                                    {/*</a>*/}
+                                                    <Button onClick={async () => await handleDownload(doc)}>
                                                         <HugeiconsIcon icon={Download01Icon} />
-                                                    </a>
+                                                    </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, true)
+                                                        await setDocumentLock(token, doc.id, true, setReload)
                                                     }}><Lock /></Button>
                                                 </div>
                                             </TableCell>
@@ -571,20 +598,25 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         currentStatus={doc.document_status}
                                                         size={false}
                                                         lock={doc.lock}
+                                                        refresh={setReload}
                                                     />
                                                 )}
-                                                    <DeleteConfirmationPopup target={doc.id}/>
-                                                    <a
-                                                        href={doc.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="hover:underline"
-                                                    >
+                                                    <DeleteConfirmationPopup target={doc.id} refresh={setReload}/>
+                                                    {/*<a*/}
+                                                    {/*    href={doc.url}*/}
+                                                    {/*    target="_blank"*/}
+                                                    {/*    rel="noopener noreferrer"*/}
+                                                    {/*    className="hover:underline"*/}
+                                                    {/*    download*/}
+                                                    {/*>*/}
+                                                    {/*    <HugeiconsIcon icon={Download01Icon} />*/}
+                                                    {/*</a>*/}
+                                                    <Button onClick={async () => await handleDownload(doc)}>
                                                         <HugeiconsIcon icon={Download01Icon} />
-                                                    </a>
+                                                    </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, false)
+                                                        await setDocumentLock(token, doc.id, false, setReload)
                                                     }}><LockOpen /></Button>
 
                                                 </div>
@@ -612,14 +644,18 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             <p className="text-sm font-medium">{doc.lock_name}</p>
                                                         </div>
 
-                                                        <a
-                                                            href={doc.url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="hover:underline"
-                                                        >
+                                                        {/*<a*/}
+                                                        {/*    href={doc.url}*/}
+                                                        {/*    target="_blank"*/}
+                                                        {/*    rel="noopener noreferrer"*/}
+                                                        {/*    className="hover:underline"*/}
+                                                        {/*    download*/}
+                                                        {/*>*/}
+                                                        {/*    <HugeiconsIcon icon={Download01Icon} />*/}
+                                                        {/*</a>*/}
+                                                        <Button onClick={async () => await handleDownload(doc)}>
                                                             <HugeiconsIcon icon={Download01Icon} />
-                                                        </a>
+                                                        </Button>
 
                                                     </div>
                                                 </TableCell>
@@ -854,6 +890,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     currentStatus="Select Status"
                                     size={true}
                                     lock="none"
+                                    refresh={setReload}
                                 />
                             </div>
                         </div>
@@ -932,32 +969,40 @@ export function DocumentsTable<TData extends Document, TValue>({
                                             {!canEdit ? (
                                                 <TableCell>
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <a
-                                                            href={doc.url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="hover:underline"
-                                                        >
-                                                            <HugeiconsIcon icon={Download01Icon}/>
-                                                        </a>
+                                                        {/*<a*/}
+                                                        {/*    href={doc.url}*/}
+                                                        {/*    target="_blank"*/}
+                                                        {/*    rel="noopener noreferrer"*/}
+                                                        {/*    className="hover:underline"*/}
+                                                        {/*    download*/}
+                                                        {/*>*/}
+                                                        {/*    <HugeiconsIcon icon={Download01Icon}/>*/}
+                                                        {/*</a>*/}
+                                                        <Button onClick={async () => await handleDownload(doc)}>
+                                                            <HugeiconsIcon icon={Download01Icon} />
+                                                        </Button>
                                                     </div>
                                                 </TableCell> ) :
                                             doc.lock === "none" ? (
                                                         <TableCell>
                                                             <div className="flex items-center justify-end gap-2">
-                                                                <a
-                                                                    href={doc.url}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="hover:underline"
-                                                                >
-                                                                    <HugeiconsIcon icon={Download01Icon}/>
-                                                                </a>
+                                                                {/*<a*/}
+                                                                {/*    href={doc.url}*/}
+                                                                {/*    target="_blank"*/}
+                                                                {/*    rel="noopener noreferrer"*/}
+                                                                {/*    className="hover:underline"*/}
+                                                                {/*    download*/}
+                                                                {/*>*/}
+                                                                {/*    <HugeiconsIcon icon={Download01Icon}/>*/}
+                                                                {/*</a>*/}
+                                                                <Button onClick={async () => await handleDownload(doc)}>
+                                                                    <HugeiconsIcon icon={Download01Icon} />
+                                                                </Button>
                                                                 <Button variant="outline" size="icon"
                                                                         className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                                                                         onClick={async () => {
                                                                             const token = await getToken();
-                                                                            await setDocumentLock(token, doc.id, true)
+                                                                            await setDocumentLock(token, doc.id, true, setReload)
                                                                         }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>
@@ -978,23 +1023,28 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     currentStatus={doc.document_status}
                                                                     size={false}
                                                                     lock={doc.lock}
+                                                                    refresh={setReload}
                                                                 />
                                                             )}
 
                                                             {canEdit && (
-                                                                <DeleteConfirmationPopup target={doc.id} />
+                                                                <DeleteConfirmationPopup target={doc.id} refresh={setReload} />
                                                             )}
-                                                            <a
-                                                                href={doc.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="hover:underline"
-                                                            >
+                                                            {/*<a*/}
+                                                            {/*    href={doc.url}*/}
+                                                            {/*    target="_blank"*/}
+                                                            {/*    rel="noopener noreferrer"*/}
+                                                            {/*    className="hover:underline"*/}
+                                                            {/*    download*/}
+                                                            {/*>*/}
+                                                            {/*    <HugeiconsIcon icon={Download01Icon} />*/}
+                                                            {/*</a>*/}
+                                                            <Button onClick={async () => await handleDownload(doc)}>
                                                                 <HugeiconsIcon icon={Download01Icon} />
-                                                            </a>
+                                                            </Button>
                                                             <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
-                                                                await setDocumentLock(token, doc.id, false)
+                                                                await setDocumentLock(token, doc.id, false, setReload)
                                                             }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
@@ -1024,14 +1074,18 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 <p className="text-sm font-medium">{doc.lock_name}</p>
                                                             </div>
 
-                                                            <a
-                                                                href={doc.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="hover:underline"
-                                                            >
+                                                            {/*<a*/}
+                                                            {/*    href={doc.url}*/}
+                                                            {/*    target="_blank"*/}
+                                                            {/*    rel="noopener noreferrer"*/}
+                                                            {/*    className="hover:underline"*/}
+                                                            {/*    download*/}
+                                                            {/*>*/}
+                                                            {/*    <HugeiconsIcon icon={Download01Icon} />*/}
+                                                            {/*</a>*/}
+                                                            <Button onClick={async () => await handleDownload(doc)}>
                                                                 <HugeiconsIcon icon={Download01Icon} />
-                                                            </a>
+                                                            </Button>
 
                                                         </div>
                                                     </TableCell>

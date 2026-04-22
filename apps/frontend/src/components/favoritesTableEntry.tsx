@@ -5,6 +5,7 @@ import DocumentViewer from "@/components/docViewer.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
+import {Button} from "@/components/ui/button.tsx";
 
 type Document = {
     id: number;
@@ -20,6 +21,31 @@ type Document = {
     favorite: boolean;
     lock: boolean;
 };
+
+const handleDownload = async (doc: Document) => {
+    try {
+        const response = await fetch(doc.url);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch file");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = doc.name || "download";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 
 type FavoriteProps = {
     d: Document;
@@ -87,14 +113,10 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                 {mod.toLocaleString()}
             </TableCell>
             <TableCell className="text-[14px] font-small text-gray-700">
-                <a
-                    href={props.d.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                >
+                <Button onClick={async () => await handleDownload(props.d)}>
                     <HugeiconsIcon icon={Download01Icon} />
-                </a>
+                </Button>
+
             </TableCell>
 
 

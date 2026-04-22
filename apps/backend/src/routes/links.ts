@@ -15,13 +15,46 @@ interface LinkRequest {
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.post('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
+linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {link_name} = req.query as Links;
+    const lReq: LinkRequest = req.body as LinkRequest;
+
+    // if (!lReq.linkData) {
+    //     res.status(400).json({
+    //         error: "INVALID_EMPLOYEE_DATA"
+    //     });
+    //     return;
+    // }
+
+    if (lReq.action == "create") {
+        createLink({
+            link_name: lReq.linkData.link_name!,
+            url: lReq.linkData.url!,
+            owner: lReq.linkData.owner
+        }, res);
+        return;
+    }
+
+    if (lReq.action == "edit") {
+        editLink(lReq.linkData, res);
+        return;
+    }
+
+    if (lReq.action == "delete" && lReq.linkData.id) {
+        deleteLink(lReq.linkData, res);
+        return;
+    }
+
     if (!action || action === 'list') {
         listLinks(req, {link_name}, res);
         return;
     }
+
+    // No/invalid action
+    res.status(400).json({
+        error: "INVALID_ACTION"
+    });
     res.status(200).json({
         error: "INVALID_LINKS_QUERY"
     })

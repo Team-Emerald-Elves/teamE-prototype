@@ -107,6 +107,7 @@ function Home() {
                         </div>
                     </div>
                 </div>
+                <CalendarWeek />
                 {/* <Footer/> */}
             </>
         )

@@ -18,6 +18,29 @@ interface EmployeeRequest{
 employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
+    const eReq: EmployeeRequest = req.body as EmployeeRequest;
+    // if (!eReq.employeeData) {
+    //     res.status(400).json({
+    //         error: "INVALID_EMPLOYEE_DATA"
+    //     });
+    //     return;
+    // }
+
+    if (eReq.action == "create") {
+        createEmployee(eReq.employeeData, res);
+        return;
+    }
+
+    if (eReq.action == "edit") {
+        editEmployee(eReq.employeeData, res);
+        return;
+    }
+
+    if (eReq.action == "delete") {
+        deleteEmployee(eReq.employeeData, res);
+        return;
+    }
+
     if (!action || action === 'list') {
         listEmployees({id, uname, first_name, last_name, email}, req, res);
         return;

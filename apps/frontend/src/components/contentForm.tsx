@@ -41,7 +41,7 @@ type contentFormProps = {
     currentID: number,
     size: boolean,
     lock: string,
-    refresh?: () => void,
+    refresh?: (any) => void,
 }
 
 type Employee = {

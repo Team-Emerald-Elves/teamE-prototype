@@ -287,7 +287,7 @@ supaBaseRouter.put(
     }
 )
 
-supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
+supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {

@@ -8,9 +8,11 @@ import PageHeader from "../components/page-header.tsx"
 async function getDocumentsAdmin(token: string) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
+            method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         }
     )
 

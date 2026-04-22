@@ -37,7 +37,7 @@ function UserManagementPage(){
         <>
             <PageHeader title="User Management" description="View users, add new users, delete existing users, and update current user accounts. Admin access only."/>
             <div>
-                <UserManagementTable columns={columns} data={employees}/>
+                <UserManagementTable columns={columns}/>
             </div>
 
         </>

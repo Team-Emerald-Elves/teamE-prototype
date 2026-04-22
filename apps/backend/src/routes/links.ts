@@ -15,7 +15,7 @@ interface LinkRequest {
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.get('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
+linkRoute.post('/', validate(LinkRequestGetModel), (req: express.Request, res: express.Response)=> {
     const {action} = req.query;
     const {link_name} = req.query as Links;
     if (!action || action === 'list') {
@@ -83,8 +83,9 @@ async function listLinks(req: express.Request, lData: Partial<Links> | undefined
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" });
         }
-
-        const whereClauseReg = buildWhereClause(req.body, lData)
+        const body = req.body
+        console.log(body)
+        const whereClauseReg = buildWhereClause(body, lData)
 
         // 1. Get employee (for favorites)
         const employee = await prisma.employee.findFirst({

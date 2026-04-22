@@ -38,8 +38,6 @@ export default function FullCalendarComponent({
             const data = await res.json();
             setMe(data);
             setEmpID(data.id);
-            console.log("Full response data:", data);
-
         }
 
         load();

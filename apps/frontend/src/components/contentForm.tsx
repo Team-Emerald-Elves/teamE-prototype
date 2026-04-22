@@ -109,8 +109,6 @@ function ContentForm(props: contentFormProps) {
             const data = await res.json();
             setMe(data);
             setRoles((data.roles as string[]))
-            console.log("Full response data:", data);
-
         }
 
         load();
@@ -162,7 +160,6 @@ function ContentForm(props: contentFormProps) {
     useEffect(() => {
 
         getToken().then( token => {
-            console.log(token);
         getEmployees(token as string)
             .then(setEmployees)
             .catch(console.error)

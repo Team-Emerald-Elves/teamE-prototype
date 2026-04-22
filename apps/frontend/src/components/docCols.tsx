@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import DocumentViewer from "@/components/docViewer.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
-import DocTag from "@/components/ui/doctag.tsx";
+import DocTag from "@/components/doctag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
 
 export type Document = {
@@ -54,11 +54,7 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <button className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
-                            {doc.name}
-                        </button>
-                    </DialogTrigger>
+                    <DialogTrigger className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
 
                     <DialogContent className="2xl:max-w-7xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">
@@ -68,7 +64,7 @@ export const columns: ColumnDef<Document>[] = [
                             <div className="w-full max-w-[min(1400px,80%)] h-full">
                                 <DocumentViewer doc={doc} />
                             </div>
-                            <DocSidePanel />
+                            <DocSidePanel doc={doc} />
                         </div>
 
                     </DialogContent>

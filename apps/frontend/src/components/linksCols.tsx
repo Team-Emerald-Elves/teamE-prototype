@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import DocumentViewer from "@/components/docViewer.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
-import DocTag from "@/components/ui/doctag.tsx";
+import DocTag from "@/components/doctag.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
@@ -30,7 +30,7 @@ export type Document = {
     favorite: boolean;
 };
 
-type Links = {
+export type Links = {
     id: string;
     link_name: string;
     url: string;

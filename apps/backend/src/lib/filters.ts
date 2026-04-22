@@ -2,10 +2,10 @@ export const buildWhereClause = (filters: any, additional: any) => {
     const whereClause: any = {AND: [
 
         ]};
-    if (Object.entries(additional).length > 0) {
+     if (Object.entries(additional).length > 0) {
         whereClause.AND.push(additional);
     }
-    if (filters && filters.length > 0) {
+   // if (filters && filters.length > 0) {
         for (const [key, value] of Object.entries(filters)) {
             if (value) {
                 const tempJSON: any = {OR: []};
@@ -17,7 +17,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
                 whereClause.AND.push(tempJSON)
             }
         }
-    }
+    //}
 
     return whereClause;
 };

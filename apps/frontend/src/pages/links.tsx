@@ -40,7 +40,7 @@ function Links() {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, []);
 
 
 

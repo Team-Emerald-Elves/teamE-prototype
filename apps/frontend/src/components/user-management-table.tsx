@@ -188,7 +188,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         const payload: Record<string, string[]> = {};
 
         if (filters.length > 0) {
-            payload['owner'] = filters.map(d => d.value);
+            payload['roles'] = filters.map(d => [d.value]);
         }
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
             method: "POST",

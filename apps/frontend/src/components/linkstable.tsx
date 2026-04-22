@@ -270,7 +270,7 @@ export default function LinksTable<TData extends Links, TValue>({
         }
         load();
 
-    }, [isSignedIn]);
+    }, []);
     useEffect(() => {
         setLinks(data);
     }, [data]);

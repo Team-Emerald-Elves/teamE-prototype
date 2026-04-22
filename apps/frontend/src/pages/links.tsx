@@ -40,7 +40,7 @@ function Links() {
         }
 
         load();
-    }, [isSignedIn, roles]);
+    }, []);
         async function getLinks() {
             const token = await getToken();
 

@@ -111,7 +111,7 @@ function EditLinksForm(props: linkProp) {
         }
 
         load();
-    }, [isSignedIn]);
+    }, []);
 
     const isAdmin = roleKeys.includes("administrator");
 

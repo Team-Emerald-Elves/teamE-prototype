@@ -33,7 +33,7 @@ export const buildWhereClausesEmployee = (filters: any, additional: any) => {
                 const tempJSON: any = {roles: {hasSome: []}}
                 for (const v of Object.entries(filters)) {
                     for (const c of v[1]) {
-                        tempJSON.roles.hasSome.add(c)
+                        tempJSON.roles.hasSome.push(c[0])
                     }
                 }
                 whereClause.AND.push(tempJSON)

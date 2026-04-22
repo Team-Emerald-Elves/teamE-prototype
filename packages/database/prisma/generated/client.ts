@@ -66,3 +66,8 @@ export type documentContent = Prisma.documentContentModel
  * 
  */
 export type Links = Prisma.LinksModel
+/**
+ * Model CalendarEvents
+ * 
+ */
+export type CalendarEvents = Prisma.CalendarEventsModel

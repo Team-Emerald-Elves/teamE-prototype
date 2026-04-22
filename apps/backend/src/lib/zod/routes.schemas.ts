@@ -35,6 +35,11 @@ export const DocumentContentModel = z.object({
     filePayload: z.string().optional(),
 })
 
+export const DeleteDocumentContentModel = z.object({
+    id: z.number(),
+    name: z.string().optional(),
+})
+
 
 const LinkDataModel = z.object({
     id: z.uuid().optional(),
@@ -86,12 +91,14 @@ export const EditEmployeeModel = z.object({
 
 //employee.ts //to test
 export const ListEmployeesModel = z.object({
-    action: z.string().optional(),
-    id: z.string().optional(),
-    uname: z.string().optional(),
-    first_name: z.string().optional(),
-    last_name: z.string().optional(),
-    email: z.string().optional(),
+    body: ({
+        action: z.string().optional(),
+        id: z.string().optional(),
+        uname: z.string().optional(),
+        first_name: z.string().optional(),
+        last_name: z.string().optional(),
+        email: z.string().optional(),
+        })
 
 })
 

@@ -8,7 +8,7 @@ import prisma, { Status,
 import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 
-import { DocumentContentModel } from '../lib/zod/routes.schemas.ts'
+import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
 import { validate } from '../lib/zod/middleware.ts'
 import mime from 'mime'
 
@@ -41,9 +41,9 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
 }
 
 function base64ToArrayBuffer(base64: string) {
-    var binaryString = atob(base64);
-    var bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
@@ -155,12 +155,12 @@ supaBaseRouter.post(
 
 supaBaseRouter.delete(
     '/delete-document',
-    validate(DocumentContentModel),
+    validate(DeleteDocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
         
         const { userId, isAuthenticated } = getAuth(req)
-        const document: IDocumentContent = req.body
+        const { id, name } = req.body;
         const supabaseClient = await createSupabaseForRequest()
 
         if (!isAuthenticated) {
@@ -179,14 +179,14 @@ supaBaseRouter.delete(
 
         prisma.documentContent.findFirst({
             where: {
-                id: document.id
+                id: id
             }
         }).then( async (d) => {
             const { data, error } = await supabaseClient.storage
             .from(employee.bucket!.id).remove([(d?.name as string).trim()])
 
             if (!data || error) {
-                console.error(`Failed to delete document '${document.name}' for user '${employee.uname}'.`)
+                console.error(`Failed to delete document '${name}' for user '${employee.uname}'.`)
             }
         }).catch((error: any) => {
             console.error("No bucket associated with employee: " + error)
@@ -196,7 +196,7 @@ supaBaseRouter.delete(
         // delete existing content for document.
         await prisma.documentContent.delete({
             where: {
-                id: document.id
+                id: id
             },
         }).catch((error) => {
             console.error("Couldn't delete document meta infomation.")

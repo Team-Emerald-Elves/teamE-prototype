@@ -58,10 +58,10 @@ export type EmployeeCountAggregateOutputType = {
   uname: number
   first_name: number
   last_name: number
-  roles: number
   email: number
   favorites: number
   favorite_links: number
+  roles: number
   _all: number
 }
 
@@ -98,10 +98,10 @@ export type EmployeeCountAggregateInputType = {
   uname?: true
   first_name?: true
   last_name?: true
-  roles?: true
   email?: true
   favorites?: true
   favorite_links?: true
+  roles?: true
   _all?: true
 }
 
@@ -197,10 +197,10 @@ export type EmployeeGroupByOutputType = {
   uname: string
   first_name: string
   last_name: string
-  roles: $Enums.UserRoles[]
   email: string | null
   favorites: number[]
   favorite_links: string[]
+  roles: $Enums.UserRoles[]
   _count: EmployeeCountAggregateOutputType | null
   _avg: EmployeeAvgAggregateOutputType | null
   _sum: EmployeeSumAggregateOutputType | null
@@ -232,10 +232,10 @@ export type EmployeeWhereInput = {
   uname?: Prisma.StringFilter<"Employee"> | string
   first_name?: Prisma.StringFilter<"Employee"> | string
   last_name?: Prisma.StringFilter<"Employee"> | string
-  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
   email?: Prisma.StringNullableFilter<"Employee"> | string | null
   favorites?: Prisma.IntNullableListFilter<"Employee">
   favorite_links?: Prisma.StringNullableListFilter<"Employee">
+  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
   bucket?: Prisma.XOR<Prisma.BucketMetaNullableScalarRelationFilter, Prisma.BucketMetaWhereInput> | null
 }
 
@@ -245,10 +245,10 @@ export type EmployeeOrderByWithRelationInput = {
   uname?: Prisma.SortOrder
   first_name?: Prisma.SortOrder
   last_name?: Prisma.SortOrder
-  roles?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   favorites?: Prisma.SortOrder
   favorite_links?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
   bucket?: Prisma.BucketMetaOrderByWithRelationInput
 }
 
@@ -262,9 +262,9 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   clerkUserId?: Prisma.StringNullableFilter<"Employee"> | string | null
   first_name?: Prisma.StringFilter<"Employee"> | string
   last_name?: Prisma.StringFilter<"Employee"> | string
-  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
   favorites?: Prisma.IntNullableListFilter<"Employee">
   favorite_links?: Prisma.StringNullableListFilter<"Employee">
+  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
   bucket?: Prisma.XOR<Prisma.BucketMetaNullableScalarRelationFilter, Prisma.BucketMetaWhereInput> | null
 }, "id" | "id" | "uname" | "email">
 
@@ -274,10 +274,10 @@ export type EmployeeOrderByWithAggregationInput = {
   uname?: Prisma.SortOrder
   first_name?: Prisma.SortOrder
   last_name?: Prisma.SortOrder
-  roles?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   favorites?: Prisma.SortOrder
   favorite_links?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
   _count?: Prisma.EmployeeCountOrderByAggregateInput
   _avg?: Prisma.EmployeeAvgOrderByAggregateInput
   _max?: Prisma.EmployeeMaxOrderByAggregateInput
@@ -294,10 +294,10 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   uname?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   first_name?: Prisma.StringWithAggregatesFilter<"Employee"> | string
   last_name?: Prisma.StringWithAggregatesFilter<"Employee"> | string
-  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
   email?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   favorites?: Prisma.IntNullableListFilter<"Employee">
   favorite_links?: Prisma.StringNullableListFilter<"Employee">
+  roles?: Prisma.EnumUserRolesNullableListFilter<"Employee">
 }
 
 export type EmployeeCreateInput = {
@@ -306,10 +306,10 @@ export type EmployeeCreateInput = {
   uname?: string
   first_name?: string
   last_name?: string
-  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   email?: string | null
   favorites?: Prisma.EmployeeCreatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeCreatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   bucket?: Prisma.BucketMetaCreateNestedOneWithoutEmployeeInput
 }
 
@@ -319,10 +319,10 @@ export type EmployeeUncheckedCreateInput = {
   uname?: string
   first_name?: string
   last_name?: string
-  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   email?: string | null
   favorites?: Prisma.EmployeeCreatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeCreatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   bucket?: Prisma.BucketMetaUncheckedCreateNestedOneWithoutEmployeeInput
 }
 
@@ -332,10 +332,10 @@ export type EmployeeUpdateInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   bucket?: Prisma.BucketMetaUpdateOneWithoutEmployeeNestedInput
 }
 
@@ -345,10 +345,10 @@ export type EmployeeUncheckedUpdateInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   bucket?: Prisma.BucketMetaUncheckedUpdateOneWithoutEmployeeNestedInput
 }
 
@@ -358,10 +358,10 @@ export type EmployeeCreateManyInput = {
   uname?: string
   first_name?: string
   last_name?: string
-  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   email?: string | null
   favorites?: Prisma.EmployeeCreatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeCreatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
 }
 
 export type EmployeeUpdateManyMutationInput = {
@@ -370,10 +370,10 @@ export type EmployeeUpdateManyMutationInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
 }
 
 export type EmployeeUncheckedUpdateManyInput = {
@@ -382,18 +382,10 @@ export type EmployeeUncheckedUpdateManyInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
-}
-
-export type EnumUserRolesNullableListFilter<$PrismaModel = never> = {
-  equals?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel> | null
-  has?: $Enums.UserRoles | Prisma.EnumUserRolesFieldRefInput<$PrismaModel> | null
-  hasEvery?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel>
-  hasSome?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
 }
 
 export type IntNullableListFilter<$PrismaModel = never> = {
@@ -412,16 +404,24 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
+export type EnumUserRolesNullableListFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel> | null
+  has?: $Enums.UserRoles | Prisma.EnumUserRolesFieldRefInput<$PrismaModel> | null
+  hasEvery?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel>
+  hasSome?: $Enums.UserRoles[] | Prisma.ListEnumUserRolesFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type EmployeeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clerkUserId?: Prisma.SortOrder
   uname?: Prisma.SortOrder
   first_name?: Prisma.SortOrder
   last_name?: Prisma.SortOrder
-  roles?: Prisma.SortOrder
   email?: Prisma.SortOrder
   favorites?: Prisma.SortOrder
   favorite_links?: Prisma.SortOrder
+  roles?: Prisma.SortOrder
 }
 
 export type EmployeeAvgOrderByAggregateInput = {
@@ -455,10 +455,6 @@ export type EmployeeScalarRelationFilter = {
   isNot?: Prisma.EmployeeWhereInput
 }
 
-export type EmployeeCreaterolesInput = {
-  set: $Enums.UserRoles[]
-}
-
 export type EmployeeCreatefavoritesInput = {
   set: number[]
 }
@@ -467,9 +463,8 @@ export type EmployeeCreatefavorite_linksInput = {
   set: string[]
 }
 
-export type EmployeeUpdaterolesInput = {
-  set?: $Enums.UserRoles[]
-  push?: $Enums.UserRoles | $Enums.UserRoles[]
+export type EmployeeCreaterolesInput = {
+  set: $Enums.UserRoles[]
 }
 
 export type EmployeeUpdatefavoritesInput = {
@@ -480,6 +475,11 @@ export type EmployeeUpdatefavoritesInput = {
 export type EmployeeUpdatefavorite_linksInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type EmployeeUpdaterolesInput = {
+  set?: $Enums.UserRoles[]
+  push?: $Enums.UserRoles | $Enums.UserRoles[]
 }
 
 export type EmployeeCreateNestedOneWithoutBucketInput = {
@@ -502,10 +502,10 @@ export type EmployeeCreateWithoutBucketInput = {
   uname?: string
   first_name?: string
   last_name?: string
-  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   email?: string | null
   favorites?: Prisma.EmployeeCreatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeCreatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
 }
 
 export type EmployeeUncheckedCreateWithoutBucketInput = {
@@ -514,10 +514,10 @@ export type EmployeeUncheckedCreateWithoutBucketInput = {
   uname?: string
   first_name?: string
   last_name?: string
-  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
   email?: string | null
   favorites?: Prisma.EmployeeCreatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeCreatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeCreaterolesInput | $Enums.UserRoles[]
 }
 
 export type EmployeeCreateOrConnectWithoutBucketInput = {
@@ -542,10 +542,10 @@ export type EmployeeUpdateWithoutBucketInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
 }
 
 export type EmployeeUncheckedUpdateWithoutBucketInput = {
@@ -554,10 +554,10 @@ export type EmployeeUncheckedUpdateWithoutBucketInput = {
   uname?: Prisma.StringFieldUpdateOperationsInput | string
   first_name?: Prisma.StringFieldUpdateOperationsInput | string
   last_name?: Prisma.StringFieldUpdateOperationsInput | string
-  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   favorites?: Prisma.EmployeeUpdatefavoritesInput | number[]
   favorite_links?: Prisma.EmployeeUpdatefavorite_linksInput | string[]
+  roles?: Prisma.EmployeeUpdaterolesInput | $Enums.UserRoles[]
 }
 
 
@@ -568,10 +568,10 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   uname?: boolean
   first_name?: boolean
   last_name?: boolean
-  roles?: boolean
   email?: boolean
   favorites?: boolean
   favorite_links?: boolean
+  roles?: boolean
   bucket?: boolean | Prisma.Employee$bucketArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -581,10 +581,10 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   uname?: boolean
   first_name?: boolean
   last_name?: boolean
-  roles?: boolean
   email?: boolean
   favorites?: boolean
   favorite_links?: boolean
+  roles?: boolean
 }, ExtArgs["result"]["employee"]>
 
 export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -593,10 +593,10 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   uname?: boolean
   first_name?: boolean
   last_name?: boolean
-  roles?: boolean
   email?: boolean
   favorites?: boolean
   favorite_links?: boolean
+  roles?: boolean
 }, ExtArgs["result"]["employee"]>
 
 export type EmployeeSelectScalar = {
@@ -605,13 +605,13 @@ export type EmployeeSelectScalar = {
   uname?: boolean
   first_name?: boolean
   last_name?: boolean
-  roles?: boolean
   email?: boolean
   favorites?: boolean
   favorite_links?: boolean
+  roles?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "uname" | "first_name" | "last_name" | "roles" | "email" | "favorites" | "favorite_links", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "uname" | "first_name" | "last_name" | "email" | "favorites" | "favorite_links" | "roles", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bucket?: boolean | Prisma.Employee$bucketArgs<ExtArgs>
 }
@@ -629,10 +629,10 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     uname: string
     first_name: string
     last_name: string
-    roles: $Enums.UserRoles[]
     email: string | null
     favorites: number[]
     favorite_links: string[]
+    roles: $Enums.UserRoles[]
   }, ExtArgs["result"]["employee"]>
   composites: {}
 }
@@ -1062,10 +1062,10 @@ export interface EmployeeFieldRefs {
   readonly uname: Prisma.FieldRef<"Employee", 'String'>
   readonly first_name: Prisma.FieldRef<"Employee", 'String'>
   readonly last_name: Prisma.FieldRef<"Employee", 'String'>
-  readonly roles: Prisma.FieldRef<"Employee", 'UserRoles[]'>
   readonly email: Prisma.FieldRef<"Employee", 'String'>
   readonly favorites: Prisma.FieldRef<"Employee", 'Int[]'>
   readonly favorite_links: Prisma.FieldRef<"Employee", 'String[]'>
+  readonly roles: Prisma.FieldRef<"Employee", 'UserRoles[]'>
 }
     
 

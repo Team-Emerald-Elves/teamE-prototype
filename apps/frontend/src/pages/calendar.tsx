@@ -17,7 +17,7 @@ export default function CalendarPage() {
                        selectedEvent={selectedEvent}
                        setSelectedEvent={setSelectedEvent} setReload={setReload}/>
             <div className="pr-7 pl-7 pt-2" >
-                <div className=" p-5 h-[800px] w-full bg-white rounded-xl shadow-sm border">
+                <div className=" p-5 h-[1000px] w-full bg-white rounded-xl shadow-sm border">
                     <h3></h3>
                     <div className="pb-3">
                         <AddEventButton setOpen={setOpen} />

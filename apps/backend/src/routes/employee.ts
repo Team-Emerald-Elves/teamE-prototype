@@ -6,7 +6,7 @@ import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.sche
 import { validate } from '../lib/zod/middleware.ts';
 
 import path from "path";
-import {buildWhereClause} from "../lib/filters.ts";
+import {buildWhereClause, buildWhereClausesEmployee} from "../lib/filters.ts";
 
 const employeeRoute = express()
 
@@ -153,7 +153,7 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
 
     try {
 
-        const whereClauseReg = buildWhereClause(req.body, {})
+        const whereClauseReg = buildWhereClausesEmployee(req.body, {})
 
         const employees = await prisma.employee.findMany({
             where: whereClauseReg,

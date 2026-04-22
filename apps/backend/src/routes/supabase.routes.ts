@@ -336,13 +336,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
-        const keyToMatch: string = employee.roles[0] as string
 
-        documents.sort((a,b) => {
-            if (a.assigned_role === keyToMatch) return 1
-            if (b.assigned_role === keyToMatch) return -1
-            return 0
-        })
         // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
@@ -394,7 +388,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             if (a.favorite === b.favorite) return 0;
             return a.favorite ? -1 : 1;
         });
+        const keyToMatch: string = "UnderWriter"
 
+        sortedDocs.sort((a,b) => {
+            if (a.assigned_role === b.assigned_role) return 0
+            return (a.assigned_role === keyToMatch) ? -1 : 1
+        })
+        console.log(sortedDocs);
         res.status(200).json(sortedDocs);
 
     } catch (error) {

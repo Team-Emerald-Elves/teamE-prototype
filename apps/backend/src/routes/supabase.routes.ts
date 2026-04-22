@@ -128,7 +128,7 @@ supaBaseRouter.post(
                     assigned_role: assignedRole,
                     bucketId: employee.bucket!.id,
                     mime_type: document.mime_type ?? "text/plain",
-                    expiration_date: expirationDate.toISOString(),
+                    expiration_date: expirationDate,
                     document_status: documentStatus,
                     document_type: document.document_type ?? "Reference"
 
@@ -272,7 +272,7 @@ supaBaseRouter.put(
                     assigned_role: document.assigned_role ?? UserRoles.UnderWriter,
                     bucketId: employee.bucket!.id,
                     mime_type: document.mime_type ?? "text/plain",
-                    expiration_date: toExpirationDate(document.expiration_date).toISOString(),
+                    expiration_date: toExpirationDate(document.expiration_date),
                     document_status: document.document_status,
                     document_type: document.document_type ?? "Reference"
                 }
@@ -301,6 +301,7 @@ supaBaseRouter.put(
             if (!data || error) {
                 throw new Error(`Failed to modify document '${document.name}' for user '${employee.uname}'.`)
             }
+            res.sendStatus(200)
 
         } catch (error) {
             console.error("Update document error:", error);

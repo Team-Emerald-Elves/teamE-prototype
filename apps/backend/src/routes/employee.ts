@@ -153,8 +153,10 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
 
     try {
 
+        const whereClauseReg = buildWhereClause(req.body, {})
 
         const employees = await prisma.employee.findMany({
+            where: whereClauseReg,
             orderBy: {
                 first_name: "asc",
             },

@@ -11,6 +11,7 @@ import type { IDocumentContent } from './types.d.ts'
 import { DocumentContentModel } from '../lib/zod/routes.schemas.ts'
 import { validate } from '../lib/zod/middleware.ts'
 import mime from 'mime'
+import {buildWhereClause} from "../lib/filters.ts";
 
 const supaBaseRouter = Router()
 
@@ -41,9 +42,9 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
 }
 
 function base64ToArrayBuffer(base64: string) {
-    var binaryString = atob(base64);
-    var bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
@@ -306,8 +307,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
 
         const favoriteSet = new Set(employee.favorites);
 
+        const whereClauseReg = buildWhereClause(req.body, {})
+        
         // get all documents
-        const documents = await prisma.documentContent.findMany();
+        const documents = await prisma.documentContent.findMany({
+                where: whereClauseReg
+            }
+        );
 
         // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);

@@ -41,9 +41,9 @@ async function getMimeFromUrl(url: string): Promise<string | null> {
 }
 
 function base64ToArrayBuffer(base64: string) {
-    var binaryString = atob(base64);
-    var bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
@@ -327,6 +327,7 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
             },
             select: {
                 favorites: true,
+                roles: true
             },
         });
 
@@ -335,6 +336,13 @@ supaBaseRouter.get('/list-documents', async (req: Request, res: Response) => {
         // get all documents
         const documents = await prisma.documentContent.findMany();
 
+        const keyToMatch: string = employee.roles[0] as string
+
+        documents.sort((a,b) => {
+            if (a.assigned_role === keyToMatch) return 1
+            if (b.assigned_role === keyToMatch) return -1
+            return 0
+        })
         // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 

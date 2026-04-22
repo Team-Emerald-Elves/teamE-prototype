@@ -131,7 +131,7 @@ function ContentForm(props: contentFormProps) {
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: props.currentContentOwner ?? "",
+        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
         role: props.currentRole ?? "",
         document_type: "",
         expirationDate: undefined,
@@ -245,7 +245,7 @@ function ContentForm(props: contentFormProps) {
                                     onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
-                                        <SelectValue placeholder={props.currentContentOwner}/>
+                                        <SelectValue placeholder="5c129c4b-658f-47c1-9afb-e28734f66e46"/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>

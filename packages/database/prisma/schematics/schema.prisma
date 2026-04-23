@@ -55,6 +55,7 @@ model documentContent {
   content_owner   String?
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
+  meta_tags       String[]
 }
 
 model Links {

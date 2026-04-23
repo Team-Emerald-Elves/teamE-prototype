@@ -5,10 +5,48 @@ import DocTag from "@/components/doctag.tsx"
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import ContentForm from "@/components/contentForm.tsx";
 import CenterDiv from "@/components/center-div.tsx";
+import {TagInput} from "@/components/tagInput.tsx"
 
 type DocSidePanelProps = {
     className?: string;
     doc?: Document
+}
+
+async function updateTags(docId: number, tags: string[]) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-document-tags`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: docId,
+            meta_tags: tags,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
+async function removeTag(docId: number, tag: string) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/remove-document-tag`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: docId,
+            meta_tag: tag,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
 }
 
 function DocSidePanel(props: DocSidePanelProps): ReactElement {
@@ -20,7 +58,9 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
 
     useEffect(() => {
         if (props.doc) {
-            setCurrDoc(props.doc)
+            setCurrDoc(props.doc);
+            setTagList(props.doc.meta_tags || []);
+            setAllowSave(false);
         }
     }, [props.doc]);
 
@@ -36,11 +76,17 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                 <div>
                     Tags
                     <br/>
-                    {tagList.map((tag) => (
-                        <DocTag>{tag}</DocTag>
-                    ))}
-                    { /* Needs click behavior */}
-                    <Button variant="default" >+</Button>
+                    <TagInput
+                        tags={tagList}
+                        setTags={async (newTags) => {
+                            setTagList(newTags);
+                            await updateTags(currDoc.id, newTags as string[]).catch(console.error);
+                        }}
+                        remove={async (tagToRemove: string) => {
+                            await removeTag(currDoc.id, tagToRemove);
+                        }}
+                        placeholder="Add tag..."
+                    />
                 </div>
                 <br/>
                 <div>
@@ -67,33 +113,12 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                     </>
                 ) : ""}
                 <div className="float-left">
-                    <ContentForm
-                        type="Edit"
-                        currentID={currDoc.id}
-                        currentName={currDoc.name}
-                        currentURL={currDoc.url}
-                        currentContentOwner={currDoc.content_owner}
-                        currentRole={currDoc.assigned_role}
-                        currentExpirationDate={currDoc.expiration_date}
-                        currentExpirationTime={currDoc.expiration_date}
-                        currentStatus={currDoc.document_status}
-                        size={false}
-                        lock={currDoc.lock_name}
-                    />
+
                 </div>
-                <FavoriteStar doc={currDoc}
-                              onToggleOn={() => {
-                                  setCurrDoc((prev) => ({...prev, favorite: true}))
-                              }}
-                              onToggleOff={() => {
-                                  setCurrDoc((prev) => ({...prev, favorite: false}))
-                              }}
-                              className="float-right"
-                />
                 <br/>
-                <CenterDiv>
-                    <Button disabled={!allowSave}>Save</Button>
-                </CenterDiv>
+                {/*<CenterDiv>*/}
+                {/*    <Button disabled={!allowSave}>Save</Button>*/}
+                {/*</CenterDiv>*/}
             </div>
         </>
     )

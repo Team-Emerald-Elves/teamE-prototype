@@ -6,6 +6,14 @@ export const buildWhereClause = (filters: any, additional: any) => {
         whereClause.AND.push(additional);
     }
         for (const [key, value] of Object.entries(filters)) {
+            if (key === "meta_tags") {
+                whereClause.AND.push({
+                    meta_tags: {
+                        hasSome: value
+                    }
+                });
+                continue;
+            }
             if (value) {
                 const tempJSON: any = {OR: []};
                 for (const v of Object.entries(value)) {

@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import mime from 'mime'
 import DocumentViewer from "@/components/docViewer.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
@@ -172,7 +173,7 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <div className="flex flex-wrap gap-1">
-                    <DocTag>{type}</DocTag>
+                    <DocTag>{mime.getExtension(type)}</DocTag>
                     <DocTag>{roles}</DocTag>
                     <DocTag>{status}</DocTag>
                     {doc.meta_tags.map(tag => (

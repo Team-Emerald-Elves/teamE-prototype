@@ -25,34 +25,16 @@
     "@hugeicons/core-free-icons": "^4.1.1",
     "@hugeicons/react": "^1.1.6",
     "@iamjariwala/react-doc-viewer": "^1.8.0",
-<<<<<<< HEAD
-=======
     "@repo/database": "workspace:*",
->>>>>>> c4dd4ac (Patch)
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "dotenv": "^17.4.2",
     "lucide-react": "^1.8.0",
     "mime": "^4.1.0",
     "react": "^19.2.5",
-=======
-    "dotenv": "^17.4.1",
-    "lucide-react": "^1.7.0",
-    "mime": "^4.1.0",
-    "mime-types": "^3.0.2",
-    "react": "^19.2.4",
->>>>>>> ad5e8ad (added custom tagging for documents and filtering by it)
-=======
-    "dotenv": "^17.4.2",
-    "lucide-react": "^1.8.0",
-    "mime": "^4.1.0",
-    "react": "^19.2.5",
->>>>>>> c4dd4ac (Patch)
     "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.5",
     "react-router": "^7.14.2",

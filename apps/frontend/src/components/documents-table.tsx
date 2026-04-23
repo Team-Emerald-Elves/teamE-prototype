@@ -586,6 +586,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     size={true}
                                     lock="none"
                                     refresh={setReload}
+                                    roles={roles}
                                 />
                             </div>
                         </div>
@@ -694,6 +695,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         size={false}
                                                         lock={doc.lock}
                                                         refresh={setReload}
+                                                        roles={roles}
                                                     />
                                                 )}
                                                     <DeleteConfirmationPopup target={doc.id} refresh={setReload}/>
@@ -1029,6 +1031,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     size={true}
                                     lock="none"
                                     refresh={setReload}
+                                    roles={roles}
                                 />
                             </div>
                         </div>
@@ -1167,6 +1170,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     size={false}
                                                                     lock={doc.lock}
                                                                     refresh={setReload}
+                                                                    roles={roles}
                                                                 />
                                                             )}
 

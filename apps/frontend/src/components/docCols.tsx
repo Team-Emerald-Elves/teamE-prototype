@@ -27,6 +27,7 @@ export type Document = {
     document_status: string;
     favorite: boolean;
     lock_name: string;
+    meta_tags: string[];
 };
 
 
@@ -171,9 +172,12 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <div className="flex flex-wrap gap-1">
-                    <DocTag>{type.toLocaleString()}</DocTag>
+                    <DocTag>{type}</DocTag>
                     <DocTag>{roles}</DocTag>
                     <DocTag>{status}</DocTag>
+                    {doc.meta_tags.map(tag => (
+                        <DocTag>{tag}</DocTag>
+                    ))}
                 </div>
             );
         },

@@ -314,6 +314,103 @@ supaBaseRouter.put(
     }
 )
 
+interface IDocTagContent {
+    id: number;
+    meta_tags: string[];
+}
+supaBaseRouter.put(
+    '/update-document-tags',
+    // requireAuth(),
+    async (req: Request, res: Response) => {
+
+
+        const document: IDocTagContent = req.body
+
+
+        try {
+            console.log(document)
+            // Update contents for document.
+            const newDoc = await prisma.documentContent.update({
+                where: {
+                    id: document.id,
+                },
+                data: {
+                    meta_tags: document.meta_tags,
+                }
+            })
+
+            console.log("New doc created: ", newDoc);
+
+
+            if (!newDoc) {
+                throw new Error(`Failed to update tags.`)
+            }
+            res.sendStatus(200)
+
+        } catch (error) {
+            console.error("Update document error:", error);
+
+            res.status(500).json({
+                message: "Error modifying document",
+                error: String(error),
+            });
+        }
+    }
+)
+interface IDocTagContentRemove {
+    id: number;
+    tag: string;
+}
+supaBaseRouter.delete(
+    '/remove-document-tag',
+    // requireAuth(),
+    async (req: Request, res: Response) => {
+
+
+        const document: IDocTagContentRemove = req.body
+
+
+        try {
+            console.log(document)
+            // Update contents for document.
+            const doc = await prisma.documentContent.findFirstOrThrow({
+                where: {
+                    id: document.id,
+                },
+            })
+
+            const updatedTags = (doc.meta_tags || []).filter(
+                (t: string) => t !== document.tag
+            );
+
+            const newDoc = await prisma.documentContent.update({
+                where: {
+                    id: document.id,
+                },
+                data: {
+                    meta_tags: updatedTags,
+                },
+            });
+
+            console.log("New doc created: ", newDoc);
+
+
+            if (!newDoc) {
+                throw new Error(`Failed to update tags.`)
+            }
+            res.sendStatus(200)
+
+        } catch (error) {
+            console.error("Update document error:", error);
+
+            res.status(500).json({
+                message: "Error modifying document",
+                error: String(error),
+            });
+        }
+    }
+)
+
 supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     const { userId, isAuthenticated } = getAuth(req);
 

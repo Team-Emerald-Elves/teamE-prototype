@@ -50,6 +50,7 @@ type Document = {
     document_status: string;
     favorite: boolean;
     lock_name: string;
+    meta_tags: string[];
 };
 
 const handleDownload = async (doc: Document) => {
@@ -103,6 +104,29 @@ interface DocProps<TData extends Document, TValue> {
     reload: () => void
 }
 
+type FilterItem = {
+    key: string;
+    value: string;
+    id: string;
+    state: boolean;
+};
+
+
+function getTagFilters(docs: Document[],): FilterItem[] {
+    const uniqueTags = Array.from(
+        new Set(docs.flatMap(doc => doc.meta_tags ?? []))
+    );
+
+    return uniqueTags.map(tag => {
+        return {
+            key: "meta_tags",
+            value: tag,
+            id: tag,
+            state: false
+        };
+    });
+}
+
 
 export function DocumentsTable<TData extends Document, TValue>({
                                              columns,
@@ -119,6 +143,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const[empID, setEmpID] = useState("");
     const[reload, setReload] = useState<boolean>(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
 
     const [docFilters, setDocFilters] =  useState([
         {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
@@ -143,6 +168,10 @@ export function DocumentsTable<TData extends Document, TValue>({
         {key: 'assigned_role', value: 'UnderWriter', id: 'Underwriter', state: false},
     ]);
 
+    const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
+
+
+
     async function getDocumentsAdmin() {
         const token = await getToken();
         const payload: Record<string, string[]> = {};
@@ -150,6 +179,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         const docs = filters.filter(item => item.key === 'document_type');
         const files = filters.filter(item => item.key === 'mime_type');
         const roles = filters.filter(item => item.key === 'assigned_role');
+        const tags = filters.filter(item => item.key === 'meta_tags');
 
         if (docs.length > 0) {
             payload['document_type'] = docs.map(d => d.value);
@@ -159,6 +189,9 @@ export function DocumentsTable<TData extends Document, TValue>({
         }
         if (roles.length > 0) {
             payload['assigned_role'] = roles.map(d => d.value);
+        }
+        if (tags.length > 0) {
+            payload['meta_tags'] = tags.map(t => t.value);
         }
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
             {
@@ -178,7 +211,12 @@ export function DocumentsTable<TData extends Document, TValue>({
     }
     useEffect(() => {
         getDocumentsAdmin()
-            .then(setDocs)
+            .then((data) => {
+                if (docs.length === 0) {
+                    setTagFilters(getTagFilters(data));
+                }
+                setDocs(data);
+            })
             .catch(console.error);
     }, [filters, reload]);
 
@@ -287,6 +325,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                 filter.id === id ? { ...filter, state: !filter.state } : filter
             )
         );
+        setTagFilters(tgFilters =>
+            tgFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
     }
     if(roles.includes("administrator")) {
         return (
@@ -329,6 +372,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             }
                                                             if (isRoleOpen) {
                                                                 setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            if(isTagOpen) {
+                                                                setIsTagOpen(!isTagOpen)
                                                             }
                                                             setIsDocumentOpen(!isDocumentOpen)
                                                         }}
@@ -380,6 +426,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             if (isRoleOpen) {
                                                                 setIsRoleOpen(!isRoleOpen)
                                                             }
+                                                            if(isTagOpen) {
+                                                                setIsTagOpen(!isTagOpen)
+                                                            }
                                                             setIsTypeOpen(!isTypeOpen)
                                                         }}
                                                         className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
@@ -429,6 +478,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             if (isDocumentOpen) {
                                                                 setIsDocumentOpen(!isDocumentOpen)
                                                             }
+                                                            if(isTagOpen) {
+                                                                setIsTagOpen(!isTagOpen)
+                                                            }
                                                             setIsRoleOpen(!isRoleOpen)
                                                         }}
                                                         className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
@@ -463,6 +515,49 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         checked={option.state}
                                                                         onChange={(e) => handleCheckbox(e, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="relative inline-block text-left">
+                                                <div className="flex gap-x-0.5">
+                                                    <button
+                                                        onClick={() => {
+                                                            if (isTypeOpen) {
+                                                                setIsTypeOpen(!isTypeOpen)
+                                                            }
+                                                            if (isDocumentOpen) {
+                                                                setIsDocumentOpen(!isDocumentOpen)
+                                                            }
+                                                            if (isRoleOpen) {
+                                                                setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            setIsTagOpen(!isTagOpen);
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                    >
+                                                        Tags
+                                                    </button>
+                                                    <button onClick={() => setIsTagOpen(false)} className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
+                                                    </button>
+                                                </div>
+
+                                                {isTagOpen && (
+                                                    <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="py-1">
+                                                            {tagFilters.map((option) => (
+                                                                <div key={option.id} className="flex items-center justify-between">
+                                                                    <label className="text-sm ml-2">{option.id}</label>
+                                                                    <input
+                                                                        id={option.id}
+                                                                        type="checkbox"
+                                                                        checked={option.state}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                                        className="mr-3"
                                                                     />
                                                                 </div>
                                                             ))}
@@ -872,6 +967,49 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </div>
                                                 )}
                                             </div>
+                                            <div className="relative inline-block text-left">
+                                                <div className="flex gap-x-0.5">
+                                                    <button
+                                                        onClick={() => {
+                                                            if (isTypeOpen) {
+                                                                setIsTypeOpen(!isTypeOpen)
+                                                            }
+                                                            if (isDocumentOpen) {
+                                                                setIsDocumentOpen(!isDocumentOpen)
+                                                            }
+                                                            if (isRoleOpen) {
+                                                                setIsRoleOpen(!isRoleOpen)
+                                                            }
+                                                            setIsTagOpen(!isTagOpen);
+                                                        }}
+                                                        className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                    >
+                                                        Tags
+                                                    </button>
+                                                    <button onClick={() => setIsTagOpen(false)} className="text-black">
+                                                        <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
+                                                    </button>
+                                                </div>
+
+                                                {isTagOpen && (
+                                                    <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="py-1">
+                                                            {tagFilters.map((option) => (
+                                                                <div key={option.id} className="flex items-center justify-between">
+                                                                    <label className="text-sm ml-2">{option.id}</label>
+                                                                    <input
+                                                                        id={option.id}
+                                                                        type="checkbox"
+                                                                        checked={option.state}
+                                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                                        className="mr-3"
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -907,6 +1045,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         );
                                         setFileFilters(fiFilters =>
                                             fiFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setRoleFilters(rlFilters =>
+                                            rlFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );

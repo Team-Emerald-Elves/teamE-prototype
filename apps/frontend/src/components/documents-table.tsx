@@ -10,7 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 import { Button } from './ui/button.tsx'
-import { SlidersHorizontalIcon, File01Icon, X, Folder01Icon, UserGroupIcon} from "@hugeicons/core-free-icons";
+import { SlidersHorizontalIcon, File01Icon, X, Folder01Icon, UserGroupIcon, PencilEdit02Icon} from "@hugeicons/core-free-icons";
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -152,7 +152,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
     const [fileFilters, setFileFilters] =  useState([
         {key: 'mime_type', value: mime.getType('docx'), id: '.docx', state: false},
-        {key: 'mime_type', value: mime.getType('jpeg'), id: '.jpeg', state: false},
+        {key: 'mime_type', value: mime.getType('jpg'), id: '.jpg', state: false},
         {key: 'mime_type', value: mime.getType('pdf'), id: '.pdf', state: false},
         {key: 'mime_type', value: mime.getType('png'), id: '.png', state: false},
         {key: 'mime_type', value: mime.getType('pptx'), id: '.pptx', state: false},
@@ -539,7 +539,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         }}
                                                         className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
                                                     >
-                                                        Tags
+                                                        <div className="pr-1"><HugeiconsIcon size={16} icon={PencilEdit02Icon}/></div>
+                                                        Custom Tags
                                                     </button>
                                                     <button onClick={() => setIsTagOpen(false)} className="text-black">
                                                         <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>

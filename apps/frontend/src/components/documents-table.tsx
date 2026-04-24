@@ -610,6 +610,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
+                                                filter.id === id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
                                     }} className="text-black pr-2">
                                         <div className="ml-1"><HugeiconsIcon size={16} icon={X}/></div>
                                     </button>
@@ -1053,9 +1058,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
-                                        setRoleFilters(rlFilters =>
-                                            rlFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
+                                                filter.id === id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
                                     }} className="text-black pr-2">

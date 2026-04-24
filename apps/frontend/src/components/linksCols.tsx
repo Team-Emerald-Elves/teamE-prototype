@@ -16,6 +16,14 @@ import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
 import {TagInput} from "@/components/tagInput.tsx";
 import {useState} from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverDescription,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 export type Document = {
     id: number;
@@ -153,20 +161,38 @@ export const columns: ColumnDef<Links>[] = [
         },
         cell: ({ row }) => {
             const link = row.original;
-            const [tagList, setTagList] = useState<string[]>([]);
+            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-                <TagInput
-                    tags={tagList}
-                    setTags={async (newTags) => {
-                        setTagList(newTags);
-                        await updateTags(link.id, newTags as string[]).catch(console.error);
-                    }}
-                    remove={async (tagToRemove: string) => {
-                        await removeTag(link.id, tagToRemove);
-                    }}
-                    placeholder="Add tag..."
-                />
+                <div>
+                    {tagList.map((item) => (
+                        <DocTag>{item}</DocTag>
+                    ))}
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline">+</Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                            <PopoverHeader>
+                                <PopoverTitle>Add Tags</PopoverTitle>
+
+                            </PopoverHeader>
+                            <TagInput
+                                tags={tagList}
+                                setTags={async (newTags) => {
+                                    setTagList(newTags);
+                                    await updateTags(link.id, newTags as string[]).catch(console.error);
+                                }}
+                                remove={async (tagToRemove: string) => {
+                                    await removeTag(link.id, tagToRemove);
+                                }}
+                                placeholder="Add tag..."
+                            />
+                        </PopoverContent>
+                    </Popover>
+
+                </div>
+
             );
         },
     }

@@ -16,13 +16,12 @@ export default function CalendarPage() {
                        setOpen={setOpen}
                        selectedEvent={selectedEvent}
                        setSelectedEvent={setSelectedEvent} setReload={setReload}/>
-            <div className="pr-7 pl-7 pt-2" >
-                <div className=" p-5 h-[1000px] w-full bg-white rounded-xl shadow-sm border">
-                    <h3></h3>
-                    <div className="pb-3">
-                        <AddEventButton setOpen={setOpen} />
-                    </div>
 
+            <div className="pr-7 pl-7 pt-2 flex flex-col h-screen overflow-scroll" >
+                <div className="mb-2 ml-2">
+                    <AddEventButton setOpen={setOpen} />
+                </div>
+                <div className=" p-5 w-full bg-white rounded-xl shadow-sm border flex-1 ">
                     <FullCalendarComponent setOpen={setOpen} setSelectedEvent={setSelectedEvent} reload={reload} setReload={setReload}/>
                 </div>
             </div>

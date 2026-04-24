@@ -30,7 +30,6 @@ export default function DateAndTime(props: DateAndTimeProps) {
         <FieldGroup className="max-w-xs flex flex-row gap-2" id={props.id}>
             {/* DATE */}
             <Field>
-                <FieldLabel>Date</FieldLabel>
 
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -76,7 +75,6 @@ export default function DateAndTime(props: DateAndTimeProps) {
             {/* TIME */}
             {!props.disableTime && (
                 <Field className="w-32">
-                    <FieldLabel>Time</FieldLabel>
 
                     <Input
                         type="time"

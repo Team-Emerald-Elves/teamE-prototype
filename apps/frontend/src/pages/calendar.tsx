@@ -3,6 +3,7 @@ import AddEventButton from "@/components/addEventButton.tsx";
 import EventForm from "@/components/eventForm.tsx";
 import PageHeader from "@/components/page-header.tsx";
 import {useState} from "react";
+import EventDetails from "@/components/eventDetailsPopup.tsx";
 
 export default function CalendarPage() {
     const [open, setOpen] = useState(false);
@@ -12,10 +13,11 @@ export default function CalendarPage() {
     return (
         <>
             <PageHeader title="Calendar" description="Keep track of important events here."></PageHeader>
-            <EventForm open={open}
-                       setOpen={setOpen}
-                       selectedEvent={selectedEvent}
-                       setSelectedEvent={setSelectedEvent} setReload={setReload}/>
+            {/*<EventForm open={open}*/}
+            {/*           setOpen={setOpen}*/}
+            {/*           selectedEvent={selectedEvent}*/}
+            {/*           setSelectedEvent={setSelectedEvent} setReload={setReload}/>*/}
+            <EventDetails openEvent={open} selectedEvent={selectedEvent} setReload={setReload} setSelectedEvent={setSelectedEvent} setOpenEvent={setOpen} />
 
             <div className="pr-7 pl-7 pt-2 flex flex-col h-screen overflow-scroll" >
                 <div className="mb-2 ml-2">

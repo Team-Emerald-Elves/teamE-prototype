@@ -60,6 +60,8 @@ app.use(clerkMiddleware());
 // Router-level middleware.
 app.use('/api/supabase', supaBaseRouter);
 
+app.use()
+
 app.get('/', (req, res) => {
     res.sendStatus(200);
 })

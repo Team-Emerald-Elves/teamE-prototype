@@ -66,6 +66,7 @@ export default function FullCalendarComponent({
     }, [getToken, reload]);
 
     return (
+        <div className="h-full w-full">
         <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
@@ -94,8 +95,10 @@ export default function FullCalendarComponent({
             ]}
 
             events={events}
+            height="100%"
             contentHeight="auto"
             stickyHeaderDates={true}
         />
+        </div>
     );
 }

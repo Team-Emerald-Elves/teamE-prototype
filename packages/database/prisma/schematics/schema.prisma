@@ -71,7 +71,6 @@ model documentContent {
   lock            String?    @default("none")
   meta_tags       String[]
   created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
 }
 
 model Links {
@@ -80,6 +79,8 @@ model Links {
   url       String
   owner     String?
   lock      String?
+  created_at      DateTime @default(now())
+  updated_at         DateTime @updatedAt
 }
 
 model CalendarEvents {

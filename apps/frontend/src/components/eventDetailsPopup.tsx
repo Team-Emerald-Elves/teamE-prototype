@@ -99,7 +99,7 @@ export default function EventDetails(props: EventDetailsProps) {
                     props.setSelectedEvent(null);
                 }}}>
                 <DialogContent style={{ backgroundColor: bgColor }}>
-                    <h3>{props.selectedEvent?.title}</h3>
+                    <h3 className="text-xl font-bold">{props.selectedEvent?.title}</h3>
 
                     <p>Expiring: {props.selectedEvent?.start?.toLocaleString()}</p>
                     <p>Role: {props.selectedEvent && role}</p>

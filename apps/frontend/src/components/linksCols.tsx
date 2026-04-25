@@ -161,12 +161,14 @@ export const columns: ColumnDef<Links>[] = [
         },
         cell: ({ row }) => {
             const link = row.original;
+            const tags = link.meta_tags;
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
                 <div>
-                    {tagList.map((item) => (
-                        <DocTag>{item}</DocTag>
+                    {tags.map((item) => (
+                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
+
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>

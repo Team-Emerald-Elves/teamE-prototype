@@ -36,6 +36,8 @@ export type Links = {
     url: string;
     owner: string;
     favorite: boolean;
+    created_at: string;
+    updated_at: string;
 };
 
 
@@ -96,5 +98,51 @@ export const columns: ColumnDef<Links>[] = [
                 </Button>
             )
         },
-    }
+    },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Last Modified
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.updated_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
 ]

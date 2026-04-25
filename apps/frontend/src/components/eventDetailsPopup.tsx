@@ -11,6 +11,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import ExpiringBar from "@/components/expiringBar.tsx";
 
 type EventDetailsProps = {
     selectedEvent: any;
@@ -20,24 +23,6 @@ type EventDetailsProps = {
     setOpenEvent: (event: any) => void;
 }
 
-function lightenColor(hex: string, percent: number): string {
-    // remove #
-    const cleanHex = hex.replace("#", "");
-
-    const num = parseInt(cleanHex, 16);
-
-    let r = (num >> 16) & 255;
-    let g = (num >> 8) & 255;
-    let b = num & 255;
-
-    r = Math.round(r + (255 - r) * percent);
-    g = Math.round(g + (255 - g) * percent);
-    b = Math.round(b + (255 - b) * percent);
-
-    return `#${(1 << 24 | (r << 16) | (g << 8) | b)
-        .toString(16)
-        .slice(1)}`;
-}
 
 export default function EventDetails(props: EventDetailsProps) {
     const [empID, setEmpID] = useState("");
@@ -84,9 +69,6 @@ export default function EventDetails(props: EventDetailsProps) {
         role = ROLE_COLORS[props.selectedEvent.backgroundColor];
     }
 
-    const bgColor = props.selectedEvent?.backgroundColor
-        ? lightenColor(props.selectedEvent.backgroundColor, 0.6)
-        : "#ffffff";
 
 
 
@@ -98,11 +80,18 @@ export default function EventDetails(props: EventDetailsProps) {
                 if (!isOpen) {
                     props.setSelectedEvent(null);
                 }}}>
-                <DialogContent style={{ backgroundColor: bgColor }}>
-                    <h3 className="text-xl font-bold">{props.selectedEvent?.title}</h3>
+                <DialogContent className="overflow-visible max-w-3xl">
+                    <div className="flex flex-col gap-2">
+                        <h3 className="text-xl font-bold">{props.selectedEvent?.title}</h3>
+                        <ExpiringBar createdAt={props.selectedEvent?.extendedProps.created_at} expiresAt={props.selectedEvent?.start} />
+                    </div>
+                        <div className="flex items-center gap-x-2">
+                        <FontAwesomeIcon icon={faCircle} style={{ color: props.selectedEvent?.backgroundColor }} />
+                        <p>{props.selectedEvent && role}</p>
+                    </div>
 
-                    <p>Expiring: {props.selectedEvent?.start?.toLocaleString()}</p>
-                    <p>Role: {props.selectedEvent && role}</p>
+                    {(eventEmpId !== "none") && (<div><p>Checked Out By:</p><p>{props.selectedEvent?.extendedProps.checkedOut}</p></div>)}
+
                     {(eventEmpId === empID) && (
                         <Button onClick={() => {setOpen(true); props.setOpenEvent(false)}}>Edit Event</Button>)}
                 </DialogContent>

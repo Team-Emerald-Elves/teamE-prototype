@@ -1,154 +1,3 @@
-// import '../App.css'
-//
-// import {
-//     Table,
-//     TableBody,
-//     TableCell,
-//     TableHead,
-//     TableHeader,
-//     TableRow,
-// } from "@/components/ui/table"
-//
-// import { Button } from "@/components/ui/button"
-// import {useEffect, useState} from "react";
-// import Editlinksform from "@/components/editlinksform.tsx";
-// import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
-// import type { Links,
-//               linksProps
-// } from './types/linkstable.d.ts';
-// import {useAuth} from "@clerk/react";
-// import AddLinksForm from "@/components/addlinksform.tsx";
-//
-// async function getLinks() {
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch links");
-//     }
-//     const data = await res.json();
-//     return data;
-// }
-//
-// async function getRoleLinks(linkOwner: string) {
-//
-//     const reqData ={
-//         owner: linkOwner
-//     }
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-link-role`, { method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(reqData)
-//     });
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch links");
-//     }
-//     const data = await res.json();
-//
-//     return data;
-// }
-//
-// function LinksTable(){
-//     const [roles, setRoles] = useState<string[]>([]);
-//     const { getToken, isSignedIn } = useAuth();
-//     const [links, setLinks] = useState<Links[]>([]);
-//     const [me, setMe] = useState(null);
-//
-//     useEffect(() => {
-//         if (!isSignedIn) {
-//             setMe(null);
-//             return;
-//         }
-//
-//         async function load() {
-//             const token = await getToken();
-//
-//             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             });
-//
-//             const data = await res.json();
-//             setMe(data);
-//             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
-//         }
-//
-//         load();
-//     }, [isSignedIn]);
-//
-//     useEffect(() => {
-//         if (roles.length === 0) return; // wait until roles are loaded
-//
-//         if (roles.includes("administrator")) {
-//             getLinks()
-//                 .then(setLinks)
-//                 .catch(console.error);
-//         } else {
-//             getRoleLinks(me.roles.at(0))
-//                 .then(setLinks)
-//                 .catch(console.error);
-//         }
-//     }, [roles]);
-//
-//     return (
-//         <>
-//             <div className="max-w-10xl mx-auto px-6 py-6">
-//                 <div className="bg-white rounded-xl shadow-sm border p-4">
-//                     <div className="flex justify-end">
-//                     <div className="pr-6 py-2 relative flex items-center">
-//                         <AddLinksForm
-//                             type="Add Link"
-//                             name="Name"
-//                             url="www.example.com"
-//                             description="What is the link used for"
-//                             size={true}
-//                             me={me}
-//                         />
-//                     </div>
-//                     </div>
-//                 <Table className="border rounded-lg overflow-hidden">
-//                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-//                         <TableRow >
-//                             <TableHead className=" text-[#0b4461] text-left">Name</TableHead>
-//                             <TableHead className=" text-[#0b4461] text-left">URL</TableHead>
-//                             <TableHead className=" text-[#0b4461] text-left">Role</TableHead>
-//                             <TableHead></TableHead>
-//                             <TableHead className="flex text-left items-center pl-[35px] text-[#0b4461]">Action</TableHead>
-//                         </TableRow>
-//                     </TableHeader>
-//                     <TableBody>
-//                         {links.map((l) => (
-//                             <TableRow key={l.link_name}>
-//                                 <TableCell>{l.link_name}</TableCell>
-//                                 <TableCell><a href={l.url}>{l.url}</a></TableCell>
-//                                 <TableCell>{l.owner}</TableCell>
-//                                 <TableCell></TableCell>
-//
-//                                 <TableCell className="flex items-center gap-3">
-//                                     <Editlinksform
-//                                         id={l.id}
-//                                         name ={l.link_name}
-//                                         url ={l.url}
-//                                         owner={roles.at(0)}
-//                                     />
-//                                     <Button variant = "destructive" size = "icon">
-//                                        <DeletePopupConfirmationLinks link={l} />
-//                                     </Button>
-//                                 </TableCell>
-//                             </TableRow>
-//                         ))}
-//                     </TableBody>
-//                 </Table>
-//             </div>
-//             </div>
-//         </>
-//     )
-// }
-//
-// export default LinksTable;
-
 "use client"
 import * as React from "react"
 import {
@@ -189,6 +38,7 @@ import {Download01Icon, SlidersHorizontalIcon, X} from "@hugeicons/core-free-ico
 import AddLinksForm from "@/components/addlinksform.tsx";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Links = {
    id: string;
@@ -397,12 +247,15 @@ export default function LinksTable<TData extends Links, TValue>({
             )
         );
     }
+    const [tab, setTab] = useState("All");
 
     if(roles.includes("administrator")) {
         return (
             <>
+                <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
+                        <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
@@ -418,13 +271,14 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="relative inline-block text-left">
+                                {tab === "All" ?
                                 <button
                                     onClick={() => setIsRoleOpen(!isRoleOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
                                     <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                     Filter
-                                </button>
+                                </button> : null }
                                 {isRoleOpen && (
                                     <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-1">
@@ -454,6 +308,17 @@ export default function LinksTable<TData extends Links, TValue>({
                                     size={true}
                                     reload={setReload}
                                 />
+                            </div>
+                        </div>
+                            <div className="flex ">
+                                <TabsList>
+                                    <TabsTrigger value="All">All</TabsTrigger>
+                                    <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
+                                    <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
+                                    <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
+                                    <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
+                                    <TabsTrigger value="Underwriter">Under Writer</TabsTrigger>
+                                </TabsList>
                             </div>
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
@@ -587,6 +452,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                     </div>
                 </div>
+            </Tabs>
             </>
         )
     }

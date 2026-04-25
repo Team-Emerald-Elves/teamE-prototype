@@ -43,6 +43,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
             extendedProps: {
                 lock: event.lock,
                 emp_id: event.emp_id,
+                created_at: event.created_at,
             }
         }));
 

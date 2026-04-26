@@ -198,8 +198,7 @@ type Links = {
    favorite: boolean;
    lock: string;
    lock_name: string;
-   created_at: string;
-   updated_at: string;
+   meta_tags: string[];
 };
 
 type Document = {

@@ -419,7 +419,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     }
 
     try {
-        // get employee for favorites
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,
@@ -441,7 +441,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         );
 
 
-        // ✅ collect BOTH content_owner and lock IDs
+
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
         const lockIds = documents
@@ -452,7 +452,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ...new Set([...ownerIds, ...lockIds])
         ];
 
-        // ✅ fetch all relevant employees
+
         const employees = await prisma.employee.findMany({
             where: {
                 id: { in: allEmployeeIds as string[] },
@@ -464,7 +464,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
-        // ✅ build lookup map
+
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
@@ -472,7 +472,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ])
         );
 
-        // ✅ format documents (add lock_name)
+
         const formattedDocs = documents.map((doc) => ({
             ...doc,
             content_owner:
@@ -506,5 +506,138 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         res.status(500).json({ message: "Failed to fetch documents" });
     }
 });
+
+supaBaseRouter.post(
+    "/get-hit-counts",
+    async (req: Request, res: Response) => {
+        const { start, end } = req.body;
+
+        if (!start || !end) {
+            return res.status(400).json({
+                message: "start and end dates are required",
+            });
+        }
+
+        try {
+            const startDate = new Date(start);
+            startDate.setHours(0, 0, 0, 0);
+
+            const endDate = new Date(end);
+            endDate.setHours(23, 59, 59, 999);
+
+
+            const hits = await prisma.hit_counts.groupBy({
+                by: ["hit_date", "target_type", "target_id"],
+                where: {
+                    hit_date: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                },
+                _sum: {
+                    count: true,
+                },
+            });
+
+            //filter docs by reference and workflow
+            const documentIds = [
+                ...new Set(
+                    hits
+                        .filter((h) => h.targetType === "DOCUMENT")
+                        .map((h) => Number(h.targetId))
+                ),
+            ];
+
+            const docs =
+                documentIds.length > 0
+                    ? await prisma.documentContent.findMany({
+                        where: {
+                            id: { in: documentIds },
+                        },
+                        select: {
+                            id: true,
+                            document_type: true,
+                        },
+                    })
+                    : [];
+
+            const docTypeMap = new Map(
+                docs.map((d) => [
+                    String(d.id),
+                    d.document_type?.toLowerCase() || "",
+                ])
+            );
+
+
+            const dateRange: string[] = [];
+            const cursor = new Date(startDate);
+
+            while (cursor <= endDate) {
+                dateRange.push(cursor.toISOString().split("T")[0]);
+                cursor.setDate(cursor.getDate() + 1);
+            }
+
+
+            type ChartRow = {
+                date: string;
+                documents: number;
+                links: number;
+                reference: number;
+                workflow: number;
+            };
+
+            const chartMap = new Map<string, ChartRow>();
+
+            for (const date of dateRange) {
+                chartMap.set(date, {
+                    date,
+                    documents: 0,
+                    links: 0,
+                    reference: 0,
+                    workflow: 0,
+                });
+            }
+
+
+            for (const row of hits) {
+                const date = row.hitDate.toISOString().split("T")[0];
+                const count = row._sum.count ?? 0;
+
+                const entry = chartMap.get(date);
+                if (!entry) continue;
+
+                if (row.targetType === "DOCUMENT") {
+                    entry.documents += count;
+
+                    const docType = docTypeMap.get(row.targetId);
+
+                    if (docType === "reference") {
+                        entry.reference += count;
+                    }
+
+                    if (docType === "workflow") {
+                        entry.workflow += count;
+                    }
+                }
+
+                if (row.targetType === "LINK") {
+                    entry.links += count;
+                }
+            }
+
+            // ----------------------------
+            // 7. Return response
+            // ----------------------------
+            return res.status(200).json([...chartMap.values()]);
+        } catch (error) {
+            console.error("Hit count chart error:", error);
+
+            return res.status(500).json({
+                message: "Error generating hit count chart",
+                error: String(error),
+            });
+        }
+    }
+);
 
 export default supaBaseRouter

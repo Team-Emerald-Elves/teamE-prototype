@@ -196,6 +196,8 @@ export default function Favorites() {
                                                 <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
                                                 <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
                                                 <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
                                             </TableRow>
                                         </TableHeader>
 

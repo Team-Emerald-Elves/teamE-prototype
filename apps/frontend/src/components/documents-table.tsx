@@ -688,7 +688,6 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         );
                                         setTagFilters(tgFilters =>
                                             tgFilters.map(filter =>
-                                                filter.id === id ? { ...filter, state: !filter.state } : filter
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -1211,7 +1210,6 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         );
                                         setTagFilters(tgFilters =>
                                             tgFilters.map(filter =>
-                                                filter.id === id ? { ...filter, state: !filter.state } : filter
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );

@@ -20,6 +20,7 @@ type Document = {
     document_status: string;
     favorite: boolean;
     lock: boolean;
+    created_at: string;
 };
 
 const handleDownload = async (doc: Document) => {
@@ -56,6 +57,7 @@ type FavoriteProps = {
 export default function FavoritesTableEntry(props: FavoriteProps)  {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
+    const created = new Date(props.d.created_at);
     return (
         <TableRow
             key={props.d.id}
@@ -87,6 +89,10 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                         </div>
                     </DialogContent>
                 </Dialog>
+            </TableCell>
+
+            <TableCell className="text-[14px] font-small text-gray-700">
+                {created.toLocaleString()}
             </TableCell>
 
             <TableCell className="text-[14px] font-small text-gray-700">

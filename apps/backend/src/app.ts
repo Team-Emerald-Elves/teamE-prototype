@@ -34,8 +34,6 @@ import addEventRoute from "./routes/add-event.ts";
 import updateEventRoute from "./routes/update-event.ts";
 import CheckoutLinks from "./routes/checkin-checkout-links.ts";
 import deleteEventRoute from "./routes/delete-event.ts";
-import linkTagUpdate from "./routes/update-link-tags.ts";
-import linkTagDelete from "./routes/link-tag-delete.ts";
 
 
 const app = express();
@@ -86,8 +84,6 @@ app.post('/update-favorite', updateFavoriteRoute);
 app.post('/update-favorite-link', updateFavoriteLinksRoute);
 
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
-app.put('/update-link-tags', linkTagUpdate);
-app.delete('/delete-link-tag', linkTagDelete);
 
 
 app.post('/edit-employee', validate(EditEmployeeModel), editEmployeeRoute);

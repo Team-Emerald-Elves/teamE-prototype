@@ -198,7 +198,6 @@ type Links = {
    favorite: boolean;
    lock: string;
    lock_name: string;
-   meta_tags: string[];
 };
 
 type Document = {
@@ -265,23 +264,15 @@ export default function LinksTable<TData extends Links, TValue>({
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
-    const [isTagOpen, setIsTagOpen] = useState(false);
-
 
 
     async function getLinks() {
         const token = await getToken();
         const payload: Record<string, string[]> = {};
 
-        const tags = filters.filter(item => item.key === 'meta_tags');
 
-        const role = filters.filter(item => item.key === 'owner');
-
-        if (role.length > 0) {
-            payload['owner'] = role.map(d => d.value);
-        }
-        if (tags.length > 0) {
-            payload['meta_tags'] = tags.map(t => t.value);
+        if (filters.length > 0) {
+            payload['owner'] = filters.map(d => d.value);
         }
 
 
@@ -298,16 +289,13 @@ export default function LinksTable<TData extends Links, TValue>({
             throw new Error("Failed to fetch links");
         }
         const data = await res.json();
+        setLinks(data)
         return data;
     }
     
     useEffect(() => {
         getLinks()
-            .then((data) => {
-                if (links.length === 0) {
-                    setTagFilters(getTagFilters(data));
-                }
-                setLinks(data);})
+            .then(setLinks)
             .catch(console.error);
     }, [filters, reload]);
     
@@ -408,36 +396,6 @@ export default function LinksTable<TData extends Links, TValue>({
                 filter.id === id ? { ...filter, state: !filter.state } : filter
             )
         );
-
-        setTagFilters(tgFilters =>
-            tgFilters.map(filter =>
-                filter.id === id ? { ...filter, state: !filter.state } : filter
-            )
-        );
-    }
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
-
-    type FilterItem = {
-        key: string;
-        value: string;
-        id: string;
-        state: boolean;
-    };
-
-    function getTagFilters(links: Links[],): FilterItem[] {
-        const uniqueTags = Array.from(
-            new Set(links.flatMap(link => link.meta_tags ?? []))
-        );
-
-        return uniqueTags.map(tag => {
-            return {
-                key: "meta_tags",
-                value: tag,
-                id: tag,
-                state: false
-            };
-        });
     }
 
     if(roles.includes("administrator")) {
@@ -461,75 +419,29 @@ export default function LinksTable<TData extends Links, TValue>({
                             </InputGroup>
                             <div className="relative inline-block text-left">
                                 <button
-                                    onClick={() => setIsDropdownOpen(prev => !prev)}
+                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
-                                    <div className="pr-1">
-                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
-                                    </div>
+                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                     Filter
                                 </button>
-
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-2">
-
-                                            {/* ROLE */}
-                                            <div className="px-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsRoleOpen(prev => !prev);
-                                                        setIsTagOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Role
-                                                </button>
-
-                                                {isRoleOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1">
-                                                        {roleFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* TAGS */}
-                                            <div className="px-2 mt-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsTagOpen(prev => !prev);
-                                                        setIsRoleOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Tags
-                                                </button>
-
-                                                {isTagOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
-                                                        {tagFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
+                                {isRoleOpen && (
+                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-1">
+                                            {roleFilters.map((option) => (
+                                                <div key={option.id}
+                                                     className="flex items-center justify-between">
+                                                    <label htmlFor={option.id}
+                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                    <input
+                                                        id={option.id}
+                                                        type="checkbox"
+                                                        checked={option.state}
+                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 )}
@@ -553,11 +465,6 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
-                                            )
-                                        );
-                                        setTagFilters(tgFilters =>
-                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -704,75 +611,29 @@ export default function LinksTable<TData extends Links, TValue>({
                             </InputGroup>
                             <div className="relative inline-block text-left">
                                 <button
-                                    onClick={() => setIsDropdownOpen(prev => !prev)}
+                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
-                                    <div className="pr-1">
-                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
-                                    </div>
+                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                     Filter
                                 </button>
-
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-2">
-
-                                            {/* ROLE */}
-                                            <div className="px-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsRoleOpen(prev => !prev);
-                                                        setIsTagOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Role
-                                                </button>
-
-                                                {isRoleOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1">
-                                                        {roleFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* TAGS */}
-                                            <div className="px-2 mt-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsTagOpen(prev => !prev);
-                                                        setIsRoleOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Tags
-                                                </button>
-
-                                                {isTagOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
-                                                        {tagFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
+                                {isRoleOpen && (
+                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-1">
+                                            {roleFilters.map((option) => (
+                                                <div key={option.id}
+                                                     className="flex items-center justify-between">
+                                                    <label htmlFor={option.id}
+                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                    <input
+                                                        id={option.id}
+                                                        type="checkbox"
+                                                        checked={option.state}
+                                                        onChange={(e) => handleCheckbox(e, option)}
+                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 )}
@@ -796,11 +657,6 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
-                                            )
-                                        );
-                                        setTagFilters(tgFilters =>
-                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );

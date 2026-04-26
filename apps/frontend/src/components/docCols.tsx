@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import mime from 'mime'
 import DocumentViewer from "@/components/docViewer.tsx";
 import {TableCell} from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
@@ -169,14 +170,52 @@ export const columns: ColumnDef<Document>[] = [
             const type = doc.mime_type
             const roles = doc.assigned_role;
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
+            let statusBackground = "bg-gray-300"
+            const typeBackground = "bg-neutral-200"
+            let roleBackground = "bg-gray-200"
+            const customBackground = "bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300"
+            switch (status) {
+                case 'Not Started':
+                    statusBackground = "bg-red-200";
+                    break;
+                case 'In Progress':
+                    statusBackground = "bg-yellow-300";
+                    break;
+                case 'Needs Review':
+                    statusBackground = "bg-orange-300";
+                    break;
+                case 'Done':
+                    statusBackground = "bg-green-300";
+                    break;
+            }
+            switch (roles) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-700";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-red-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-400";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-emerald-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-amber-500";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-yellow-200";
+                    break;
+            }
 
             return (
                 <div className="flex flex-wrap gap-1">
-                    <DocTag>{type}</DocTag>
-                    <DocTag>{roles}</DocTag>
-                    <DocTag>{status}</DocTag>
+                    <DocTag background={typeBackground}>{mime.getExtension(type)}</DocTag>
+                    <DocTag background={roleBackground}>{roles}</DocTag>
+                    <DocTag background={statusBackground}>{status}</DocTag>
                     {doc.meta_tags.map(tag => (
-                        <DocTag>{tag}</DocTag>
+                        <DocTag background={customBackground}>{tag}</DocTag>
                     ))}
                 </div>
             );

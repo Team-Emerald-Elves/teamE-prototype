@@ -51,7 +51,6 @@ type Document = {
     favorite: boolean;
     lock_name: string;
     meta_tags: string[];
-    created_at: string;
 };
 
 const handleDownload = async (doc: Document) => {

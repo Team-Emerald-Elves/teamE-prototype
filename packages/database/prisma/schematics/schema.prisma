@@ -56,7 +56,6 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
-  created_at      DateTime @default(now())
 }
 
 model Links {
@@ -65,8 +64,7 @@ model Links {
   url       String
   owner     String?
   lock      String?
-  created_at      DateTime @default(now())
-  updated_at         DateTime @updatedAt
+  meta_tags String[]
 }
 
 model CalendarEvents {

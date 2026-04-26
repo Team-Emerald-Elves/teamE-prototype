@@ -97,17 +97,17 @@ model CalendarEvents {
   created_at      DateTime @default(now())
 }
 
-model HitCounts {
-  targetType HitTargetType
-  targetId   String
-  hitDate    DateTime @db.Date
+model hit_counts {
+  target_type hit_target_type
+  target_id   String
+  hit_date    DateTime @db.Date
   count      Int      @default(0)
 
-  @@id([targetType, targetId, hitDate])
-  @@index([hitDate])
+  @@id([target_type, target_id, hit_date])
+  @@index([hit_date])
 }
 
-enum HitTargetType {
+enum hit_target_type {
   DOCUMENT
   LINK
 }

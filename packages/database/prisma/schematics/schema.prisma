@@ -77,6 +77,7 @@ model CalendarEvents {
   lock      String?    @default("none")
   doc_id    Int?      @default(-1)
   color     String?
+  created_at      DateTime @default(now())
 }
 
 enum Roles {

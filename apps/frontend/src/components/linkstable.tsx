@@ -198,7 +198,6 @@ type Links = {
    favorite: boolean;
    lock: string;
    lock_name: string;
-   meta_tags: string[];
 };
 
 type Document = {

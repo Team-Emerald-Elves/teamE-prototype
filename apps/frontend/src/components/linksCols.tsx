@@ -36,7 +36,6 @@ export type Links = {
     url: string;
     owner: string;
     favorite: boolean;
-    meta_tags: string[];
 };
 
 
@@ -96,59 +95,6 @@ export const columns: ColumnDef<Links>[] = [
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>
             )
-        },
-    },
-    {
-        accessorKey: "tags",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Tags
-                    <ArrowUpDown className="ml-2 h-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const link = row.original;
-            const tags = link.meta_tags;
-            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
-
-            return (
-                <div>
-                    {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
-                    ))}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline">+</Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start">
-                            <PopoverHeader>
-                                <PopoverTitle>Add Tags</PopoverTitle>
-
-                            </PopoverHeader>
-                            <TagInput
-                                tags={tagList}
-                                setTags={async (newTags) => {
-                                    setTagList(newTags);
-                                    await updateTags(link.id, newTags as string[]).catch(console.error);
-                                }}
-                                remove={async (tagToRemove: string) => {
-                                    await removeTag(link.id, tagToRemove);
-                                }}
-                                placeholder="Add tag..."
-                            />
-                        </PopoverContent>
-                    </Popover>
-
-                </div>
-
-            );
         },
     }
 ]

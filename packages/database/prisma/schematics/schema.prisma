@@ -64,7 +64,6 @@ model Links {
   url       String
   owner     String?
   lock      String?
-  meta_tags String[]
 }
 
 model CalendarEvents {

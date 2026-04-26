@@ -42,7 +42,6 @@ type contentFormProps = {
     size: boolean,
     lock: string,
     refresh?: (any) => void,
-    roles: string[],
 }
 
 type Employee = {
@@ -91,32 +90,32 @@ async function getEmployees(sessionToken: string) {
 
 function ContentForm(props: contentFormProps) {
 
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const {user} = useUser()
+    const [roles, setRoles] = useState<string[]>([]);
+    const {user} = useUser()
     const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.roles as string[]))
-    //     }
-    //
-    //     load();
-    // }, []);
+    const [me, setMe] = useState(null);
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            setMe(null);
+            return;
+        }
+
+        async function load() {
+            const token = await getToken();
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            setMe(data);
+            setRoles((data.roles as string[]))
+        }
+
+        load();
+    }, [getToken,isSignedIn]);
 
 
 
@@ -176,16 +175,19 @@ function ContentForm(props: contentFormProps) {
         getToken().then(t => setSessionToken(t ?? ""))
     }, [getToken])
 
-    const isAdmin = props.roles.some(role =>
-        role.toLowerCase().includes("administrator")
+    const isAdmin = roles.some(role =>
+        role.toLowerCase().startsWith("admin")
     );
     //console.log(isAdmin);
     useEffect(() => {
-        if(!isAdmin && props.roles.length >0 ){
-            props.roles.some(role => setFormData(prev => ({...prev, role: role})))
+        if(!isAdmin && roles.length >0 ){
+            roles.some(role => setFormData(prev => ({...prev, role: role})))
 
         }
-    }, [isAdmin]);
+    }, [isAdmin,roles]);
+    useEffect(() => {
+        console.log("Current roles:", roles);
+    }, [roles]);
     if (!sessionToken ) return;
 
 
@@ -269,11 +271,8 @@ function ContentForm(props: contentFormProps) {
 
                                         <SelectGroup>
                                             <SelectLabel>Roles</SelectLabel>
-                                            <SelectItem value="UnderWriter">Underwriter</SelectItem>
+                                            <SelectItem value="Underwriter">Underwriter</SelectItem>
                                             <SelectItem value="BusinessAnalyst">BusinessAnalyst</SelectItem>
-                                            <SelectItem value="BusinessOperator">BusinessOperator</SelectItem>
-                                            <SelectItem value="ActuarialAnalyst">ActuarialAnalyst</SelectItem>
-                                            <SelectItem value="ExcelOperator">ExcelOperator</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>

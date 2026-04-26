@@ -57,7 +57,7 @@ function Navbar(props: NavbarProps) {
         load();
     }, []);
     return (
-        <header className="w-full bg-[#013C5A] text-white sticky top-0 z-50">
+        <header className="w-full bg-[#013C5A] text-white">
             <div className="w-full flex items-center justify-between px-6 py-2">
 
                 {/*Left side*/}

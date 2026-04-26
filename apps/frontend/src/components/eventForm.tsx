@@ -178,54 +178,50 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
                 setSelectedEvent(null);
             }
         }}>
-            <DialogContent className="lg:max-w-lg" >
+            <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-2xl text-primary font-mono font-bold">
+                    <DialogTitle>
                         {selectedEvent ? "Edit Event" : "Add Event"}
                     </DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={async (e) => handleSubmit(e)}>
                     <Field className="p-1">
-                        <FieldLabel className="w-24 text-right text-sm font-bold" htmlFor="eventTitle">Event Title:</FieldLabel>
+                        <FieldLabel htmlFor="eventTitle">Event Title</FieldLabel>
                         <Input
                             placeholder="Event title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
                     </Field>
-                    <Field className="mt-2">
-                        <Label htmlFor="startDate" className="w-24 text-right text-xs font-bold">Choose Start Date</Label>
-                        <div className="grid grid-cols-2">
+                    <Field className="p-1">
+                        <div className="flex items-center space-x-2">
+                            <Label htmlFor="allDay" > All Day </Label>
+                            <Switch id="allDay"
+                                checked={allDay}
+                                onCheckedChange={setAllDay}
+                            />
+                        </div>
+                    </Field>
+                    <Field>
+                        <Label htmlFor="startDate" >Choose Start Date</Label>
                         <DateAndTime
                             id="startDate"
                             date={startDate}
                             disableTime={allDay}
                             onDateChange={setStartDate}
                         />
-                            <Field className="p-1 ml-24">
-                                <div className="flex items-center space-x-2">
-                                    <Label htmlFor="allDay" className="text-right text-xs font-bold"> All Day: </Label>
-                                    <Switch id="allDay"
-                                            checked={allDay}
-                                            onCheckedChange={setAllDay}
-                                    />
-                                </div>
-                            </Field>
-                        </div>
                     </Field>
-                    <Field className="mt-2">
-                        <Label htmlFor="endDate" className="w-24 text-right text-xs font-bold">Choose End Date</Label>
-                        <div className="grid grid-cols-2">
+                    <Field>
+                        <Label htmlFor="endDate" >Choose End Date</Label>
                         <DateAndTime
                             id="endDate"
                             date={endDate}
                             disableTime={allDay}
                             onDateChange={setEndDate}
                         />
-                        </div>
                     </Field>
-                    <Button className="mt-5" type="submit" >{selectedEvent ? "Save Changes" : "Add"}</Button>
+                    <Button type="submit" >{selectedEvent ? "Save Changes" : "Add"}</Button>
                     {selectedEvent && (
                         <Button onClick={async () => { await deleteEvent() }}>Delete</Button>
                     )}

@@ -46,8 +46,7 @@ export type Links = {
     url: string;
     owner: string;
     favorite: boolean;
-    created_at: string;
-    updated_at: string;
+    meta_tags: string[];
 };
 
 async function updateTags(lId: string, tags: string[]) {
@@ -147,7 +146,7 @@ export const columns: ColumnDef<Links>[] = [
         },
     },
     {
-        accessorKey: "created_at",
+        accessorKey: "tags",
         header: ({ column }) => {
             return (
                 <Button
@@ -155,41 +154,48 @@ export const columns: ColumnDef<Links>[] = [
                     className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Created
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    Tags
+                    <ArrowUpDown className="ml-2 h-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
             const link = row.original;
-            const date = new Date(link.created_at);
+            const tags = link.meta_tags;
+            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-                <p>{date.toLocaleString()}</p>
-            );
-        },
-    },
-    {
-        accessorKey: "updated_at",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Last Modified
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            const link = row.original;
-            const date = new Date(link.updated_at);
+                <div>
+                    {tags.map((item) => (
+                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
 
-            return (
-                <p>{date.toLocaleString()}</p>
+                    ))}
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline">+</Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                            <PopoverHeader>
+                                <PopoverTitle>Add Tags</PopoverTitle>
+
+                            </PopoverHeader>
+                            <TagInput
+                                tags={tagList}
+                                setTags={async (newTags) => {
+                                    setTagList(newTags);
+                                    await updateTags(link.id, newTags as string[]).catch(console.error);
+                                }}
+                                remove={async (tagToRemove: string) => {
+                                    await removeTag(link.id, tagToRemove);
+                                }}
+                                placeholder="Add tag..."
+                            />
+                        </PopoverContent>
+                    </Popover>
+
+                </div>
+
             );
         },
-    },
+    }
 ]

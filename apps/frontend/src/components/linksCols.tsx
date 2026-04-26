@@ -14,6 +14,16 @@ import DocTag from "@/components/doctag.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
+import {TagInput} from "@/components/tagInput.tsx";
+import {useState} from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverDescription,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 export type Document = {
     id: number;
@@ -39,6 +49,43 @@ export type Links = {
     created_at: string;
     updated_at: string;
 };
+
+async function updateTags(lId: string, tags: string[]) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: lId,
+            meta_tags: tags,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
+async function removeTag(lId: string, tag: string) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/delete-link-tag`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: lId,
+            meta_tag: tag,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
 
 
 export const columns: ColumnDef<Links>[] = [

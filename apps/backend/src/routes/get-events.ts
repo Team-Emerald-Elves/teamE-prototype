@@ -33,33 +33,6 @@ async function eventsRoute(req: express.Request, res: express.Response) {
             },
         });
 
-
-        const empIds = Array.from(
-            new Set(
-                result
-                    .map(e => e.lock)
-                    .filter((lock) => lock && lock !== "none")
-            )
-        );
-
-        const employees = await prisma.employee.findMany({
-            where: {
-                id: { in: empIds },
-            },
-            select: {
-                id: true,
-                first_name: true,
-                last_name: true,
-            },
-        });
-
-        const employeeMap = new Map(
-            employees.map(e => [
-                e.id,
-                `${e.first_name} ${e.last_name}`.trim(),
-            ])
-        );
-
         const formattedEvents = result.map((event: any) => ({
             id: event.id,
             title: event.title,
@@ -70,12 +43,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
             extendedProps: {
                 lock: event.lock,
                 emp_id: event.emp_id,
-                created_at: event.created_at,
-                checkedOut:
-                    event.lock && event.lock !== "none"
-                        ? (employeeMap.get(event.lock) ?? null)
-                        : 'none',
-            },
+            }
         }));
 
         return res.json(formattedEvents);

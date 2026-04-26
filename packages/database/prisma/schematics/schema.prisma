@@ -82,6 +82,21 @@ model CalendarEvents {
   created_at      DateTime @default(now())
 }
 
+model HitCounts {
+  targetType HitTargetType
+  targetId   String
+  hitDate    DateTime @db.Date
+  count      Int      @default(0)
+
+  @@id([targetType, targetId, hitDate])
+  @@index([hitDate])
+}
+
+enum HitTargetType {
+  DOCUMENT
+  LINK
+}
+
 enum Roles {
   UnderWriter
   BusinessAnalyst

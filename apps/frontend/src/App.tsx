@@ -51,7 +51,7 @@ function App() {
     (async () => {
         qmgr.auth(useAuth());
         qmgr.wait(async () => {
-            await qmgr.getDocuments((res) => {
+            qmgr.getDocuments((res) => {
         
             });
         });

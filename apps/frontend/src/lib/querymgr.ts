@@ -81,12 +81,13 @@ class ApiRes<T> {
 
 // Class to centralize interaction with the backend
 class QueryMgr {
-    ready: boolean = false;
     loggedIn: boolean = false;
     token: string = "";
-    checkRate: number = performance.now();
-
-
+    waitList: (() => void)[];
+    
+    constructor() {
+        this.waitList = [];
+    }
 
     async getDocuments(callBack: (res: ApiRes<Backend.documentContent[]>, docFilter?: Partial<Backend.documentContent>) => void): Promise<void> {
         const res = await postRequest("/api/supabase/list-documents", this.token, "");
@@ -101,30 +102,33 @@ class QueryMgr {
     }
     async auth(authData: UseAuthReturn) {
         authData.getToken().then((tkn) => {
-            if (!tkn) {
-                throw Error("QueryManager failed to auth");
-            }
-            this.token = tkn;
-            this.ready = true;
+            console.log("QMGR unable to auth.");
+            this.token = tkn!;
         })
         this.loggedIn = authData.isSignedIn ? true : false;
-        this.ready = this.loggedIn;
-        console.log("Qmgr readied: ", this.ready);
+        if (this.loggedIn) {
+            this.doneWait();
+        }
+    }
+    deauth() {
+        this.loggedIn = false;
+        this.wait = (then: () => void) => {
+            this.waitList.concat(then);
+        }
+    }
+    private async doneWait() {
+        this.wait = (then: () => void) => {
+            then();
+        }
+        this.waitList.forEach((cb) => {
+            if (this.loggedIn) {
+                cb();
+            }
+        })
+        console.log("Qmgr Ready");
     }
     wait = (then: () => void) => {
-        console.log("Qmgr check rate: ", this.checkRate);
-        const wt = setInterval(() => {
-            if (this.ready) {
-                this.wait = (then: () => void) => {
-                    then();
-                }
-                then();
-                console.log("Qmgr Ready");
-                clearInterval(wt);
-            } else {
-                console.log("Qmgr wait ", this.checkRate);
-            }
-        }, this.checkRate);
+        this.waitList.concat(then);
     }
 }
 

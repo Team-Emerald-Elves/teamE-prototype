@@ -498,7 +498,6 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             if (a.assigned_role === b.assigned_role) return 0
             return (a.assigned_role === keyToMatch) ? -1 : 1
         })
-        console.log(sortedDocs);
         res.status(200).json(sortedDocs);
 
     } catch (error) {

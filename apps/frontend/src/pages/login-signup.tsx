@@ -15,7 +15,7 @@ function LoginSignup(){
                 <div className="w-1/2 h-screen text-left flex flex-col justify-center items-center bg-[url('/geometric-background.png')] bg-cover bg-no-repeat text-white p-2">
                     <div className="flex flex-col gap-4 justify-center items-center">
                         <h1 className = "text-left">Welcome to iBank</h1>
-                        <SignIn/>
+                        <SignIn withSignUp={false} />
                         <div className="flex flex-row gap-1">
                             <p>New to iBank?</p>
                             <SignUpButton>

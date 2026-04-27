@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express'
 import { validate } from '../lib/zod/middleware'
 import { notificationModel } from '../lib/zod/routes.schemas'
-import { getAuth } from '@clerk/express'
+import { getAuth, clerkClient } from '@clerk/express'
 import prisma, { Prisma, type Employee, type Notification } from '@repo/database'
 import { extend } from 'zod/mini'
 
@@ -23,11 +23,12 @@ notifyRouter.get(
                 },
                 select: {
                     id: true,
-                    roles: true
+                    roles: true,
+                    clerkUserId: true
                 }
             })
 
-            const notifications: Notification[] = await prisma.notification.findMany({
+            let notifications: Notification[] = await prisma.notification.findMany({
                 where: {
                     OR: [
                         {
@@ -46,8 +47,14 @@ notifyRouter.get(
                 },
             })
 
+            const user = await clerkClient.users.getUser(employee?.clerkUserId as string)
+
+            const updatedNotifications = notifications.map((n) => {
+                return n.public ? { ...n, profileIcon: user.imageUrl }: n
+            })
+
             if(notifications.length > 0)
-                return res.status(200).json(notifications)
+                return res.status(200).json(notifications.push)
             else
                 return res.status(404).json({message:'No notifcations found.'})
 

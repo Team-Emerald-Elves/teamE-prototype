@@ -1,3 +1,154 @@
+// import '../App.css'
+//
+// import {
+//     Table,
+//     TableBody,
+//     TableCell,
+//     TableHead,
+//     TableHeader,
+//     TableRow,
+// } from "@/components/ui/table"
+//
+// import { Button } from "@/components/ui/button"
+// import {useEffect, useState} from "react";
+// import Editlinksform from "@/components/editlinksform.tsx";
+// import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
+// import type { Links,
+//               linksProps
+// } from './types/linkstable.d.ts';
+// import {useAuth} from "@clerk/react";
+// import AddLinksForm from "@/components/addlinksform.tsx";
+//
+// async function getLinks() {
+//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
+//
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch links");
+//     }
+//     const data = await res.json();
+//     return data;
+// }
+//
+// async function getRoleLinks(linkOwner: string) {
+//
+//     const reqData ={
+//         owner: linkOwner
+//     }
+//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-link-role`, { method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(reqData)
+//     });
+//
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch links");
+//     }
+//     const data = await res.json();
+//
+//     return data;
+// }
+//
+// function LinksTable(){
+//     const [roles, setRoles] = useState<string[]>([]);
+//     const { getToken, isSignedIn } = useAuth();
+//     const [links, setLinks] = useState<Links[]>([]);
+//     const [me, setMe] = useState(null);
+//
+//     useEffect(() => {
+//         if (!isSignedIn) {
+//             setMe(null);
+//             return;
+//         }
+//
+//         async function load() {
+//             const token = await getToken();
+//
+//             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`
+//                 }
+//             });
+//
+//             const data = await res.json();
+//             setMe(data);
+//             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+//         }
+//
+//         load();
+//     }, [isSignedIn]);
+//
+//     useEffect(() => {
+//         if (roles.length === 0) return; // wait until roles are loaded
+//
+//         if (roles.includes("administrator")) {
+//             getLinks()
+//                 .then(setLinks)
+//                 .catch(console.error);
+//         } else {
+//             getRoleLinks(me.roles.at(0))
+//                 .then(setLinks)
+//                 .catch(console.error);
+//         }
+//     }, [roles]);
+//
+//     return (
+//         <>
+//             <div className="max-w-10xl mx-auto px-6 py-6">
+//                 <div className="bg-white rounded-xl shadow-sm border p-4">
+//                     <div className="flex justify-end">
+//                     <div className="pr-6 py-2 relative flex items-center">
+//                         <AddLinksForm
+//                             type="Add Link"
+//                             name="Name"
+//                             url="www.example.com"
+//                             description="What is the link used for"
+//                             size={true}
+//                             me={me}
+//                         />
+//                     </div>
+//                     </div>
+//                 <Table className="border rounded-lg overflow-hidden">
+//                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+//                         <TableRow >
+//                             <TableHead className=" text-[#0b4461] text-left">Name</TableHead>
+//                             <TableHead className=" text-[#0b4461] text-left">URL</TableHead>
+//                             <TableHead className=" text-[#0b4461] text-left">Role</TableHead>
+//                             <TableHead></TableHead>
+//                             <TableHead className="flex text-left items-center pl-[35px] text-[#0b4461]">Action</TableHead>
+//                         </TableRow>
+//                     </TableHeader>
+//                     <TableBody>
+//                         {links.map((l) => (
+//                             <TableRow key={l.link_name}>
+//                                 <TableCell>{l.link_name}</TableCell>
+//                                 <TableCell><a href={l.url}>{l.url}</a></TableCell>
+//                                 <TableCell>{l.owner}</TableCell>
+//                                 <TableCell></TableCell>
+//
+//                                 <TableCell className="flex items-center gap-3">
+//                                     <Editlinksform
+//                                         id={l.id}
+//                                         name ={l.link_name}
+//                                         url ={l.url}
+//                                         owner={roles.at(0)}
+//                                     />
+//                                     <Button variant = "destructive" size = "icon">
+//                                        <DeletePopupConfirmationLinks link={l} />
+//                                     </Button>
+//                                 </TableCell>
+//                             </TableRow>
+//                         ))}
+//                     </TableBody>
+//                 </Table>
+//             </div>
+//             </div>
+//         </>
+//     )
+// }
+//
+// export default LinksTable;
+
 "use client"
 import * as React from "react"
 import {
@@ -48,6 +199,9 @@ type Links = {
    favorite: boolean;
    lock: string;
    lock_name: string;
+   created_at: string;
+   updated_at: string;
+   meta_tags: string[];
 };
 
 type Document = {
@@ -114,15 +268,23 @@ export default function LinksTable<TData extends Links, TValue>({
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
+
 
 
     async function getLinks() {
         const token = await getToken();
         const payload: Record<string, string[]> = {};
 
+        const tags = filters.filter(item => item.key === 'meta_tags');
 
-        if (filters.length > 0) {
-            payload['owner'] = filters.map(d => d.value);
+        const role = filters.filter(item => item.key === 'owner');
+
+        if (role.length > 0) {
+            payload['owner'] = role.map(d => d.value);
+        }
+        if (tags.length > 0) {
+            payload['meta_tags'] = tags.map(t => t.value);
         }
 
 
@@ -139,13 +301,16 @@ export default function LinksTable<TData extends Links, TValue>({
             throw new Error("Failed to fetch links");
         }
         const data = await res.json();
-        setLinks(data)
         return data;
     }
     
     useEffect(() => {
         getLinks()
-            .then(setLinks)
+            .then((data) => {
+                if (links.length === 0) {
+                    setTagFilters(getTagFilters(data));
+                }
+                setLinks(data);})
             .catch(console.error);
     }, [filters, reload]);
     
@@ -246,6 +411,36 @@ export default function LinksTable<TData extends Links, TValue>({
                 filter.id === id ? { ...filter, state: !filter.state } : filter
             )
         );
+
+        setTagFilters(tgFilters =>
+            tgFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+    }
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
+
+    type FilterItem = {
+        key: string;
+        value: string;
+        id: string;
+        state: boolean;
+    };
+
+    function getTagFilters(links: Links[],): FilterItem[] {
+        const uniqueTags = Array.from(
+            new Set(links.flatMap(link => link.meta_tags ?? []))
+        );
+
+        return uniqueTags.map(tag => {
+            return {
+                key: "meta_tags",
+                value: tag,
+                id: tag,
+                state: false
+            };
+        });
     }
     const [tab, setTab] = useState("All");
 
@@ -285,26 +480,72 @@ export default function LinksTable<TData extends Links, TValue>({
                                     onClick={() => setIsRoleOpen(!isRoleOpen)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
-                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
-                                    Filter
+                                    <div className="pr-1">
+                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
+                                    </div>
+                                    Filter Tags
                                 </button> : null }
-                                {isRoleOpen && (
-                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-1">
-                                            {roleFilters.map((option) => (
-                                                <div key={option.id}
-                                                     className="flex items-center justify-between">
-                                                    <label htmlFor={option.id}
-                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
-                                                    <input
-                                                        id={option.id}
-                                                        type="checkbox"
-                                                        checked={option.state}
-                                                        onChange={(e) => handleCheckbox(e, option)}
-                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
-                                                    />
-                                                </div>
-                                            ))}
+
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-2">
+
+                                            {/*/!* ROLE *!/*/}
+                                            {/*<div className="px-2">*/}
+                                            {/*    <button*/}
+                                            {/*        onClick={() => {*/}
+                                            {/*            setIsRoleOpen(prev => !prev);*/}
+                                            {/*            setIsTagOpen(false);*/}
+                                            {/*        }}*/}
+                                            {/*        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
+                                            {/*    >*/}
+                                            {/*        Role*/}
+                                            {/*    </button>*/}
+
+                                            {/*    {isRoleOpen && (*/}
+                                            {/*        <div className="ml-2 mt-1 flex flex-col gap-1">*/}
+                                            {/*            {roleFilters.map(option => (*/}
+                                            {/*                <label key={option.id} className="flex justify-between items-center text-sm">*/}
+                                            {/*                    {option.id}*/}
+                                            {/*                    <input*/}
+                                            {/*                        type="checkbox"*/}
+                                            {/*                        checked={filters.some(f => f.id === option.id)}*/}
+                                            {/*                        onChange={(e) => handleCheckbox(e, option)}*/}
+                                            {/*                    />*/}
+                                            {/*                </label>*/}
+                                            {/*            ))}*/}
+                                            {/*        </div>*/}
+                                            {/*    )}*/}
+                                            {/*</div>*/}
+
+                                            {/* TAGS */}
+                                            <div className="px-2 mt-2">
+                                                {/*<button*/}
+                                                {/*    onClick={() => {*/}
+                                                {/*        setIsTagOpen(prev => !prev);*/}
+                                                {/*        setIsRoleOpen(false);*/}
+                                                {/*    }}*/}
+                                                {/*    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
+                                                {/*>*/}
+                                                {/*    Tags*/}
+                                                {/*</button>*/}
+
+                                                {/*{isTagOpen && (*/}
+                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                        {tagFilters.map(option => (
+                                                            <label key={option.id} className="flex justify-between items-center text-sm">
+                                                                {option.id}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={filters.some(f => f.id === option.id)}
+                                                                    onChange={(e) => handleCheckbox(e, option)}
+                                                                />
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                {/*)}*/}
+                                            </div>
+
                                         </div>
                                     </div>
                                 )}
@@ -332,13 +573,18 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                <div key={option.id} className=" flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -472,59 +718,105 @@ export default function LinksTable<TData extends Links, TValue>({
                 <div className="max-w-10xl mx-auto w-full px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
-                            <div className="flex items-center mb-4">
-                                <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
-                                    <InputGroupInput
-                                        placeholder="Search"
-                                        value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
-                                        onChange={(event) =>
-                                            table.getColumn("link_name")?.setFilterValue(event.target.value)
-                                        }
-                                        className="w-full"
-                                    />
-                                    <InputGroupAddon>
-                                        <Search />
-                                    </InputGroupAddon>
-                                </InputGroup>
-                                <div className="relative inline-block text-left">
-                                    <button
-                                        onClick={() => setIsRoleOpen(!isRoleOpen)}
-                                        className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                    >
-                                        <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
-                                        Filter
-                                    </button>
-                                    {isRoleOpen && (
-                                        <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                                            <div className="py-1">
-                                                {roleFilters.map((option) => (
-                                                    <div key={option.id}
-                                                         className="flex items-center justify-between">
-                                                        <label htmlFor={option.id}
-                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
-                                                        <input
-                                                            id={option.id}
-                                                            type="checkbox"
-                                                            checked={option.state}
-                                                            onChange={(e) => handleCheckbox(e, option)}
-                                                            className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
-                                                        />
+                        <div className="flex items-center mb-4">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                                <InputGroupInput
+                                    placeholder="Search"
+                                    value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
+                                    onChange={(event) =>
+                                        table.getColumn("link_name")?.setFilterValue(event.target.value)
+                                    }
+                                    className="w-full"
+                                />
+                                <InputGroupAddon>
+                                    <Search />
+                                </InputGroupAddon>
+                            </InputGroup>
+                            <div className="relative inline-block text-left">
+                                <button
+                                    onClick={() => setIsDropdownOpen(prev => !prev)}
+                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                >
+                                    <div className="pr-1">
+                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
+                                    </div>
+                                    Filter Tags
+                                </button>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-2">
+
+                                            {/*/!* ROLE *!/*/}
+                                            {/*<div className="px-2">*/}
+                                            {/*    <button*/}
+                                            {/*        onClick={() => {*/}
+                                            {/*            setIsRoleOpen(prev => !prev);*/}
+                                            {/*            setIsTagOpen(false);*/}
+                                            {/*        }}*/}
+                                            {/*        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
+                                            {/*    >*/}
+                                            {/*        Role*/}
+                                            {/*    </button>*/}
+
+                                            {/*    {isRoleOpen && (*/}
+                                            {/*        <div className="ml-2 mt-1 flex flex-col gap-1">*/}
+                                            {/*            {roleFilters.map(option => (*/}
+                                            {/*                <label key={option.id} className="flex justify-between items-center text-sm">*/}
+                                            {/*                    {option.id}*/}
+                                            {/*                    <input*/}
+                                            {/*                        type="checkbox"*/}
+                                            {/*                        checked={filters.some(f => f.id === option.id)}*/}
+                                            {/*                        onChange={(e) => handleCheckbox(e, option)}*/}
+                                            {/*                    />*/}
+                                            {/*                </label>*/}
+                                            {/*            ))}*/}
+                                            {/*        </div>*/}
+                                            {/*    )}*/}
+                                            {/*</div>*/}
+
+                                            {/* TAGS */}
+                                            <div className="px-2 mt-2">
+                                                {/*<button*/}
+                                                {/*    onClick={() => {*/}
+                                                {/*        setIsTagOpen(prev => !prev);*/}
+                                                {/*        setIsRoleOpen(false);*/}
+                                                {/*    }}*/}
+                                                {/*    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
+                                                {/*>*/}
+                                                {/*    Tags*/}
+                                                {/*</button>*/}
+
+                                                {/*{isTagOpen && (*/}
+                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                        {tagFilters.map(option => (
+                                                            <label key={option.id} className="flex justify-between items-center text-sm">
+                                                                {option.id}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={filters.some(f => f.id === option.id)}
+                                                                    onChange={(e) => handleCheckbox(e, option)}
+                                                                />
+                                                            </label>
+                                                        ))}
                                                     </div>
-                                                ))}
+                                                {/*)}*/}
                                             </div>
+
                                         </div>
-                                    )}
-                                </div>
-                                <div className="flex justify-end ml-auto">
-                                    <AddLinksForm
-                                        type="Add Link"
-                                        name="Name"
-                                        url="www.example.com"
-                                        size={true}
-                                        reload={setReload}
-                                    />
-                                </div>
+                                    </div>
+                                )}
                             </div>
+                            <div className="flex justify-end ml-auto">
+                                <AddLinksForm
+                                    type="Add Link"
+                                    name="Name"
+                                    url="www.example.com"
+                                    size={true}
+                                    reload={setReload}
+                                />
+                            </div>
+                        </div>
                                     <div className="flex ">
                                         <TabsList>
                                             <TabsTrigger value="All">All</TabsTrigger>
@@ -545,6 +837,11 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );

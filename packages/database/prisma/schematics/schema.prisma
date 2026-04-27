@@ -56,26 +56,40 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
+  created_at      DateTime   @default(now()) @db.Timestamp(6)
 }
 
 model Links {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  link_name String
-  url       String
-  owner     String?
-  lock      String?
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_name  String
+  url        String
+  owner      String?
+  lock       String?   @default("none")
+  meta_tags  String[]
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt @db.Timestamp(6)
 }
 
 model CalendarEvents {
-  id        Int   @id @default(autoincrement())
-  title     String
-  start_date DateTime?
-  end_date   DateTime?
+  id         Int       @id @default(autoincrement())
+  title      String
+  start_date DateTime? @db.Timestamp(6)
+  end_date   DateTime? @db.Timestamp(6)
   all_day    Boolean?
-  emp_id    String?
-  lock      String?    @default("none")
-  doc_id    Int?      @default(-1)
-  color     String?
+  emp_id     String?
+  lock       String?   @default("none")
+  doc_id     Int?      @default(-1)
+  color      String?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model hit_counts {
+  target_type hit_target_type
+  target_id   String
+  hit_date    DateTime        @db.Date
+  count       Int             @default(0)
+
+  @@id([target_type, target_id, hit_date])
 }
 
 enum Roles {
@@ -101,4 +115,9 @@ enum Status {
   needs_review
   done
   expired
+}
+
+enum hit_target_type {
+  DOCUMENT
+  LINK
 }

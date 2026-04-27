@@ -139,7 +139,7 @@ function ContentForm(props: contentFormProps) {
         id: props.currentID,
     });
     useEffect(() => {
-        if (formData.name && formData.url && formData.contentOwner && (formData.role != "Select Role") && formData.document_type && formData.document_status && formData.expirationDate && formData.expirationTime) {
+        if (formData.name && formData.url && formData.contentOwner && formData.role && formData.document_type && formData.document_status && formData.expirationDate && formData.expirationTime) {
             setIsFilled(true);
             }
         else {
@@ -223,7 +223,7 @@ function ContentForm(props: contentFormProps) {
                                 <Input
                                     id="name"
                                     name="name"
-                                    placeholder={props.currentName}
+                                    placeholder="Name..."
                                     value={formData.name}
                                     onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
                                 />
@@ -233,7 +233,7 @@ function ContentForm(props: contentFormProps) {
                                 <Input
                                     id="url"
                                     name="url"
-                                    placeholder={props.currentURL}
+                                    placeholder="https://www.example.com"
                                     value={formData.url}
                                     onChange={(e) => setFormData(prev => ({...prev, url: e.target.value}))}
                                 />

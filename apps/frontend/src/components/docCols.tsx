@@ -217,19 +217,19 @@ export const columns: ColumnDef<Document>[] = [
                     roleBackground = "bg-purple-700";
                     break;
                 case 'BusinessAnalyst':
-                    roleBackground = "bg-red-300";
+                    roleBackground = "bg-blue-300";
                     break;
                 case 'UnderWriter':
-                    roleBackground = "bg-pink-400";
+                    roleBackground = "bg-pink-300";
                     break;
                 case 'ExcelOperator':
-                    roleBackground = "bg-emerald-400";
+                    roleBackground = "bg-teal-400";
                     break;
                 case 'BusinessOperator':
-                    roleBackground = "bg-amber-500";
+                    roleBackground = "bg-violet-300";
                     break;
                 case 'ActuarialAnalyst':
-                    roleBackground = "bg-yellow-200";
+                    roleBackground = "bg-fuchsia-300";
                     break;
             }
 

@@ -72,12 +72,22 @@ function EditLinksForm(props: linkProp) {
     const [roles, setRoles] = useState<string[]>([]);
     const [roleKeys, setRoleKeys] = useState<string[]>([]);
     const [selectedRole, setSelectedRole] = useState<string>(props.owner || "");
+    const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
     });
 
+    useEffect(() => {
+        if (link.link_name && link.url) {
+            setIsFilled(true);
+
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [link]);
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -145,22 +155,6 @@ function EditLinksForm(props: linkProp) {
                                 Edit Content
                             </DialogTitle>
 
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="bg-primary text-primary-foreground"
-                                onClick={() => {
-                                    setLink({
-                                        link_name: "",
-                                        url: "",
-                                    });
-                                    setSelectedRole(
-                                        isAdmin ? props.owner || "" : roles[0] || ""
-                                    );
-                                }}
-                            >
-                                Clear
-                            </Button>
                         </div>
                     </DialogHeader>
 
@@ -215,15 +209,31 @@ function EditLinksForm(props: linkProp) {
 
                     <DialogFooter>
                         <DialogClose
-                            render={<Button variant="secondary">Cancel</Button>}
+                            render={<Button variant="outline" size="lg">Cancel</Button>}
                         />
-
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="bg-primary text-primary-foreground"
+                            onClick={() => {
+                                setLink({
+                                    link_name: "",
+                                    url: "",
+                                });
+                                setSelectedRole(
+                                    isAdmin ? props.owner || "" : roles[0] || ""
+                                );
+                            }}
+                        >
+                            Clear
+                        </Button>
                         <DialogClose
                             render={
                                 <Button
                                     type="submit"
                                     className="bg-secondary text-secondary-foreground"
                                     size="lg"
+                                    disabled={!isFilled}
                                     onClick={async () => {
                                         const finalRole =
                                             isAdmin

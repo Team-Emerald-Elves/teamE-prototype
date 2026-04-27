@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { CircleUserRound, FileText } from "lucide-react"
 
+//change these stuff as needed
 type Notification = {
     subject?: string //user or document name
     action: string
@@ -10,6 +11,7 @@ type Notification = {
     time: string
     date: string
     type: "user" | "document"
+    read?: boolean
 }
 
 const notifications: Notification[] = [
@@ -38,12 +40,12 @@ export function NotifScroll() {
                 <h4 className="px-3 py-2 text-md font-semibold text-[#12324b]">Notifications</h4>
                 {Object.entries(grouped).map(([date, items]) => (
                     <div key={date}>
-                        <div className="top-0 z-10 bg-gray-100 px-2 py-2 text-xs font-semibold text-gray-500 border-b">
+                        <div className="top-0 z-10 bg-gray-100 px-2 py-2 text-xs font-semibold text-gray-500">
                             {date}
                         </div>
                         {items.map((n, i) => (
                             <React.Fragment key={i}>
-                                <div className="flex items-center gap-2 px-2 py-2">
+                                <div className="flex items-center gap-2 px-2 py-1 rounded-sm">
                                     {n.type === "document"
                                         ? <FileText size={28} strokeWidth={1.5} className="shrink-0 text-gray-400" />
                                         : <CircleUserRound size={28} strokeWidth={1.5} className="shrink-0 text-gray-400" />

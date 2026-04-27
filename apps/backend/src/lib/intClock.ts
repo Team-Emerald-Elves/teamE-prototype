@@ -31,7 +31,9 @@ const intClock: Function = async () => {
     documents.map( async (doc: documentContent) => {
         await prisma.notification.createMany({
             data: {
-                title: `Document ${doc.name.substring(0, 8) + (doc.name.length > 8 ? '' : '')} is expiring soon!`
+                title: `Document ${doc.name.substring(0, 8) + (doc.name.length > 8 ? '' : '')} is expiring soon!`,
+                public: false,
+                employeeId: doc.content_owner
             }
         })
     })

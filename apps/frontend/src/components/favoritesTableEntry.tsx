@@ -25,6 +25,7 @@ type Document = {
 
 const handleDownload = async (doc: Document) => {
     try {
+        addHitCount(doc);
         const response = await fetch(doc.url);
 
         if (!response.ok) {
@@ -54,6 +55,23 @@ type FavoriteProps = {
     onToggleOn: (doc: Document) => void;
 };
 
+async function addHitCount (doc: Document) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: doc.id,
+            type: "DOCUMENT"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
+
 export default function FavoritesTableEntry(props: FavoriteProps)  {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
@@ -72,7 +90,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             <TableCell className="text-[14px] font-small text-gray-700">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button onClick={async () => {addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
                             {props.d.name}
                         </button>
                     </DialogTrigger>

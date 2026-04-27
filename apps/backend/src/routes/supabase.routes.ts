@@ -543,8 +543,8 @@ supaBaseRouter.post(
             const documentIds = [
                 ...new Set(
                     hits
-                        .filter((h) => h.targetType === "DOCUMENT")
-                        .map((h) => Number(h.targetId))
+                        .filter((h) => h.target_type === "DOCUMENT")
+                        .map((h) => Number(h.target_id))
                 ),
             ];
 
@@ -600,16 +600,16 @@ supaBaseRouter.post(
 
 
             for (const row of hits) {
-                const date = row.hitDate.toISOString().split("T")[0];
+                const date = row.hit_date.toISOString().split("T")[0];
                 const count = row._sum.count ?? 0;
 
                 const entry = chartMap.get(date);
                 if (!entry) continue;
 
-                if (row.targetType === "DOCUMENT") {
+                if (row.target_type === "DOCUMENT") {
                     entry.documents += count;
 
-                    const docType = docTypeMap.get(row.targetId);
+                    const docType = docTypeMap.get(row.target_id);
 
                     if (docType === "reference") {
                         entry.reference += count;
@@ -620,15 +620,54 @@ supaBaseRouter.post(
                     }
                 }
 
-                if (row.targetType === "LINK") {
+                if (row.target_type === "LINK") {
                     entry.links += count;
                 }
             }
 
-            // ----------------------------
-            // 7. Return response
-            // ----------------------------
+
             return res.status(200).json([...chartMap.values()]);
+        } catch (error) {
+            console.error("Hit count chart error:", error);
+
+            return res.status(500).json({
+                message: "Error generating hit count chart",
+                error: String(error),
+            });
+        }
+    }
+);
+supaBaseRouter.post(
+    "/add-hit-count",
+    async (req: Request, res: Response) => {
+        console.log("reached hit count add")
+        const { type, id,  } = req.body;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        try {
+            const hit = await prisma.hit_counts.upsert({
+                    where: {
+                        target_type_target_id_hit_date: {
+                            target_type: type,
+                            target_id: String(id),
+                            hit_date: today
+                        }
+                    },
+                    update: {
+                        count: { increment: 1 }
+                    },
+                    create: {
+                        target_type: type,
+                        target_id: String(id),
+                        hit_date: today,
+                        count: 1
+                    }
+                });;
+
+
+
+            return res.status(200).json(hit);
         } catch (error) {
             console.error("Hit count chart error:", error);
 

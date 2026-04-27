@@ -156,7 +156,17 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
+async function invite(req: Request, res: Response) {
+    const email = req.body.email
+    const invitation = await clerkClient.invitations.createInvitation({
+        emailAddress: email,
+    })
+    res.status(200).json(invitation);
+}
+
 APIRouter.put('/update-lock', validate(UpdateLockBody), updateLock)
 APIRouter.get('/get-lock', validate(GetLockQuery), (getLock))
+
+APIRouter.post('/invite', invite)
 
 export default APIRouter

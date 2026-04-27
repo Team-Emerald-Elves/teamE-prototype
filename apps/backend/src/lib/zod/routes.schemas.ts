@@ -137,3 +137,7 @@ export const UpdateFavoriteModel = z.object({
     id:       z.number(),
     favorite: z.boolean(),
 })
+
+export const InviteModel = z.object({
+    email: z.email(),
+})

@@ -16,7 +16,7 @@ const intClock: Function = async () => {
     })
 
     if (documents.length < 1) return;
-    console.log(`Created ${documents.length} notifications.`)
+    console.log(`Creating ${documents.length} notifications.`)
 
     await prisma.documentContent.updateMany({
         where: {

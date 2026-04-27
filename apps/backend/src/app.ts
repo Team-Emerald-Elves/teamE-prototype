@@ -100,5 +100,5 @@ app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);
 
     console.log("Starting internal clock.")
-    setInterval(intClock(), 5000);
+    setInterval(intClock, 5000);
 })

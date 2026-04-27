@@ -15,6 +15,8 @@ const intClock: Function = async () => {
         }
     })
 
+    if (documents.length < 1) return;
+
     await prisma.documentContent.updateMany({
         where: {
             id: {

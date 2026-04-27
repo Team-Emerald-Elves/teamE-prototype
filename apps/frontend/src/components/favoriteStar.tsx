@@ -3,21 +3,7 @@ import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
 import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
 import {TableCell} from "@/components/ui/table.tsx";
 import { useState } from "react";
-
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock: boolean;
-};
+import type {documentContent as Document} from "@/../../packages/database/lib/prismadefs.ts"
 
 type Links = {
     id: string;

@@ -36,6 +36,8 @@ import { useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
+import qmgr from "@/lib/querymgr.ts";
+import type {documentContent as Document, Links} from "@/../../packages/database/lib/prismadefs.ts"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 type Document = {
     id: number;
@@ -57,7 +59,7 @@ type Document = {
 
 const handleDownload = async (doc: Document) => {
     try {
-        const response = await fetch(doc.url);
+        const response = await fetch(doc.url!);
 
         if (!response.ok) {
             throw new Error("Failed to fetch file");
@@ -78,28 +80,6 @@ const handleDownload = async (doc: Document) => {
         console.error(err);
     }
 };
-
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean, setReload: (any) => void): Promise<string> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-    setReload(prev => !prev);
-    return String(data);
-}
 
 interface DocProps<TData extends Document, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -153,14 +133,14 @@ export function DocumentsTable<TData extends Document, TValue>({
         {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
     ]);
 
-    const [fileFilters, setFileFilters] =  useState([
-        {key: 'mime_type', value: mime.getType('docx'), id: '.docx', state: false},
-        {key: 'mime_type', value: mime.getType('jpg'), id: '.jpg', state: false},
-        {key: 'mime_type', value: mime.getType('pdf'), id: '.pdf', state: false},
-        {key: 'mime_type', value: mime.getType('png'), id: '.png', state: false},
-        {key: 'mime_type', value: mime.getType('pptx'), id: '.pptx', state: false},
-        {key: 'mime_type', value: mime.getType('txt'), id: '.txt', state: false},
-        {key: 'mime_type', value: mime.getType('xlsx'), id: '.xlsx', state: false},
+    const [fileFilters, setFileFilters] =  useState<FilterItem[]>([
+        {key: 'mime_type', value: mime.getType('docx')!, id: '.docx', state: false},
+        {key: 'mime_type', value: mime.getType('jpg')!, id: '.jpg', state: false},
+        {key: 'mime_type', value: mime.getType('pdf')!, id: '.pdf', state: false},
+        {key: 'mime_type', value: mime.getType('png')!, id: '.png', state: false},
+        {key: 'mime_type', value: mime.getType('pptx')!, id: '.pptx', state: false},
+        {key: 'mime_type', value: mime.getType('txt')!, id: '.txt', state: false},
+        {key: 'mime_type', value: mime.getType('xlsx')!, id: '.xlsx', state: false},
     ]);
 
     const [roleFilters, setRoleFilters] =  useState( [
@@ -210,31 +190,25 @@ export function DocumentsTable<TData extends Document, TValue>({
         if (statuses.length > 0) {
             payload['document_status'] = statuses.map(t => t.value);
         }
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload)
-            });
-        
-        if (!res.ok) {
-            throw new Error("Failed to fetch docs")
-        }
-        const data = await res.json()
-        return data
+        return payload;
     }
     useEffect(() => {
-        getDocumentsAdmin()
-            .then((data) => {
+        const payload = getDocumentsAdmin();
+            /*.then((data) => {
                 if (docs.length === 0) {
                     setTagFilters(getTagFilters(data));
                 }
                 setDocs(data);
             })
-            .catch(console.error);
+            .catch(console.error);*/
+        qmgr.wait(() => {
+            qmgr.getDocuments((res) => {
+                if (res.data!.length === 0) {
+                    setTagFilters(getTagFilters(res.data!));
+                }
+                setDocs(res.data!);
+            })
+        })
     }, [filters, reload]);
 
     useEffect(() => {
@@ -269,6 +243,28 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
+
+    async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
+
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+            headers: {
+                Authorization: `Bearer ${sessionToken}`,
+                "Content-Type": "application/json"
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                id: documentID,
+                status: status
+            })
+        })
+        if (!res.ok) {
+            throw new Error("Failed to fetch document.");
+        }
+        const data = await res.json();
+        setReload(prev => !prev);
+        return String(data);
+    }
     const table = useReactTable({
         data: docs,
         columns,
@@ -789,7 +785,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, true, setReload)
+                                                        await setDocumentLock(token, doc.id, true)
                                                     }}><Lock /></Button>
                                                 </div>
                                             </TableCell>
@@ -802,9 +798,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         type="Edit"
                                                         currentID={doc.id}
                                                         currentName={doc.name}
-                                                        currentURL={doc.url}
-                                                        currentContentOwner={doc.content_owner}
-                                                        currentRole={doc.assigned_role}
+                                                        currentURL={doc.url!}
+                                                        currentContentOwner={doc.content_owner!}
+                                                        currentRole={doc.assigned_role!}
                                                         currentExpirationDate={doc.expiration_date}
                                                         currentExpirationTime={"10:30:00"}
                                                         currentStatus={doc.document_status}
@@ -829,13 +825,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, false, setReload)
+                                                        await setDocumentLock(token, doc.id, false)
                                                     }}><LockOpen /></Button>
 
                                                 </div>
                                             </TableCell>
                                                     ):(
-                                                    <TableCell><p>{doc.lock_name}</p></TableCell> )
+                                                    <TableCell><p>{doc.lock}</p></TableCell> )
                                             }
                                         </TableRow> ) : (
                                             <TableRow key={row.id} className="bg-[#e6e8e8]">
@@ -854,7 +850,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
                                                         <div className="flex flex-col text-right">
                                                             <p className="text-xs">Checked out by:</p>
-                                                            <p className="text-sm font-medium">{doc.lock_name}</p>
+                                                            <p className="text-sm font-medium">{doc.lock}</p>
                                                         </div>
 
                                                         {/*<a*/}
@@ -1351,7 +1347,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                                                                         onClick={async () => {
                                                                             const token = await getToken();
-                                                                            await setDocumentLock(token, doc.id, true, setReload)
+                                                                            await setDocumentLock(token, doc.id, true)
                                                                         }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>

@@ -41,7 +41,7 @@ type contentFormProps = {
     currentID: number,
     size: boolean,
     lock: string,
-    refresh?: (any) => void,
+    refresh?: (arg: any) => void,
     roles: string[],
 }
 
@@ -130,7 +130,7 @@ function ContentForm(props: contentFormProps) {
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
+        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46",
         role: props.currentRole ?? "",
         document_type: "",
         expirationDate: props.currentExpirationDate ?? "",
@@ -236,7 +236,7 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner).first_name) + " " + (employees.find(u => u.id === formData.contentOwner).last_name)) : "Select"}
+                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner)!.first_name) + " " + (employees.find(u => u.id === formData.contentOwner)!.last_name)) : "Select"}
                                     onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
@@ -346,7 +346,7 @@ function ContentForm(props: contentFormProps) {
                     <DialogFooter>
                         <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh} open={setOpen} />
+                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh!} open={setOpen} />
                     </DialogFooter>
                 </DialogContent>
             </form>

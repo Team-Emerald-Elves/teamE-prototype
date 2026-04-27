@@ -16,9 +16,10 @@ import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
 
 
-import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
+import {Show, SignInButton, SignUpButton, useAuth, UserButton} from '@clerk/react'
 import CenterDiv from "./components/center-div.tsx";
 import CalendarPage from "@/pages/calendar.tsx";
+import qmgr from './lib/querymgr.ts';
 
 function App() {
     // const [roles, setRoles] = useState<string[]>([]);
@@ -47,6 +48,14 @@ function App() {
     //
     //     load();
     // }, [isSignedIn, roles]);
+    (async () => {
+        qmgr.auth(useAuth());
+        qmgr.wait(async () => {
+            await qmgr.getDocuments((res) => {
+        
+            });
+        });
+    })();
 
     return (
         <BrowserRouter>

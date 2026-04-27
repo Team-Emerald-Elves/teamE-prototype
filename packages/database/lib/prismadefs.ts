@@ -1,4 +1,5 @@
 export type { Employee,
               ServiceRequests,
-              Links
+              Links,
+              documentContent
 } from "../prisma/generated/client.ts";

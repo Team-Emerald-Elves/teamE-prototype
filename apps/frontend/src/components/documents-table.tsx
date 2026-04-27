@@ -671,8 +671,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                        currentName="Name..."
-                                        currentURL="www.example.com"
+                                        currentName=""
+                                        currentURL=""
                                         currentContentOwner="Select Content Owner"
                                         currentRole="Select Role"
                                         currentExpirationDate={new Date()}
@@ -1208,8 +1208,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                        currentName="Name..."
-                                        currentURL="www.example.com"
+                                        currentName=""
+                                        currentURL=""
                                         currentContentOwner="Select Content Owner"
                                         currentRole="Select Role"
                                         currentExpirationDate={new Date()}

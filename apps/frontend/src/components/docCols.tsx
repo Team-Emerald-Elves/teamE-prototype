@@ -194,10 +194,10 @@ export const columns: ColumnDef<Document>[] = [
             const type = doc.mime_type
             const roles = doc.assigned_role;
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
-            let statusBackground = "bg-gray-300"
+            let statusBackground = "bg-slate-400"
             const typeBackground = "bg-neutral-200"
             let roleBackground = "bg-gray-200"
-            const customBackground = "bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300"
+            const customBackground = "bg-indigo-300"
             switch (status) {
                 case 'Not Started':
                     statusBackground = "bg-red-200";

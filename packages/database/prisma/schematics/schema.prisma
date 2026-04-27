@@ -33,10 +33,7 @@ model Employee {
 model Notification {
   id              String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt       DateTime    @default(now())
-  expiration_date DateTime
   title           String
-  summary         String
-  extend          String?      @default("No additional information.")
   
   employee        Employee?   @relation(fields: [employeeId], references: [id])
   employeeId      String?     @db.Uuid
@@ -64,6 +61,7 @@ model documentContent {
   bucketId        String     @db.Uuid
   last_modified   DateTime   @updatedAt
   expiration_date DateTime
+  expiration_warn Boolean    @default(false)
   mime_type       String     @default("text/plain")
   document_status Status     @default(not_started)
   document_type   String?    @default("")

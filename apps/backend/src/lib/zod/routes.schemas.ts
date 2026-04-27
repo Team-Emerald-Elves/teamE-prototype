@@ -40,6 +40,7 @@ export const DocumentContentModel = z.object({
     document_status: StatusEnum.default('not_started'),
     document_type:   z.string(),
     favorite:        z.boolean().default(false),
+    
     //IDocumentContent
     documentID:      z.number().optional(),
     filePayload:     z.string().optional(),

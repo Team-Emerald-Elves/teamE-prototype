@@ -67,7 +67,7 @@ export default function AboutUs() {
                     </div>
 
                     {/* Description */}
-                    <p className="text-lg text-gray-500 leading-relaxed ml-4 pl-4 mt-8 space-y-1 border-l-4 border-blue-500">
+                    <p className="text-lg text-gray-500 leading-relaxed ml-4 pl-4 mt-8.5 space-y-1 border-l-4 border-blue-500">
                         We are a team of ten WPI students collaborating with Hanover Insurance
                         to design and build a full-stack software solution as part of the CS3733
                         Software Engineering course. Our goal is to deliver a scalable, secure,

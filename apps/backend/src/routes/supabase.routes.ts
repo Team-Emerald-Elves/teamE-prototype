@@ -441,7 +441,6 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         );
 
 
-        // ✅ collect BOTH content_owner and lock IDs
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
         const lockIds = documents
@@ -452,7 +451,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ...new Set([...ownerIds, ...lockIds])
         ];
 
-        // ✅ fetch all relevant employees
+
         const employees = await prisma.employee.findMany({
             where: {
                 id: { in: allEmployeeIds as string[] },
@@ -464,7 +463,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
-        // ✅ build lookup map
+
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
@@ -472,7 +471,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ])
         );
 
-        // ✅ format documents (add lock_name)
+
         const formattedDocs = documents.map((doc) => ({
             ...doc,
             content_owner:

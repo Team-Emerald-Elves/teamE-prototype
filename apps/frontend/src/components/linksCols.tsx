@@ -51,6 +51,23 @@ export type Links = {
     updated_at: string;
 };
 
+async function addHitCount (link: Links) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: link.id,
+            type: "LINK"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
+
 async function updateTags(lId: string, tags: string[]) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
         method: "PUT",
@@ -127,6 +144,7 @@ export const columns: ColumnDef<Links>[] = [
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
+                    onClick={async () => { addHitCount(link) }}
                 >
                     {link.url}
                 </a>

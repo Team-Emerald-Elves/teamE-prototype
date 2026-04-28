@@ -162,9 +162,6 @@ importers:
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
       lucide-react:
         specifier: ^1.8.0
         version: 1.8.0(react@19.2.5)
@@ -241,6 +238,9 @@ importers:
       globals:
         specifier: ^17.5.0
         version: 17.5.0
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       typescript:
         specifier: ~5.9.3
         version: 5.9.3

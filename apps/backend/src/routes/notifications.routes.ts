@@ -50,7 +50,7 @@ notifyRouter.get(
             const user = await clerkClient.users.getUser(employee?.clerkUserId as string)
 
             const updatedNotifications = notifications.map((n) => {
-                return n.public ? { ...n, profileIcon: clerkClient.users.getUser(n.creatorId) }: n
+                return n.public ? { ...n, profileIcon: clerkClient.users.getUser(n.creatorId as string) }: n
             })
 
             if(notifications.length > 0)

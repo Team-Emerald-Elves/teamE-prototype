@@ -185,7 +185,6 @@ export const columns: ColumnDef<Links>[] = [
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-<<<<<<< HEAD
                 <p>{date.toLocaleString()}</p>
             );
         },
@@ -240,38 +239,6 @@ export const columns: ColumnDef<Links>[] = [
 
                 </div>
 
-=======
-                <div>
-                    {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
-                    ))}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline">+</Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start">
-                            <PopoverHeader>
-                                <PopoverTitle>Add Tags</PopoverTitle>
-
-                            </PopoverHeader>
-                            <TagInput
-                                tags={tagList}
-                                setTags={async (newTags) => {
-                                    setTagList(newTags);
-                                    await updateTags(link.id, newTags as string[]).catch(console.error);
-                                }}
-                                remove={async (tagToRemove: string) => {
-                                    await removeTag(link.id, tagToRemove);
-                                }}
-                                placeholder="Add tag..."
-                            />
-                        </PopoverContent>
-                    </Popover>
-
-                </div>
-
->>>>>>> 00e75d6 (fixed bug where proper link tags not showing up during filtering)
             );
         },
     }

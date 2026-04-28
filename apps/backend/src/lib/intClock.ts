@@ -1,18 +1,20 @@
-import prisma, { type documentContent } from "@repo/database"
+import type { User } from "@clerk/express"
+import prisma, { UserRoles, type documentContent } from "@repo/database"
 
 const FULLDAY: number = 8.64e+7
 
 const intClock: Function = async () => {
-    const currentDate: number = Date.now()
+    const now = new Date()
+    const oneDayFromNow = new Date(Date.now() + FULLDAY)
 
     const documents: documentContent[] = await prisma.documentContent.findMany({
         where: {
             expiration_date: {
-                lt: new Date(currentDate + FULLDAY),
-                gt: new Date(currentDate - FULLDAY)
+            gte: now,
+            lte: oneDayFromNow,
             },
-            expiration_warn: false
-        }
+            expiration_warn: false,
+        },
     })
 
     if (documents.length < 1) return;
@@ -32,9 +34,9 @@ const intClock: Function = async () => {
     documents.map( async (doc: documentContent) => {
         await prisma.notification.createMany({
             data: {
-                title: `Document ${doc.name.substring(0, 8) + (doc.name.length > 8 ? '' : '')} is expiring soon!`,
-                public: false,
-                employeeId: doc.content_owner
+                title: `Document ${doc.name.substring(0, 8) + (doc.name.length >= 8 ? '...' : '')} is expiring tomorrow!`,
+                public: true,
+                targetRoles: [doc.assigned_role as UserRoles]
             }
         })
     })

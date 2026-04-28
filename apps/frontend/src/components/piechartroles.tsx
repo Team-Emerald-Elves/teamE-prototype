@@ -17,6 +17,7 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart"
 import {useEffect, useState} from "react";
+import {getToken} from "@clerk/react";
 
 export const description = "A pie chart with no separator"
 
@@ -65,10 +66,16 @@ export function ChartPieSeparatorNone() {
 
     useEffect(() => {
         async function getStats() {
+            const token = await getToken();
+
             const res = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/statistics`,
-
-            )
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             const data = await res.json();
             setChartData([
                 { role: "Underwriters", employees: data.underwriterCount, fill: "#d2eafc" },

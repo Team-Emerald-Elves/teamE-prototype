@@ -69,7 +69,7 @@ app.use('/api/tests', APIRouter)
 app.use('/checkin-checkout-links', CheckoutLinks)
 
 app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/statistics', requireAuth(), statsRoutes)
+app.get('/statistics', requireAuth(), statsRoutes);
 app.get('/get-favorited', requireAuth(), favoriteRoute);
 app.get('/get-events', requireAuth(), eventsRoute);
 app.get('/get-favorited-links', requireAuth(), favoriteLinksRoute);

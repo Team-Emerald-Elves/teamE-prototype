@@ -89,12 +89,12 @@ export default function Favorites() {
                             icon={solidStar}
                             className="text-yellow-400 cursor-pointer"
                         />
-                        <h4 className="text-lg font-semibold text-gray-800">
+                        <h4 className="text-lg font-semibold text-(--subheader-color)">
                             Favorited
                         </h4>
                     </div>
 
-                    <Link className="text-sm internal-link-color hover:underline"
+                    <Link className="text-sm text-(--internal-link-color) hover:underline"
                           //to="/documents"
                           to={currentFavorite === "docs" ? "/documents" : "/links"}
                     >
@@ -109,21 +109,21 @@ export default function Favorites() {
                     </TabsList>
 
                     <TabsContent value="docs">
-                        <div className="bg-white rounded-xl shadow-sm border p-4">
+                        <div className="bg-(--card) rounded-xl shadow-sm border p-4">
                             <Table className="border rounded-lg overflow-hidden">
-                                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                <TableHeader className="bg-(--card-header) text-(--table-titles))">
                                     <TableRow>
                                         <TableHead
-                                            className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
+                                            className="text-(--table-titles) text-center font-medium text-sm">Favorite</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Title</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Created</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Content Type</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Expiration Date</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Status</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Owner</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Role</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Last Modified</TableHead>
+                                        <TableHead className="text-(--table-titles) font-medium text-sm">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>

@@ -97,9 +97,9 @@ export function UserLogs(){
             <Card className= "w-[40%] flex flex-col">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
-                        <CardTitle className="text-2xl text-[#12324b]">User Activity</CardTitle>
-                        <CardDescription>
-                            Track recent actions performed by users, including creations, edits, deletes, and more.
+                        <CardTitle className="text-2xl text-(--card-title)">User Activity</CardTitle>
+                        <CardDescription className="text-(--foreground)">
+                            Track recent actions performed by users, including creations, edits, logins, and more.
                         </CardDescription>
                     </div>
                 </CardHeader>

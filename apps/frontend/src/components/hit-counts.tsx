@@ -115,8 +115,8 @@ export function HitCounts() {
         <Card className="pt-0 w-[60%] h-full">
             <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1">
-                    <CardTitle className = "text-2xl text-[#12324b]">Document Hit Counts</CardTitle>
-                    <CardDescription>
+                    <CardTitle className = "text-2xl text-(--card-title)">Document Hit Counts</CardTitle>
+                    <CardDescription className = "text-(--foreground)">
                         An overview of document hit counts over the selected time.
                     </CardDescription>
                 </div>

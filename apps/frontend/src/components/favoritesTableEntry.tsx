@@ -111,7 +111,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
     return (
         <TableRow
             key={props.d.id}
-            className="hover:bg-gray-50 transition h-12"
+            className="hover:bg-(--table-hover) transition h-12"
         >
             <FavoriteStar
                 doc={props.d}
@@ -119,7 +119,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                 onToggleOn={props.onToggleOn}
             />
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <Dialog>
                     <DialogTrigger asChild>
                         <button onClick={async () => {createNotif(props.d, "accessed"); addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
@@ -141,34 +141,34 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                 </Dialog>
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {created.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.document_type}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {exp.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.document_status}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.content_owner}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.assigned_role}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <Button onClick={async () => await handleDownload(props.d)}>
                     <HugeiconsIcon icon={Download01Icon} />
                 </Button>

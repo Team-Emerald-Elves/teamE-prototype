@@ -10,6 +10,7 @@ import {type ReactNode, useEffect, useState} from "react";
 import CenterDiv from "./center-div.tsx";
 import {useAuth} from "@clerk/react";
 import { Bell } from 'lucide-react';
+import {NotifScroll} from '@/components/notifications.tsx';
 
 
 
@@ -33,6 +34,10 @@ function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
+    const [showNotification, setShowNotification] = useState(false);
+    const toggleNotifs = () => {
+        setShowNotification(!showNotification);
+    }
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -111,7 +116,16 @@ function Navbar(props: NavbarProps) {
                         {/*</NavigationMenuItem>*/}
 
                         <NavigationMenuItem>
-                            <Bell size = {18} className={navigationMenuTriggerStyle()}/>
+                            <button onClick={toggleNotifs}>
+                                {/*red dot thingy*/}
+                                <div className="w-2.5 h-2.5 bg-red-500 z-10 absolute rounded-full translate-x-6.5 translate-y-1"></div>
+                                <Bell size = {18} className={navigationMenuTriggerStyle()}/>
+                            </button>
+                            {showNotification && (
+                                <div className="absolute right-0 top-full mt-2 z-50 animate-in zoom-in-80 origin-top-right duration-200 ease-in-out">
+                                    <NotifScroll/>
+                                </div>
+                            )}
                         </NavigationMenuItem>
                         <NavigationMenuItem>
                             <CenterDiv>

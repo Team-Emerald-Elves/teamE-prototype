@@ -188,12 +188,12 @@ function ContentForm(props: contentFormProps) {
         role.toLowerCase().includes("administrator")
     );
     //console.log(isAdmin);
-    useEffect(() => {
-        if(!isAdmin && props.roles.length >0 ){
-            props.roles.some(role => setFormData(prev => ({...prev, role: role})))
-
-        }
-    }, [isAdmin]);
+    // useEffect(() => {
+    //     if(!isAdmin && props.roles.length >0 ){
+    //         props.roles.some(role => setFormData(prev => ({...prev, role: role})))
+    //
+    //     }
+    // }, [isAdmin]);
     if (!sessionToken ) return;
 
 

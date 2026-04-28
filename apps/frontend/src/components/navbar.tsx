@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import {type ReactNode, useEffect, useState} from "react";
 import CenterDiv from "./center-div.tsx";
-import {useAuth} from "@clerk/react";
+import {getToken, useAuth} from "@clerk/react";
 import { Bell } from 'lucide-react';
 import {NotifScroll} from '@/components/notifications.tsx';
 
@@ -30,6 +30,23 @@ interface NavbarProps {
 
 // }
 
+async function setRead(setUnread: (a: boolean) => void) {
+    const token = await getToken();
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/set-read`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error("Error setting notifications to read")
+    }
+    setUnread(false);
+
+}
+
 function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
@@ -38,12 +55,15 @@ function Navbar(props: NavbarProps) {
     const toggleNotifs = () => {
         setShowNotification(!showNotification);
     }
+    const [unread, setUnread] = useState<boolean>(false);
+
 
     useEffect(() => {
         if (!isSignedIn) {
             setMe(null);
             return;
         }
+        let interval: number;
 
         async function load() {
             const token = await getToken();
@@ -56,11 +76,19 @@ function Navbar(props: NavbarProps) {
 
             const data = await res.json();
             setMe(data);
+            console.log(data.unreadNotif);
+            setUnread(data.unreadNotif);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
 
         load();
+
+
+        interval = window.setInterval(load, 10000);
+
+        return () => window.clearInterval(interval);
     }, []);
+
     return (
         <header className="w-full bg-[#013C5A] text-white sticky top-0 z-50">
             <div className="w-full flex items-center justify-between px-6 py-2">
@@ -116,9 +144,9 @@ function Navbar(props: NavbarProps) {
                         {/*</NavigationMenuItem>*/}
 
                         <NavigationMenuItem>
-                            <button onClick={toggleNotifs}>
+                            <button onClick={async () => {toggleNotifs(); await setRead(setUnread); }}>
                                 {/*red dot thingy*/}
-                                <div className="w-2.5 h-2.5 bg-red-500 z-10 absolute rounded-full translate-x-6.5 translate-y-1"></div>
+                                {unread && (<div className="w-2.5 h-2.5 bg-red-500 z-10 absolute rounded-full translate-x-6.5 translate-y-1"></div>)}
                                 <Bell size = {18} className={navigationMenuTriggerStyle()}/>
                             </button>
                             {showNotification && (

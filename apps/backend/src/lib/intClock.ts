@@ -31,14 +31,26 @@ const intClock: Function = async () => {
         },
     })
 
-    documents.map( async (doc: documentContent) => {
+    await Promise.all(documents.map( async (doc: documentContent) => {
         await prisma.notification.createMany({
             data: {
                 title: `${doc.name.substring(0, 14) + (doc.name.length >= 12 ? '...' : '')} is expiring tomorrow!`,
                 public: true,
-                targetRoles: [doc.assigned_role as UserRoles],
+                targetRoles: [doc.assigned_role as UserRoles, "Administrator"],
             }
         })
-    })
+        const targetRoles: UserRoles[] = [doc.assigned_role as UserRoles, "Administrator"];
+
+        await prisma.employee.updateMany({
+            where: {
+                roles: {
+                    hasSome: targetRoles
+                }
+            },
+            data: {
+                unreadNotif: true
+            }
+        });
+    }));
 }
 export default intClock

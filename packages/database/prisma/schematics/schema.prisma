@@ -70,7 +70,8 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
-  created_at      DateTime @default(now())
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
 }
 
 model Links {
@@ -79,10 +80,7 @@ model Links {
   url       String
   owner     String?
   lock      String?
-<<<<<<< HEAD
   meta_tags String[]
-=======
->>>>>>> 7bf629b (Revert "Revert "Document table add dates"")
   created_at      DateTime @default(now())
   updated_at         DateTime @updatedAt
 }
@@ -93,10 +91,11 @@ model CalendarEvents {
   start_date DateTime?
   end_date   DateTime?
   all_day    Boolean?
-  emp_id    String?
-  lock      String?    @default("none")
-  doc_id    Int?      @default(-1)
-  color     String?
+  emp_id     String?
+  lock       String?   @default("none")
+  doc_id     Int?      @default(-1)
+  color      String?
+  created_at DateTime  @default(now())
 }
 
 model hit_counts {

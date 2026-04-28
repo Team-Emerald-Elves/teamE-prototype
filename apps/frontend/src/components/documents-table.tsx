@@ -148,6 +148,9 @@ export function DocumentsTable<TData extends Document, TValue>({
     const[reload, setReload] = useState<boolean>(false);
     const [isTagOpen, setIsTagOpen] = useState(false);
 
+    const [myDocumentsButton, setMyDocumentsButton] =  useState([
+        {key: 'content_owner', value: empID, id: 'Owned by Me', state: false},
+    ]);
     const [docFilters, setDocFilters] =  useState([
         {key: 'document_type', value: 'Reference', id: 'Reference', state: false},
         {key: 'document_type', value: 'Workflow', id: 'Workflow', state: false},
@@ -192,6 +195,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         const roles = filters.filter(item => item.key === 'assigned_role');
         const tags = filters.filter(item => item.key === 'meta_tags');
         const statuses = filters.filter(item => item.key === 'document_status');
+        const myDocs = filters.filter(item => item.key === 'content_owner');
         if (docs.length > 0) {
             payload['document_type'] = docs.map(d => d.value);
         }
@@ -210,6 +214,10 @@ export function DocumentsTable<TData extends Document, TValue>({
         if (statuses.length > 0) {
             payload['document_status'] = statuses.map(t => t.value);
         }
+        if (myDocs.length > 0) {
+            payload['content_owner'] = myDocs.map(t => t.value);
+        }
+
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
             {
                 method: "POST",
@@ -264,6 +272,15 @@ export function DocumentsTable<TData extends Document, TValue>({
         load();
     }, []);
 
+    useEffect(() => {
+        setMyDocumentsButton(employeeId =>
+            employeeId.map(doc =>
+                doc.key === 'content_owner'
+                    ? { ...doc, value: empID }
+                    : doc
+            )
+        );
+    }, [empID]);
 
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -317,15 +334,16 @@ export function DocumentsTable<TData extends Document, TValue>({
         }
     };
 
-
     const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
         const {id, checked} = e.target;
 
         if (checked) {
             setFilters((filter) => [...filter, option])
+            console.log(filters)
         }
         else {
             setFilters((filter) => filter.filter((item) => item.id !== option.id));
+            console.log(filters)
         }
         setDocFilters(dcFilters =>
             dcFilters.map(filter =>
@@ -349,6 +367,11 @@ export function DocumentsTable<TData extends Document, TValue>({
         );
         setStatusFilters(stFilters =>
             stFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+        setMyDocumentsButton(myFilters =>
+            myFilters.map(filter =>
                 filter.id === id ? { ...filter, state: !filter.state } : filter
             )
         );
@@ -660,6 +683,20 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         </div>
                                                     )}
                                                 </div>
+                                                <div className="py-1">
+                                                    {myDocumentsButton.map((option) => (
+                                                        <div key={option.id} className="flex items-center justify-between">
+                                                            <label className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md  text-xs w-36">{option.id}</label>
+                                                            <input
+                                                                id={option.id}
+                                                                type="checkbox"
+                                                                checked={option.state}
+                                                                onChange={(e) => handleCheckbox(e, option)}
+                                                                className="mr-3"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                            </div>
                                             </div>
                                         </div>
                                     )}
@@ -696,7 +733,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 </TabsList>
                             </div>
                         </div>
-                        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+                        <div className="py-1 mb-1 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
                                 <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
@@ -724,6 +761,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         );
                                         setStatusFilters(stFilters =>
                                             stFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setMyDocumentsButton(myFilters =>
+                                            myFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -1199,6 +1241,20 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         </div>
                                                     )}
                                                 </div>
+                                                <div className="py-1">
+                                                    {myDocumentsButton.map((option) => (
+                                                        <div key={option.id} className="flex items-center justify-between">
+                                                            <label className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md  text-xs w-36">{option.id}</label>
+                                                            <input
+                                                                id={option.id}
+                                                                type="checkbox"
+                                                                checked={option.state}
+                                                                onChange={(e) => handleCheckbox(e, option)}
+                                                                className="mr-3"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -1261,6 +1317,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         );
                                         setStatusFilters(stFilters =>
                                             stFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setMyDocumentsButton(myFilters =>
+                                            myFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );

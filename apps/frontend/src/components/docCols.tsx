@@ -32,6 +32,21 @@ export type Document = {
     created_at: string;
 };
 
+async function addHitCount (doc: Document) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: doc.id,
+            type: "DOCUMENT"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
 
 export const columns: ColumnDef<Document>[] = [
     // {
@@ -57,7 +72,7 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <Dialog>
-                    <DialogTrigger className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
+                    <DialogTrigger onClick={async () => {addHitCount(doc)}} className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
 
                     <DialogContent className="2xl:max-w-7xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">
@@ -194,10 +209,10 @@ export const columns: ColumnDef<Document>[] = [
             const type = doc.mime_type
             const roles = doc.assigned_role;
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
-            let statusBackground = "bg-gray-300"
+            let statusBackground = "bg-slate-400"
             const typeBackground = "bg-neutral-200"
             let roleBackground = "bg-gray-200"
-            const customBackground = "bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300"
+            const customBackground = "bg-indigo-300"
             switch (status) {
                 case 'Not Started':
                     statusBackground = "bg-red-200";
@@ -217,19 +232,19 @@ export const columns: ColumnDef<Document>[] = [
                     roleBackground = "bg-purple-700";
                     break;
                 case 'BusinessAnalyst':
-                    roleBackground = "bg-red-300";
+                    roleBackground = "bg-blue-300";
                     break;
                 case 'UnderWriter':
-                    roleBackground = "bg-pink-400";
+                    roleBackground = "bg-pink-300";
                     break;
                 case 'ExcelOperator':
-                    roleBackground = "bg-emerald-400";
+                    roleBackground = "bg-teal-400";
                     break;
                 case 'BusinessOperator':
-                    roleBackground = "bg-amber-500";
+                    roleBackground = "bg-violet-300";
                     break;
                 case 'ActuarialAnalyst':
-                    roleBackground = "bg-yellow-200";
+                    roleBackground = "bg-fuchsia-300";
                     break;
             }
 

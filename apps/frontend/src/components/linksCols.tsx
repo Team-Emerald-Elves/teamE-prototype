@@ -47,7 +47,26 @@ export type Links = {
     owner: string;
     favorite: boolean;
     meta_tags: string[];
+    created_at: string;
+    updated_at: string;
 };
+
+async function addHitCount (link: Links) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: link.id,
+            type: "LINK"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
 
 async function updateTags(lId: string, tags: string[]) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
@@ -125,6 +144,7 @@ export const columns: ColumnDef<Links>[] = [
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
+                    onClick={async () => { addHitCount(link) }}
                 >
                     {link.url}
                 </a>
@@ -143,6 +163,83 @@ export const columns: ColumnDef<Links>[] = [
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>
             )
+        },
+        cell: ({ row }) => {
+            const role = row.original.owner
+            let roleBackground = "bg-gray-200"
+
+            switch (role) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-700";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-blue-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-300";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-teal-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-violet-300";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-fuchsia-300";
+                    break;
+            }
+
+            return (
+                <div className="text-center justify-items-center">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                </div>
+            )
+        }
+    },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Last Modified
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.updated_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
         },
     },
     {
@@ -167,8 +264,7 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <div>
                     {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
+                        <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>
@@ -197,5 +293,6 @@ export const columns: ColumnDef<Links>[] = [
 
             );
         },
-    }
+    },
+
 ]

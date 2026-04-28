@@ -17,16 +17,29 @@ model ServiceRequests {
 }
 
 model Employee {
-  id             String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId    String?
-  uname          String      @unique @default("uname")
-  first_name     String      @default("fname")
-  last_name      String      @default("lname")
-  email          String?     @unique
+  id             String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkUserId    String?        @unique
+  uname          String         @unique @default("uname")
+  first_name     String         @default("fname")
+  last_name      String         @default("lname")
+  email          String?        @unique
   favorites      Int[]
   favorite_links String[]
-  roles          UserRoles[]
+  roles          UserRoles[]    @default([])
+  Notifications  Notification[]
   bucket         BucketMeta?
+}
+
+model Notification {
+  id              String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime    @default(now())
+  title           String
+  creatorId       String?
+  employee        Employee?   @relation(fields: [employeeId], references: [id])
+  employeeId      String?     @db.Uuid
+
+  public          Boolean?    @default(false)
+  targetRoles     UserRoles[] @default([])
 }
 
 model BucketMeta {
@@ -48,6 +61,7 @@ model documentContent {
   bucketId        String     @db.Uuid
   last_modified   DateTime   @updatedAt
   expiration_date DateTime
+  expiration_warn Boolean    @default(false)
   mime_type       String     @default("text/plain")
   document_status Status     @default(not_started)
   document_type   String?    @default("")
@@ -60,14 +74,14 @@ model documentContent {
 }
 
 model Links {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  link_name  String
-  url        String
-  owner      String?
-  lock       String?   @default("none")
-  meta_tags  String[]
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @updatedAt @db.Timestamp(6)
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_name String
+  url       String
+  owner     String?
+  lock      String?
+  meta_tags String[]
+  created_at      DateTime @default(now())
+  updated_at         DateTime @updatedAt
 }
 
 model CalendarEvents {
@@ -86,10 +100,16 @@ model CalendarEvents {
 model hit_counts {
   target_type hit_target_type
   target_id   String
-  hit_date    DateTime        @db.Date
-  count       Int             @default(0)
+  hit_date    DateTime @db.Date
+  count      Int      @default(0)
 
   @@id([target_type, target_id, hit_date])
+  @@index([hit_date])
+}
+
+enum hit_target_type {
+  DOCUMENT
+  LINK
 }
 
 enum Roles {
@@ -115,9 +135,4 @@ enum Status {
   needs_review
   done
   expired
-}
-
-enum hit_target_type {
-  DOCUMENT
-  LINK
 }

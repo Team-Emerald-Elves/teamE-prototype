@@ -192,6 +192,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         const roles = filters.filter(item => item.key === 'assigned_role');
         const tags = filters.filter(item => item.key === 'meta_tags');
         const statuses = filters.filter(item => item.key === 'document_status');
+
         if (docs.length > 0) {
             payload['document_type'] = docs.map(d => d.value);
         }
@@ -671,8 +672,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                        currentName="Name..."
-                                        currentURL="www.example.com"
+                                        currentName=""
+                                        currentURL=""
                                         currentContentOwner="Select Content Owner"
                                         currentRole="Select Role"
                                         currentExpirationDate={new Date()}
@@ -1208,8 +1209,8 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
-                                        currentName="Name..."
-                                        currentURL="www.example.com"
+                                        currentName=""
+                                        currentURL=""
                                         currentContentOwner="Select Content Owner"
                                         currentRole="Select Role"
                                         currentExpirationDate={new Date()}

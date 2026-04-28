@@ -8,14 +8,13 @@ import {
 type RoleLegendProps = {
     roleColors?: Record<string, string>;
 };
-
 const DEFAULT_ROLE_COLORS: Record<string, string> = {
-    "#8b5cf6": "Administrator",
-    "#ef4444": "BusinessAnalyst",
-    "#ec4899": "UnderWriter",
-    "#22c55e": "ExcelOperator",
-    "#f97316": "BusinessOperator",
-    "#eab308": "ActuarialAnalyst",
+    "#6D28D9": "Administrator",
+    "#93C5FD": "BusinessAnalyst",
+    "#F9A8D4": "UnderWriter",
+    "#2DD4BF": "ExcelOperator",
+    "#C4B5FD": "BusinessOperator",
+    "#F0ABFC": "ActuarialAnalyst",
 };
 
 export default function RoleLegend({

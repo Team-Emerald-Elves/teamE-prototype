@@ -1,5 +1,6 @@
 import {TableCell, TableRow} from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
+import * as React from "react";
 
 type Document = {
     id: number;
@@ -22,6 +23,8 @@ type Links = {
     url: string;
     owner: string;
     favorite: boolean;
+    created_at: string;
+    updated_at: string;
 };
 
 type FavoriteProps = {
@@ -31,6 +34,8 @@ type FavoriteProps = {
 };
 
 export default function FavoritesTableEntryLink(props: FavoriteProps)  {
+    const mod = new Date(props.l.updated_at);
+    const created = new Date(props.l.created_at);
     return (
         <TableRow
             key={props.l.id}
@@ -59,6 +64,14 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
 
             <TableCell className="text-[14px] font-small text-gray-700">
                 {props.l.owner}
+            </TableCell>
+
+            <TableCell className="text-[14px] font-small text-gray-700">
+                {created.toLocaleString()}
+            </TableCell>
+
+            <TableCell className="text-[14px] font-small text-gray-700">
+                {mod.toLocaleString()}
             </TableCell>
 
 

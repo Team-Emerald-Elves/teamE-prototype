@@ -77,12 +77,23 @@ function AddLinksForm(props: linkProp) {
     const [roles, setRoles] = useState<string[]>([]);      // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
     const [selectedRole, setSelectedRole] = useState<string>("");
+    const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
         owner: props.owner,
     });
+
+    useEffect(() => {
+        if (link.link_name && link.url) {
+            setIsFilled(true);
+
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [link]);
 
     const [me, setMe] = useState(null);
 
@@ -146,25 +157,6 @@ function AddLinksForm(props: linkProp) {
                             <DialogTitle className="text-2xl text-primary font-mono font-bold">
                                 Add Content
                             </DialogTitle>
-
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="bg-primary text-primary-foreground"
-                                onClick={() => {
-                                    setLink({
-                                        link_name: "",
-                                        url: "",
-                                        owner: "",
-                                    });
-
-                                    setSelectedRole(
-                                        isAdmin ? "" : roles[0] || ""
-                                    );
-                                }}
-                            >
-                                Clear
-                            </Button>
                         </div>
                     </DialogHeader>
 
@@ -176,6 +168,7 @@ function AddLinksForm(props: linkProp) {
                                 value={link.link_name}
                                 onChange={handleChange}
                                 className="mt-1"
+                                placeholder="Name..."
                             />
                         </Field>
 
@@ -186,6 +179,7 @@ function AddLinksForm(props: linkProp) {
                                 value={link.url}
                                 onChange={handleChange}
                                 className="mt-1"
+                                placeholder="https://www.example.com"
                             />
                         </Field>
 
@@ -219,8 +213,26 @@ function AddLinksForm(props: linkProp) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="bg-primary text-primary-foreground"
+                            onClick={() => {
+                                setLink({
+                                    link_name: "",
+                                    url: "",
+                                    owner: "",
+                                });
+
+                                setSelectedRole(
+                                    isAdmin ? "" : roles[0] || ""
+                                );
+                            }}
+                        >
+                            Clear
+                        </Button>
                         <DialogClose render={
-                            <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
+                            <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
                                 const finalRole =
                                     isAdmin
                                         ? selectedRole

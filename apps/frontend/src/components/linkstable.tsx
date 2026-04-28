@@ -1,4 +1,5 @@
 "use client"
+
 import * as React from "react"
 import {
     Table,
@@ -95,8 +96,8 @@ interface LinkProps<TData extends Links, TValue> {
 
 
 export default function LinksTable<TData extends Links, TValue>({
-                                                                   columns,
-                                                               }: LinkProps<TData, TValue>) {
+                                                                    columns,
+                                                                }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
@@ -150,7 +151,7 @@ export default function LinksTable<TData extends Links, TValue>({
         const data = await res.json();
         return data;
     }
-    
+
     useEffect(() => {
         getLinks()
             .then((data) => {
@@ -160,7 +161,7 @@ export default function LinksTable<TData extends Links, TValue>({
                 setLinks(data);})
             .catch(console.error);
     }, [filters, reload]);
-    
+
 
 
     useEffect(() => {
@@ -326,7 +327,7 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="relative inline-block text-left">
                                 {tab === "All" ?
                                 <button
-                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
+                                    onClick={() => setIsDropdownOpen(prev => !prev)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
                                     <div className="pr-1">
@@ -365,8 +366,8 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="flex justify-end ml-auto">
                                 <AddLinksForm
                                     type="Add Link"
-                                    name="Name"
-                                    url="www.example.com"
+                                    name=""
+                                    url=""
                                     size={true}
                                     reload={setReload}
                                 />
@@ -433,19 +434,19 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
-                                        <TableRow key={row.id}>
-                                            <FavoriteStar
-                                                doc={link}
-                                                onToggleOn={(link) => toggleFavorite(link, false)}
-                                                onToggleOff={(link) => toggleFavorite(link, true)}
-                                            />
+                                            <TableRow key={row.id}>
+                                                <FavoriteStar
+                                                    doc={link}
+                                                    onToggleOn={(link) => toggleFavorite(link, false)}
+                                                    onToggleOff={(link) => toggleFavorite(link, true)}
+                                                />
 
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                            {link.lock === "none"? (
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                {link.lock === "none"? (
                                                     <TableCell>
                                                         <div className="flex items-center gap-1 justify-end">
                                                             <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
@@ -455,27 +456,27 @@ export default function LinksTable<TData extends Links, TValue>({
                                                         </div>
                                                     </TableCell>
                                                 ) : link.lock === empID ?(
-                                            <TableCell className="px-1 py-0.5 text-center">
-                                                <div className="flex gap-2 justify-end">
-                                                    <Editlinksform
-                                                        id={link.id}
-                                                        name ={link.link_name}
-                                                        url ={link.url}
-                                                        owner={roles.at(0)}
-                                                        reload={setReload}
-                                                    />
-                                                    <Button variant = "destructive" size = "icon">
-                                                        <DeletePopupConfirmationLinks link={link} reload={setReload}/>
-                                                    </Button>
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
-                                                        const token = await getToken();
-                                                        await setLinkLock(token, link.id, false, setReload)
-                                                    }}><LockOpen /></Button>
-                                                </div>
-                                            </TableCell> ) :(
-                                                <TableCell><p>{link.lock_name}</p></TableCell> )
-                                            }
-                                        </TableRow> ) : (
+                                                    <TableCell className="px-1 py-0.5 text-center">
+                                                        <div className="flex gap-2 justify-end">
+                                                            <Editlinksform
+                                                                id={link.id}
+                                                                name ={link.link_name}
+                                                                url ={link.url}
+                                                                owner={roles.at(0)}
+                                                                reload={setReload}
+                                                            />
+                                                            <Button variant = "destructive" size = "icon">
+                                                                <DeletePopupConfirmationLinks link={link} reload={setReload}/>
+                                                            </Button>
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                const token = await getToken();
+                                                                await setLinkLock(token, link.id, false, setReload)
+                                                            }}><LockOpen /></Button>
+                                                        </div>
+                                                    </TableCell> ) :(
+                                                    <TableCell><p>{link.lock_name}</p></TableCell> )
+                                                }
+                                            </TableRow> ) : (
                                             <TableRow key={row.id} className="bg-[#e6e8e8]">
                                                 <FavoriteStar
                                                     doc={link}
@@ -493,9 +494,9 @@ export default function LinksTable<TData extends Links, TValue>({
                                                         <p className="text-sm font-medium">{link.lock_name}</p>
                                                     </div>
                                                 </TableCell>
-                                                </TableRow>
-                                                )
-                                           );
+                                            </TableRow>
+                                        )
+                                    );
                                 })}
                             </TableBody>
                         </Table>
@@ -657,64 +658,64 @@ export default function LinksTable<TData extends Links, TValue>({
                                         ((roles.includes("businessoperator") && link.owner === "BusinessOperator"))
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
-                                        <TableRow key={row.id}>
-                                            <FavoriteStar
-                                                doc={link}
-                                                onToggleOn={(link) => toggleFavorite(link, false)}
-                                                onToggleOff={(link) => toggleFavorite(link, true)}
-                                            />
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                            {!canEdit ? (
-                                                <>
-                                                </>
-                                                ) :
-                                            link.lock === "none" ? (
-                                                <TableCell className="px-1 py-0.5">
-                                                    <div className="flex justify-end w-full">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="icon"
-                                                            className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                            onClick={async () => {
-                                                                const token = await getToken();
-                                                                await setLinkLock(token, link.id, true, setReload)
-                                                            }}
-                                                        >
-                                                            <Lock />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                                ) : link.lock === empID ? (
-                                            <TableCell className="px-1 py-0.5 text-center">
-                                                <div className="flex gap-2 justify-end">
-                                                    {canEdit && (
-                                                        <Editlinksform
-                                                            id={link.id}
-                                                            name ={link.link_name}
-                                                            url ={link.url}
-                                                            owner={roles.at(0)}
-                                                            reload={setReload}
-                                                        />
-                                                    )}
+                                            <TableRow key={row.id}>
+                                                <FavoriteStar
+                                                    doc={link}
+                                                    onToggleOn={(link) => toggleFavorite(link, false)}
+                                                    onToggleOff={(link) => toggleFavorite(link, true)}
+                                                />
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                {!canEdit ? (
+                                                        <>
+                                                        </>
+                                                    ) :
+                                                    link.lock === "none" ? (
+                                                        <TableCell className="px-1 py-0.5">
+                                                            <div className="flex justify-end w-full">
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="icon"
+                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                    onClick={async () => {
+                                                                        const token = await getToken();
+                                                                        await setLinkLock(token, link.id, true, setReload)
+                                                                    }}
+                                                                >
+                                                                    <Lock />
+                                                                </Button>
+                                                            </div>
+                                                        </TableCell>
+                                                    ) : link.lock === empID ? (
+                                                        <TableCell className="px-1 py-0.5 text-center">
+                                                            <div className="flex gap-2 justify-end">
+                                                                {canEdit && (
+                                                                    <Editlinksform
+                                                                        id={link.id}
+                                                                        name ={link.link_name}
+                                                                        url ={link.url}
+                                                                        owner={roles.at(0)}
+                                                                        reload={setReload}
+                                                                    />
+                                                                )}
 
-                                                    {canEdit && (
-                                                        <Button variant = "destructive" size = "icon">
-                                                            <DeletePopupConfirmationLinks link={link} reload={setReload}/>
-                                                        </Button>
-                                                    )}
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
-                                                        const token = await getToken();
-                                                        await setLinkLock(token, link.id, false, setReload)
-                                                    }}><LockOpen /></Button>
-                                                </div>
-                                            </TableCell> ) : (
-                                                    <TableCell><p>{link.lock_name}</p></TableCell>)
-                                            }
-                                        </TableRow>
+                                                                {canEdit && (
+                                                                    <Button variant = "destructive" size = "icon">
+                                                                        <DeletePopupConfirmationLinks link={link} reload={setReload}/>
+                                                                    </Button>
+                                                                )}
+                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                    const token = await getToken();
+                                                                    await setLinkLock(token, link.id, false, setReload)
+                                                                }}><LockOpen /></Button>
+                                                            </div>
+                                                        </TableCell> ) : (
+                                                        <TableCell><p>{link.lock_name}</p></TableCell>)
+                                                }
+                                            </TableRow>
                                         ) : (
                                             <TableRow key={row.id} className="bg-[#e6e8e8]">
                                                 <FavoriteStar

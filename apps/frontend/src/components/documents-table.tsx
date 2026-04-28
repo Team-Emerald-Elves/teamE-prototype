@@ -378,22 +378,35 @@ export function DocumentsTable<TData extends Document, TValue>({
     }
     useEffect(() => {
         setFilters(prev => {
-            const withoutRoles = prev.filter(f => f.key !== "assigned_role");
+            const updated = prev.filter(f => f.key !== "assigned_role");
 
-            if (tab === "All") return withoutRoles;
-            const selectedRole = roleFilters.find(f => f.value === tab);
+            if (tab === "All") {
+                return updated.filter(f => f.key !== "content_owner");
+            }
 
             if (tab === "OwnedByMe") {
+                const exists = updated.some(f => f.key === "content_owner");
+
+                if (exists) {
+                    return updated.map(f =>
+                        f.key === "content_owner"
+                            ? { ...f, value: empID }
+                            : f
+                    );
+                }
+
                 return [
-                    ...withoutRoles,
-                    {key: 'content_owner', value: empID, id: 'Owned by Me', state: false}
+                    ...updated,
+                    { key: 'content_owner', value: empID, id: 'Owned by Me', state: false }
                 ];
             }
 
-            if (!selectedRole) return withoutRoles;
-            return [...withoutRoles, selectedRole];
+            const selectedRole = roleFilters.find(f => f.value === tab);
+            if (!selectedRole) return updated;
+
+            return [...updated, selectedRole];
         });
-    }, [tab]);
+    }, [tab,empID]);
     if(roles.includes("administrator")) {
         return (
             <>

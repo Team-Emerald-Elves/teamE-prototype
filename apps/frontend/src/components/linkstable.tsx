@@ -291,11 +291,20 @@ export default function LinksTable<TData extends Links, TValue>({
     }
     const [tab, setTab] = useState("All");
 
+    useEffect(() => {
+        if(tab === "All"){
+            table.getColumn("owner")?.setFilterValue(undefined)
+        }
+        else{
+            table.getColumn("owner")?.setFilterValue(tab)
+        }
+    }, [tab,table]);
+
     if(roles.includes("administrator")) {
         return (
             <>
                 <Tabs value={tab} onValueChange={setTab}>
-                <div className="max-w-10xl mx-auto px-10 py-10">
+                <div className="max-w-10xl mx-auto w-full px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
@@ -508,106 +517,73 @@ export default function LinksTable<TData extends Links, TValue>({
     else{
         return(
             <>
-                <div className="max-w-10xl mx-auto px-10 py-10">
+            <Tabs value={tab} onValueChange={setTab}>
+                <div className="max-w-10xl mx-auto w-full px-10 py-10">
                     <div className="bg-white rounded-xl shadow-sm border p-4">
-                        <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
-                                <InputGroupInput
-                                    placeholder="Search"
-                                    value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
-                                    onChange={(event) =>
-                                        table.getColumn("link_name")?.setFilterValue(event.target.value)
-                                    }
-                                    className="w-full"
-                                />
-                                <InputGroupAddon>
-                                    <Search />
-                                </InputGroupAddon>
-                            </InputGroup>
-                            <div className="relative inline-block text-left">
-                                <button
-                                    onClick={() => setIsDropdownOpen(prev => !prev)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                >
-                                    <div className="pr-1">
-                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
-                                    </div>
-                                    Filter
-                                </button>
-
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-2">
-
-                                            {/* ROLE */}
-                                            <div className="px-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsRoleOpen(prev => !prev);
-                                                        setIsTagOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Role
-                                                </button>
-
-                                                {isRoleOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1">
-                                                        {roleFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
+                        <div className="flex flex-col">
+                            <div className="flex items-center mb-4">
+                                <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                                    <InputGroupInput
+                                        placeholder="Search"
+                                        value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
+                                        onChange={(event) =>
+                                            table.getColumn("link_name")?.setFilterValue(event.target.value)
+                                        }
+                                        className="w-full"
+                                    />
+                                    <InputGroupAddon>
+                                        <Search />
+                                    </InputGroupAddon>
+                                </InputGroup>
+                                <div className="relative inline-block text-left">
+                                    <button
+                                        onClick={() => setIsRoleOpen(!isRoleOpen)}
+                                        className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    >
+                                        <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
+                                        Filter
+                                    </button>
+                                    {isRoleOpen && (
+                                        <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                            <div className="py-1">
+                                                {roleFilters.map((option) => (
+                                                    <div key={option.id}
+                                                         className="flex items-center justify-between">
+                                                        <label htmlFor={option.id}
+                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                        <input
+                                                            id={option.id}
+                                                            type="checkbox"
+                                                            checked={option.state}
+                                                            onChange={(e) => handleCheckbox(e, option)}
+                                                            className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
+                                                        />
                                                     </div>
-                                                )}
+                                                ))}
                                             </div>
-
-                                            {/* TAGS */}
-                                            <div className="px-2 mt-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setIsTagOpen(prev => !prev);
-                                                        setIsRoleOpen(false);
-                                                    }}
-                                                    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"
-                                                >
-                                                    Tags
-                                                </button>
-
-                                                {isTagOpen && (
-                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
-                                                        {tagFilters.map(option => (
-                                                            <label key={option.id} className="flex justify-between items-center text-sm">
-                                                                {option.id}
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={filters.some(f => f.id === option.id)}
-                                                                    onChange={(e) => handleCheckbox(e, option)}
-                                                                />
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-
                                         </div>
+                                    )}
+                                </div>
+                                <div className="flex justify-end ml-auto">
+                                    <AddLinksForm
+                                        type="Add Link"
+                                        name="Name"
+                                        url="www.example.com"
+                                        size={true}
+                                        reload={setReload}
+                                    />
+                                </div>
+                            </div>
+                                    <div className="flex ">
+                                        <TabsList>
+                                            <TabsTrigger value="All">All</TabsTrigger>
+                                            <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
+                                            <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
+                                            <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
+                                            <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
+                                            <TabsTrigger value="Underwriter">Under Writer</TabsTrigger>
+                                        </TabsList>
                                     </div>
-                                )}
-                            </div>
-                            <div className="flex justify-end ml-auto">
-                                <AddLinksForm
-                                    type="Add Link"
-                                    name="Name"
-                                    url="www.example.com"
-                                    size={true}
-                                    reload={setReload}
-                                />
-                            </div>
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
@@ -663,11 +639,6 @@ export default function LinksTable<TData extends Links, TValue>({
                                         ((roles.includes("actuarialanalyst") && link.owner === "ActuarialAnalyst")) ||
                                         ((roles.includes("exceloperator") && link.owner === "ExcelOperator")) ||
                                         ((roles.includes("businessoperator") && link.owner === "BusinessOperator"))
-                                    console.log("User role: " , roles)
-                                    console.log("Doc Role: " ,link.owner)
-                                    console.log("Lock status" , link.lock)
-                                    console.log("Can edit: " , canEdit)
-                                    console.log("This emploee ID" , empID)
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
                                             <TableRow key={row.id}>
@@ -813,6 +784,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </Button>
                     </div>
                 </div>
+            </Tabs>
             </>
         )
     }

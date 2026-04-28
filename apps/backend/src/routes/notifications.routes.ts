@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express'
-import { validate } from '../lib/zod/middleware.ts'
+import validate from '../lib/zod/middleware.ts'
 import { notificationModel } from '../lib/zod/routes.schemas.ts'
 import { getAuth, clerkClient } from '@clerk/express'
 import prisma, { Prisma, type Employee, type Notification } from '@repo/database'
@@ -84,8 +84,18 @@ notifyRouter.post(
     '/create-notifcation',
     validate(notificationModel),
     async (req: Request, res: Response) => {
+
+        const { userId, isAuthenticated } = getAuth(req)
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" })
+        }
+
         prisma.notification.create({
-            data: req.body
+            data: {
+                ...req.body,
+                creatorId: userId
+            }
         }).then((notifcation: Notification) => {
             return res.status(200).json({message:`Notifcation created: '${notifcation}'.`})
         }).catch((error) => {

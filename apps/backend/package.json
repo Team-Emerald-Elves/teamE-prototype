@@ -20,31 +20,31 @@
     "@types/body-parser": "^1.19.6",
     "@types/bun": "latest",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.6.0",
     "body-parser": "^2.2.2",
-    "eslint": "^10.1.0",
-    "globals": "^17.0.0",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.59.1"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@clerk/backend": "^3.2.7",
-    "@clerk/express": "^2.0.8",
+    "@clerk/backend": "^3.4.1",
+    "@clerk/express": "^2.1.9",
     "@repo/database": "workspace:*",
-    "@supabase/supabase-js": "^2.101.1",
+    "@supabase/supabase-js": "^2.105.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "backend-prototype": "link:",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.0",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mime": "^4.1.0",
     "morgan": "^1.10.1",
-    "pnpm": "^10.33.0",
+    "pnpm": "^10.33.2",
     "ts-node": "^10.9.2",
     "zod": "^4.3.6"
   }

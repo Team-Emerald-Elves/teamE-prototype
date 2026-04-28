@@ -36,7 +36,7 @@ const intClock: Function = async () => {
             data: {
                 title: `${doc.name.substring(0, 14) + (doc.name.length >= 12 ? '...' : '')} is expiring tomorrow!`,
                 public: true,
-                targetRoles: [doc.assigned_role as UserRoles]
+                targetRoles: [doc.assigned_role as UserRoles],
             }
         })
     })

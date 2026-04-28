@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { UserRoles } from "@repo/database";
+import { title } from "process";
 
 const StatusEnum = z.enum(['not_started', 'in_progress', 'needs_review', 'done', 'expired']).default('not_started')
 const UserRoleEnum = z.enum(UserRoles);
@@ -7,9 +8,8 @@ const ActionEnum = z.enum(['list', 'create', 'edit','delete']);
 
 export const notificationModel = z.object({
     id:              z.uuid(),
-    expiration_date: z.date(),
-    summary:         z.string(),
-    extend:          z.string().optional(),
+    createdAt:       z.date(),
+    title:           z.string(),
     employeeId:      z.uuid().optional(),
     public:          z.boolean().optional(),
     targetRoles:     z.array(UserRoleEnum).default([])
@@ -85,12 +85,6 @@ export const CreateEmployeeModel = z.object({
     last_name:  z.string(),
     email:      z.email(),
     uname:      z.string(),
-})
-
-//create-servicereq.ts
-export const CreateServiceReqModel = z.object({
-    uname:       z.string().optional(),
-    description: z.string(),
 })
 
 //edit-employee.ts

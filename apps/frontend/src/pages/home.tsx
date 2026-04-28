@@ -89,30 +89,6 @@ function Home() {
     //     )
     // }
     if (roles.includes("administrator")) {
-        return (
-            <>
-                <HeroBanner firstname={firstname} />
-
-                <div className="home-content-container">
-                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
-                        {/*<Card title={"Reviews and Testimonies"} content={<DocTable rows={rows} />} />*/}
-                        {/*<Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
-                        <Favorites />
-                    {/*</div>*/}
-                    <div className = "mx-5">
-                        <PageHeader title="Dashboard"/>
-                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
-                            <UserLogs/>
-                            <HitCounts/>
-                        </div>
-                    </div>
-                </div>
-                <CalendarWeek />
-                {/* <Footer/> */}
-            </>
-        )
-    }
-    if (roles.includes("underwriter")) {
 
         return(
             <>

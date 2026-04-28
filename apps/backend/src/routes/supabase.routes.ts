@@ -9,7 +9,7 @@ import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 
 import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
-import { validate } from '../lib/zod/middleware.ts'
+import validate from '../lib/zod/middleware.ts'
 import mime from 'mime'
 import {buildWhereClause} from "../lib/filters.ts";
 
@@ -585,7 +585,7 @@ supaBaseRouter.post(
             const cursor = new Date(startDate);
 
             while (cursor <= endDate) {
-                dateRange.push(cursor.toISOString().split("T")[0]);
+                dateRange.push(cursor.toISOString().split("T")[0] as string);
                 cursor.setDate(cursor.getDate() + 1);
             }
 
@@ -615,7 +615,7 @@ supaBaseRouter.post(
                 const date = row.hit_date.toISOString().split("T")[0];
                 const count = row._sum.count ?? 0;
 
-                const entry = chartMap.get(date);
+                const entry = chartMap.get(date as string);
                 if (!entry) continue;
 
                 if (row.target_type === "DOCUMENT") {

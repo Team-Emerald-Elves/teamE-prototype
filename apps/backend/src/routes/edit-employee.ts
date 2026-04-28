@@ -2,18 +2,8 @@ import express from "express";
 import prisma, { Prisma, type UserRoles, type Employee } from "@repo/database"
 
 
-
-interface IEditEmployeeRequest {
-    id: string;
-    uname: string | undefined;
-    first_name: string | undefined;
-    last_name: string | undefined;
-    roles: UserRoles[] | undefined;
-    email: string | undefined;
-}
-
 async function editEmployeeRoute(req: express.Request, res: express.Response) {
-    const ereq: IEditEmployeeRequest = req.body as IEditEmployeeRequest;
+    const ereq: Employee = req.body as Employee;
     try {
         const employee: Employee = await prisma.employee.update({
             where: {

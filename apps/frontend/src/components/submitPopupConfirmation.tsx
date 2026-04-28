@@ -149,6 +149,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     fileName: fileData.formData.fileName
   }
 
+
   const endpoint =
     fileData.type === "Create"
       ? "/api/supabase/create-document"

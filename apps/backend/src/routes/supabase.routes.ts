@@ -245,8 +245,9 @@ supaBaseRouter.put(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" })
         }
-        console.log("Uid: ", userId);
+
         const document: IDocumentContent = req.body
+
         const supabaseClient = await createSupabaseForRequest()
 
 

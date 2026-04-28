@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
+import { Info } from "lucide-react"
 import {
     Card,
     CardContent,
@@ -18,6 +18,9 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from "@/components/ui/chart"
+
+import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
     Select,
     SelectContent,
@@ -77,7 +80,7 @@ export function HitCounts() {
     })
 
     return (
-        <Card className="pt-0 w-[60%] h-full">
+        <Card className="pt-0 w-[60%] h-full relative">
             <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1">
                     <CardTitle className = "text-2xl text-[#12324b]">Document Hit Counts</CardTitle>
@@ -161,6 +164,34 @@ export function HitCounts() {
                     </AreaChart>
                 </ChartContainer>
             </CardContent>
+
+            {/* info popover */}
+            <div className="absolute bottom-3 left-3">
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                            <Info className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" align="start" className="w-64">
+                        <p className="font-medium text-sm mb-2">Document Hit Counts</p>
+                        <p className="text-xs text-muted-foreground mb-3">
+                            An overview of document hit counts over the selected time period.
+                        </p>
+                        <div className="space-y-1">
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Series</p>
+                            {Object.entries(chartConfig).map(([key, value]) => (
+                                <div key={key} className="flex justify-between text-xs">
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="inline-block w-2 h-2 rounded-full" style={{ background: value.color }} />
+                                        {value.label}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </div>
         </Card>
     )
 }

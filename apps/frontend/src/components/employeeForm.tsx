@@ -24,7 +24,7 @@ import {
 import {FieldGroup, Field} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { type JSX, useState} from "react";
+import {type JSX, useEffect, useState} from "react";
 import { ConfirmationPopup } from "@/components/EmployeeConfirmationPopup"
 
 type EditEmployeeRequest = {
@@ -78,6 +78,17 @@ function EmployeeForm(props: empProps): JSX.Element {
         email: employee!.email,
         role: employee!.roles ? employee!.roles.at(0) : "None",
     });
+    const [isFilled, setIsFilled] = useState<boolean>(false);
+    useEffect(() => {
+        if (user.firstname && user.lastname && user.username && user.email && user.role) {
+            setIsFilled(true);
+
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [user]);
+
     const [open, setOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +125,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 onChange={handleChange}
                                 disabled={false}
                                 className="mt-1"
+                                placeholder="First Name"
                             />
                             </Field>
                             <Field>
@@ -124,6 +136,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 onChange={handleChange}
                                 disabled={false}
                                 className="mt-1"
+                                placeholder="Last Name"
                             />
                             </Field>
                         </div>
@@ -136,6 +149,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 onChange={handleChange}
                                 disabled={false}
                                 className="mt-1"
+                                placeholder="Username"
                             />
                             </Field>
                             <Field>
@@ -147,6 +161,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 onChange={handleChange}
                                 disabled={false}
                                 className="mt-1"
+                                placeholder="Email"
                             />
                             </Field>
                         </div>
@@ -198,6 +213,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                     console.log("Failed to update employee");
                                 }
                             }}
+                            disabled={!isFilled}
                         />
                     </DialogFooter>
                 </DialogContent>

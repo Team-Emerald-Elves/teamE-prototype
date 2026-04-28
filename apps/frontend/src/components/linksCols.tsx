@@ -164,6 +164,37 @@ export const columns: ColumnDef<Links>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const role = row.original.owner
+            let roleBackground = "bg-gray-200"
+
+            switch (role) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-700";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-blue-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-300";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-teal-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-violet-300";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-fuchsia-300";
+                    break;
+            }
+
+            return (
+                <div className="text-center justify-items-center">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                </div>
+            )
+        }
     },
     {
         accessorKey: "created_at",
@@ -233,8 +264,7 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <div>
                     {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
+                        <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>

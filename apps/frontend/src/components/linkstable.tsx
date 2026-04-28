@@ -403,8 +403,8 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="flex justify-end ml-auto">
                                 <AddLinksForm
                                     type="Add Link"
-                                    name="Name"
-                                    url="www.example.com"
+                                    name=""
+                                    url=""
                                     size={true}
                                     reload={setReload}
                                 />

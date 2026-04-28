@@ -1,5 +1,5 @@
 import '../App.css'
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 
 import { Button } from './ui/button.tsx'
 import {
@@ -65,7 +65,16 @@ function CreateEmployeeForm(props: Props) {
         email: "",
         roles: "",
     });
+    const [isFilled, setIsFilled] = useState<boolean>(false);
+    useEffect(() => {
+        if (user.fname && user.lname && user.username && user.email && user.roles) {
+            setIsFilled(true);
 
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [user]);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({
             ...user,
@@ -200,6 +209,7 @@ function CreateEmployeeForm(props: Props) {
                                     console.error(err);
                                 }
                             }}
+                            disabled={!isFilled}
                         />
                         {/*
                         <Button

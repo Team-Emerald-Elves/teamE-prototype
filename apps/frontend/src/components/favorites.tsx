@@ -94,7 +94,7 @@ export default function Favorites() {
                         </h4>
                     </div>
 
-                    <Link className="text-sm text-blue-900 hover:underline"
+                    <Link className="text-sm internal-link-color hover:underline"
                           //to="/documents"
                           to={currentFavorite === "docs" ? "/documents" : "/links"}
                     >

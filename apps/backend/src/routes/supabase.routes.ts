@@ -419,7 +419,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     }
 
     try {
-        // get employee for favorites
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,

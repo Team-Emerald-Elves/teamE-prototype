@@ -22,6 +22,7 @@ import { validate } from './lib/zod/middleware.ts'
 
 import cors from 'cors';
 import APIRouter from './routes/api.ts';
+import intClock from './lib/intClock.ts'
 
 import linkRoleRoute from "./routes/get-link-role.ts";
 import favoriteRoute from "./routes/get-favorited.ts";
@@ -101,4 +102,7 @@ app.post('/create-srvreq', createServiceReqRoute);
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);
+
+    console.log("Starting internal clock.")
+    setInterval(intClock, 5000);
 })

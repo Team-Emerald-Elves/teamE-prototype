@@ -171,9 +171,9 @@ function Home() {
                                 <h1>Hello,<br/> {firstname}</h1>
                             </div>
                         </div>
-                        <div className = "hero-content-bottom py-5 pl-2">
-                            <SearchBar/>
-                        </div>
+                        {/*<div className = "hero-content-bottom py-5 pl-2">*/}
+                        {/*    <SearchBar/>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
                 <div className="home-content-container">

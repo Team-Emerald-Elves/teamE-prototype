@@ -11,6 +11,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import type { Links } from './types/linkstable.d.ts'
+import {getToken} from "@clerk/react";
 
 type Links = {
     id: string;
@@ -30,6 +31,36 @@ type editlinksRequest ={
     action: string,
     linkData: Links,
 
+}
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
 }
 
 // async function updateLinks(body: editlinksRequest) {
@@ -100,7 +131,7 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {removeLink(bodyData, props.reload); }}>Confirm</Button>
+                        <Button type="submit" onClick={() => {removeLink(bodyData, props.reload); createNotif(props.link, "deleted") }}>Confirm</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

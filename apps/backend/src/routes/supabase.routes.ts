@@ -159,7 +159,7 @@ supaBaseRouter.post(
                 }
             })
 
-            res.sendStatus(200)
+            return res.status(200).json(documentContents);
     } catch (error)
     {
         res.status(401).json(`{"message":"Error creating document in bucket: ${error}"}`)
@@ -312,7 +312,7 @@ supaBaseRouter.put(
             if (!data || error) {
                 throw new Error(`Failed to modify document '${document.name}' for user '${employee.uname}'.`)
             }
-            res.sendStatus(200)
+            return res.status(200).json(newDoc);
 
         } catch (error) {
             console.error("Update document error:", error);

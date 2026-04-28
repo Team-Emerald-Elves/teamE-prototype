@@ -7,12 +7,12 @@ const UserRoleEnum = z.enum(UserRoles);
 const ActionEnum = z.enum(['list', 'create', 'edit','delete']);
 
 export const notificationModel = z.object({
-    id:              z.uuid(),
-    createdAt:       z.date(),
+    id:              z.uuid().optional(),
+    createdAt:       z.date().optional(),
     title:           z.string(),
-    employeeId:      z.uuid().optional(),
-    public:          z.boolean().optional(),
-    targetRoles:     z.array(UserRoleEnum).default([])
+    employeeId:      z.uuid().optional().optional(),
+    public:          z.boolean().optional().optional(),
+    targetRoles:     z.array(UserRoleEnum).default([]),
 })
 
 export const EmployeeDataModel = z.object({

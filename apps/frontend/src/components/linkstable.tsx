@@ -29,13 +29,11 @@ import {
     InputGroupAddon,
     InputGroupInput,
 } from "@/components/ui/input-group"
-import ContentForm from "@/components/contentForm.tsx";
-import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
 import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon, SlidersHorizontalIcon, X} from "@hugeicons/core-free-icons";
+import { SlidersHorizontalIcon, X} from "@hugeicons/core-free-icons";
 import AddLinksForm from "@/components/addlinksform.tsx";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
@@ -186,7 +184,7 @@ export default function LinksTable<TData extends Links, TValue>({
             setMe(data);
             setToken(token as string)
             setEmpID(data.id);
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            setRoles((data.roles as string[]))
         }
         load();
 
@@ -292,16 +290,18 @@ export default function LinksTable<TData extends Links, TValue>({
             };
         });
     }
-    const [tab, setTab] = useState("All");
+    const [tab, setTab] = useState(roles[0]);
 
     useEffect(() => {
-        if(tab === "All"){
+        if(tab === "administrator"){
             table.getColumn("owner")?.setFilterValue(undefined)
         }
         else{
             table.getColumn("owner")?.setFilterValue(tab)
         }
     }, [tab,table]);
+    console.log(roles[0])
+    console.log(tab)
 
     if(roles.includes("administrator")) {
         return (
@@ -340,45 +340,8 @@ export default function LinksTable<TData extends Links, TValue>({
                                     <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2">
 
-                                            {/*/!* ROLE *!/*/}
-                                            {/*<div className="px-2">*/}
-                                            {/*    <button*/}
-                                            {/*        onClick={() => {*/}
-                                            {/*            setIsRoleOpen(prev => !prev);*/}
-                                            {/*            setIsTagOpen(false);*/}
-                                            {/*        }}*/}
-                                            {/*        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
-                                            {/*    >*/}
-                                            {/*        Role*/}
-                                            {/*    </button>*/}
-
-                                            {/*    {isRoleOpen && (*/}
-                                            {/*        <div className="ml-2 mt-1 flex flex-col gap-1">*/}
-                                            {/*            {roleFilters.map(option => (*/}
-                                            {/*                <label key={option.id} className="flex justify-between items-center text-sm">*/}
-                                            {/*                    {option.id}*/}
-                                            {/*                    <input*/}
-                                            {/*                        type="checkbox"*/}
-                                            {/*                        checked={filters.some(f => f.id === option.id)}*/}
-                                            {/*                        onChange={(e) => handleCheckbox(e, option)}*/}
-                                            {/*                    />*/}
-                                            {/*                </label>*/}
-                                            {/*            ))}*/}
-                                            {/*        </div>*/}
-                                            {/*    )}*/}
-                                            {/*</div>*/}
-
                                             {/* TAGS */}
                                             <div className="px-2 mt-2">
-                                                {/*<button*/}
-                                                {/*    onClick={() => {*/}
-                                                {/*        setIsTagOpen(prev => !prev);*/}
-                                                {/*        setIsRoleOpen(false);*/}
-                                                {/*    }}*/}
-                                                {/*    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
-                                                {/*>*/}
-                                                {/*    Tags*/}
-                                                {/*</button>*/}
 
                                                 {/*{isTagOpen && (*/}
                                                     <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
@@ -412,7 +375,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                             <div className="flex ">
                                 <TabsList>
-                                    <TabsTrigger value="All">All</TabsTrigger>
+                                    <TabsTrigger value="administrator">All</TabsTrigger>
                                     <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
                                     <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
                                     <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
@@ -597,47 +560,8 @@ export default function LinksTable<TData extends Links, TValue>({
                                     <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2">
 
-                                            {/*/!* ROLE *!/*/}
-                                            {/*<div className="px-2">*/}
-                                            {/*    <button*/}
-                                            {/*        onClick={() => {*/}
-                                            {/*            setIsRoleOpen(prev => !prev);*/}
-                                            {/*            setIsTagOpen(false);*/}
-                                            {/*        }}*/}
-                                            {/*        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
-                                            {/*    >*/}
-                                            {/*        Role*/}
-                                            {/*    </button>*/}
-
-                                            {/*    {isRoleOpen && (*/}
-                                            {/*        <div className="ml-2 mt-1 flex flex-col gap-1">*/}
-                                            {/*            {roleFilters.map(option => (*/}
-                                            {/*                <label key={option.id} className="flex justify-between items-center text-sm">*/}
-                                            {/*                    {option.id}*/}
-                                            {/*                    <input*/}
-                                            {/*                        type="checkbox"*/}
-                                            {/*                        checked={filters.some(f => f.id === option.id)}*/}
-                                            {/*                        onChange={(e) => handleCheckbox(e, option)}*/}
-                                            {/*                    />*/}
-                                            {/*                </label>*/}
-                                            {/*            ))}*/}
-                                            {/*        </div>*/}
-                                            {/*    )}*/}
-                                            {/*</div>*/}
-
                                             {/* TAGS */}
                                             <div className="px-2 mt-2">
-                                                {/*<button*/}
-                                                {/*    onClick={() => {*/}
-                                                {/*        setIsTagOpen(prev => !prev);*/}
-                                                {/*        setIsRoleOpen(false);*/}
-                                                {/*    }}*/}
-                                                {/*    className="w-full text-left px-2 py-1 text-sm hover:bg-gray-200 rounded-md"*/}
-                                                {/*>*/}
-                                                {/*    Tags*/}
-                                                {/*</button>*/}
-
-                                                {/*{isTagOpen && (*/}
                                                     <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
                                                         {tagFilters.map(option => (
                                                             <label key={option.id} className="flex justify-between items-center text-sm">
@@ -669,7 +593,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                                     <div className="flex ">
                                         <TabsList>
-                                            <TabsTrigger value="All">All</TabsTrigger>
+                                            <TabsTrigger value="administrator">All</TabsTrigger>
                                             <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
                                             <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
                                             <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>

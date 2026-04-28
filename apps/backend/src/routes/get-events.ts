@@ -40,7 +40,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
                     .map(e => e.lock)
                     .filter((lock) => lock && lock !== "none")
             )
-        );
+        ) as string[]
 
         const employees = await prisma.employee.findMany({
             where: {

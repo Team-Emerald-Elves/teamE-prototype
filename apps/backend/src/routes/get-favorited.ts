@@ -35,7 +35,7 @@ async function favoriteRoute(req: express.Request, res: express.Response) {
         });
 
         // get all contnet owner ids (need to convert to names)
-        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))];
+        const ownerIds = [...new Set(documents.map(doc => doc.content_owner))] as string[];
 
         // get employees that are content owners
         const owners = await prisma.employee.findMany({
@@ -57,7 +57,7 @@ async function favoriteRoute(req: express.Request, res: express.Response) {
         // add the favorite as true (since these are all favorites)
         const result = documents.map(doc => ({
             ...doc,
-            content_owner: ownerMap.get(doc.content_owner) || "Unknown",
+            content_owner: ownerMap.get(doc.content_owner as string) || "Unknown",
             favorite: true,
         }));
 

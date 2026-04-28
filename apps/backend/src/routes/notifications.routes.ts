@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express'
-import { validate } from '../lib/zod/middleware.ts'
+import validate from '../lib/zod/middleware.ts'
 import { notificationModel } from '../lib/zod/routes.schemas.ts'
 import { getAuth, clerkClient } from '@clerk/express'
 import prisma, { Prisma, type Employee, type Notification } from '@repo/database'

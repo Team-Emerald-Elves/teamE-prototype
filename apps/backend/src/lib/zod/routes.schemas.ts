@@ -87,12 +87,6 @@ export const CreateEmployeeModel = z.object({
     uname:      z.string(),
 })
 
-//create-servicereq.ts
-export const CreateServiceReqModel = z.object({
-    uname:       z.string().optional(),
-    description: z.string(),
-})
-
 //edit-employee.ts
 export const EditEmployeeModel = z.object({
     id:         z.uuid(),

@@ -70,6 +70,7 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
+  created_at      DateTime @default(now())
 }
 
 model Links {
@@ -78,7 +79,10 @@ model Links {
   url       String
   owner     String?
   lock      String?
+<<<<<<< HEAD
   meta_tags String[]
+=======
+>>>>>>> 7bf629b (Revert "Revert "Document table add dates"")
   created_at      DateTime @default(now())
   updated_at         DateTime @updatedAt
 }

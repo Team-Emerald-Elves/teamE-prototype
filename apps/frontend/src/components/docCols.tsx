@@ -29,6 +29,7 @@ export type Document = {
     favorite: boolean;
     lock_name: string;
     meta_tags: string[];
+    created_at: string;
 };
 
 async function addHitCount (doc: Document) {
@@ -86,6 +87,29 @@ export const columns: ColumnDef<Document>[] = [
 
                     </DialogContent>
                 </Dialog>
+            );
+        },
+    },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const doc = row.original;
+            const date = new Date(doc.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
             );
         },
     },

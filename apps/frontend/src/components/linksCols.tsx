@@ -166,7 +166,7 @@ export const columns: ColumnDef<Links>[] = [
         },
     },
     {
-        accessorKey: "tags",
+        accessorKey: "created_at",
         header: ({ column }) => {
             return (
                 <Button
@@ -174,47 +174,17 @@ export const columns: ColumnDef<Links>[] = [
                     className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Tags
-                    <ArrowUpDown className="ml-2 h-4" />
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
             const link = row.original;
-            const tags = link.meta_tags;
-            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
+            const date = new Date(link.created_at);
 
             return (
-                <div>
-                    {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
-                    ))}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline">+</Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start">
-                            <PopoverHeader>
-                                <PopoverTitle>Add Tags</PopoverTitle>
-
-                            </PopoverHeader>
-                            <TagInput
-                                tags={tagList}
-                                setTags={async (newTags) => {
-                                    setTagList(newTags);
-                                    await updateTags(link.id, newTags as string[]).catch(console.error);
-                                }}
-                                remove={async (tagToRemove: string) => {
-                                    await removeTag(link.id, tagToRemove);
-                                }}
-                                placeholder="Add tag..."
-                            />
-                        </PopoverContent>
-                    </Popover>
-
-                </div>
-
+                <p>{date.toLocaleString()}</p>
             );
         },
     },

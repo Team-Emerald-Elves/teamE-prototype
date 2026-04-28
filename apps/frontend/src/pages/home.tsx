@@ -1,5 +1,5 @@
 import "./home.css";
-import {SearchBar} from "@/components/searchbar.tsx";
+//import {SearchBar} from "@/components/searchbar.tsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
@@ -13,12 +13,26 @@ import { ChartPieSeparatorNone} from "@/components/piechartroles.tsx";
 import { ChartPieStacked} from "@/components/piechartdocuments.tsx";
 import CalendarWeek from "@/components/calendarWeekComponent.tsx";
 
+interface HeroBannerProps {
+    firstname: string;
+}
 
-
-
+const HeroBanner = ({ firstname }: HeroBannerProps) => (
+    <div className="hero-container p-40px">
+        <div className="hero-overlay"></div>
+        <div className="hero-image"></div>
+        <div className="hero-content justify-content-start">
+            <div className="hero-content-top flex items-center">
+                <UserAvatar />
+                <div className="hero-text px-5 justify-center text-lg/10">
+                    <h1>Hello,<br /> {firstname}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 function Home() {
-
     const [roles, setRoles] = useState<string[]>([]);
     const [firstname, setfirstname] = useState("");
     const {user} = useUser()
@@ -77,21 +91,33 @@ function Home() {
     if (roles.includes("administrator")) {
         return (
             <>
-                <div className ="hero-container p-40px">
-                    <div className="hero-overlay"></div>
-                    <div className = "hero-image"></div>
-                    <div className="hero-content justify-content-start">
-                        <div className ="hero-content-top flex items-center">
-                            <UserAvatar/>
-                            <div className="hero-text px-5 justify-center text-lg/10">
-                                <h1>Hello,<br/> {firstname}</h1>
-                            </div>
-                        </div>
-                        <div className = "hero-content-bottom py-5 pl-2">
-                            <SearchBar/>
+                <HeroBanner firstname={firstname} />
+
+                <div className="home-content-container">
+                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
+                        {/*<Card title={"Reviews and Testimonies"} content={<DocTable rows={rows} />} />*/}
+                        {/*<Card title={"Reports and Analytics"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
+                        <Favorites />
+                    {/*</div>*/}
+                    <div className = "mx-5">
+                        <PageHeader title="Dashboard"/>
+                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
+                            <UserLogs/>
+                            <HitCounts/>
                         </div>
                     </div>
                 </div>
+                <CalendarWeek />
+                {/* <Footer/> */}
+            </>
+        )
+    }
+    if (roles.includes("underwriter")) {
+
+        return(
+            <>
+                <HeroBanner firstname={firstname} />
+
                 <div className="home-content-container">
                     {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
                     {/*    <Card title={"Reviews and Testimonies"}*/}
@@ -136,23 +162,7 @@ function Home() {
 
         return(
             <>
-                <div className ="hero-container p-40px">
-                    <div className="hero-overlay"></div>
-                    <div className = "hero-image"></div>
-                    <div className="hero-content justify-content-start">
-                        <div className ="hero-content-top flex items-center">
-                            <UserAvatar/>
-                            <div className="hero-text px-5 justify-center text-lg/10">
-                                <h1>Hello,<br/> {firstname}</h1>
-                            </div>
-                        </div>
-                        <div className = "hero-content-bottom py-5 pl-2">
-                            <SearchBar/>
-                        </div>
-
-                    </div>
-                </div>
-
+                <HeroBanner firstname={firstname} />
                 <div className="home-content-container">
                     {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
                     {/*    <Card title={"Reviews and Testimonies"}*/}

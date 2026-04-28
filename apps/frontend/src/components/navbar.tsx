@@ -50,7 +50,7 @@ async function setRead(setUnread: (a: boolean) => void) {
 function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [setMe] = useState(null);
     const [showNotification, setShowNotification] = useState(false);
     const toggleNotifs = () => {
         setShowNotification(!showNotification);
@@ -129,6 +129,11 @@ function Navbar(props: NavbarProps) {
 
                         <NavigationMenuItem>
                             <NavigationMenuLink render={<Link to="/aboutus">About Us</Link>} className={navigationMenuTriggerStyle()}>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+
+                        <NavigationMenuItem>
+                            <NavigationMenuLink render={<Link to="/credits">Credits</Link>} className={navigationMenuTriggerStyle()}>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
 

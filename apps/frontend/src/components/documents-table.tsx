@@ -760,6 +760,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                                        if (option.key == "assigned_role" || option.key == "content_owner") {
+                                            if (tab !== "All") {
+                                                setTab("All")
+                                            }
+                                        }
                                         setDocFilters(dcFilters =>
                                             dcFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
@@ -1317,6 +1322,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
+                                        if (option.key == "assigned_role" || option.key == "content_owner") {
+                                            if (tab !== "All") {
+                                                setTab("All")
+                                            }
+                                        }
                                         setDocFilters(dcFilters =>
                                             dcFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter

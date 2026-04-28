@@ -262,13 +262,13 @@ export const columns: ColumnDef<Links>[] = [
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-                <div>
+                <div className="flex items-center">
                     {tags.map((item) => (
                         <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="outline">+</Button>
+                            <Button variant="outline" className="h-4 w-4 ml-1 flex items-center justify-center text-center">+</Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">
                             <PopoverHeader>

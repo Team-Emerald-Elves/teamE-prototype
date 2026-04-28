@@ -37,7 +37,7 @@ model Notification {
   creatorId       String?      @db.Uuid
   employee        Employee?   @relation(fields: [employeeId], references: [id])
   employeeId      String?     @db.Uuid
-  
+
   public          Boolean?    @default(false)
   targetRoles     UserRoles[] @default([])
 }

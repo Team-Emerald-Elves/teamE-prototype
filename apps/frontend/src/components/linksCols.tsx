@@ -164,9 +164,40 @@ export const columns: ColumnDef<Links>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const role = row.original.owner
+            let roleBackground = "bg-gray-200"
+
+            switch (role) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-700";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-blue-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-300";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-teal-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-violet-300";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-fuchsia-300";
+                    break;
+            }
+
+            return (
+                <div className="text-center justify-items-center">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                </div>
+            )
+        }
     },
     {
-        accessorKey: "tags",
+        accessorKey: "created_at",
         header: ({ column }) => {
             return (
                 <Button
@@ -174,15 +205,37 @@ export const columns: ColumnDef<Links>[] = [
                     className = "justify-start px-0"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Tags
-                    <ArrowUpDown className="ml-2 h-4" />
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
             const link = row.original;
-            const tags = link.meta_tags;
-            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
+            const date = new Date(link.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Last Modified
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.updated_at);
 
             return (
                 <p>{date.toLocaleString()}</p>
@@ -211,8 +264,7 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <div>
                     {tags.map((item) => (
-                        <div className="pb-1" key={item}><DocTag>{item}</DocTag></div>
-
+                        <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>
@@ -241,5 +293,6 @@ export const columns: ColumnDef<Links>[] = [
 
             );
         },
-    }
+    },
+
 ]

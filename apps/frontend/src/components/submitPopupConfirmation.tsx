@@ -28,6 +28,7 @@ type SubmitConfirmationPopupProps = {
   }
   refresh: (any) => void
   open: (arg:boolean) => void
+  disabled: boolean
 }
 
 export type IFile = {
@@ -133,34 +134,40 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
         getToken().then(t => setSessionToken(t ?? ""))
     }, [])
 
-
     return (
-        <Dialog open={open} onClose={() => {setOpen(false)}} onOpenChange={setOpen}>
-            <DialogTrigger>
-                <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-sm">
-                <DialogHeader>
-                    <DialogTitle>Are you sure?</DialogTitle>
-                </DialogHeader>
-                <DialogFooter>
-                    <DialogClose >
-                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                    </DialogClose>
-                    <DialogClose>
-                        <Button type="button" onClick={() => {
-                            try{
-                                createDocument(info, sessionToken, info.refresh);console.log("submitted sucsessfully!");
-                                info.open(false);
-                                console.log("closed ready for refresh");
-                               }
-                        catch (error) {
-                                console.error("broke at",error)
-                        }}}>Confirm</Button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <>
+            { info.disabled ? (
+                <Button type="submit" disabled={true} className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+            ) : (
+                <Dialog open={open} onClose={() => {setOpen(false)}} onOpenChange={setOpen}>
+                    <DialogTrigger>
+                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-sm">
+                        <DialogHeader>
+                            <DialogTitle>Are you sure?</DialogTitle>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <DialogClose >
+                                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                            </DialogClose>
+                            <DialogClose>
+                                <Button type="button" onClick={() => {
+                                    try{
+                                        createDocument(info, sessionToken, info.refresh);console.log("submitted sucsessfully!");
+                                        info.open(false);
+                                        console.log("closed ready for refresh");
+                                    }
+                                    catch (error) {
+                                        console.error("broke at",error)
+                                    }}}>Confirm</Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )
+            }
+        </>
     )
 }
 

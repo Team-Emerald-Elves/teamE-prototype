@@ -95,10 +95,36 @@ export const columns: ColumnDef<Employee>[] = [
             )
         },
         cell: ({ row }) => {
-            const emp = row.original;
+            const emp = row.original.roles[0];
+
+            let roleBackground = "bg-gray-200"
+
+            switch (emp) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-400";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-blue-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-300";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-teal-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-violet-300";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-fuchsia-300";
+                    break;
+            }
+
             return (
-                <p>{emp.roles}</p>
-            );
+                <div className="items-center justify-items-center">
+                    <DocTag background={roleBackground}>{emp}</DocTag>
+                </div>
+            )
         },
 
     }

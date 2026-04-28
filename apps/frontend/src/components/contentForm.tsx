@@ -121,12 +121,12 @@ function ContentForm(props: contentFormProps) {
 
 
 
-
     const now = new Date();
     const formattedDate = now.toLocaleString();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [isFilled, setIsFilled] = useState<boolean>(false);
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
@@ -138,6 +138,14 @@ function ContentForm(props: contentFormProps) {
         document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
+    useEffect(() => {
+        if (formData.name && formData.url && formData.contentOwner && formData.role && formData.document_type && formData.document_status && formData.expirationDate && formData.expirationTime) {
+            setIsFilled(true);
+            }
+        else {
+            setIsFilled(false);
+        }
+        }, [formData]);
 
     const toBase64 = (file: File): Promise<string> =>
         new Promise((resolve, reject) => {
@@ -215,7 +223,7 @@ function ContentForm(props: contentFormProps) {
                                 <Input
                                     id="name"
                                     name="name"
-                                    placeholder={props.currentName}
+                                    placeholder="Name..."
                                     value={formData.name}
                                     onChange={(e) => setFormData(prev => ({...prev, name: e.target.value}))}
                                 />
@@ -225,7 +233,7 @@ function ContentForm(props: contentFormProps) {
                                 <Input
                                     id="url"
                                     name="url"
-                                    placeholder={props.currentURL}
+                                    placeholder="https://www.example.com"
                                     value={formData.url}
                                     onChange={(e) => setFormData(prev => ({...prev, url: e.target.value}))}
                                 />
@@ -342,11 +350,10 @@ function ContentForm(props: contentFormProps) {
                     <FileUpload dnd={true} show={true} onUpload={uploadHandler}/>
 
                     <p>Last Modified: {formattedDate}</p>
-
                     <DialogFooter>
                         <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh} open={setOpen} />
+                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh} open={setOpen} disabled={!isFilled}/>
                     </DialogFooter>
                 </DialogContent>
             </form>

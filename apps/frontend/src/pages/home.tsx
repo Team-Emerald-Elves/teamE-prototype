@@ -195,10 +195,10 @@ function Home() {
                             <div className="w-[45%]">
                                 <NumericalStats/>
                             </div>
-                            <div className="w-110">
+                            <div className="w-275">
                                 <ChartPieSeparatorNone/>
                             </div>
-                            <div className="w-110">
+                            <div className="w-275">
                                 <ChartPieStacked/>
                             </div>
 

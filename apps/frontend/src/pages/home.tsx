@@ -88,7 +88,7 @@ function Home() {
     //         </div>
     //     )
     // }
-    if (roles.includes("businessanalyst")) {
+    if (roles.includes("administrator")) {
         return (
             <>
                 <HeroBanner firstname={firstname} />
@@ -128,35 +128,6 @@ function Home() {
                     {/*        }*/}
                     {/*        />*/}
                     {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
-                        <Favorites />
-                    {/*</div>*/}
-                    <div className = "mx-5">
-                        <PageHeader title="Dashboard"/>
-                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
-                            <UserLogs/>
-                            <HitCounts/>
-                        </div>
-                    </div>
-                </div>
-                {/* <Footer/> */}
-                <CalendarWeek />
-            </>
-        )
-    }
-    else {
-        return (
-            <>
-                <HeroBanner firstname={firstname} />
-                <div className="home-content-container">
-                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
-                    {/*    <Card title={"Reviews and Testimonies"}*/}
-                    {/*          content={*/}
-                    {/*        <p>*/}
-                    {/*            I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker*/}
-                    {/*        </p>*/}
-                    {/*        }*/}
-                    {/*        />*/}
-                    {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
                     <Favorites />
                     {/*</div>*/}
 
@@ -186,6 +157,38 @@ function Home() {
             </>
         )
     }
+
+    else {
+
+        return(
+            <>
+                <HeroBanner firstname={firstname} />
+                <div className="home-content-container">
+                    {/*<div className="grid grid-cols-[repeat(auto-fill,minmax(300px,2fr))] lg:grid-cols-[repeat(auto-fill,minmax(450px,2fr))] gap-[50px]">*/}
+                    {/*    <Card title={"Reviews and Testimonies"}*/}
+                    {/*          content={*/}
+                    {/*        <p>*/}
+                    {/*            I was not only pleased but incredibly surprised at how well my claim went when I contacted Hanover Insurance. My insurance adjuster, Drew, was communicative and very helpful. I have been referring Hanover Insurance to my friends and family. I could not have asked for a better experience. - Anita Becker*/}
+                    {/*        </p>*/}
+                    {/*        }*/}
+                    {/*        />*/}
+                    {/*    <Card title={"Recognitions and Awards"} content={<img src="/U.S. News & World Report Best Companies to Work For.avif" className="w-75 py-[15px] mx-auto block"/>}/>*/}
+                        <Favorites />
+                    {/*</div>*/}
+                    <div className = "mx-5">
+                        <PageHeader title="Dashboard"/>
+                        <div className = "flex flex-row gap-4 h-[550px] mx-5 mt-3">
+                            <UserLogs/>
+                            <HitCounts/>
+                        </div>
+                    </div>
+                </div>
+                {/* <Footer/> */}
+                <CalendarWeek />
+            </>
+        )
+    }
+
 
 }
 export default Home;

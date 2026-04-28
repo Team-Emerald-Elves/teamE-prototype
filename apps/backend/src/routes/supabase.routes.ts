@@ -534,7 +534,8 @@ supaBaseRouter.post(
             startDate.setHours(0, 0, 0, 0);
 
             const endDate = new Date(end);
-            endDate.setHours(23, 59, 59, 999);
+            endDate.setHours(0, 0, 0, 0);
+
 
 
             const hits = await prisma.hit_counts.groupBy({

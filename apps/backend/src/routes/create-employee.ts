@@ -23,10 +23,20 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
             username: employee.uname,
             password: tempPwd,
         })
-        invite(req, res);
 
     } catch (error) {
         console.error("Logged Error: ", error)
+        res.sendStatus(500);
+        return;
+    }
+
+    const iRes = await invite(employee.email!, tempPwd);
+
+    if (!iRes) {
+        await clerkClient.users.deleteUser(user.id);
+        res.send(500).json({
+            error: "Invite unable to send."
+        })
         return;
     }
 

@@ -1,7 +1,12 @@
 import Router, { type Request, type Response } from "express"
 import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBody, GetLockQuery } from '../lib/zod/routes.schemas.ts'
+<<<<<<< HEAD
 import validate from "../lib/zod/middleware.ts";
+=======
+import { validate } from "../lib/zod/middleware.ts";
+import { Resend } from "resend"
+>>>>>>> d619a7d (email invite untested)
 
 import prisma, { Prisma, type Employee } from "@repo/database"
 
@@ -43,7 +48,7 @@ APIRouter.get('/me', requireAuth(), async (req, res) => {
                         file_size_limit: 52428800 // 50MB
                     }
                 },
-                email: clerkUser.primaryEmailAddress?.emailAddress ?? "example@email.com"
+                email: clerkUser.primaryEmailAddress!.emailAddress!
             }
         })
 
@@ -156,12 +161,17 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
-async function invite(req: Request, res: Response) {
+export async function invite(req: Request, res: Response) {
     const email = req.body.email
-    const invitation = await clerkClient.invitations.createInvitation({
-        emailAddress: email,
-    })
-    res.status(200).json(invitation);
+    const resend = new Resend(process.env.RESEND_KEY!);
+
+    const eRes = await resend.emails.send({
+        from: `Hanover <${process.env.INVITE_EMAIL}>`,
+        to: email,
+        subject: 'Hello World',
+        html: '<p>Congrats on sending your <strong>Email test</strong>!</p>'
+    });
+    res.status(200).json(eRes);
 }
 
 APIRouter.put('/update-lock', validate(UpdateLockBody), updateLock)

@@ -1,7 +1,9 @@
 import express from "express";
 import prisma, { type Employee } from "@repo/database";
-import { createClerkClient } from '@clerk/express';
+import { createClerkClient, type User } from '@clerk/express';
 import { createSupabaseForRequest } from '../lib/supabase.ts'
+import { randomBytes } from "node:crypto";
+import { invite } from "./api.ts";
 
 const supabaseClient = await createSupabaseForRequest()
 
@@ -11,15 +13,18 @@ const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY 
 async function createEmployeeRoute(req: express.Request, res: express.Response) {
     const employee: Employee = req.body
     console.log("Employee: ", employee)
-    let user
+    let user: User
+    const tempPwd: string = randomBytes(12).toString('base64url');
     try {
         user = await clerkClient.users.createUser({
             firstName: employee.first_name,
             lastName: employee.last_name,
             emailAddress: [employee.email!],
             username: employee.uname,
-            password: "YQkxpzdR4P&HRzcQ3$!",
+            password: tempPwd,
         })
+        invite(req, res);
+
     } catch (error) {
         console.error("Logged Error: ", error)
         return;

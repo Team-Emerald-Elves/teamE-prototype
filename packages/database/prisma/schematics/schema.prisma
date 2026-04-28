@@ -70,8 +70,7 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
-  created_at      DateTime   @default(now())
-  updated_at      DateTime   @updatedAt
+  created_at      DateTime   @default(now()) @db.Timestamp(6)
 }
 
 model Links {
@@ -88,14 +87,14 @@ model Links {
 model CalendarEvents {
   id         Int       @id @default(autoincrement())
   title      String
-  start_date DateTime?
-  end_date   DateTime?
+  start_date DateTime? @db.Timestamp(6)
+  end_date   DateTime? @db.Timestamp(6)
   all_day    Boolean?
   emp_id     String?
   lock       String?   @default("none")
   doc_id     Int?      @default(-1)
   color      String?
-  created_at DateTime  @default(now())
+  created_at DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model hit_counts {

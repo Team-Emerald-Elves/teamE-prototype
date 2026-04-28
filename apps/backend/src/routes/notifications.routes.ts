@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express'
-import { validate } from '../lib/zod/middleware'
-import { notificationModel } from '../lib/zod/routes.schemas'
+import { validate } from '../lib/zod/middleware.ts'
+import { notificationModel } from '../lib/zod/routes.schemas.ts'
 import { getAuth, clerkClient } from '@clerk/express'
 import prisma, { Prisma, type Employee, type Notification } from '@repo/database'
 import { extend } from 'zod/mini'
@@ -28,7 +28,7 @@ notifyRouter.get(
                 }
             })
 
-            let notifications: Notification[] = await prisma.notification.findMany({
+            const notifications: Notification[] = await prisma.notification.findMany({
                 where: {
                     OR: [
                         {
@@ -49,14 +49,26 @@ notifyRouter.get(
 
             const user = await clerkClient.users.getUser(employee?.clerkUserId as string)
 
-            const updatedNotifications = notifications.map((n) => {
-                return n.public ? { ...n, profileIcon: clerkClient.users.getUser(n.creatorId as string) }: n
-            })
+            const updatedNotifications = await Promise.all(
+                notifications.map(async (n) => {
+                    if (!n.public || !n.creatorId) {
+                        return n;
+                    }
 
-            if(notifications.length > 0)
-                return res.status(200).json(notifications.push)
-            else
-                return res.status(404).json({message:'No notifcations found.'})
+                    const creator = await clerkClient.users.getUser(n.creatorId);
+
+                    return {
+                        ...n,
+                        profileIcon: creator.imageUrl,
+                    };
+                })
+            );
+
+            if (updatedNotifications.length > 0) {
+                return res.status(200).json(updatedNotifications);
+            }
+
+            return res.status(404).json({ message: "No notifications found." });
 
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError)

@@ -192,6 +192,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         const roles = filters.filter(item => item.key === 'assigned_role');
         const tags = filters.filter(item => item.key === 'meta_tags');
         const statuses = filters.filter(item => item.key === 'document_status');
+
         if (docs.length > 0) {
             payload['document_type'] = docs.map(d => d.value);
         }

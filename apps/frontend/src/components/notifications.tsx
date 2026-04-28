@@ -29,7 +29,7 @@ type Notification = {
 
 function groupByDate(notifications: Notification[]) {
     return notifications.reduce((groups, n) => {
-        const dateKey = new Date(n.createdAt).toISOString().split("T")[0];
+        const dateKey = new Date(n.createdAt).toLocaleDateString("en-US");
         if (!groups[dateKey]) groups[dateKey] = []
         groups[dateKey].push(n)
         return groups
@@ -57,6 +57,7 @@ export function NotifScroll() {
             console.log(data)
             setNotifs(data);
             const grouped = groupByDate(data)
+            console.log(grouped)
             setGrouped(grouped);
         }
         getNotifs();

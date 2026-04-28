@@ -34,7 +34,7 @@ model Notification {
   id              String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt       DateTime    @default(now())
   title           String
-  
+  creatorId       String      @db.Uuid
   employee        Employee?   @relation(fields: [employeeId], references: [id])
   employeeId      String?     @db.Uuid
   

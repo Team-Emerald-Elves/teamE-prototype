@@ -14,8 +14,11 @@ import { UserPen } from 'lucide-react';
 import { UserLock } from 'lucide-react';
 import { UserSearch } from 'lucide-react';
 import { UserCog } from 'lucide-react';
+import { Info } from 'lucide-react';
 import {useEffect, useState} from "react";
 
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 
 function StatItem({ icon: Icon, value, label }) {
@@ -54,7 +57,7 @@ export function NumericalStats() {
     }, []);
     return (
         <>
-            <Card className="w-max-[500px] h-full mb-5">
+            <Card className="w-max-[500px] h-full mb-5 relative">
                 <CardContent className="py-4 px-8 flex flex-row gap-3 items-center h-full">
                     {/* Stats grid */}
                     <div className="grid grid-cols-2 gap-y-5 gap-x-1">
@@ -66,6 +69,34 @@ export function NumericalStats() {
                         <StatItem icon={UserCog} value={2} label="TOTAL EXL OPERATIONS EMPLOYEES" />
                     </div>
                 </CardContent>
+
+                {/* Popover Icon */}
+                <div className="absolute bottom-3 left-3">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                <Info className="h-4 w-4" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent side="top" align="start" className="w-64">
+                            <p className="font-medium text-sm mb-2">Summary Stats</p>
+                            <p className="text-xs text-muted-foreground mb-3">
+                                A snapshot of total documents and employees in the system.
+                            </p>
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">Total Documents</span>
+                                    <span className="font-medium">{docTotal}</span>
+                                </div>
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-muted-foreground">Total Employees</span>
+                                    <span className="font-medium">{empTotal}</span>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
+
             </Card>
         </>
 

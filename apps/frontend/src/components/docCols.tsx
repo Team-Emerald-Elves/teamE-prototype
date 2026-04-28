@@ -32,6 +32,21 @@ export type Document = {
     created_at: string;
 };
 
+async function addHitCount (doc: Document) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: doc.id,
+            type: "DOCUMENT"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
 
 export const columns: ColumnDef<Document>[] = [
     // {
@@ -57,7 +72,7 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <Dialog>
-                    <DialogTrigger className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
+                    <DialogTrigger onClick={async () => {addHitCount(doc)}} className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
 
                     <DialogContent className="2xl:max-w-7xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">

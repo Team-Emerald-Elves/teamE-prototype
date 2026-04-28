@@ -1,5 +1,5 @@
 import express from "express";
-import {getAuth} from "@clerk/express";
+import { getAuth } from "@clerk/express";
 import prisma from "@repo/database";
 
 interface IUpdateFavoriteRequest {

@@ -3,7 +3,7 @@ import prisma, {type Employee} from "@repo/database";
 import { clerkClient } from "@clerk/express";
 
 import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.schemas.ts';
-import { validate } from '../lib/zod/middleware.ts';
+import validate  from '../lib/zod/middleware.ts';
 
 import path from "path";
 import {buildWhereClause, buildWhereClausesEmployee} from "../lib/filters.ts";
@@ -27,17 +27,17 @@ employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
     // }
 
     if (eReq.action == "create") {
-        createEmployee(eReq.employeeData, res);
+        createEmployee(eReq.employeeData!, res);
         return;
     }
 
     if (eReq.action == "edit") {
-        editEmployee(eReq.employeeData, res);
+        editEmployee(eReq.employeeData!, res);
         return;
     }
 
     if (eReq.action == "delete") {
-        deleteEmployee(eReq.employeeData, res);
+        deleteEmployee(eReq.employeeData!, res);
         return;
     }
 

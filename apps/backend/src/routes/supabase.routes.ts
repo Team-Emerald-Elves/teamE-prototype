@@ -9,7 +9,7 @@ import { createSupabaseForRequest } from '../lib/supabase.ts'
 import type { IDocumentContent } from './types.d.ts'
 
 import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
-import { validate } from '../lib/zod/middleware.ts'
+import validate from '../lib/zod/middleware.ts'
 import mime from 'mime'
 import {buildWhereClause} from "../lib/filters.ts";
 
@@ -136,15 +136,15 @@ supaBaseRouter.post(
             })
 
             const ROLE_COLORS: Record<string, string> = {
-                Administrator: "#8b5cf6",      // purple
-                BusinessAnalyst: "#ef4444",    // red
-                UnderWriter: "#ec4899",        // pink
-                ExcelOperator: "#22c55e",      // green
-                BusinessOperator: "#f97316",   // orange
-                ActuarialAnalyst: "#eab308",   // yellow
+                Administrator: "#6D28D9",
+                BusinessAnalyst: "#93C5FD",
+                UnderWriter: "#F9A8D4",
+                ExcelOperator: "#2DD4BF",
+                BusinessOperator: "#C4B5FD",
+                ActuarialAnalyst: "#F0ABFC",
             };
 
-            const color = ROLE_COLORS[assignedRole] ?? "#6b7280"; // fallback gray
+            const color = ROLE_COLORS[assignedRole] ?? "#6b7280";
 
             await prisma.calendarEvents.create({
                 data: {
@@ -282,6 +282,16 @@ supaBaseRouter.put(
                     doc_id: document.id
                 }
             })
+
+            const ROLE_COLORS: Record<string, string> = {
+                Administrator: "#6D28D9",
+                BusinessAnalyst: "#93C5FD",
+                UnderWriter: "#F9A8D4",
+                ExcelOperator: "#2DD4BF",
+                BusinessOperator: "#C4B5FD",
+                ActuarialAnalyst: "#F0ABFC",
+            };
+
             await prisma.calendarEvents.update({
                 where: {
                     id: event.id
@@ -289,7 +299,8 @@ supaBaseRouter.put(
                 data: {
                     title: newDoc.name,
                     start_date: newDoc.expiration_date,
-                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60)
+                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60),
+                    color: ROLE_COLORS[newDoc.assigned_role as string],
                 }
             })
 
@@ -419,7 +430,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     }
 
     try {
-        // get employee for favorites
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,
@@ -441,7 +452,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         );
 
 
-        // ✅ collect BOTH content_owner and lock IDs
+
         const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
         const lockIds = documents
@@ -452,7 +463,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ...new Set([...ownerIds, ...lockIds])
         ];
 
-        // ✅ fetch all relevant employees
+
         const employees = await prisma.employee.findMany({
             where: {
                 id: { in: allEmployeeIds as string[] },
@@ -464,7 +475,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
-        // ✅ build lookup map
+
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
@@ -472,7 +483,7 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             ])
         );
 
-        // ✅ format documents (add lock_name)
+
         const formattedDocs = documents.map((doc) => ({
             ...doc,
             content_owner:
@@ -506,5 +517,178 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         res.status(500).json({ message: "Failed to fetch documents" });
     }
 });
+
+supaBaseRouter.post(
+    "/get-hit-counts",
+    async (req: Request, res: Response) => {
+        const { start, end } = req.body;
+
+        if (!start || !end) {
+            return res.status(400).json({
+                message: "start and end dates are required",
+            });
+        }
+
+        try {
+            const startDate = new Date(start);
+            startDate.setHours(0, 0, 0, 0);
+
+            const endDate = new Date(end);
+            endDate.setHours(0, 0, 0, 0);
+
+
+
+            const hits = await prisma.hit_counts.groupBy({
+                by: ["hit_date", "target_type", "target_id"],
+                where: {
+                    hit_date: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                },
+                _sum: {
+                    count: true,
+                },
+            });
+
+            //filter docs by reference and workflow
+            const documentIds = [
+                ...new Set(
+                    hits
+                        .filter((h) => h.target_type === "DOCUMENT")
+                        .map((h) => Number(h.target_id))
+                ),
+            ];
+
+            const docs =
+                documentIds.length > 0
+                    ? await prisma.documentContent.findMany({
+                        where: {
+                            id: { in: documentIds },
+                        },
+                        select: {
+                            id: true,
+                            document_type: true,
+                        },
+                    })
+                    : [];
+
+            const docTypeMap = new Map(
+                docs.map((d) => [
+                    String(d.id),
+                    d.document_type?.toLowerCase() || "",
+                ])
+            );
+
+
+            const dateRange: string[] = [];
+            const cursor = new Date(startDate);
+
+            while (cursor <= endDate) {
+                dateRange.push(cursor.toISOString().split("T")[0] as string);
+                cursor.setDate(cursor.getDate() + 1);
+            }
+
+
+            type ChartRow = {
+                date: string;
+                documents: number;
+                links: number;
+                reference: number;
+                workflow: number;
+            };
+
+            const chartMap = new Map<string, ChartRow>();
+
+            for (const date of dateRange) {
+                chartMap.set(date, {
+                    date,
+                    documents: 0,
+                    links: 0,
+                    reference: 0,
+                    workflow: 0,
+                });
+            }
+
+
+            for (const row of hits) {
+                const date = row.hit_date.toISOString().split("T")[0];
+                const count = row._sum.count ?? 0;
+
+                const entry = chartMap.get(date as string);
+                if (!entry) continue;
+
+                if (row.target_type === "DOCUMENT") {
+                    entry.documents += count;
+
+                    const docType = docTypeMap.get(row.target_id);
+
+                    if (docType === "reference") {
+                        entry.reference += count;
+                    }
+
+                    if (docType === "workflow") {
+                        entry.workflow += count;
+                    }
+                }
+
+                if (row.target_type === "LINK") {
+                    entry.links += count;
+                }
+            }
+
+
+            return res.status(200).json([...chartMap.values()]);
+        } catch (error) {
+            console.error("Hit count chart error:", error);
+
+            return res.status(500).json({
+                message: "Error generating hit count chart",
+                error: String(error),
+            });
+        }
+    }
+);
+supaBaseRouter.post(
+    "/add-hit-count",
+    async (req: Request, res: Response) => {
+        console.log("reached hit count add")
+        const { type, id,  } = req.body;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        try {
+            const hit = await prisma.hit_counts.upsert({
+                    where: {
+                        target_type_target_id_hit_date: {
+                            target_type: type,
+                            target_id: String(id),
+                            hit_date: today
+                        }
+                    },
+                    update: {
+                        count: { increment: 1 }
+                    },
+                    create: {
+                        target_type: type,
+                        target_id: String(id),
+                        hit_date: today,
+                        count: 1
+                    }
+                });;
+
+
+
+            return res.status(200).json(hit);
+        } catch (error) {
+            console.error("Hit count chart error:", error);
+
+            return res.status(500).json({
+                message: "Error generating hit count chart",
+                error: String(error),
+            });
+        }
+    }
+);
 
 export default supaBaseRouter

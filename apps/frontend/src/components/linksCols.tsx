@@ -47,7 +47,26 @@ export type Links = {
     owner: string;
     favorite: boolean;
     meta_tags: string[];
+    created_at: string;
+    updated_at: string;
 };
+
+async function addHitCount (link: Links) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: link.id,
+            type: "LINK"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
 
 async function updateTags(lId: string, tags: string[]) {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
@@ -125,6 +144,7 @@ export const columns: ColumnDef<Links>[] = [
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
+                    onClick={async () => { addHitCount(link) }}
                 >
                     {link.url}
                 </a>
@@ -177,6 +197,52 @@ export const columns: ColumnDef<Links>[] = [
         }
     },
     {
+        accessorKey: "created_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Last Modified
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.updated_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
         accessorKey: "tags",
         header: ({ column }) => {
             return (
@@ -227,5 +293,6 @@ export const columns: ColumnDef<Links>[] = [
 
             );
         },
-    }
+    },
+
 ]

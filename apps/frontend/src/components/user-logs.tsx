@@ -45,7 +45,7 @@ function groupByDate(notifications: Notification[]) {
     return notifications.reduce((groups, n) => {
         if (!n.creatorId) return groups;
 
-        const key = new Date(n.createdAt).toISOString().split("T")[0]
+        const key = new Date(n.createdAt).toLocaleDateString("en-US");
         if (!groups[key]) groups[key] = []
         groups[key].push(n)
         return groups

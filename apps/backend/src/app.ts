@@ -43,19 +43,20 @@ import notifyRouter from "./routes/notifications.routes.ts";
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
 
-const __filename = fileURLToPath(`${import.meta.url}/../`);
-const __dirname = dirname(__filename);
-
 /**
  * This TypeScript file binds the routes from express to the handlers in the routes directory.
  */
 
-//app.use("/public", express.static('public'));
-// Source - https://stackoverflow.com/a/73921588
-// Posted by KrystianKasp98
-// Retrieved 2026-04-07, License - CC BY-SA 4.0
+const corsOptions = {
+  origin: process.env.FRONTEND_SERVER,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
 
-app.use(cors());
+console.log(`Allowing server ${process.env.FRONTEND_SERVER} communication in CORS config.`)
+
+app.use(cors(corsOptions));
 
 // Middleware.
 app.use(bodyParser.json());
@@ -66,42 +67,34 @@ app.use('/api/supabase', supaBaseRouter);
 
 app.use('/api/notifs', notifyRouter);
 
-app.get('/', (req, res) => {
-    res.sendStatus(200);
-})
-
 app.use('/employee', employeeRoute); //validated in employee.ts
 app.use('/links', linkRoute) //validated in links.ts
 app.use('/api/tests', APIRouter)
 app.use('/checkin-checkout-links', CheckoutLinks)
 
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
-
 app.get('/assigned', requireAuth(), assignedRoute);
 app.get('/statistics', statsRoutes)
 app.get('/get-favorited', favoriteRoute);
 app.get('/get-events', eventsRoute);
 app.get('/get-favorited-links', favoriteLinksRoute);
-//app.get('/content-employee',contentEmployeeRoute)
+app.get('/', (req, res) => {res.status(200).json({message:'Backend express server running.'})})
 
 app.post('/create-employee', createOldEmployeeRoute);
 app.post('/get-link-role', linkRoleRoute)
 app.post('/update-favorite', updateFavoriteRoute);
 app.post('/update-favorite-link', updateFavoriteLinksRoute);
-
 app.post('/create-srvreq', requireAuth(), createServiceReqRoute);
-app.put('/update-link-tags', linkTagUpdate);
-app.delete('/delete-link-tag', linkTagDelete);
-
-
 app.post('/edit-employee', validate(EditEmployeeModel), editEmployeeRoute);
 app.post('/add-event', addEventRoute);
 app.post('/update-event', updateEventRoute);
-app.delete('/delete-event', deleteEventRoute);
-
 app.post('/create-srvreq', validate(CreateServiceReqModel), createServiceReqRoute);
-
 app.post('/create-srvreq', createServiceReqRoute);
+
+app.put('/update-link-tags', linkTagUpdate);
+
+app.delete('/delete-link-tag', linkTagDelete);
+app.delete('/delete-event', deleteEventRoute);
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);

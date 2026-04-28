@@ -137,22 +137,7 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
 
-    {
-        accessorKey: "document_status",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Status
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
+       {
         accessorKey: "content_owner",
         header: ({ column }) => {
             return (

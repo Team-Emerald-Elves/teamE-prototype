@@ -136,15 +136,15 @@ supaBaseRouter.post(
             })
 
             const ROLE_COLORS: Record<string, string> = {
-                Administrator: "#8b5cf6",      // purple
-                BusinessAnalyst: "#ef4444",    // red
-                UnderWriter: "#ec4899",        // pink
-                ExcelOperator: "#22c55e",      // green
-                BusinessOperator: "#f97316",   // orange
-                ActuarialAnalyst: "#eab308",   // yellow
+                Administrator: "#6D28D9",
+                BusinessAnalyst: "#93C5FD",
+                UnderWriter: "#F9A8D4",
+                ExcelOperator: "#2DD4BF",
+                BusinessOperator: "#C4B5FD",
+                ActuarialAnalyst: "#F0ABFC",
             };
 
-            const color = ROLE_COLORS[assignedRole] ?? "#6b7280"; // fallback gray
+            const color = ROLE_COLORS[assignedRole] ?? "#6b7280";
 
             await prisma.calendarEvents.create({
                 data: {
@@ -282,6 +282,16 @@ supaBaseRouter.put(
                     doc_id: document.id
                 }
             })
+
+            const ROLE_COLORS: Record<string, string> = {
+                Administrator: "#6D28D9",
+                BusinessAnalyst: "#93C5FD",
+                UnderWriter: "#F9A8D4",
+                ExcelOperator: "#2DD4BF",
+                BusinessOperator: "#C4B5FD",
+                ActuarialAnalyst: "#F0ABFC",
+            };
+
             await prisma.calendarEvents.update({
                 where: {
                     id: event.id
@@ -289,7 +299,8 @@ supaBaseRouter.put(
                 data: {
                     title: newDoc.name,
                     start_date: newDoc.expiration_date,
-                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60)
+                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60),
+                    color: ROLE_COLORS[newDoc.assigned_role as string],
                 }
             })
 

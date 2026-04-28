@@ -37,6 +37,7 @@ import CheckoutLinks from "./routes/checkin-checkout-links.ts";
 import deleteEventRoute from "./routes/delete-event.ts";
 import linkTagUpdate from "./routes/update-link-tags.ts";
 import linkTagDelete from "./routes/link-tag-delete.ts";
+import notifyRouter from "./routes/notifications.routes.ts";
 
 
 const app = express();
@@ -62,6 +63,8 @@ app.use(clerkMiddleware());
 
 // Router-level middleware.
 app.use('/api/supabase', supaBaseRouter);
+
+app.use('/api/notifs', notifyRouter);
 
 app.get('/', (req, res) => {
     res.sendStatus(200);

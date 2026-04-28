@@ -90,7 +90,7 @@ export function HitCounts() {
 
             const end = new Date();
             const start = new Date();
-            start.setDate(start.getDate() - daysToSubtract);
+            start.setDate(start.getDate() - daysToSubtract-1);
 
             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/get-hit-counts`, {
                 method: "POST",
@@ -193,15 +193,15 @@ export function HitCounts() {
                                 />
                             }
                         />
-                        <Area dataKey="documents" type="natural" fill="url(#fillDocuments)" stroke="var(--color-documents)" stackId="a" />
+
                         <Area dataKey="reference"  type="natural" fill="url(#fillReference)"  stroke="var(--color-reference)"  stackId="a" />
                         <Area dataKey="workflow"   type="natural" fill="url(#fillWorkflow)"   stroke="var(--color-workflow)"   stackId="a" />
+                        <Area dataKey="documents" type="natural" fill="url(#fillDocuments)" stroke="var(--color-documents)" stackId="a" />
                         <Area
                             dataKey="links"
                             type="natural"
                             fill="url(#fillLinks)"
                             stroke="var(--color-links)"
-                            stackId="a"
                         />
                         <ChartLegend content={<ChartLegendContent />} />
                     </AreaChart>

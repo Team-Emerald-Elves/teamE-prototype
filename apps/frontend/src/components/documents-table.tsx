@@ -386,7 +386,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             if (tab === "OwnedByMe") {
                 return [
                     ...withoutRoles,
-                    { key: "content_owner", value: empID }
+                    {key: 'content_owner', value: empID, id: 'Owned by Me', state: false}
                 ];
             }
 

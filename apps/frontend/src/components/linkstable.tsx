@@ -41,14 +41,14 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Links = {
-   id: string;
-   link_name: string;
-   url: string;
-   owner: string;
-   favorite: boolean;
-   lock: string;
-   lock_name: string;
-   meta_tags: string[];
+    id: string;
+    link_name: string;
+    url: string;
+    owner: string;
+    favorite: boolean;
+    lock: string;
+    lock_name: string;
+    meta_tags: string[];
 };
 
 type Document = {

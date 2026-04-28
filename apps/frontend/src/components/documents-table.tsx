@@ -383,6 +383,13 @@ export function DocumentsTable<TData extends Document, TValue>({
             if (tab === "All") return withoutRoles;
             const selectedRole = roleFilters.find(f => f.value === tab);
 
+            if (tab === "OwnedByMe") {
+                return [
+                    ...withoutRoles,
+                    { key: "content_owner", value: empID }
+                ];
+            }
+
             if (!selectedRole) return withoutRoles;
             return [...withoutRoles, selectedRole];
         });
@@ -730,6 +737,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
                                     <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
                                     <TabsTrigger value="UnderWriter">Under Writer</TabsTrigger>
+                                    <TabsTrigger value="OwnedByMe">Owned By Me</TabsTrigger>
                                 </TabsList>
                             </div>
                         </div>
@@ -1286,6 +1294,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                     <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
                                     <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
                                     <TabsTrigger value="UnderWriter">Under Writer</TabsTrigger>
+                                    <TabsTrigger value="OwnedByMe">Owned By Me</TabsTrigger>
                                 </TabsList>
                             </div>
                         </div>

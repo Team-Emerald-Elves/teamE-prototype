@@ -32,7 +32,7 @@ import {
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import { useEffect, useState} from "react";
-import { useAuth} from "@clerk/react";
+import {getToken, useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
@@ -57,6 +57,7 @@ type Document = {
 
 const handleDownload = async (doc: Document) => {
     try {
+        createNotif(doc, "downloaded");
         const response = await fetch(doc.url);
 
         if (!response.ok) {
@@ -78,6 +79,37 @@ const handleDownload = async (doc: Document) => {
         console.error(err);
     }
 };
+
+async function createNotif(doc: Document, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [doc.assigned_role, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
 
 async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean, setReload: (any) => void): Promise<string> {
 
@@ -815,7 +847,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                         roles={roles}
                                                     />
                                                 )}
-                                                    <DeleteConfirmationPopup target={doc.id} refresh={setReload}/>
+                                                    <DeleteConfirmationPopup target={doc} refresh={setReload}/>
                                                     {/*<a*/}
                                                     {/*    href={doc.url}*/}
                                                     {/*    target="_blank"*/}
@@ -1379,7 +1411,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             )}
 
                                                             {canEdit && (
-                                                                <DeleteConfirmationPopup target={doc.id} refresh={setReload} />
+                                                                <DeleteConfirmationPopup target={doc} refresh={setReload} />
                                                             )}
                                                             {/*<a*/}
                                                             {/*    href={doc.url}*/}

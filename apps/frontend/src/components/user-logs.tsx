@@ -5,8 +5,9 @@ import {
     TableRow,
 } from "@/components/ui/log-table.tsx"
 
-import {CircleUserRound, Dot, FileText} from 'lucide-react';
+import {Dot} from 'lucide-react';
 
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/card"
 import {useEffect, useState} from "react";
 import {getToken} from "@clerk/react";
-import * as React from "react";
 
 
 type Notification = {
@@ -94,16 +94,17 @@ export function UserLogs(){
     }, [])
     return (
         <>
-            <Card className= "w-[40%] h-full">
+            <Card className= "w-[40%] flex flex-col">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-2xl text-[#12324b]">User Activity</CardTitle>
                         <CardDescription>
-                            Track actions performed by users, including creations, edits, deletes, and more.
+                            Track recent actions performed by users, including creations, edits, deletes, and more.
                         </CardDescription>
                     </div>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="p-0 overflow-hidden flex-1 min-h-0">
+                    <ScrollArea className="h-full">
                     {Object.entries(grouped).map(([date, logs]) => (
                         <div key={date}>
                             <p className="text-center text-xs font-semibold text-gray-500 py-1">
@@ -113,7 +114,7 @@ export function UserLogs(){
                                 <TableBody>
                                     {logs.map((n) => (
                                         <TableRow key={n.id}>
-                                            <TableCell className="font-medium flex align-middle items-center text-sm">
+                                            <TableCell className="font-medium flex items-center text-sm">
                                                 <div className="flex gap-1 items-center font-normal">
                                                   <img className="size-10 rounded-full" src={n.profileIcon}/>
 
@@ -134,8 +135,8 @@ export function UserLogs(){
                             </Table>
                         </div>
                     ))}
+                    </ScrollArea>
                 </CardContent>
-
             </Card>
         </>
     )

@@ -16,6 +16,7 @@ import { UserSearch } from 'lucide-react';
 import { UserCog } from 'lucide-react';
 import { UserPlus } from 'lucide-react';
 import {useEffect, useState} from "react";
+import {getToken} from "@clerk/react";
 
 
 
@@ -44,10 +45,16 @@ export function NumericalStats() {
 
     useEffect(() => {
         async function getStats() {
+            const token = await getToken();
+
             const res = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/statistics`,
-
-            )
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             const data = await res.json();
             setDocTotal(data.docCount);
             setEmpTotal(data.empCount);

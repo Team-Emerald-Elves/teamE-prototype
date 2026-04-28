@@ -12,15 +12,67 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { getToken } from '@clerk/react'
 import { useEffect, useState } from "react";
+
+export type Document = {
+    id: number;
+    url: string;
+    name: string;
+    last_modified: string;
+    expiration_date: string;
+    lock: boolean;
+    mime_type: string;
+    document_type: string;
+    assigned_role: string;
+    content_owner: string;
+    document_status: string;
+    favorite: boolean;
+    lock_name: string;
+    meta_tags: string[];
+    created_at: string;
+};
+
 type deleteConfirmationPopupProps = {
-    target: number
+    target: Document
     refresh: (any) => void
 }
 
-async function removeDocument(documentID: number, token: string, refresh: (any) => void) {
+
+
+async function createNotif(doc: Document, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [doc.assigned_role, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
+
+async function removeDocument(document: Document, token: string, refresh: (any) => void) {
 
     const data = {
-        id: documentID
+        id: document.id
     }
 
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/delete-document`, {
@@ -34,6 +86,9 @@ async function removeDocument(documentID: number, token: string, refresh: (any) 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+
+        createNotif(document, "deleted");
+
         refresh(prev => !prev)
         return response.json();
     })

@@ -16,6 +16,7 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart"
 import {useEffect, useState} from "react";
+import {getToken} from "@clerk/react";
 
 export const description = "A pie chart with stacked sections"
 
@@ -82,12 +83,23 @@ export function ChartPieStacked() {
     useEffect(() => {
         async function getStats() {
             try {
+                const token = await getToken();
+
                 const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/statistics`
+                    `${import.meta.env.VITE_BACKEND_URL}/statistics`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
                 );
 
-                const data = await res.json();
+                if(!res.ok) {
+                    throw new Error("Error fetching statistics.");
+                }
 
+                const data = await res.json();
+                console.log(data);
 
                 setStatusData([
                     { Status: "Not Started", Count: data.statusCounts.not_started, fill: "#C4C4C4FF" },

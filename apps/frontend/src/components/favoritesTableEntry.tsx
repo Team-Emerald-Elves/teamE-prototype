@@ -6,6 +6,7 @@ import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
 import {Button} from "@/components/ui/button.tsx";
+import {getToken} from "@clerk/react";
 
 type Document = {
     id: number;
@@ -26,6 +27,7 @@ type Document = {
 const handleDownload = async (doc: Document) => {
     try {
         addHitCount(doc);
+        createNotif(doc, "downloaded");
         const response = await fetch(doc.url);
 
         if (!response.ok) {
@@ -71,6 +73,36 @@ async function addHitCount (doc: Document) {
     }
 }
 
+async function createNotif(doc: Document, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [doc.assigned_role, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
 
 export default function FavoritesTableEntry(props: FavoriteProps)  {
     const exp = new Date(props.d.expiration_date);
@@ -90,7 +122,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             <TableCell className="text-[14px] font-small text-gray-700">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button onClick={async () => {addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button onClick={async () => {createNotif(props.d, "accessed"); addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
                             {props.d.name}
                         </button>
                     </DialogTrigger>

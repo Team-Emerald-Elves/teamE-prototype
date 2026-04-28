@@ -67,6 +67,7 @@ export default function EventDetails(props: EventDetailsProps) {
     if (props.selectedEvent) {
         eventEmpId = props.selectedEvent.extendedProps.lock;
         role = ROLE_COLORS[props.selectedEvent.backgroundColor];
+        console.log(props.selectedEvent.extendedProps.contentOwner);
     }
 
 
@@ -90,7 +91,9 @@ export default function EventDetails(props: EventDetailsProps) {
                         <p>{props.selectedEvent && role}</p>
                     </div>
 
-                    {(eventEmpId !== "none") && (<div><p>Checked Out By:</p><p>{props.selectedEvent?.extendedProps.checkedOut}</p></div>)}
+                    <div><p>Owned By: {props.selectedEvent?.extendedProps?.contentOwner ? props.selectedEvent?.extendedProps?.contentOwner : "Unknown"}</p></div>
+
+                    {(eventEmpId !== "none") && (<p>Checked Out By: {props.selectedEvent?.extendedProps.checkedOut}</p>)}
 
                     {(eventEmpId === empID) && (
                         <Button onClick={() => {setOpen(true); props.setOpenEvent(false)}}>Edit Event</Button>)}

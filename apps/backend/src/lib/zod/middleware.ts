@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodObject, ZodError } from 'zod';
 
-export const validate = (schema: ZodObject) => 
+const validate = (schema: ZodObject) => 
   (req: Request, res: Response, next: NextFunction) => {
     try {
       // Validate body, query, and params at once if needed
@@ -22,3 +22,5 @@ export const validate = (schema: ZodObject) =>
       return res.status(500).json({ message: `Cannot validate request with zod: (${error})` });
     }
 };
+
+export default validate

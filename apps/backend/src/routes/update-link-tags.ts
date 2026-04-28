@@ -1,4 +1,4 @@
-import express, {type Request, type Response} from "express";
+import express from "express";
 import prisma from "@repo/database";
 
 interface ILinkTagContent {

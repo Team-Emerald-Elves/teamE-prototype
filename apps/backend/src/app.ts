@@ -34,6 +34,7 @@ import {
   createOldEmployeeRoute,
   supaBaseRouter
 } from "./routes/index.ts"
+import setReadRoute from "./routes/set-read.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -81,7 +82,9 @@ app.post('/update-favorite-link', requireAuth(), updateFavoriteLinksRoute);
 app.post('/edit-employee', requireAuth(), validate(EditEmployeeModel), editEmployeeRoute);
 app.post('/add-event', requireAuth(), addEventRoute);
 app.post('/update-event', requireAuth(), updateEventRoute);
+app.post('/set-read', requireAuth(), setReadRoute);
 app.put('/update-link-tags', requireAuth(), linkTagUpdate);
+
 
 app.delete('/delete-link-tag', requireAuth(), linkTagDelete);
 app.delete('/delete-event', requireAuth(), deleteEventRoute);

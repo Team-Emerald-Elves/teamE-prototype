@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from 'express'
 import validate from '../lib/zod/middleware.ts'
 import { notificationModel } from '../lib/zod/routes.schemas.ts'
 import { getAuth, clerkClient } from '@clerk/express'
-import prisma, { Prisma, type Employee, type Notification } from '@repo/database'
+import prisma, {Prisma, type Employee, type Notification, type UserRoles} from '@repo/database'
 import { extend } from 'zod/mini'
 
 const notifyRouter: Router = Router()
@@ -84,27 +84,43 @@ notifyRouter.post(
     '/create-notification',
     validate(notificationModel),
     async (req: Request, res: Response) => {
-
-        const { userId, isAuthenticated } = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req);
 
         if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
+            return res.status(401).json({ error: "Not authenticated" });
         }
 
-        prisma.notification.create({
-            data: {
-                ...req.body,
-                creatorId: userId
-            }
-        }).then((notifcation: Notification) => {
-            return res.status(200).json({message:`Notifcation created: '${notifcation}'.`})
-        }).catch((error) => {
-            if (error instanceof Prisma.PrismaClientKnownRequestError)
-                console.error("Prisma: " + error)
-            else
-                console.error(error)
-        })
+        try {
+            const notification = await prisma.notification.create({
+                data: {
+                    ...req.body,
+                    creatorId: userId
+                }
+            });
+
+            const targetRoles: UserRoles[] = notification.targetRoles;
+
+
+            await prisma.employee.updateMany({
+                where: {
+                    roles: {
+                        hasSome: targetRoles
+                    }
+                },
+                data: {
+                    unreadNotif: true
+                }
+            });
+
+            return res.status(200).json({message: "Notification created", notification});
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                error: "Failed to create notification"
+            });
+        }
     }
-)
+);
 
 export default notifyRouter

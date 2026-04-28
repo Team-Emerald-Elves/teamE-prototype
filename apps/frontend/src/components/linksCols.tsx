@@ -14,6 +14,16 @@ import DocTag from "@/components/doctag.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
+import {TagInput} from "@/components/tagInput.tsx";
+import {useState} from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverDescription,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 export type Document = {
     id: number;
@@ -254,5 +264,4 @@ export const columns: ColumnDef<Links>[] = [
             );
         },
     },
-
 ]

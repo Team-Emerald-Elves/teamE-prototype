@@ -13,8 +13,8 @@ import UserManagementPage from "@/pages/user-management-page.tsx";
 import Footer from "./components/footer.tsx";
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
-import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
-import CenterDiv from "./components/center-div.tsx";
+import {Show, UserButton} from '@clerk/react'
+//import CenterDiv from "./components/center-div.tsx";
 import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";

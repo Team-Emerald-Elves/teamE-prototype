@@ -303,7 +303,7 @@ export default function LinksTable<TData extends Links, TValue>({
     console.log(roles[0])
     console.log(tab)
 
-    if(roles.includes("administrator")) {
+    if(roles.includes("Administrator")) {
         return (
             <>
                 <Tabs value={tab} onValueChange={setTab}>
@@ -431,6 +431,7 @@ export default function LinksTable<TData extends Links, TValue>({
                             <TableBody>
                                 {table.getRowModel().rows.map((row) => {
                                     const link = row.original;
+                                    console.log(link)
 
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
@@ -446,7 +447,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </TableCell>
                                                 ))}
-                                                {link.lock === "none"? (
+                                                {link.lock === "none" ? (
                                                     <TableCell>
                                                         <div className="flex items-center gap-1 justify-end">
                                                             <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
@@ -455,7 +456,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             }}><Lock /></Button>
                                                         </div>
                                                     </TableCell>
-                                                ) : link.lock === empID ?(
+                                                ) : link.lock === empID ? (
                                                     <TableCell className="px-1 py-0.5 text-center">
                                                         <div className="flex gap-2 justify-end">
                                                             <Editlinksform
@@ -650,12 +651,13 @@ export default function LinksTable<TData extends Links, TValue>({
                                 {table.getRowModel().rows.map((row) => {
                                     const link = row.original;
 
+
                                     const canEdit =
-                                        ((roles.includes("underwriter") && link.owner === "UnderWriter")) ||
-                                        ((roles.includes("businessanalyst") && link.owner === "BusinessAnalyst")) ||
-                                        ((roles.includes("actuarialanalyst") && link.owner === "ActuarialAnalyst")) ||
-                                        ((roles.includes("exceloperator") && link.owner === "ExcelOperator")) ||
-                                        ((roles.includes("businessoperator") && link.owner === "BusinessOperator"))
+                                        ((roles.includes("UnderWriter") && link.owner === "UnderWriter")) ||
+                                        ((roles.includes("BusinessAnalyst") && link.owner === "BusinessAnalyst")) ||
+                                        ((roles.includes("ActuarialAnalyst") && link.owner === "ActuarialAnalyst")) ||
+                                        ((roles.includes("ExcelOperator") && link.owner === "ExcelOperator")) ||
+                                        ((roles.includes("BusinessOperator") && link.owner === "BusinessOperator"))
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
                                             <TableRow key={row.id}>

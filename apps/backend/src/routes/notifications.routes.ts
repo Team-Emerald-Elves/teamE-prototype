@@ -81,7 +81,7 @@ notifyRouter.get(
 )
 
 notifyRouter.post(
-    '/create-notifcation',
+    '/create-notification',
     validate(notificationModel),
     async (req: Request, res: Response) => {
 

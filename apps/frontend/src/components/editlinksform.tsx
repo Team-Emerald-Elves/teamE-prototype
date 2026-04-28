@@ -12,7 +12,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
-import { useAuth } from "@clerk/react"
+import {getToken, useAuth} from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Edit03Icon } from "@hugeicons/core-free-icons"
 import {
@@ -44,6 +44,36 @@ type linkProp = {
     name: string,
     reload: (any) => void
 }
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
 
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
@@ -62,8 +92,12 @@ async function updateLinks(body: editlinksRequest, reload: (any) => void) {
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+
+    const newLink = await res.json()
+    createNotif(newLink, "updated");
+
     reload(prev => !prev)
-    return res.json();
+    return newLink;
 }
 
 function EditLinksForm(props: linkProp) {

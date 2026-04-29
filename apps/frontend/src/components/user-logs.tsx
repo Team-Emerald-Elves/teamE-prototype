@@ -5,7 +5,7 @@ import {
     TableRow,
 } from "@/components/ui/log-table.tsx"
 
-import {Dot} from 'lucide-react';
+import { CircleUserRound, Dot, FileText, Info } from 'lucide-react';
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -20,6 +20,8 @@ import {
 import {useEffect, useState} from "react";
 import {getToken} from "@clerk/react";
 
+import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type Notification = {
     createdAt: string
@@ -94,7 +96,7 @@ export function UserLogs(){
     }, [])
     return (
         <>
-            <Card className= "w-[40%] flex flex-col">
+            <Card className= "w-[40%] flex flex-col relative">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-2xl text-[#12324b]">User Activity</CardTitle>
@@ -137,6 +139,32 @@ export function UserLogs(){
                     ))}
                     </ScrollArea>
                 </CardContent>
+
+                {/* Popup Info */}
+                <div className="absolute top-3 right-3">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                <Info className="h-4 w-4" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent side="top" align="start" className="w-64">
+                            <p className="font-medium text-sm mb-2">User Activity</p>
+                            <p className="text-xs text-muted-foreground mb-3">
+                                A real-time log of all recent actions performed by users in the system.
+                            </p>
+                            <div className="space-y-1">
+                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Actions tracked</p>
+                                {["Created", "Updated", "Deleted", "Approved", "Commented on", "Logged in"].map((action) => (
+                                    <div key={action} className="text-xs text-muted-foreground">
+                                        {action}
+                                    </div>
+                                ))}
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
+
             </Card>
         </>
     )

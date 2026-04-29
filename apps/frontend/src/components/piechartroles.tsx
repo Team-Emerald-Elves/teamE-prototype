@@ -2,7 +2,7 @@
 
 
 import { Pie, PieChart } from "recharts"
-
+import { Info } from "lucide-react"
 
 import {
     Card,
@@ -19,6 +19,8 @@ import {
 import {useEffect, useState} from "react";
 import {getToken} from "@clerk/react";
 
+import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 export const description = "A pie chart with no separator"
 
 const chartData = [
@@ -91,7 +93,7 @@ export function ChartPieSeparatorNone() {
     }, []);
 
     return (
-        <Card className="flex flex-col h-full">
+        <Card className="flex flex-col h-full relative">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Employees by Role</CardTitle>
             </CardHeader>
@@ -116,6 +118,35 @@ export function ChartPieSeparatorNone() {
                     </PieChart>
                 </ChartContainer>
             </CardContent>
+
+            {/* info popover */}
+            <div className="absolute bottom-3 left-3">
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                            <Info className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" align="start" className="w-64">
+                        <p className="font-medium text-sm mb-2">Employees By Role</p>
+                        <p className="text-xs text-muted-foreground mb-3">
+                            Breakdown of all active employees across each assigned role.
+                        </p>
+                        <div className="space-y-1">
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Roles</p>
+                            {chartData.map((d) => (
+                                <div key={d.role} className="flex justify-between text-xs">
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="inline-block w-2 h-2 rounded-full" style={{ background: d.fill }} />
+                                        {d.role}
+                                    </span>
+                                    <span className="font-medium">{d.employees}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </div>
 
         </Card>
     )

@@ -43,7 +43,7 @@ function Footer() {
                         <h3 className="font-semibold text-[#E9A565] mb-4">Resources</h3>
                         <ul className="space-y-2 text-sm text-white">
                             <li><a href="#">Tutorial</a></li>
-                            <li><a href="#">Credits</a></li>
+                            <li><FooterLink to="/credits">Credits</FooterLink></li>
                         </ul>
                     </div>
 

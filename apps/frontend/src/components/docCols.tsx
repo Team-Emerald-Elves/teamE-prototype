@@ -107,10 +107,7 @@ export const columns: ColumnDef<Document>[] = [
                 <Dialog>
                     <DialogTrigger onClick={async () => {createNotif(doc); addHitCount(doc)}} className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">{doc.name}</DialogTrigger>
 
-                    <DialogContent className="2xl:max-w-7xl h-[90vh] flex flex-col overflow-hidden">
-                        <DialogClose className="absolute right-4 top-4 text-xl z-10">
-                            ✕
-                        </DialogClose>
+                    <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
                         <div className="flex-1 overflow-auto flex justify-center">
                             <div className="w-full max-w-[min(1400px,80%)] h-full">
                                 <DocumentViewer doc={doc} />
@@ -170,22 +167,7 @@ export const columns: ColumnDef<Document>[] = [
         },
     },
 
-    {
-        accessorKey: "document_status",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Status
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
+       {
         accessorKey: "content_owner",
         header: ({ column }) => {
             return (

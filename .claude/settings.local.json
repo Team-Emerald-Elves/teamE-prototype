@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:UsersellioWPIsoftEngteamE-prototype -maxdepth 2 -type f -name *.md -o -name .env* -o -name docker-compose* -o -name .cursorrules -o -name CLAUDE.md)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm run *)"
+    ]
+  }
+}

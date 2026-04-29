@@ -218,6 +218,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
 
     const [tab, setTab] = useState("All");
+    const [myRole, setMyRole] = useState("");
 
 
     async function getDocumentsAdmin() {
@@ -301,6 +302,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             const data = await res.json();
             setMe(data);
             setEmpID(data.id);
+            setMyRole(data.roles.at(0))
             setToken(token as string)
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
         }
@@ -427,6 +429,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
         });
     }, [tab,empID]);
+
     if(roles.includes("administrator")) {
         return (
             <>
@@ -753,7 +756,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         currentName=""
                                         currentURL=""
                                         currentContentOwner="Select Content Owner"
-                                        currentRole="Select Role"
+                                        currentRole= "Select Role"
                                         currentExpirationDate={new Date()}
                                         currentExpirationTime="10:30:00"
                                         currentStatus="Select Status"
@@ -1351,7 +1354,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         currentName=""
                                         currentURL=""
                                         currentContentOwner="Select Content Owner"
-                                        currentRole="Select Role"
+                                        currentRole=""
                                         currentExpirationDate={new Date()}
                                         currentExpirationTime="10:30:00"
                                         currentStatus="Select Status"

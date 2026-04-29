@@ -6,6 +6,7 @@ import {getToken, useAuth} from "@clerk/react"
 
 type FullCalendarComponentProps = {
     setOpen: (open: boolean) => void;
+    setOpenAdd: (open: boolean) => void;
     setSelectedEvent: (event: any) => void;
     reload: boolean;
     setReload: (reload: any) => void;
@@ -13,7 +14,7 @@ type FullCalendarComponentProps = {
 
 export default function FullCalendarComponent({
                                                   setOpen,
-                                                  setSelectedEvent, reload
+                                                  setSelectedEvent, reload, setOpenAdd
                                               }: FullCalendarComponentProps) {
 
     const [events, setEvents] = useState<any[]>([]);
@@ -46,7 +47,7 @@ export default function FullCalendarComponent({
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
 
-            dateClick={() => setOpen(true)}
+            dateClick={() => setOpenAdd(true)}
 
             eventClick={(info) => {
                 setSelectedEvent(info.event)

@@ -68,26 +68,26 @@ app.use('/links', linkRoute) //validated in links.ts
 app.use('/api/tests', APIRouter)
 app.use('/checkin-checkout-links', CheckoutLinks)
 
-app.get('/assigned', requireAuth(), assignedRoute);
-app.get('/statistics', requireAuth(), statsRoutes);
-app.get('/get-favorited', requireAuth(), favoriteRoute);
-app.get('/get-events', requireAuth(), eventsRoute);
-app.get('/get-favorited-links', requireAuth(), favoriteLinksRoute);
+app.get('/assigned',/* requireAuth(),*/ assignedRoute);
+app.get('/statistics', /* requireAuth(),*/statsRoutes);
+app.get('/get-favorited', /* requireAuth(),*/favoriteRoute);
+app.get('/get-events',/* requireAuth(),*/ eventsRoute);
+app.get('/get-favorited-links', /* requireAuth(),*/favoriteLinksRoute);
 app.get('/', (req, res) => {res.status(200).json({message:'Backend express server running.'})})
 
-app.post('/create-employee', requireAuth(), validate(CreateEmployeeModel), createOldEmployeeRoute);
-app.post('/get-link-role', requireAuth(), validate(LinkRoleModel), linkRoleRoute)
-app.post('/update-favorite', requireAuth(), validate(UpdateFavoriteModel), updateFavoriteRoute);
-app.post('/update-favorite-link', requireAuth(), updateFavoriteLinksRoute);
-app.post('/edit-employee', requireAuth(), validate(EditEmployeeModel), editEmployeeRoute);
-app.post('/add-event', requireAuth(), addEventRoute);
-app.post('/update-event', requireAuth(), updateEventRoute);
-app.post('/set-read', requireAuth(), setReadRoute);
-app.put('/update-link-tags', requireAuth(), linkTagUpdate);
+app.post('/create-employee',/* requireAuth(),*/  validate(CreateEmployeeModel), createOldEmployeeRoute);
+app.post('/get-link-role',/* requireAuth(),*/  validate(LinkRoleModel), linkRoleRoute)
+app.post('/update-favorite', /* requireAuth(),*/validate(UpdateFavoriteModel), updateFavoriteRoute);
+app.post('/update-favorite-link',/* requireAuth(),*/ updateFavoriteLinksRoute);
+app.post('/edit-employee', /* requireAuth(),*/ validate(EditEmployeeModel), editEmployeeRoute);
+app.post('/add-event', /* requireAuth(),*/addEventRoute);
+app.post('/update-event',/* requireAuth(),*/ updateEventRoute);
+app.post('/set-read',/* requireAuth(),*/  setReadRoute);
+app.put('/update-link-tags',/* requireAuth(),*/ linkTagUpdate);
 
 
-app.delete('/delete-link-tag', requireAuth(), linkTagDelete);
-app.delete('/delete-event', requireAuth(), deleteEventRoute);
+app.delete('/delete-link-tag', /* requireAuth(),*/ linkTagDelete);
+app.delete('/delete-event',/* requireAuth(),*/ deleteEventRoute);
 
 app.listen(PORT, () => {
     console.log(`\x1b[33mServer started on\x1b[36m http://localhost:${PORT}!\x1b[0m`);

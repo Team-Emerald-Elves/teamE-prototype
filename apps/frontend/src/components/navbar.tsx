@@ -75,7 +75,6 @@ function Navbar(props: NavbarProps) {
             });
 
             const data = await res.json();
-            setMe(data);
             console.log(data.unreadNotif);
             setUnread(data.unreadNotif);
             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))

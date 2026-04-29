@@ -73,6 +73,13 @@ model CalendarEvents {
   emp_id     String?
 }
 
+model Layout {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner   String?
+  layout  Json
+  widgets String[]
+}
+
 enum Roles {
   UnderWriter
   BusinessAnalyst

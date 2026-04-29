@@ -34,6 +34,7 @@ import addEventRoute from "./routes/add-event.ts";
 import updateEventRoute from "./routes/update-event.ts";
 import CheckoutLinks from "./routes/checkin-checkout-links.ts";
 import deleteEventRoute from "./routes/delete-event.ts";
+import layoutRoute from "./routes/layouts.ts";
 
 
 const app = express();
@@ -68,6 +69,7 @@ app.use('/employee', employeeRoute); //validated in employee.ts
 app.use('/links', linkRoute) //validated in links.ts
 app.use('/api/tests', APIRouter)
 app.use('/checkin-checkout-links', CheckoutLinks)
+app.use('/layouts', layoutRoute)
 
 app.get('/servicereqs', requireAuth(), serviceReqRoute)
 

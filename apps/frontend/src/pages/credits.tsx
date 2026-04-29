@@ -1,5 +1,6 @@
 import PageHeader from "../components/page-header.tsx"
 import { Card } from "@/components/ui/card.tsx"
+import { useEffect } from 'react';
 
 const pernStack = [
     { title: "PostgreSQL", image: "/postgreSQL.png", description: "Relational Database for reliable data storage." },
@@ -23,6 +24,10 @@ const additionalTools = [
 ]
 
 function CreditCard({ title, image, description }: { title: string; image: string; description: string }) {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, []);
+
     return (
         <Card className="flex flex-col items-center justify-center text-center p-6 gap-4 bg-white rounded-2xl shadow-sm min-h-[200px] w-full">
             <div className="h-16 w-16 flex items-center justify-center">

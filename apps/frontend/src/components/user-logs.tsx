@@ -95,7 +95,7 @@ export function UserLogs(){
     return (
         <>
             <Card className= "w-[40%] flex flex-col">
-                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
+                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-(--card)">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-2xl text-(--card-title)">User Activity</CardTitle>
                         <CardDescription className="text-(--foreground)">

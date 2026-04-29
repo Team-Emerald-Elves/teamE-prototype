@@ -392,7 +392,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             return tabFilter ? [...withoutRoles, tabFilter] : withoutRoles;
 
         });
-    }, [tab]);
+    }, [tab,empID]);
     if(roles.includes("administrator")) {
         return (
             <>

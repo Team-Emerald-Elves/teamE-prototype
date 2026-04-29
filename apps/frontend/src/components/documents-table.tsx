@@ -205,7 +205,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         if (roles.length > 0 && tab == "All") {
             payload['assigned_role'] = roles.map(d => d.value);
         }
-        if (tab !== "All") {
+        if (tab !== "All" && tab !== "OwnedByMe") {
             payload['assigned_role'] = [tab];
         }
         if (tags.length > 0) {
@@ -235,6 +235,7 @@ export function DocumentsTable<TData extends Document, TValue>({
         return data
     }
     useEffect(() => {
+        console.log(filters)
         getDocumentsAdmin()
             .then((data) => {
                 if (docs.length === 0) {
@@ -378,20 +379,18 @@ export function DocumentsTable<TData extends Document, TValue>({
     }
     useEffect(() => {
         setFilters(prev => {
-            const withoutRoles = prev.filter(f => f.key !== "assigned_role");
-
+            const withoutRoles = prev.filter(f => f.key !== "assigned_role" && f.key !== "content_owner");
             if (tab === "All") return withoutRoles;
             const selectedRole = roleFilters.find(f => f.value === tab);
+            let selectedOwned = null;
 
             if (tab === "OwnedByMe") {
-                return [
-                    ...withoutRoles,
-                    {key: 'content_owner', value: empID, id: 'Owned by Me', state: false}
-                ];
+                selectedOwned = myDocumentsButton.find(f => f.value === empID);
             }
 
-            if (!selectedRole) return withoutRoles;
-            return [...withoutRoles, selectedRole];
+            const tabFilter = selectedOwned || selectedRole;
+            return tabFilter ? [...withoutRoles, tabFilter] : withoutRoles;
+
         });
     }, [tab]);
     if(roles.includes("administrator")) {
@@ -691,7 +690,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     )}
                                                 </div>
                                                 <div className="py-1">
-                                                    {myDocumentsButton.map((option) => (
+
+                                                    {tab !== "OwnedByMe" &&
+                                                        myDocumentsButton.map((option) => (
                                                         <div key={option.id} className="flex items-center justify-between">
                                                             <label className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md  text-xs w-36">{option.id}</label>
                                                             <input

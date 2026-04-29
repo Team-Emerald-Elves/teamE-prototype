@@ -6,6 +6,7 @@ import {useState} from "react";
 import EventDetails from "@/components/eventDetailsPopup.tsx";
 import RoleLegend from "@/components/roleLegend.tsx";
 
+
 export default function CalendarPage() {
     const [open, setOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);

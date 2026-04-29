@@ -114,7 +114,7 @@ export default function Favorites() {
                 </TabsList>
 
                     <TabsContent value="docs">
-                        <div className="bg-white rounded-xl shadow-sm border p-4">
+                        <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                             <Table className="border rounded-lg overflow-hidden">
                                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                     <TableRow>

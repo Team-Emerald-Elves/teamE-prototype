@@ -329,7 +329,7 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="relative inline-block text-left">
                                 <button
                                     onClick={() => setIsDropdownOpen(prev => !prev)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon icon={SlidersHorizontalIcon}/>

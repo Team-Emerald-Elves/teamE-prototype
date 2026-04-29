@@ -9,6 +9,7 @@ import RoleLegend from "@/components/roleLegend.tsx";
 
 export default function CalendarPage() {
     const [open, setOpen] = useState(false);
+    const [openAdd, setOpenAdd] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [reload, setReload] = useState(false);
 
@@ -38,12 +39,17 @@ export default function CalendarPage() {
 
             <div className="pr-7 pl-7 pt-2 flex flex-col h-screen overflow-scroll">
                 <div className="mb-2 ml-2">
-                    <AddEventButton setOpen={setOpen} />
+                    <AddEventButton setOpen={setOpenAdd} />
                 </div>
+                <EventForm open={openAdd}
+                           setOpen={setOpenAdd}
+                           selectedEvent={selectedEvent}
+                           setSelectedEvent={setSelectedEvent} setReload={setReload}/>
 
                 <div className="p-5 w-full bg-white rounded-xl shadow-sm border flex-1">
                     <FullCalendarComponent
                         setOpen={setOpen}
+                        setOpenAdd={setOpenAdd}
                         setSelectedEvent={setSelectedEvent}
                         reload={reload}
                         setReload={setReload}

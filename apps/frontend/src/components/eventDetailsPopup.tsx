@@ -84,18 +84,20 @@ export default function EventDetails(props: EventDetailsProps) {
                 <DialogContent className="overflow-visible max-w-3xl">
                     <div className="flex flex-col gap-2">
                         <h3 className="text-xl font-bold">{props.selectedEvent?.title}</h3>
-                        <ExpiringBar createdAt={props.selectedEvent?.extendedProps.created_at} expiresAt={props.selectedEvent?.start} />
+                        {props.selectedEvent?.doc_id !== -1 ? (<ExpiringBar createdAt={props.selectedEvent?.extendedProps.created_at} expiresAt={props.selectedEvent?.start} />) :
+                            (<div><p>Start Date: {props.selectedEvent?.start}</p> <p> End Date: {props.selectedEvent?.end}</p></div>) }
                     </div>
-                        <div className="flex items-center gap-x-2">
+                    {props.selectedEvent?.doc_id !== -1 ?
+                        (<div className="flex items-center gap-x-2">
                         <FontAwesomeIcon icon={faCircle} style={{ color: props.selectedEvent?.backgroundColor }} />
                         <p>{props.selectedEvent && role}</p>
-                    </div>
+                    </div>) : null}
 
-                    <div><p>Owned By: {props.selectedEvent?.extendedProps?.contentOwner ? props.selectedEvent?.extendedProps?.contentOwner : "Unknown"}</p></div>
+                    {props.selectedEvent?.doc_id !== -1 ? (<div><p>Owned By: {props.selectedEvent?.extendedProps?.contentOwner ? props.selectedEvent?.extendedProps?.contentOwner : "Unknown"}</p></div>) : null}
 
-                    {(eventEmpId !== "none") && (<p>Checked Out By: {props.selectedEvent?.extendedProps.checkedOut}</p>)}
+                    {(eventEmpId !== "none") && (props.selectedEvent?.doc_id !== -1) && (<p>Checked Out By: {props.selectedEvent?.extendedProps.checkedOut}</p>)}
 
-                    {(eventEmpId === empID) && (
+                    {((eventEmpId === empID) || (props.selectedEvent?.doc_id === -1)) && (
                         <Button onClick={() => {setOpen(true); props.setOpenEvent(false)}}>Edit Event</Button>)}
                 </DialogContent>
                 <DialogFooter>

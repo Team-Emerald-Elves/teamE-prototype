@@ -1,24 +1,27 @@
-import express, {type Request, type Response} from "express";
-import prisma, {type Employee} from "@repo/database";
+import express, { type Request, type Response } from "express";
+import prisma, { type Employee } from "@repo/database";
 import { getAuth, clerkClient } from "@clerk/express";
 
-
-import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.schemas.ts';
-import validate  from '../lib/zod/middleware.ts';
+import {
+    ListEmployeesModel,
+    EmployeeRequestModel,
+} from "../lib/zod/routes.schemas.ts";
+import validate from "../lib/zod/middleware.ts";
 
 import path from "path";
-import {buildWhereClause, buildWhereClausesEmployee} from "../lib/filters.ts";
+import { buildWhereClause, buildWhereClausesEmployee } from "../lib/filters.ts";
 
-const employeeRoute = express()
+const employeeRoute = express();
 
-interface EmployeeRequest{
-    action: 'list' | 'create' | 'edit' | 'delete';
+interface EmployeeRequest {
+    action: "list" | "create" | "edit" | "delete";
     employeeData: Partial<Employee> | undefined;
 }
 
-employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
-    const {action} = req.query;
-    const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
+employeeRoute.post("/", (req: express.Request, res: express.Response) => {
+    const { action } = req.query;
+    const { id, uname, first_name, last_name, email } =
+        req.query as Partial<Employee>;
     const eReq: EmployeeRequest = req.body as EmployeeRequest;
     // if (!eReq.employeeData) {
     //     res.status(400).json({
@@ -42,123 +45,140 @@ employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
         return;
     }
 
-    if (!action || action === 'list') {
-        listEmployees({id, uname, first_name, last_name, email}, req, res);
+    if (!action || action === "list") {
+        listEmployees({ id, uname, first_name, last_name, email }, req, res);
         return;
     }
     res.status(200).json({
-        error: "INVALID_EMPLOYEE_QUERY"
-    })
-})
-
-employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, res: express.Response) => {
-    const eReq: EmployeeRequest = req.body as EmployeeRequest;
-
-    if (eReq.action == "list") {
-        eReq.employeeData!.roles = undefined
-        listEmployees(eReq.employeeData!, req, res);
-        return;
-    }
-
-    if (!eReq.employeeData) {
-        res.status(400).json({
-            error: "INVALID_EMPLOYEE_DATA"
-        });
-        return;
-    }
-
-    if (eReq.action == "create") {
-        createEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    if (eReq.action == "edit") {
-        editEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    if (eReq.action == "delete") {
-        deleteEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    // No/invalid action
-    res.status(400).json({
-        error: "INVALID_ACTION"
+        error: "INVALID_EMPLOYEE_QUERY",
     });
+});
 
-})
+employeeRoute.post(
+    "/",
+    validate(EmployeeRequestModel),
+    (req: express.Request, res: express.Response) => {
+        const eReq: EmployeeRequest = req.body as EmployeeRequest;
 
-//checks if employee is a new user
-employeeRoute.get('/new-user', async (req: express.Request, res: express.Response) => {
-    const { userId, isAuthenticated } = getAuth(req);
-
-    if (!isAuthenticated) {
-        return res.status(401).json({ error: "Not authenticated" });
-    }
-
-    try {
-        const employee = await prisma.employee.findFirst({
-            where: { clerkUserId: userId },
-            select: { newUser: true }
-        });
-
-        if (!employee) {
-            return res.status(404).json({ error: "Employee not found" });
+        if (eReq.action == "list") {
+            eReq.employeeData!.roles = undefined;
+            listEmployees(eReq.employeeData!, req, res);
+            return;
         }
 
-        return res.status(200).json({ newUser: employee.newUser });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Failed to check new user status" });
-    }
-});
+        if (!eReq.employeeData) {
+            res.status(400).json({
+                error: "INVALID_EMPLOYEE_DATA",
+            });
+            return;
+        }
+
+        if (eReq.action == "create") {
+            createEmployee(eReq.employeeData, res);
+            return;
+        }
+
+        if (eReq.action == "edit") {
+            editEmployee(eReq.employeeData, res);
+            return;
+        }
+
+        if (eReq.action == "delete") {
+            deleteEmployee(eReq.employeeData, res);
+            return;
+        }
+
+        // No/invalid action
+        res.status(400).json({
+            error: "INVALID_ACTION",
+        });
+    },
+);
+
+//checks if employee is a new user
+employeeRoute.get(
+    "/new-user",
+    async (req: express.Request, res: express.Response) => {
+        const { userId, isAuthenticated } = getAuth(req);
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        try {
+            const employee = await prisma.employee.findFirst({
+                where: { clerkUserId: userId },
+                select: { newUser: true },
+            });
+
+            if (!employee) {
+                return res.status(404).json({ error: "Employee not found" });
+            }
+
+            return res.status(200).json({ newUser: employee.newUser });
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({ error: "Failed to check new user status" });
+        }
+    },
+);
 
 //dismiss manual popup-- no longer new user
-employeeRoute.post('/new-user/dismiss', async (req: express.Request, res: express.Response) => {
-    const { userId, isAuthenticated } = getAuth(req);
+employeeRoute.post(
+    "/new-user/dismiss",
+    async (req: express.Request, res: express.Response) => {
+        const { userId, isAuthenticated } = getAuth(req);
 
-    if (!isAuthenticated) {
-        return res.status(401).json({ error: "Not authenticated" });
-    }
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
 
-    try {
-        const employee = await prisma.employee.updateMany({
-            where: { clerkUserId: userId },
-            data: { newUser: false }
-        });
+        try {
+            const employee = await prisma.employee.updateMany({
+                where: { clerkUserId: userId },
+                data: { newUser: false },
+            });
 
-        return res.status(200).json({ message: "New user status cleared" });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Failed to update new user status" });
-    }
-});
+            return res.status(200).json({ message: "New user status cleared" });
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({ error: "Failed to update new user status" });
+        }
+    },
+);
 
 function createEmployee(eData: Partial<Employee>, res: express.Response) {
-    if (!eData.uname ||
-        !eData.first_name ||
-        !eData.last_name) {
+    if (!eData.uname || !eData.first_name || !eData.last_name) {
         res.status(400).json({
-            error: "INVALID_EMPLOYEE_DATA"
+            error: "INVALID_EMPLOYEE_DATA",
         });
         return;
     }
 
-
-    prisma.employee.create({
-        data: eData
-    }).then((result: Employee) => {
-        console.log(`Successfully created employee: ${result.uname}`);
-        res.status(200).json(result); // Success
-    }, (err) => {
-        console.error(`[ERROR] Failed to create employee with error: ${err}`);
-        res.sendStatus(500); // Failed
-    })
+    prisma.employee
+        .create({
+            data: eData,
+        })
+        .then(
+            (result: Employee) => {
+                console.log(`Successfully created employee: ${result.uname}`);
+                res.status(200).json(result); // Success
+            },
+            (err) => {
+                console.error(
+                    `[ERROR] Failed to create employee with error: ${err}`,
+                );
+                res.sendStatus(500); // Failed
+            },
+        );
 }
 
 async function editEmployee(eData: Partial<Employee>, res: express.Response) {
-    console.log(eData)
+    console.log(eData);
 
     if (!eData.id) {
         res.status(400).send("INVALID_EMPLOYEE_DATA");
@@ -175,7 +195,7 @@ async function editEmployee(eData: Partial<Employee>, res: express.Response) {
         if (!employee) {
             res.status(400).send({
                 error: "Employee not found",
-            })
+            });
         }
 
         res.status(200).send(employee);
@@ -185,7 +205,7 @@ async function editEmployee(eData: Partial<Employee>, res: express.Response) {
 }
 
 async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
-    console.log(eData)
+    console.log(eData);
 
     if (!eData.id) {
         res.status(400).send("INVALID_EMPLOYEE_DATA");
@@ -194,7 +214,7 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     try {
         const bucket = await prisma.bucketMeta.delete({
             where: {
-                employeeId : eData.id,
+                employeeId: eData.id,
             },
         });
         const employee: Employee = await prisma.employee.delete({
@@ -205,12 +225,12 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
         if (!bucket) {
             res.status(400).send({
                 error: "Employee not found",
-            })
+            });
         }
         if (!employee) {
             res.status(400).send({
                 error: "Employee not found",
-            })
+            });
         }
 
         res.status(200).send(employee);
@@ -219,11 +239,13 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, req: express.Request, res: express.Response) {
-
+async function listEmployees(
+    eData: Omit<Partial<Employee>, "roles"> | undefined,
+    req: express.Request,
+    res: express.Response,
+) {
     try {
-
-        const whereClauseReg = buildWhereClausesEmployee(req.body, {})
+        const whereClauseReg = buildWhereClausesEmployee(req.body, {});
 
         const employees = await prisma.employee.findMany({
             where: whereClauseReg,
@@ -244,7 +266,9 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
                         };
                     }
 
-                    const user = await clerkClient.users.getUser(emp.clerkUserId);
+                    const user = await clerkClient.users.getUser(
+                        emp.clerkUserId,
+                    );
 
                     return {
                         ...emp,
@@ -257,7 +281,7 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
                         imageUrl: defaultImage,
                     };
                 }
-            })
+            }),
         );
 
         return res.json(enriched);
@@ -265,8 +289,6 @@ async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined
         console.error("[ERROR]", err);
         return res.sendStatus(500);
     }
-
 }
-
 
 export default employeeRoute;

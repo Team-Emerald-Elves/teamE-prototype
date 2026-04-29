@@ -1,5 +1,5 @@
-import {TableCell, TableRow} from "@/components/ui/table.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
@@ -20,15 +20,12 @@ type Document = {
 
 type favoriteProps = {
     d: Document;
-}
+};
 
 export default function DocTableEntry(props: favoriteProps) {
     const [favorited, setFavorited] = useState(false);
     return (
-        <TableRow
-            key={props.d.id}
-            className="hover:bg-gray-50 transition"
-        >
+        <TableRow key={props.d.id} className="hover:bg-gray-50 transition">
             <TableCell>
                 <FontAwesomeIcon
                     icon={favorited ? solidStar : regularStar}
@@ -37,21 +34,15 @@ export default function DocTableEntry(props: favoriteProps) {
                 />
             </TableCell>
 
-            <TableCell className="py-3 text-gray-700">
-                {props.d.name}
-            </TableCell>
+            <TableCell className="py-3 text-gray-700">{props.d.name}</TableCell>
 
-            <TableCell className="text-gray-700">
-                {props.d.mime_type}
-            </TableCell>
+            <TableCell className="text-gray-700">{props.d.mime_type}</TableCell>
 
             <TableCell className="text-gray-700">
                 {props.d.expirationDate}
             </TableCell>
 
-            <TableCell className="text-gray-700">
-                {props.d.status}
-            </TableCell>
+            <TableCell className="text-gray-700">{props.d.status}</TableCell>
 
             <TableCell className="text-gray-700">
                 {props.d.contentOwner}
@@ -80,5 +71,5 @@ export default function DocTableEntry(props: favoriteProps) {
                 </div>
             </TableCell>
         </TableRow>
-    )
+    );
 }

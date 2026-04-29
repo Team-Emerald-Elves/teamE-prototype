@@ -1,5 +1,5 @@
-"use client"
-import * as React from "react"
+"use client";
+import * as React from "react";
 import {
     Table,
     TableBody,
@@ -8,7 +8,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx";
-import { Button } from './ui/button.tsx'
+import { Button } from "./ui/button.tsx";
 
 import {
     type ColumnDef,
@@ -20,14 +20,14 @@ import {
     useReactTable,
     type SortingState,
     getSortedRowModel,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
-import { Search } from "lucide-react"
+import { Search } from "lucide-react";
 import {
     InputGroup,
     InputGroupAddon,
     InputGroupInput,
-} from "@/components/ui/input-group"
+} from "@/components/ui/input-group";
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 
@@ -73,18 +73,17 @@ Documents.push(Doc1);
 Documents.push(Doc2);
 
 interface DocProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
 export function TestDoc<TData, TValue>({
-                                             columns,
-                                             data,
-                                         }: DocProps<TData, TValue>) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    columns,
+    data,
+}: DocProps<TData, TValue>) {
+    const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] =
+        React.useState<ColumnFiltersState>([]);
     const table = useReactTable({
         data,
         columns,
@@ -98,25 +97,31 @@ export function TestDoc<TData, TValue>({
             sorting,
             columnFilters,
         },
-    })
+    });
 
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
-        <div className="bg-white rounded-xl shadow-sm border p-4">
-            <div className="flex items-center mb-4">
-                <InputGroup className="max-w-md py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
-                    <InputGroupInput
-                        placeholder="Search"
-                        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            table.getColumn("name")?.setFilterValue(event.target.value)
-                        }
-                        className="max-w-sm"
-                    />
-                    <InputGroupAddon>
-                        <Search />
-                    </InputGroupAddon>
-                </InputGroup>
+            <div className="bg-white rounded-xl shadow-sm border p-4">
+                <div className="flex items-center mb-4">
+                    <InputGroup className="max-w-md py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
+                        <InputGroupInput
+                            placeholder="Search"
+                            value={
+                                (table
+                                    .getColumn("name")
+                                    ?.getFilterValue() as string) ?? ""
+                            }
+                            onChange={(event) =>
+                                table
+                                    .getColumn("name")
+                                    ?.setFilterValue(event.target.value)
+                            }
+                            className="max-w-sm"
+                        />
+                        <InputGroupAddon>
+                            <Search />
+                        </InputGroupAddon>
+                    </InputGroup>
                     <ContentForm
                         type="Create"
                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
@@ -129,87 +134,103 @@ export function TestDoc<TData, TValue>({
                         currentStatus="Select Status"
                         size={true}
                     />
-            </div>
-            <Table className="border rounded-lg overflow-hidden">
-                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead className=" text-[#0b4461]" key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
+                </div>
+                <Table className="border rounded-lg overflow-hidden">
+                    <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead
+                                            className=" text-[#0b4461]"
+                                            key={header.id}
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext(),
+                                                  )}
+                                        </TableHead>
+                                    );
+                                })}
+                                <TableHead className="text-[#0b4461]">
+                                    Actions
+                                </TableHead>
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={
+                                        row.getIsSelected() && "selected"
+                                    }
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
                                             )}
-                                    </TableHead>
-                                )
-                            })}
-                            <TableHead className="text-[#0b4461]">Actions</TableHead>
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <ContentForm
-                                            type="Edit"
-                                            currentID= {1}
-                                            currentName={"example"}
-                                            currentURL={"www.example.com"}
-                                            currentContentOwner={"alex"}
-                                            currentRole={"underwriter"}
-                                            currentExpirationDate={"1/2/3"}
-                                            currentExpirationTime={"2:30"}
-                                            currentStatus={"done"}
-                                            size={false}
-                                        />
+                                        </TableCell>
+                                    ))}
+                                    <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            <ContentForm
+                                                type="Edit"
+                                                currentID={1}
+                                                currentName={"example"}
+                                                currentURL={"www.example.com"}
+                                                currentContentOwner={"alex"}
+                                                currentRole={"underwriter"}
+                                                currentExpirationDate={"1/2/3"}
+                                                currentExpirationTime={"2:30"}
+                                                currentStatus={"done"}
+                                                size={false}
+                                            />
 
-                                        <DeleteConfirmationPopup target={"null"} />
-                                    </div>
+                                            <DeleteConfirmationPopup
+                                                target={"null"}
+                                            />
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    No results.
                                 </TableCell>
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
+                        )}
+                    </TableBody>
+                </Table>
+                <div className="flex items-center justify-end space-x-2 py-4">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </div>
-        </div>
-    )
+    );
 }

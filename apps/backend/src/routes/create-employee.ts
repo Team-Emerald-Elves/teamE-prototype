@@ -1,17 +1,21 @@
 import express from "express";
 import prisma, { type Employee } from "@repo/database";
-import { createClerkClient } from '@clerk/express';
-import { createSupabaseForRequest } from '../lib/supabase.ts'
+import { createClerkClient } from "@clerk/express";
+import { createSupabaseForRequest } from "../lib/supabase.ts";
 
-const supabaseClient = await createSupabaseForRequest()
+const supabaseClient = await createSupabaseForRequest();
 
+const clerkClient = createClerkClient({
+    secretKey: process.env.CLERK_SECRET_KEY,
+});
 
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-
-async function createEmployeeRoute(req: express.Request, res: express.Response) {
-    const employee: Employee = req.body
-    console.log("Employee: ", employee)
-    let user
+async function createEmployeeRoute(
+    req: express.Request,
+    res: express.Response,
+) {
+    const employee: Employee = req.body;
+    console.log("Employee: ", employee);
+    let user;
     try {
         user = await clerkClient.users.createUser({
             firstName: employee.first_name,
@@ -19,49 +23,60 @@ async function createEmployeeRoute(req: express.Request, res: express.Response) 
             emailAddress: [employee.email!],
             username: employee.uname,
             password: "YQkxpzdR4P&HRzcQ3$!",
-        })
+        });
     } catch (error) {
-        console.error("Logged Error: ", error)
+        console.error("Logged Error: ", error);
         return;
     }
 
     console.log("Clerk User: ", user);
-    prisma.employee.create({
-        data: {
-            ...employee,
-            clerkUserId: user!.id
-        }
-    }).then(async (result) => {
-        console.log(`Successfully created employee: ${result.first_name} ${result.last_name}`);
-
-        const bucketData = await prisma.bucketMeta.create({
+    prisma.employee
+        .create({
             data: {
-                employeeId: result.id
-            }
+                ...employee,
+                clerkUserId: user!.id,
+            },
         })
+        .then(
+            async (result) => {
+                console.log(
+                    `Successfully created employee: ${result.first_name} ${result.last_name}`,
+                );
 
-        if (process.env.NODE_ENV != 'development') {
-            const { data, error } = await supabaseClient
-            .storage
-            .createBucket(bucketData.id, {
-            public: false, // Set to true for a public bucket
-            fileSizeLimit: 1024 * 1024 * 10 // Optional: limit size (e.g., 1MB)
-            })
+                const bucketData = await prisma.bucketMeta.create({
+                    data: {
+                        employeeId: result.id,
+                    },
+                });
 
-            if(!data || error) {
-                throw new Error("Cannot create bucket.")
-            }
-        } else {
-            console.error("Cannot create buckets with development db. Only records")
-        }
+                if (process.env.NODE_ENV != "development") {
+                    const { data, error } =
+                        await supabaseClient.storage.createBucket(
+                            bucketData.id,
+                            {
+                                public: false, // Set to true for a public bucket
+                                fileSizeLimit: 1024 * 1024 * 10, // Optional: limit size (e.g., 1MB)
+                            },
+                        );
 
+                    if (!data || error) {
+                        throw new Error("Cannot create bucket.");
+                    }
+                } else {
+                    console.error(
+                        "Cannot create buckets with development db. Only records",
+                    );
+                }
 
-        
-        res.sendStatus(200); // Success
-    }, (err) => {
-        console.error(`[ERROR] Failed to create employee with error: ${err}`);
-        res.sendStatus(500); // Failed
-    })
+                res.sendStatus(200); // Success
+            },
+            (err) => {
+                console.error(
+                    `[ERROR] Failed to create employee with error: ${err}`,
+                );
+                res.sendStatus(500); // Failed
+            },
+        );
 }
 
 export default createEmployeeRoute;

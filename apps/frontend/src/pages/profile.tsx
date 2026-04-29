@@ -1,11 +1,6 @@
-import '../App.css'
+import "../App.css";
 import { useState } from "react";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -33,7 +28,6 @@ function Profile() {
                 Edit Profile
             </h1>
 
-
             <div className="px-10 py-20">
                 <Card className="max-w-xl">
                     <CardHeader>
@@ -42,7 +36,9 @@ function Profile() {
 
                     <CardContent className="space-y-6">
                         <div>
-                            <label className="text-sm font-medium">First Name</label>
+                            <label className="text-sm font-medium">
+                                First Name
+                            </label>
                             <Input
                                 name="Firstname"
                                 value={user.firstname}
@@ -53,7 +49,9 @@ function Profile() {
                         </div>
 
                         <div>
-                            <label className="text-sm font-medium">Last Name</label>
+                            <label className="text-sm font-medium">
+                                Last Name
+                            </label>
                             <Input
                                 name="Lastname"
                                 value={user.lastname}
@@ -64,7 +62,9 @@ function Profile() {
                         </div>
 
                         <div>
-                            <label className="text-sm font-medium">Username</label>
+                            <label className="text-sm font-medium">
+                                Username
+                            </label>
                             <Input
                                 name="username"
                                 value={user.username}
@@ -75,7 +75,9 @@ function Profile() {
                         </div>
 
                         <div>
-                            <label className="text-sm font-medium">Password</label>
+                            <label className="text-sm font-medium">
+                                Password
+                            </label>
                             <Input
                                 name="password"
                                 value={user.password}
@@ -84,7 +86,6 @@ function Profile() {
                                 className="mt-1"
                             />
                         </div>
-
 
                         <div>
                             <label className="text-sm font-medium">Email</label>

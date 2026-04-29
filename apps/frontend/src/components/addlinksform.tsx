@@ -1,4 +1,4 @@
-import { Button } from './ui/button.tsx'
+import { Button } from "./ui/button.tsx";
 import {
     Dialog,
     DialogClose,
@@ -7,14 +7,14 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {useCallback, useEffect, useState} from "react";
-import {getToken, useAuth} from "@clerk/react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { PlusSignIcon } from "@hugeicons/core-free-icons"
+} from "@/components/ui/dialog";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useCallback, useEffect, useState } from "react";
+import { getToken, useAuth } from "@clerk/react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { PlusSignIcon } from "@hugeicons/core-free-icons";
 import {
     Select,
     SelectContent,
@@ -22,93 +22,112 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
-} from "@/components/ui/select.tsx"
+    SelectValue,
+} from "@/components/ui/select.tsx";
 
 type Links = {
-    id: number
-    link_name: string,
-    url: string,
-    owner: string
-}
+    id: number;
+    link_name: string;
+    url: string;
+    owner: string;
+};
 
 type editlinksRequest = {
-    action: string,
-    linkData: Links,
-}
+    action: string;
+    linkData: Links;
+};
 
 type linkProp = {
-    id?: number,
-    type: string,
-    size: boolean,
-    url: string,
-    owner?: string
-    name: string,
-    reload: (any) => void,
-}
+    id?: number;
+    type: string;
+    size: boolean;
+    url: string;
+    owner?: string;
+    name: string;
+    reload: (any) => void;
+};
 
 async function createNotif(link: Links, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    const res1 = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    );
 
     const me = await res1.json();
     console.log(me);
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                public: true,
+                targetRoles: [link.owner, "Administrator"],
+                title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+            }),
         },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [link.owner, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-        })
-    })
+    );
 
     if (!res.ok) {
-        throw new Error("failed to create view notification")
+        throw new Error("failed to create view notification");
     }
     console.log(await res.json());
 }
 
-const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
+const ALL_ROLES = [
+    "BusinessAnalyst",
+    "UnderWriter",
+    "Administrator",
+    "BusinessOperator",
+    "ExcelOperator",
+    "ActuarialAnalyst",
+];
 
-async function updateLinks(body: editlinksRequest, token: string | null, reload: (any) => void) {
-    console.log(body)
+async function updateLinks(
+    body: editlinksRequest,
+    token: string | null,
+    reload: (any) => void,
+) {
+    console.log(body);
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
     });
 
     if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+        throw new Error(
+            `Failed to update link (status ${res.status}): ${errorText}`,
+        );
     }
     const newLink = await res.json();
     createNotif(newLink, "created");
 
-    reload(prev => !prev)
+    reload((prev) => !prev);
     return newLink;
 }
 
 function AddLinksForm(props: linkProp) {
     const { getToken, isSignedIn } = useAuth();
-    const token =  getToken()
+    const token = getToken();
 
-    const [roles, setRoles] = useState<string[]>([]);      // display values
+    const [roles, setRoles] = useState<string[]>([]); // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
     const [selectedRole, setSelectedRole] = useState<string>("");
     const [isFilled, setIsFilled] = useState<boolean>(false);
@@ -122,9 +141,7 @@ function AddLinksForm(props: linkProp) {
     useEffect(() => {
         if (link.link_name && link.url) {
             setIsFilled(true);
-
-        }
-        else {
+        } else {
             setIsFilled(false);
         }
     }, [link]);
@@ -137,22 +154,24 @@ function AddLinksForm(props: linkProp) {
         async function load() {
             const token = await getToken();
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
 
             const data = await res.json();
 
             const rawRoles = data.roles as string[];
-            const lowered = rawRoles.map(r => r.toLowerCase());
+            const lowered = rawRoles.map((r) => r.toLowerCase());
 
             setRoles(rawRoles);
             setRoleKeys(lowered);
 
             const isAdmin = lowered.includes("administrator");
-
 
             if (!isAdmin && rawRoles.length > 0) {
                 setSelectedRole(rawRoles[0]);
@@ -222,7 +241,9 @@ function AddLinksForm(props: linkProp) {
 
                             <Select
                                 value={selectedRole}
-                                onValueChange={(value) => setSelectedRole(value)}
+                                onValueChange={(value) =>
+                                    setSelectedRole(value)
+                                }
                                 disabled={!isAdmin}
                             >
                                 <SelectTrigger>
@@ -233,12 +254,16 @@ function AddLinksForm(props: linkProp) {
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
 
-                                        {(isAdmin ? ALL_ROLES : roles).map((role) => (
-                                            <SelectItem key={role} value={role}>
-                                                {role}
-                                            </SelectItem>
-                                        ))}
-
+                                        {(isAdmin ? ALL_ROLES : roles).map(
+                                            (role) => (
+                                                <SelectItem
+                                                    key={role}
+                                                    value={role}
+                                                >
+                                                    {role}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -246,7 +271,13 @@ function AddLinksForm(props: linkProp) {
                     </FieldGroup>
 
                     <DialogFooter>
-                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <DialogClose
+                            render={
+                                <Button variant="outline" size="lg">
+                                    Cancel
+                                </Button>
+                            }
+                        />
                         <Button
                             variant="outline"
                             size="lg"
@@ -258,41 +289,52 @@ function AddLinksForm(props: linkProp) {
                                     owner: "",
                                 });
 
-                                setSelectedRole(
-                                    isAdmin ? "" : roles[0] || ""
-                                );
+                                setSelectedRole(isAdmin ? "" : roles[0] || "");
                             }}
                         >
                             Clear
                         </Button>
-                        <DialogClose render={
-                            <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
-                                const finalRole =
-                                    isAdmin
-                                        ? selectedRole
-                                        : roles[0];
-                                const bodyData: editlinksRequest = {
-                                    action: "create",
-                                    linkData: {
-                                        id: props.id!,
-                                        link_name: link.link_name,
-                                        url: link.url,
-                                        owner: finalRole,
-                                    }
-
-                                };
-                                try {
-
-                                    await updateLinks(bodyData, token, props.reload);
-                                    console.log("link updated successfully");
-                                } catch (err) {
-                                    console.error(err);
-                                    console.log("Failed to update links");
-                                }
-                                }}
-                            >
-                                Submit
-                            </Button> }/>
+                        <DialogClose
+                            render={
+                                <Button
+                                    type="submit"
+                                    disabled={!isFilled}
+                                    className=" bg-secondary text-secondary-foreground"
+                                    size="lg"
+                                    onClick={async () => {
+                                        const finalRole = isAdmin
+                                            ? selectedRole
+                                            : roles[0];
+                                        const bodyData: editlinksRequest = {
+                                            action: "create",
+                                            linkData: {
+                                                id: props.id!,
+                                                link_name: link.link_name,
+                                                url: link.url,
+                                                owner: finalRole,
+                                            },
+                                        };
+                                        try {
+                                            await updateLinks(
+                                                bodyData,
+                                                token,
+                                                props.reload,
+                                            );
+                                            console.log(
+                                                "link updated successfully",
+                                            );
+                                        } catch (err) {
+                                            console.error(err);
+                                            console.log(
+                                                "Failed to update links",
+                                            );
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            }
+                        />
                     </DialogFooter>
                 </DialogContent>
             </form>

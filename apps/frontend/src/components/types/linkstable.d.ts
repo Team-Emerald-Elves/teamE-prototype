@@ -1,10 +1,10 @@
 export type linksProps = {
-    me: any
-}
+    me: any;
+};
 
 export type Links = {
     id: number;
-    link_name: string,
-    url: string,
-    owner: string
-}
+    link_name: string;
+    url: string;
+    owner: string;
+};

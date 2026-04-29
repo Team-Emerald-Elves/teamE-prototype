@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -7,11 +7,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
-import type { Links } from './types/linkstable.d.ts'
-import {getToken} from "@clerk/react";
+import type { Links } from "./types/linkstable.d.ts";
+import { getToken } from "@clerk/react";
 
 type Links = {
     id: string;
@@ -21,44 +21,48 @@ type Links = {
     favorite: boolean;
 };
 
-
 type deleteConfirmationPopupProps = {
-    link: Links,
-    reload: (any) => void
-}
+    link: Links;
+    reload: (any) => void;
+};
 
-type editlinksRequest ={
-    action: string,
-    linkData: Links,
-
-}
+type editlinksRequest = {
+    action: string;
+    linkData: Links;
+};
 async function createNotif(link: Links, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    const res1 = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    );
 
     const me = await res1.json();
     console.log(me);
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                public: true,
+                targetRoles: [link.owner, "Administrator"],
+                title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+            }),
         },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [link.owner, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-        })
-    })
+    );
 
     if (!res.ok) {
-        throw new Error("failed to create view notification")
+        throw new Error("failed to create view notification");
     }
     console.log(await res.json());
 }
@@ -81,44 +85,44 @@ async function createNotif(link: Links, action: string) {
 //     return res.json();
 // }
 async function removeLink(body: editlinksRequest, reload: (any) => void) {
-
-    console.log(body)
+    console.log(body);
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
     });
 
     if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+        throw new Error(
+            `Failed to update link (status ${res.status}): ${errorText}`,
+        );
     }
-    reload(prev => !prev)
+    reload((prev) => !prev);
     return res.json();
 }
 
-export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps) {
-
+export function DeleteConfirmationPopupLink(
+    props: deleteConfirmationPopupProps,
+) {
     // const [sessionToken, setSessionToken] = useState("")
 
     // useEffect(() => {
     //     getToken().then(t => setSessionToken(t ?? ""))
     // }, [])
 
-    const bodyData ={
+    const bodyData = {
         action: "delete",
-        linkData: props.link
-    }
-
-
+        linkData: props.link,
+    };
 
     return (
         <Dialog>
-            <DialogTrigger >
-                <Button variant = "destructive" size = "icon">
+            <DialogTrigger>
+                <Button variant="destructive" size="icon">
                     <HugeiconsIcon icon={Delete02Icon} size={20} />
                 </Button>
             </DialogTrigger>
@@ -127,16 +131,24 @@ export function DeleteConfirmationPopupLink(props: deleteConfirmationPopupProps)
                     <DialogTitle>Are you sure?</DialogTitle>
                 </DialogHeader>
                 <DialogFooter>
-                    <DialogClose >
+                    <DialogClose>
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
                     <DialogClose>
-                        <Button type="submit" onClick={() => {removeLink(bodyData, props.reload); createNotif(props.link, "deleted") }}>Confirm</Button>
+                        <Button
+                            type="submit"
+                            onClick={() => {
+                                removeLink(bodyData, props.reload);
+                                createNotif(props.link, "deleted");
+                            }}
+                        >
+                            Confirm
+                        </Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
 
-export default DeleteConfirmationPopupLink
+export default DeleteConfirmationPopupLink;

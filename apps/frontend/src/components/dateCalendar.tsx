@@ -19,18 +19,14 @@ export default function DateAndTime(props: DateAndTimeProps) {
     const [open, setOpen] = React.useState(false);
 
     const safeDate =
-        props.date && !isNaN(props.date.getTime())
-            ? props.date
-            : new Date();
+        props.date && !isNaN(props.date.getTime()) ? props.date : new Date();
 
-    const getTime = (date: Date) =>
-        date.toTimeString().slice(0, 5); // HH:MM
+    const getTime = (date: Date) => date.toTimeString().slice(0, 5); // HH:MM
 
     return (
         <FieldGroup className="max-w-xs flex flex-row gap-2" id={props.id}>
             {/* DATE */}
             <Field>
-
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button
@@ -60,7 +56,7 @@ export default function DateAndTime(props: DateAndTimeProps) {
                                         safeDate.getHours(),
                                         safeDate.getMinutes(),
                                         0,
-                                        0
+                                        0,
                                     );
                                 }
 
@@ -75,7 +71,6 @@ export default function DateAndTime(props: DateAndTimeProps) {
             {/* TIME */}
             {!props.disableTime && (
                 <Field className="w-32">
-
                     <Input
                         type="time"
                         value={getTime(safeDate)}

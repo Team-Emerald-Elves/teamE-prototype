@@ -12,7 +12,7 @@ import {useEffect, useState} from "react";
 //     return context;
 // };
 
-function Links() {
+function LinksPage() {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState<any>(null);
@@ -82,4 +82,4 @@ function Links() {
     )
 }
 
-export default Links;
+export default LinksPage;

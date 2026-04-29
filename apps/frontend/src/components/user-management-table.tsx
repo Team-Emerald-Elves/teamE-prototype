@@ -1,113 +1,3 @@
-// import '../App.css'
-//
-// import {
-//     Table,
-//     TableBody,
-//     TableCell,
-//     TableHead,
-//     TableHeader,
-//     TableRow,
-// } from "@/components/ui/table"
-//
-// import {HugeiconsIcon} from "@hugeicons/react";
-// import { UserCircleIcon } from '@hugeicons/core-free-icons';
-// import {useEffect, useState} from "react";
-// import EmployeeForm from "@/components/employeeForm.tsx";
-// import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
-// import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
-// import * as React from "react";
-//
-//
-// type Employee = {
-//     id: string;
-//     first_name: string;
-//     last_name: string;
-//     uname: string;
-//     email?: string;
-//     roles?: string[];
-//     imageUrl: string;
-// };
-//
-// async function getEmployees() {
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
-//
-//     if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
-//         window.location.replace("/");
-//     }
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch employees");
-//     }
-//     const data = await res.json();
-//     console.log(data)
-//
-//     return data;
-// }
-//
-//
-// function UserManagementTable(){
-//
-//     const [employees, setEmployees] = useState<Employee[]>([]);
-//
-//     useEffect(() => {
-//         getEmployees()
-//             .then(setEmployees)
-//             .catch(console.error);
-//     }, []);
-//
-//
-//     return (
-//         <>
-//             <div className="max-w-10xl mx-auto px-6 py-6">
-//                 <div className="bg-white rounded-xl shadow-sm border p-4">
-//                     <div className="flex items-center mb-4 justify-end ml-auto">
-//                         <CreateEmployeeForm />
-//                     </div>
-//             <Table className="border rounded-lg overflow-hidden">
-//                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-//                     <TableRow>
-//                         <TableHead className=" text-[#0b4461] text-center">Name</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Username</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Email</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Role</TableHead>
-//                         <TableHead className="text-[#0b4461]  flex text-center items-center pl-[35px]">Action</TableHead>
-//                     </TableRow>
-//                 </TableHeader>
-//                 <TableBody>
-//                     {employees.map((emp) => (
-//                         <TableRow key={emp.id}>
-//                             <TableCell className="font-medium text-center">
-//                                 <div className="flex gap-3 text-center items-center">
-//                                     <img className="size-8 rounded-full" src={emp.imageUrl}/>
-//                                     {emp.first_name} {emp.last_name}
-//                                 </div>
-//                             </TableCell>
-//
-//                             <TableCell className="text-center">{emp.uname}</TableCell>
-//                             <TableCell className="text-center">{emp.email}</TableCell>
-//                             <TableCell className="text-center">{emp.roles?.at(0) ?? "No Roles" }</TableCell>
-//
-//                             <TableCell className="flex items-center text-center gap-3">
-//                                 <div className="flex justify-end">
-//                                     <EmployeeForm employee={emp}/>
-//                                 </div>
-//
-//                                 <EmployeeConfirmationPopup target={emp.id} />
-//
-//                             </TableCell>
-//                         </TableRow>
-//                     ))}
-//                 </TableBody>
-//             </Table>
-//             </div>
-//             </div>
-//         </>
-//     )
-// }
-//
-// export default UserManagementTable;
-
-
 "use client"
 import * as React from "react"
 import {
@@ -168,9 +58,7 @@ interface EmployeeProps<TData extends Employee, TValue> {
 export default function EmployeeTable<TData extends Employee, TValue>({
                                                                     columns,
                                                                 }: EmployeeProps<TData, TValue>) {
-    const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const [token, setToken] = useState<string>();
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [roleFilters, setRoleFilters] =  useState( [
@@ -187,18 +75,14 @@ export default function EmployeeTable<TData extends Employee, TValue>({
     const [reload, setReload] = useState<boolean>(false);
 
     async function getEmployees() {
-        const payload: Record<string, string[]> = {};
-
-        if (filters.length > 0) {
-            payload['roles'] = filters.map(d => [d.value]);
-        }
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                action: "list"
+            })
         });
 
         if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
@@ -218,23 +102,12 @@ export default function EmployeeTable<TData extends Employee, TValue>({
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
         async function load() {
             const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const data = await res.json();
-            setMe(data);
-            setToken(token as string)
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            setToken(token as string);
         }
         load();
 

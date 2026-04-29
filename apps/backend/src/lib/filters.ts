@@ -1,4 +1,4 @@
-export const buildWhereClause = (filters: any, additional: any) => {
+const buildWhereClause = (filters: any, additional: any) => {
     const whereClause: any = {AND: [
 
         ]};
@@ -28,7 +28,7 @@ export const buildWhereClause = (filters: any, additional: any) => {
     return whereClause;
 };
 
-export const buildWhereClausesEmployee = (filters: any, additional: any) => {
+const buildWhereClausesEmployee = (filters: any, additional: any) => {
     const whereClause: any = {AND: [
 
         ]};

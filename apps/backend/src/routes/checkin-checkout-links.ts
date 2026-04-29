@@ -1,5 +1,5 @@
 import Router, { type Request, type Response } from "express"
-import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
+import { getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBodyLink, GetLockQuery } from '../lib/zod/routes.schemas.ts'
 import validate from "../lib/zod/middleware.ts";
 import prisma from "@repo/database";

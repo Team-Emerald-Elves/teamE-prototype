@@ -25,6 +25,8 @@ import {
     SelectValue
 } from "@/components/ui/select.tsx"
 
+import type { Employee } from '../../../../packages/database/lib/prismadefs.ts'
+
 type Links = {
     id: number
     link_name: string,
@@ -44,80 +46,77 @@ type linkProp = {
     url: string,
     owner?: string
     name: string,
-    reload: (any) => void,
-}
-
-async function createNotif(link: Links, action: string) {
-    const token = await getToken();
-
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [link.owner, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-        })
-    })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
-}
-
-const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
-
-async function updateLinks(body: editlinksRequest, token: string | null, reload: (any) => void) {
-    console.log(body)
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(body),
-    });
-
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
-    }
-    const newLink = await res.json();
-    createNotif(newLink, "created");
-
-    reload(prev => !prev)
-    return newLink;
+    reload: (any: any) => void,
 }
 
 function AddLinksForm(props: linkProp) {
     const { getToken, isSignedIn } = useAuth();
-    const token =  getToken()
+    let token: string =  ""
+    getToken().then((tkn) => {
+        token = tkn!;
+    }, (err) => {
+        console.error("Add links error (token):", err)
+    })
 
     const [roles, setRoles] = useState<string[]>([]);      // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
     const [selectedRole, setSelectedRole] = useState<string>("");
     const [isFilled, setIsFilled] = useState<boolean>(false);
+    const [me, setMe] = useState<Employee | undefined>(undefined);
 
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
         owner: props.owner,
     });
+
+    async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                public: true,
+                targetRoles: [link.owner, "Administrator"],
+                title: `${me!.first_name} ${me!.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+            })
+        })
+
+        if (!res.ok) {
+            throw new Error("failed to create view notification")
+        }
+        console.log(await res.json());
+    }
+
+    const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
+
+    async function updateLinks(body: editlinksRequest, token: string | null) {
+        console.log(body)
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+        }
+        const newLink = await res.json();
+        createNotif(newLink, "created");
+
+        props.reload((prev) => !prev)
+        return newLink;
+    }
 
     useEffect(() => {
         if (link.link_name && link.url) {
@@ -129,23 +128,19 @@ function AddLinksForm(props: linkProp) {
         }
     }, [link]);
 
-    const [me, setMe] = useState(null);
-
     useEffect(() => {
         if (!isSignedIn) return;
 
         async function load() {
             const token = await getToken();
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+            setMe( await (await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            });
+            })).json());
 
-            const data = await res.json();
-
-            const rawRoles = data.roles as string[];
+            const rawRoles = me!.roles as string[];
             const lowered = rawRoles.map(r => r.toLowerCase());
 
             setRoles(rawRoles);
@@ -222,7 +217,7 @@ function AddLinksForm(props: linkProp) {
 
                             <Select
                                 value={selectedRole}
-                                onValueChange={(value) => setSelectedRole(value)}
+                                onValueChange={(value) => setSelectedRole(value ?? "")}
                                 disabled={!isAdmin}
                             >
                                 <SelectTrigger>
@@ -283,7 +278,7 @@ function AddLinksForm(props: linkProp) {
                                 };
                                 try {
 
-                                    await updateLinks(bodyData, token, props.reload);
+                                    await updateLinks(bodyData, token!);
                                     console.log("link updated successfully");
                                 } catch (err) {
                                     console.error(err);

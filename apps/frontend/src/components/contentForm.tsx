@@ -41,7 +41,7 @@ type contentFormProps = {
     currentID: number,
     size: boolean,
     lock: string,
-    refresh?: (any) => void,
+    refresh?: (any: any) => void,
     roles: string[],
 }
 
@@ -90,36 +90,7 @@ async function getEmployees(sessionToken: string) {
 
 
 function ContentForm(props: contentFormProps) {
-
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const {user} = useUser()
     const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.roles as string[]))
-    //     }
-    //
-    //     load();
-    // }, []);
-
-
-
 
     const now = new Date();
     const formattedDate = now.toLocaleString();
@@ -130,8 +101,8 @@ function ContentForm(props: contentFormProps) {
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
-        role: props.currentRole ?? "",
+        contentOwner: employees.length > 0 ? employees[0].id : "",
+        role: props.currentRole,
         document_type: "",
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
@@ -244,7 +215,7 @@ function ContentForm(props: contentFormProps) {
                             <Field>
                                 <Label htmlFor="contentOwner" className="text-xs font-bold">Select Content Owner</Label>
                                 <Select
-                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner).first_name) + " " + (employees.find(u => u.id === formData.contentOwner).last_name)) : "Select"}
+                                    value={employees.find(u => u.id === formData.contentOwner) ? ((employees.find(u => u.id === formData.contentOwner)!.first_name) + " " + (employees.find(u => u.id === formData.contentOwner)!.last_name)) : "Select"}
                                     onValueChange={(value) =>{ setFormData(prev => ({...prev, contentOwner: value!})); console.log("content owner: " + formData.contentOwner);console.log("value: " + value)}}
                                 >
                                     <SelectTrigger className="w-full max-w-48">
@@ -353,7 +324,7 @@ function ContentForm(props: contentFormProps) {
                     <DialogFooter>
                         <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh} open={setOpen} disabled={!isFilled}/>
+                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh!} open={setOpen} disabled={!isFilled}/>
                     </DialogFooter>
                 </DialogContent>
             </form>

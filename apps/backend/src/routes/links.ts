@@ -4,7 +4,6 @@ import { getAuth } from '@clerk/express'
 
 import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
 import validate from '../lib/zod/middleware.ts';
-import {buildWhereClause} from "../lib/filters.ts";
 
 const linkRoute = express()
 
@@ -14,51 +13,6 @@ interface LinkRequest {
     action: 'list' | 'create' | 'edit' | 'delete';
     linkData: Partial<Links> | undefined;
 }
-
-linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response)=> {
-    const {action} = req.query;
-    const {link_name} = req.query as Links;
-    const lReq: LinkRequest = req.body as LinkRequest;
-
-    // if (!lReq.linkData) {
-    //     res.status(400).json({
-    //         error: "INVALID_EMPLOYEE_DATA"
-    //     });
-    //     return;
-    // }
-
-    if (lReq.action == "create") {
-        createLink({
-            link_name: lReq.linkData.link_name!,
-            url: lReq.linkData.url!,
-            owner: lReq.linkData.owner
-        }, res);
-        return;
-    }
-
-    if (lReq.action == "edit") {
-        editLink(lReq.linkData, res);
-        return;
-    }
-
-    if (lReq.action == "delete" && lReq.linkData.id) {
-        deleteLink(lReq.linkData, res);
-        return;
-    }
-
-    if (!action || action === 'list') {
-        listLinks(req, {link_name}, res);
-        return;
-    }
-
-    // No/invalid action
-    res.status(400).json({
-        error: "INVALID_ACTION"
-    });
-    res.status(200).json({
-        error: "INVALID_LINKS_QUERY"
-    })
-})
 
 linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response) => {
     console.log("BODY: ", req.body)
@@ -122,7 +76,6 @@ async function listLinks(
         }
         const body = req.body
         console.log(body)
-        const whereClauseReg = buildWhereClause(body, lData)
 
         // 1. Get employee (for favorites)
         const employee = await prisma.employee.findFirst({
@@ -134,7 +87,6 @@ async function listLinks(
 
         // 2. Get all links
         const links: Links[] = await prisma.links.findMany({
-            where: whereClauseReg,
             orderBy: {
                 link_name: 'asc'
             }

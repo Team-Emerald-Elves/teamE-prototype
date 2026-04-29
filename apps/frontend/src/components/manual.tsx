@@ -78,7 +78,7 @@ export function ManualPopup({ open, onOpenChange }: ManualPopupProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent style={{ maxWidth: "1100px", width: "90vw", maxHeight: "95vh" }} className="flex flex-col p-0 gap-0">
+            <DialogContent style={{ maxWidth: "1100px", width: "90vw", maxHeight: "650px", minHeight: "650px"}} className="flex flex-col p-0 gap-0">
 
                 {/* Header + Tabs */}
                 <DialogHeader className="px-7 pt-6 pb-0 border-b border-border">

@@ -130,6 +130,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
                             ? (employeeMap.get(event.lock) ?? null)
                             : 'none',
                     contentOwner: contentOwnerName,
+                    doc_id: event.doc_id,
                 },
             };
         });

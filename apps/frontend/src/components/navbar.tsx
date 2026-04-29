@@ -50,7 +50,7 @@ async function setRead(setUnread: (a: boolean) => void) {
 function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [, setMe] = useState(null);
     const [showNotification, setShowNotification] = useState(false);
     const toggleNotifs = () => {
         setShowNotification(!showNotification);

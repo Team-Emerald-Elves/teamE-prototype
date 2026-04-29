@@ -1,7 +1,7 @@
 import * as React from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { CircleUserRound, FileText } from "lucide-react"
+import { FileText } from "lucide-react"
 import {useEffect, useState} from "react";
 import {getToken} from "@clerk/react";
 
@@ -37,7 +37,7 @@ function groupByDate(notifications: Notification[]) {
 }
 
 export function NotifScroll() {
-    const [notifs, setNotifs] = useState<Notification[]>([]);
+    const [, setNotifs] = useState<Notification[]>([]);
     const [grouped, setGrouped] = useState<Record<string,Notification[]>>({});
 
     useEffect(() => {

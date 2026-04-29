@@ -30,14 +30,14 @@ import {
     InputGroupInput,
 } from "@/components/ui/input-group"
 import {useEffect, useState} from "react";
-import {getToken, useAuth, useUser} from "@clerk/react";
+import {useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import { SlidersHorizontalIcon, X} from "@hugeicons/core-free-icons";
 import AddLinksForm from "@/components/addlinksform.tsx";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Links = {
    id: string;
@@ -100,11 +100,11 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                 }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [, setMe] = useState(null);
     const[links, setLinks] = useState<Links[]>([]);
-    const [token, setToken] = useState<string>();
+    const [, setToken] = useState<string>();
     const[empID, setEmpID] = useState("");
-    const [roleFilters, setRoleFilters] =  useState( [
+    const [, setRoleFilters] =  useState( [
         {key: 'owner', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
         {key: 'owner', value: 'Administrator', id: 'Administrator', state: false},
         {key: 'owner', value: 'BusinessAnalyst', id: 'Business Analyst', state: false},
@@ -114,9 +114,9 @@ export default function LinksTable<TData extends Links, TValue>({
 
     ]);
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
-    const [isRoleOpen, setIsRoleOpen] = useState(false);
+    //const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
-    const [isTagOpen, setIsTagOpen] = useState(false);
+    //const [isTagOpen, setIsTagOpen] = useState(false);
 
 
 

@@ -43,8 +43,8 @@ export default function EventForm({ open, setOpen, selectedEvent, setSelectedEve
         return d;
     });
 
-    const getTime = (date: Date) =>
-        date.toTimeString().slice(0, 5);
+    // const getTime = (date: Date) =>
+    //     date.toTimeString().slice(0, 5);
 
     async function handleSubmit(event) {
         event.preventDefault();

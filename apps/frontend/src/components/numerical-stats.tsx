@@ -2,19 +2,11 @@
 
 import {
     Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription
+    CardContent
 } from "@/components/ui/card"
 
 import { FileText } from 'lucide-react';
 import { UsersRound } from 'lucide-react';
-import { UserPen } from 'lucide-react';
-import { UserLock } from 'lucide-react';
-import { UserSearch } from 'lucide-react';
-import { UserCog } from 'lucide-react';
-import { UserPlus } from 'lucide-react';
 import {useEffect, useState} from "react";
 import {getToken} from "@clerk/react";
 
@@ -36,12 +28,12 @@ function StatItem({ icon: Icon, value, label }) {
 export function NumericalStats() {
     const [docTotal, setDocTotal] = useState(0);
     const [empTotal, setEmpTotal] = useState(0);
-    const [undCount, setUndTotal] = useState(0);
-    const [busCount, setBusTotal] = useState(0);
-    const [busOpCount, setBusOpTotal] = useState(0);
-    const [exOpCount, setExOpTotal] = useState(0);
-    const [acCount, setAcTotal] = useState(0);
-    const [adminCount, setAdminTotal] = useState(0);
+    const [, setUndTotal] = useState(0);
+    const [, setBusTotal] = useState(0);
+    const [, setBusOpTotal] = useState(0);
+    const [, setExOpTotal] = useState(0);
+    const [, setAcTotal] = useState(0);
+    const [, setAdminTotal] = useState(0);
 
     useEffect(() => {
         async function getStats() {

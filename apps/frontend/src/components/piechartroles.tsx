@@ -21,13 +21,6 @@ import {getToken} from "@clerk/react";
 
 export const description = "A pie chart with no separator"
 
-const chartData = [
-    { role: "Underwriters:", employees: 275, fill: "#d2eafc"},
-    { role: "Business Analyst:", employees: 200, fill: "#b4dcfa" },
-    { role: "Actuarial Analyst:", employees: 187, fill: "#96cdf7" },
-    { role: "EXL Operations:", employees: 173, fill: "#87c6f6" },
-    { role: "Business Ops Rating Teams:", employees: 90, fill: "#69b8f4" },
-]
 
 const chartConfig = {
     visitors: {

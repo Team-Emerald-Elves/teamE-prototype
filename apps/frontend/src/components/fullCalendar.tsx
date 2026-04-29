@@ -2,7 +2,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from "react";
-import {getToken, useAuth} from "@clerk/react"
+import {getToken} from "@clerk/react"
 
 type FullCalendarComponentProps = {
     setOpen: (open: boolean) => void;

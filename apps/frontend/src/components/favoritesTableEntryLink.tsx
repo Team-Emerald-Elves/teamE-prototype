@@ -1,6 +1,5 @@
 import {TableCell, TableRow} from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import * as React from "react";
 import {getToken} from "@clerk/react";
 
 type Document = {

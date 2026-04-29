@@ -466,7 +466,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 <div className="relative inline-block text-left">
                                         <button
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                            className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                            className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80   rounded-md "
                                         >
                                             <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                             Filter
@@ -516,7 +516,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -573,7 +573,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -631,7 +631,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1119,7 +1119,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1176,7 +1176,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1234,7 +1234,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"

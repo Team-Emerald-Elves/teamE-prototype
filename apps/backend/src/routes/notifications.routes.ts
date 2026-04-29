@@ -80,6 +80,9 @@ notifyRouter.get(
     }
 )
 
+
+// Create notifications.
+
 notifyRouter.post(
     '/create-notification',
     validate(notificationModel),

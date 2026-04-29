@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { ManualPopup } from './manual.tsx';
 
 function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
     return (
@@ -13,7 +15,10 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
 }
 
 function Footer() {
+    const [manualOpen, setManualOpen] = useState(false);
     return (
+        <>
+            <ManualPopup open={manualOpen} onOpenChange={setManualOpen} />
         <footer className="border-t bg-primary mt-10">
             <div className="max-w-7xl mx-auto px-6 py-12">
 
@@ -42,7 +47,14 @@ function Footer() {
                     <div>
                         <h3 className="font-semibold text-[#E9A565] mb-4">Resources</h3>
                         <ul className="space-y-2 text-sm text-white">
-                            <li><a href="#">Tutorial</a></li>
+                            <li>
+                                <button
+                                    onClick={() => setManualOpen(true)}
+                                    className="hover:text-[#E9A565] transition-colors"
+                                >
+                                    Manual
+                                </button>
+                            </li>
                             <li><FooterLink to="/credits">Credits</FooterLink></li>
                         </ul>
                     </div>
@@ -55,6 +67,7 @@ function Footer() {
                 </div>
             </div>
         </footer>
+            </>
     )
 }
 

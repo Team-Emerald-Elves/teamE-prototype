@@ -1,155 +1,5 @@
-// import '../App.css'
-//
-// import {
-//     Table,
-//     TableBody,
-//     TableCell,
-//     TableHead,
-//     TableHeader,
-//     TableRow,
-// } from "@/components/ui/table"
-//
-// import { Button } from "@/components/ui/button"
-// import {useEffect, useState} from "react";
-// import Editlinksform from "@/components/editlinksform.tsx";
-// import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
-// import type { Links,
-//               linksProps
-// } from './types/linkstable.d.ts';
-// import {useAuth} from "@clerk/react";
-// import AddLinksForm from "@/components/addlinksform.tsx";
-//
-// async function getLinks() {
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`);
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch links");
-//     }
-//     const data = await res.json();
-//     return data;
-// }
-//
-// async function getRoleLinks(linkOwner: string) {
-//
-//     const reqData ={
-//         owner: linkOwner
-//     }
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-link-role`, { method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(reqData)
-//     });
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch links");
-//     }
-//     const data = await res.json();
-//
-//     return data;
-// }
-//
-// function LinksTable(){
-//     const [roles, setRoles] = useState<string[]>([]);
-//     const { getToken, isSignedIn } = useAuth();
-//     const [links, setLinks] = useState<Links[]>([]);
-//     const [me, setMe] = useState(null);
-//
-//     useEffect(() => {
-//         if (!isSignedIn) {
-//             setMe(null);
-//             return;
-//         }
-//
-//         async function load() {
-//             const token = await getToken();
-//
-//             const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             });
-//
-//             const data = await res.json();
-//             setMe(data);
-//             setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
-//         }
-//
-//         load();
-//     }, [isSignedIn]);
-//
-//     useEffect(() => {
-//         if (roles.length === 0) return; // wait until roles are loaded
-//
-//         if (roles.includes("administrator")) {
-//             getLinks()
-//                 .then(setLinks)
-//                 .catch(console.error);
-//         } else {
-//             getRoleLinks(me.roles.at(0))
-//                 .then(setLinks)
-//                 .catch(console.error);
-//         }
-//     }, [roles]);
-//
-//     return (
-//         <>
-//             <div className="max-w-10xl mx-auto px-6 py-6">
-//                 <div className="bg-white rounded-xl shadow-sm border p-4">
-//                     <div className="flex justify-end">
-//                     <div className="pr-6 py-2 relative flex items-center">
-//                         <AddLinksForm
-//                             type="Add Link"
-//                             name="Name"
-//                             url="www.example.com"
-//                             description="What is the link used for"
-//                             size={true}
-//                             me={me}
-//                         />
-//                     </div>
-//                     </div>
-//                 <Table className="border rounded-lg overflow-hidden">
-//                     <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-//                         <TableRow >
-//                             <TableHead className=" text-[#0b4461] text-left">Name</TableHead>
-//                             <TableHead className=" text-[#0b4461] text-left">URL</TableHead>
-//                             <TableHead className=" text-[#0b4461] text-left">Role</TableHead>
-//                             <TableHead></TableHead>
-//                             <TableHead className="flex text-left items-center pl-[35px] text-[#0b4461]">Action</TableHead>
-//                         </TableRow>
-//                     </TableHeader>
-//                     <TableBody>
-//                         {links.map((l) => (
-//                             <TableRow key={l.link_name}>
-//                                 <TableCell>{l.link_name}</TableCell>
-//                                 <TableCell><a href={l.url}>{l.url}</a></TableCell>
-//                                 <TableCell>{l.owner}</TableCell>
-//                                 <TableCell></TableCell>
-//
-//                                 <TableCell className="flex items-center gap-3">
-//                                     <Editlinksform
-//                                         id={l.id}
-//                                         name ={l.link_name}
-//                                         url ={l.url}
-//                                         owner={roles.at(0)}
-//                                     />
-//                                     <Button variant = "destructive" size = "icon">
-//                                        <DeletePopupConfirmationLinks link={l} />
-//                                     </Button>
-//                                 </TableCell>
-//                             </TableRow>
-//                         ))}
-//                     </TableBody>
-//                 </Table>
-//             </div>
-//             </div>
-//         </>
-//     )
-// }
-//
-// export default LinksTable;
-
 "use client"
+
 import * as React from "react"
 import {
     Table,
@@ -179,16 +29,17 @@ import {
     InputGroupAddon,
     InputGroupInput,
 } from "@/components/ui/input-group"
-import ContentForm from "@/components/contentForm.tsx";
-import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import {useEffect, useState} from "react";
 import {getToken, useAuth, useUser} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon, SlidersHorizontalIcon, X} from "@hugeicons/core-free-icons";
+import { SlidersHorizontalIcon, X} from "@hugeicons/core-free-icons";
 import AddLinksForm from "@/components/addlinksform.tsx";
 import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Info } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 
 type Links = {
    id: string;
@@ -198,6 +49,9 @@ type Links = {
    favorite: boolean;
    lock: string;
    lock_name: string;
+   created_at: string;
+   updated_at: string;
+   meta_tags: string[];
 };
 
 type Document = {
@@ -244,8 +98,8 @@ interface LinkProps<TData extends Links, TValue> {
 
 
 export default function LinksTable<TData extends Links, TValue>({
-                                                                   columns,
-                                                               }: LinkProps<TData, TValue>) {
+                                                                    columns,
+                                                                }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
@@ -264,15 +118,23 @@ export default function LinksTable<TData extends Links, TValue>({
     const [filters, setFilters] = useState<{key: string; value: string; id: string; state: boolean;}[]>([]);
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
+
 
 
     async function getLinks() {
         const token = await getToken();
         const payload: Record<string, string[]> = {};
 
+        const tags = filters.filter(item => item.key === 'meta_tags');
 
-        if (filters.length > 0) {
-            payload['owner'] = filters.map(d => d.value);
+        const role = filters.filter(item => item.key === 'owner');
+
+        if (role.length > 0) {
+            payload['owner'] = role.map(d => d.value);
+        }
+        if (tags.length > 0) {
+            payload['meta_tags'] = tags.map(t => t.value);
         }
 
 
@@ -289,16 +151,19 @@ export default function LinksTable<TData extends Links, TValue>({
             throw new Error("Failed to fetch links");
         }
         const data = await res.json();
-        setLinks(data)
         return data;
     }
-    
+
     useEffect(() => {
         getLinks()
-            .then(setLinks)
+            .then((data) => {
+                if (links.length === 0) {
+                    setTagFilters(getTagFilters(data));
+                }
+                setLinks(data);})
             .catch(console.error);
     }, [filters, reload]);
-    
+
 
 
     useEffect(() => {
@@ -321,7 +186,7 @@ export default function LinksTable<TData extends Links, TValue>({
             setMe(data);
             setToken(token as string)
             setEmpID(data.id);
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            setRoles((data.roles as string[]))
         }
         load();
 
@@ -396,13 +261,57 @@ export default function LinksTable<TData extends Links, TValue>({
                 filter.id === id ? { ...filter, state: !filter.state } : filter
             )
         );
-    }
 
-    if(roles.includes("administrator")) {
+        setTagFilters(tgFilters =>
+            tgFilters.map(filter =>
+                filter.id === id ? { ...filter, state: !filter.state } : filter
+            )
+        );
+    }
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
+
+    type FilterItem = {
+        key: string;
+        value: string;
+        id: string;
+        state: boolean;
+    };
+
+    function getTagFilters(links: Links[],): FilterItem[] {
+        const uniqueTags = Array.from(
+            new Set(links.flatMap(link => link.meta_tags ?? []))
+        );
+
+        return uniqueTags.map(tag => {
+            return {
+                key: "meta_tags",
+                value: tag,
+                id: tag,
+                state: false
+            };
+        });
+    }
+    const [tab, setTab] = useState(roles[0]);
+
+    useEffect(() => {
+        if(tab === "administrator"){
+            table.getColumn("owner")?.setFilterValue(undefined)
+        }
+        else{
+            table.getColumn("owner")?.setFilterValue(tab)
+        }
+    }, [tab,table]);
+    console.log(roles[0])
+    console.log(tab)
+
+    if(roles.includes("Administrator")) {
         return (
             <>
-                <div className="max-w-10xl mx-auto px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                <Tabs value={tab} onValueChange={setTab}>
+                <div className="max-w-10xl mx-auto w-full px-10 py-10">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                        <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
@@ -418,30 +327,40 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="relative inline-block text-left">
+                                {tab === "All" ?
                                 <button
-                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
+                                    onClick={() => setIsDropdownOpen(prev => !prev)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
-                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
-                                    Filter
-                                </button>
-                                {isRoleOpen && (
-                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-1">
-                                            {roleFilters.map((option) => (
-                                                <div key={option.id}
-                                                     className="flex items-center justify-between">
-                                                    <label htmlFor={option.id}
-                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
-                                                    <input
-                                                        id={option.id}
-                                                        type="checkbox"
-                                                        checked={option.state}
-                                                        onChange={(e) => handleCheckbox(e, option)}
-                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
-                                                    />
-                                                </div>
-                                            ))}
+                                    <div className="pr-1">
+                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
+                                    </div>
+                                    Filter Tags
+                                </button> : null }
+
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-2">
+
+                                            {/* TAGS */}
+                                            <div className="px-2 mt-2">
+
+                                                {/*{isTagOpen && (*/}
+                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                        {tagFilters.map(option => (
+                                                            <label key={option.id} className="flex justify-between items-center text-sm">
+                                                                {option.id}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={filters.some(f => f.id === option.id)}
+                                                                    onChange={(e) => handleCheckbox(e, option)}
+                                                                />
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                {/*)}*/}
+                                            </div>
+
                                         </div>
                                     </div>
                                 )}
@@ -449,22 +368,38 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="flex justify-end ml-auto">
                                 <AddLinksForm
                                     type="Add Link"
-                                    name="Name"
-                                    url="www.example.com"
+                                    name=""
+                                    url=""
                                     size={true}
                                     reload={setReload}
                                 />
                             </div>
                         </div>
+                            <div className="flex ">
+                                <TabsList>
+                                    <TabsTrigger value="administrator">All</TabsTrigger>
+                                    <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
+                                    <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
+                                    <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
+                                    <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
+                                    <TabsTrigger value="Underwriter">Under Writer</TabsTrigger>
+                                </TabsList>
+                            </div>
+                        </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                <div key={option.id} className=" flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -498,22 +433,23 @@ export default function LinksTable<TData extends Links, TValue>({
                             <TableBody>
                                 {table.getRowModel().rows.map((row) => {
                                     const link = row.original;
+                                    console.log(link)
 
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
-                                        <TableRow key={row.id}>
-                                            <FavoriteStar
-                                                doc={link}
-                                                onToggleOn={(link) => toggleFavorite(link, false)}
-                                                onToggleOff={(link) => toggleFavorite(link, true)}
-                                            />
+                                            <TableRow key={row.id}>
+                                                <FavoriteStar
+                                                    doc={link}
+                                                    onToggleOn={(link) => toggleFavorite(link, false)}
+                                                    onToggleOff={(link) => toggleFavorite(link, true)}
+                                                />
 
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                            {link.lock === "none"? (
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                {link.lock === "none" ? (
                                                     <TableCell>
                                                         <div className="flex items-center gap-1 justify-end">
                                                             <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
@@ -522,28 +458,28 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             }}><Lock /></Button>
                                                         </div>
                                                     </TableCell>
-                                                ) : link.lock === empID ?(
-                                            <TableCell className="px-1 py-0.5 text-center">
-                                                <div className="flex gap-2 justify-end">
-                                                    <Editlinksform
-                                                        id={link.id}
-                                                        name ={link.link_name}
-                                                        url ={link.url}
-                                                        owner={roles.at(0)}
-                                                        reload={setReload}
-                                                    />
-                                                    <Button variant = "destructive" size = "icon">
-                                                        <DeletePopupConfirmationLinks link={link} reload={setReload}/>
-                                                    </Button>
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
-                                                        const token = await getToken();
-                                                        await setLinkLock(token, link.id, false, setReload)
-                                                    }}><LockOpen /></Button>
-                                                </div>
-                                            </TableCell> ) :(
-                                                <TableCell><p>{link.lock_name}</p></TableCell> )
-                                            }
-                                        </TableRow> ) : (
+                                                ) : link.lock === empID ? (
+                                                    <TableCell className="px-1 py-0.5 text-center">
+                                                        <div className="flex gap-2 justify-end">
+                                                            <Editlinksform
+                                                                id={link.id}
+                                                                name ={link.link_name}
+                                                                url ={link.url}
+                                                                owner={roles.at(0)}
+                                                                reload={setReload}
+                                                            />
+                                                            <Button variant = "destructive" size = "icon">
+                                                                <DeletePopupConfirmationLinks link={link} reload={setReload}/>
+                                                            </Button>
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                const token = await getToken();
+                                                                await setLinkLock(token, link.id, false, setReload)
+                                                            }}><LockOpen /></Button>
+                                                        </div>
+                                                    </TableCell> ) :(
+                                                    <TableCell><p>{link.lock_name}</p></TableCell> )
+                                                }
+                                            </TableRow> ) : (
                                             <TableRow key={row.id} className="bg-[#e6e8e8]">
                                                 <FavoriteStar
                                                     doc={link}
@@ -561,9 +497,9 @@ export default function LinksTable<TData extends Links, TValue>({
                                                         <p className="text-sm font-medium">{link.lock_name}</p>
                                                     </div>
                                                 </TableCell>
-                                                </TableRow>
-                                                )
-                                           );
+                                            </TableRow>
+                                        )
+                                    );
                                 })}
                             </TableBody>
                         </Table>
@@ -585,16 +521,55 @@ export default function LinksTable<TData extends Links, TValue>({
                                 Next
                             </Button>
                         </div>
+
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="top" align="start" className="w-72">
+                                    <p className="font-medium text-sm mb-2">Links</p>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage and organize all your links in one place.
+                                    </p>
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">Stats</p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">Total links</span>
+                                            <span className="font-medium">{links.length}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">Features</p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>⭐ Favorite links for quick access</li>
+                                            <li>🔍 Search and filter by tag or role</li>
+                                            <li>✏️ Edit link name and URL</li>
+                                            <li>🗑️ Delete links you no longer need</li>
+                                            <li>🔒 Lock links to prevent edits</li>
+                                            <li>📋 Sort by any column header</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+
                     </div>
                 </div>
+            </Tabs>
             </>
         )
     }
     else{
         return(
             <>
-                <div className="max-w-10xl mx-auto px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+            <Tabs value={tab} onValueChange={setTab}>
+                <div className="max-w-10xl mx-auto w-full px-10 py-10">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                        <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
@@ -611,29 +586,36 @@ export default function LinksTable<TData extends Links, TValue>({
                             </InputGroup>
                             <div className="relative inline-block text-left">
                                 <button
-                                    onClick={() => setIsRoleOpen(!isRoleOpen)}
+                                    onClick={() => setIsDropdownOpen(prev => !prev)}
                                     className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
                                 >
-                                    <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
-                                    Filter
+                                    <div className="pr-1">
+                                        <HugeiconsIcon icon={SlidersHorizontalIcon}/>
+                                    </div>
+                                    Filter Tags
                                 </button>
-                                {isRoleOpen && (
-                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-1">
-                                            {roleFilters.map((option) => (
-                                                <div key={option.id}
-                                                     className="flex items-center justify-between">
-                                                    <label htmlFor={option.id}
-                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
-                                                    <input
-                                                        id={option.id}
-                                                        type="checkbox"
-                                                        checked={option.state}
-                                                        onChange={(e) => handleCheckbox(e, option)}
-                                                        className="h-4 w-4 rounded border-gray-300 hover:bg-gray-600 focus:bg-gray-600 cursor-pointer mr-3"
-                                                    />
-                                                </div>
-                                            ))}
+
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                        <div className="py-2">
+
+                                            {/* TAGS */}
+                                            <div className="px-2 mt-2">
+                                                    <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                        {tagFilters.map(option => (
+                                                            <label key={option.id} className="flex justify-between items-center text-sm">
+                                                                {option.id}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={filters.some(f => f.id === option.id)}
+                                                                    onChange={(e) => handleCheckbox(e, option)}
+                                                                />
+                                                            </label>
+                                                        ))}
+                                                    </div>
+                                                {/*)}*/}
+                                            </div>
+
                                         </div>
                                     </div>
                                 )}
@@ -641,12 +623,23 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="flex justify-end ml-auto">
                                 <AddLinksForm
                                     type="Add Link"
-                                    name="Name"
-                                    url="www.example.com"
+                                    name=""
+                                    url=""
                                     size={true}
                                     reload={setReload}
                                 />
                             </div>
+                        </div>
+                                    <div className="flex ">
+                                        <TabsList>
+                                            <TabsTrigger value="administrator">All</TabsTrigger>
+                                            <TabsTrigger value="ActuarialAnalyst">Actuarial Analyst</TabsTrigger>
+                                            <TabsTrigger value="BusinessAnalyst">Business Analyst</TabsTrigger>
+                                            <TabsTrigger value="BusinessOperator">Business Operator</TabsTrigger>
+                                            <TabsTrigger value="ExcelOperator">Excel Operator</TabsTrigger>
+                                            <TabsTrigger value="Underwriter">Under Writer</TabsTrigger>
+                                        </TabsList>
+                                    </div>
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
@@ -657,6 +650,11 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
+                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                            )
+                                        );
+                                        setTagFilters(tgFilters =>
+                                            tgFilters.map(filter =>
                                                 filter.id === option.id ? { ...filter, state: !filter.state } : filter
                                             )
                                         );
@@ -691,77 +689,73 @@ export default function LinksTable<TData extends Links, TValue>({
                                 {table.getRowModel().rows.map((row) => {
                                     const link = row.original;
 
+
                                     const canEdit =
-                                        ((roles.includes("underwriter") && link.owner === "UnderWriter")) ||
-                                        ((roles.includes("businessanalyst") && link.owner === "BusinessAnalyst")) ||
-                                        ((roles.includes("actuarialanalyst") && link.owner === "ActuarialAnalyst")) ||
-                                        ((roles.includes("exceloperator") && link.owner === "ExcelOperator")) ||
-                                        ((roles.includes("businessoperator") && link.owner === "BusinessOperator"))
-                                    console.log("User role: " , roles)
-                                    console.log("Doc Role: " ,link.owner)
-                                    console.log("Lock status" , link.lock)
-                                    console.log("Can edit: " , canEdit)
-                                    console.log("This emploee ID" , empID)
+                                        ((roles.includes("UnderWriter") && link.owner === "UnderWriter")) ||
+                                        ((roles.includes("BusinessAnalyst") && link.owner === "BusinessAnalyst")) ||
+                                        ((roles.includes("ActuarialAnalyst") && link.owner === "ActuarialAnalyst")) ||
+                                        ((roles.includes("ExcelOperator") && link.owner === "ExcelOperator")) ||
+                                        ((roles.includes("BusinessOperator") && link.owner === "BusinessOperator"))
                                     return (
                                         (link.lock === "none" || link.lock === empID) ? (
-                                        <TableRow key={row.id}>
-                                            <FavoriteStar
-                                                doc={link}
-                                                onToggleOn={(link) => toggleFavorite(link, false)}
-                                                onToggleOff={(link) => toggleFavorite(link, true)}
-                                            />
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                            {!canEdit ? (
-                                                <>
-                                                </>
-                                                ) :
-                                            link.lock === "none" ? (
-                                                <TableCell className="px-1 py-0.5">
-                                                    <div className="flex justify-end w-full">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="icon"
-                                                            className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
-                                                            onClick={async () => {
-                                                                const token = await getToken();
-                                                                await setLinkLock(token, link.id, true, setReload)
-                                                            }}
-                                                        >
-                                                            <Lock />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                                ) : link.lock === empID ? (
-                                            <TableCell className="px-1 py-0.5 text-center">
-                                                <div className="flex gap-2 justify-end">
-                                                    {canEdit && (
-                                                        <Editlinksform
-                                                            id={link.id}
-                                                            name ={link.link_name}
-                                                            url ={link.url}
-                                                            owner={roles.at(0)}
-                                                            reload={setReload}
-                                                        />
-                                                    )}
+                                            <TableRow key={row.id}>
+                                                <FavoriteStar
+                                                    doc={link}
+                                                    onToggleOn={(link) => toggleFavorite(link, false)}
+                                                    onToggleOff={(link) => toggleFavorite(link, true)}
+                                                />
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id} className="px-5 py-0.5 text-left whitespace-normal">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                                {!canEdit ? (
+                                                        <>
+                                                        </>
+                                                    ) :
+                                                    link.lock === "none" ? (
+                                                        <TableCell className="px-1 py-0.5">
+                                                            <div className="flex justify-end w-full">
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="icon"
+                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                    onClick={async () => {
+                                                                        const token = await getToken();
+                                                                        await setLinkLock(token, link.id, true, setReload)
+                                                                    }}
+                                                                >
+                                                                    <Lock />
+                                                                </Button>
+                                                            </div>
+                                                        </TableCell>
+                                                    ) : link.lock === empID ? (
+                                                        <TableCell className="px-1 py-0.5 text-center">
+                                                            <div className="flex gap-2 justify-end">
+                                                                {canEdit && (
+                                                                    <Editlinksform
+                                                                        id={link.id}
+                                                                        name ={link.link_name}
+                                                                        url ={link.url}
+                                                                        owner={roles.at(0)}
+                                                                        reload={setReload}
+                                                                    />
+                                                                )}
 
-                                                    {canEdit && (
-                                                        <Button variant = "destructive" size = "icon">
-                                                            <DeletePopupConfirmationLinks link={link} reload={setReload}/>
-                                                        </Button>
-                                                    )}
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
-                                                        const token = await getToken();
-                                                        await setLinkLock(token, link.id, false, setReload)
-                                                    }}><LockOpen /></Button>
-                                                </div>
-                                            </TableCell> ) : (
-                                                    <TableCell><p>{link.lock_name}</p></TableCell>)
-                                            }
-                                        </TableRow>
+                                                                {canEdit && (
+                                                                    <Button variant = "destructive" size = "icon">
+                                                                        <DeletePopupConfirmationLinks link={link} reload={setReload}/>
+                                                                    </Button>
+                                                                )}
+                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                    const token = await getToken();
+                                                                    await setLinkLock(token, link.id, false, setReload)
+                                                                }}><LockOpen /></Button>
+                                                            </div>
+                                                        </TableCell> ) : (
+                                                        <TableCell><p>{link.lock_name}</p></TableCell>)
+                                                }
+                                            </TableRow>
                                         ) : (
                                             <TableRow key={row.id} className="bg-[#e6e8e8]">
                                                 <FavoriteStar
@@ -827,6 +821,41 @@ export default function LinksTable<TData extends Links, TValue>({
                                 })}
                             </TableBody>
                         </Table>
+
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="top" align="start" className="w-72">
+                                    <p className="font-medium text-sm mb-2">Links</p>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage and organize all your links in one place.
+                                    </p>
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">Stats</p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">Total links</span>
+                                            <span className="font-medium">{links.length}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">Features</p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>Favorite links for quick access</li>
+                                            <li>Search and filter by tag or role</li>
+                                            <li>Edit link name and URL</li>
+                                            <li>Delete links you no longer need</li>
+                                            <li>Lock links to prevent edits</li>
+                                            <li>Sort by any column header</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
                     </div>
                     <div className="flex items-center justify-end space-x-2 py-4">
                         <Button
@@ -847,6 +876,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </Button>
                     </div>
                 </div>
+            </Tabs>
             </>
         )
     }

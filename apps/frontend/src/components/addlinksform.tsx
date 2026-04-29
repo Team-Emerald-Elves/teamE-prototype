@@ -12,7 +12,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useCallback, useEffect, useState} from "react";
-import { useAuth } from "@clerk/react"
+import {getToken, useAuth} from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
 import {
@@ -47,6 +47,37 @@ type linkProp = {
     reload: (any) => void,
 }
 
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
+
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
 async function updateLinks(body: editlinksRequest, token: string | null, reload: (any) => void) {
@@ -66,8 +97,11 @@ async function updateLinks(body: editlinksRequest, token: string | null, reload:
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+    const newLink = await res.json();
+    createNotif(newLink, "created");
+
     reload(prev => !prev)
-    return res.json();
+    return newLink;
 }
 
 function AddLinksForm(props: linkProp) {
@@ -77,12 +111,23 @@ function AddLinksForm(props: linkProp) {
     const [roles, setRoles] = useState<string[]>([]);      // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
     const [selectedRole, setSelectedRole] = useState<string>("");
+    const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
         owner: props.owner,
     });
+
+    useEffect(() => {
+        if (link.link_name && link.url) {
+            setIsFilled(true);
+
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [link]);
 
     const [me, setMe] = useState(null);
 
@@ -146,25 +191,6 @@ function AddLinksForm(props: linkProp) {
                             <DialogTitle className="text-2xl text-primary font-mono font-bold">
                                 Add Content
                             </DialogTitle>
-
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="bg-primary text-primary-foreground"
-                                onClick={() => {
-                                    setLink({
-                                        link_name: "",
-                                        url: "",
-                                        owner: "",
-                                    });
-
-                                    setSelectedRole(
-                                        isAdmin ? "" : roles[0] || ""
-                                    );
-                                }}
-                            >
-                                Clear
-                            </Button>
                         </div>
                     </DialogHeader>
 
@@ -176,6 +202,7 @@ function AddLinksForm(props: linkProp) {
                                 value={link.link_name}
                                 onChange={handleChange}
                                 className="mt-1"
+                                placeholder="Name..."
                             />
                         </Field>
 
@@ -186,6 +213,7 @@ function AddLinksForm(props: linkProp) {
                                 value={link.url}
                                 onChange={handleChange}
                                 className="mt-1"
+                                placeholder="https://www.example.com"
                             />
                         </Field>
 
@@ -219,8 +247,26 @@ function AddLinksForm(props: linkProp) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="bg-primary text-primary-foreground"
+                            onClick={() => {
+                                setLink({
+                                    link_name: "",
+                                    url: "",
+                                    owner: "",
+                                });
+
+                                setSelectedRole(
+                                    isAdmin ? "" : roles[0] || ""
+                                );
+                            }}
+                        >
+                            Clear
+                        </Button>
                         <DialogClose render={
-                            <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
+                            <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
                                 const finalRole =
                                     isAdmin
                                         ? selectedRole

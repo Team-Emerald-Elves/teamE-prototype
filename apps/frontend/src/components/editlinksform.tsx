@@ -12,7 +12,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
-import { useAuth } from "@clerk/react"
+import {getToken, useAuth} from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Edit03Icon } from "@hugeicons/core-free-icons"
 
@@ -45,6 +45,36 @@ type linkProp = {
     name: string,
     reload: (any) => void
 }
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
 
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
 
@@ -63,8 +93,12 @@ async function updateLinks(body: editlinksRequest, reload: (any) => void) {
         const errorText = await res.text();
         throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
     }
+
+    const newLink = await res.json()
+    createNotif(newLink, "updated");
+
     reload(prev => !prev)
-    return res.json();
+    return newLink;
 }
 
 function EditLinksForm(props: linkProp) {
@@ -73,12 +107,22 @@ function EditLinksForm(props: linkProp) {
     const [roles, setRoles] = useState<string[]>([]);
     const [roleKeys, setRoleKeys] = useState<string[]>([]);
     const [selectedRole, setSelectedRole] = useState<string>(props.owner || "");
+    const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
         link_name: props.name,
         url: props.url,
     });
 
+    useEffect(() => {
+        if (link.link_name && link.url) {
+            setIsFilled(true);
+
+        }
+        else {
+            setIsFilled(false);
+        }
+    }, [link]);
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -146,22 +190,6 @@ function EditLinksForm(props: linkProp) {
                                 Edit Content
                             </DialogTitle>
 
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="bg-primary text-primary-foreground"
-                                onClick={() => {
-                                    setLink({
-                                        link_name: "",
-                                        url: "",
-                                    });
-                                    setSelectedRole(
-                                        isAdmin ? props.owner || "" : roles[0] || ""
-                                    );
-                                }}
-                            >
-                                Clear
-                            </Button>
                         </div>
                     </DialogHeader>
 
@@ -216,15 +244,31 @@ function EditLinksForm(props: linkProp) {
 
                     <DialogFooter>
                         <DialogClose
-                            render={<Button variant="secondary">Cancel</Button>}
+                            render={<Button variant="outline" size="lg">Cancel</Button>}
                         />
-
+                        <Button
+                            variant="outline"
+                            size="lg"
+                            className="bg-primary text-primary-foreground"
+                            onClick={() => {
+                                setLink({
+                                    link_name: "",
+                                    url: "",
+                                });
+                                setSelectedRole(
+                                    isAdmin ? props.owner || "" : roles[0] || ""
+                                );
+                            }}
+                        >
+                            Clear
+                        </Button>
                         <DialogClose
                             render={
                                 <Button
                                     type="submit"
                                     className="bg-secondary text-secondary-foreground"
                                     size="lg"
+                                    disabled={!isFilled}
                                     onClick={async () => {
                                         const finalRole =
                                             isAdmin

@@ -17,16 +17,31 @@ model ServiceRequests {
 }
 
 model Employee {
-  id             String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId    String?
-  uname          String      @unique @default("uname")
-  first_name     String      @default("fname")
-  last_name      String      @default("lname")
-  email          String?     @unique
+  id             String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkUserId    String?        @unique
+  uname          String         @unique @default("uname")
+  first_name     String         @default("fname")
+  last_name      String         @default("lname")
+  email          String?        @unique
   favorites      Int[]
   favorite_links String[]
-  roles          UserRoles[]
+  roles          UserRoles[]    @default([])
+  Notifications  Notification[]
   bucket         BucketMeta?
+  unreadNotif    Boolean        @default(false)
+  newUser        Boolean        @default(true)
+}
+
+model Notification {
+  id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime  @default(now())
+  title      String
+  creatorId  String?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?   @db.Uuid
+
+  public      Boolean?    @default(false)
+  targetRoles UserRoles[] @default([])
 }
 
 model BucketMeta {
@@ -48,6 +63,7 @@ model documentContent {
   bucketId        String     @db.Uuid
   last_modified   DateTime   @updatedAt
   expiration_date DateTime
+  expiration_warn Boolean    @default(false)
   mime_type       String     @default("text/plain")
   document_status Status     @default(not_started)
   document_type   String?    @default("")
@@ -56,14 +72,18 @@ model documentContent {
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
   meta_tags       String[]
+  created_at      DateTime   @default(now()) @db.Timestamp(6)
 }
 
 model Links {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  link_name String
-  url       String
-  owner     String?
-  lock      String?
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_name  String
+  url        String
+  owner      String?
+  lock       String?
+  meta_tags  String[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Layout {
@@ -74,15 +94,31 @@ model Layout {
 }
 
 model CalendarEvents {
-  id        Int   @id @default(autoincrement())
-  title     String
-  start_date DateTime?
-  end_date   DateTime?
+  id         Int       @id @default(autoincrement())
+  title      String
+  start_date DateTime? @db.Timestamp(6)
+  end_date   DateTime? @db.Timestamp(6)
   all_day    Boolean?
-  emp_id    String?
-  lock      String?    @default("none")
-  doc_id    Int?      @default(-1)
-  color     String?
+  emp_id     String?
+  lock       String?   @default("none")
+  doc_id     Int?      @default(-1)
+  color      String?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model hit_counts {
+  target_type hit_target_type
+  target_id   String
+  hit_date    DateTime        @db.Date
+  count       Int             @default(0)
+
+  @@id([target_type, target_id, hit_date])
+  @@index([hit_date])
+}
+
+enum hit_target_type {
+  DOCUMENT
+  LINK
 }
 
 enum Roles {

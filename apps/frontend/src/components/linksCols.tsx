@@ -14,6 +14,17 @@ import DocTag from "@/components/doctag.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import * as React from "react";
+import {TagInput} from "@/components/tagInput.tsx";
+import {useState} from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverDescription,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import {getToken} from "@clerk/react";
 
 export type Document = {
     id: number;
@@ -36,8 +47,95 @@ export type Links = {
     url: string;
     owner: string;
     favorite: boolean;
+    meta_tags: string[];
+    created_at: string;
+    updated_at: string;
 };
 
+async function addHitCount (link: Links) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: link.id,
+            type: "LINK"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
+
+async function updateTags(lId: string, tags: string[]) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: lId,
+            meta_tags: tags,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
+async function removeTag(lId: string, tag: string) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/delete-link-tag`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: lId,
+            meta_tag: tag,
+        }),
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
+
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
 
 export const columns: ColumnDef<Links>[] = [
     {
@@ -77,6 +175,7 @@ export const columns: ColumnDef<Links>[] = [
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
+                    onClick={async () => { createNotif(link, "opened");  addHitCount(link) }}
                 >
                     {link.url}
                 </a>
@@ -96,5 +195,135 @@ export const columns: ColumnDef<Links>[] = [
                 </Button>
             )
         },
-    }
+        cell: ({ row }) => {
+            const role = row.original.owner
+            let roleBackground = "bg-gray-200"
+
+            switch (role) {
+                case 'Administrator':
+                    roleBackground = "bg-purple-700";
+                    break;
+                case 'BusinessAnalyst':
+                    roleBackground = "bg-blue-300";
+                    break;
+                case 'UnderWriter':
+                    roleBackground = "bg-pink-300";
+                    break;
+                case 'ExcelOperator':
+                    roleBackground = "bg-teal-400";
+                    break;
+                case 'BusinessOperator':
+                    roleBackground = "bg-violet-300";
+                    break;
+                case 'ActuarialAnalyst':
+                    roleBackground = "bg-fuchsia-300";
+                    break;
+            }
+
+            return (
+                <div className="text-center justify-items-center">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                </div>
+            )
+        }
+    },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.created_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Last Modified
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const date = new Date(link.updated_at);
+
+            return (
+                <p>{date.toLocaleString()}</p>
+            );
+        },
+    },
+    {
+        accessorKey: "tags",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    className = "justify-start px-0"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Tags
+                    <ArrowUpDown className="ml-2 h-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const link = row.original;
+            const tags = link.meta_tags;
+            const [tagList, setTagList] = useState<string[]>(link.meta_tags);
+
+            return (
+                <div className="flex items-center">
+                    {tags.map((item) => (
+                        <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
+                    ))}
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="outline" className="h-4 w-4 ml-1 flex items-center justify-center text-center">+</Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                            <PopoverHeader>
+                                <PopoverTitle>Add Tags</PopoverTitle>
+
+                            </PopoverHeader>
+                            <TagInput
+                                tags={tagList}
+                                setTags={async (newTags) => {
+                                    setTagList(newTags);
+                                    await updateTags(link.id, newTags as string[]).catch(console.error);
+                                }}
+                                remove={async (tagToRemove: string) => {
+                                    await removeTag(link.id, tagToRemove);
+                                }}
+                                placeholder="Add tag..."
+                            />
+                        </PopoverContent>
+                    </Popover>
+
+                </div>
+
+            );
+        },
+    },
+
 ]

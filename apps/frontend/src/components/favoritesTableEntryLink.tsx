@@ -1,5 +1,7 @@
 import {TableCell, TableRow} from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
+import * as React from "react";
+import {getToken} from "@clerk/react";
 
 type Document = {
     id: number;
@@ -22,6 +24,8 @@ type Links = {
     url: string;
     owner: string;
     favorite: boolean;
+    created_at: string;
+    updated_at: string;
 };
 
 type FavoriteProps = {
@@ -30,7 +34,57 @@ type FavoriteProps = {
     onToggleOn: (link: Document | Links) => void;
 };
 
+async function addHitCount (link: Links) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            id: link.id,
+            type: "LINK"
+        })
+    })
+    if (!res.ok) {
+        throw new Error("failed to add doc hit count")
+    }
+}
+
+
+async function createNotif(link: Links, action: string) {
+    const token = await getToken();
+
+    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    const me = await res1.json();
+    console.log(me);
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            public: true,
+            targetRoles: [link.owner, "Administrator"],
+            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        })
+    })
+
+    if (!res.ok) {
+        throw new Error("failed to create view notification")
+    }
+    console.log(await res.json());
+}
+
 export default function FavoritesTableEntryLink(props: FavoriteProps)  {
+    const mod = new Date(props.l.updated_at);
+    const created = new Date(props.l.created_at);
     return (
         <TableRow
             key={props.l.id}
@@ -52,6 +106,7 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
+                    onClick={async () => { createNotif(props.l, "opened");  addHitCount(props.l) }}
                 >
                     {props.l.url}
                 </a>
@@ -59,6 +114,14 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
 
             <TableCell className="text-[14px] font-small text-gray-700">
                 {props.l.owner}
+            </TableCell>
+
+            <TableCell className="text-[14px] font-small text-gray-700">
+                {created.toLocaleString()}
+            </TableCell>
+
+            <TableCell className="text-[14px] font-small text-gray-700">
+                {mod.toLocaleString()}
             </TableCell>
 
 

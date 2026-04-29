@@ -3,7 +3,7 @@ import prisma, { type Links } from "@repo/database";
 import { getAuth } from '@clerk/express'
 
 import { LinkRequestGetModel, LinkRequestPostModel } from '../lib/zod/routes.schemas.ts';
-import { validate } from '../lib/zod/middleware.ts';
+import validate from '../lib/zod/middleware.ts';
 import {buildWhereClause} from "../lib/filters.ts";
 
 const linkRoute = express()

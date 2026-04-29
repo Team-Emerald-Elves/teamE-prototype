@@ -105,12 +105,12 @@ async function saveLayout(req: express.Request, lData: LayoutData, res: express.
 
         const saved = existing
             ? await prisma.layout.update({
-                  where: { id: existing.id },
-                  data: { layout: layoutJson, widgets: activeWidgets },
-              })
+                where: { id: existing.id },
+                data: { layout: layoutJson, widgets: activeWidgets },
+            })
             : await prisma.layout.create({
-                  data: { owner: employee.id, layout: layoutJson, widgets: activeWidgets },
-              });
+                data: { owner: employee.id, layout: layoutJson, widgets: activeWidgets },
+            });
 
         return res.status(200).json({
             layout: saved.layout,

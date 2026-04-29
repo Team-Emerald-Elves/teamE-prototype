@@ -29,18 +29,19 @@ model Employee {
   Notifications  Notification[]
   bucket         BucketMeta?
   unreadNotif    Boolean        @default(false)
+  newUser        Boolean        @default(true)
 }
 
 model Notification {
-  id              String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt       DateTime    @default(now())
-  title           String
-  creatorId       String?
-  employee        Employee?   @relation(fields: [employeeId], references: [id])
-  employeeId      String?     @db.Uuid
+  id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime  @default(now())
+  title      String
+  creatorId  String?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?   @db.Uuid
 
-  public          Boolean?    @default(false)
-  targetRoles     UserRoles[] @default([])
+  public      Boolean?    @default(false)
+  targetRoles UserRoles[] @default([])
 }
 
 model BucketMeta {
@@ -75,14 +76,14 @@ model documentContent {
 }
 
 model Links {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  link_name String
-  url       String
-  owner     String?
-  lock      String?
-  meta_tags String[]
-  created_at      DateTime @default(now())
-  updated_at         DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  link_name  String
+  url        String
+  owner      String?
+  lock       String?
+  meta_tags  String[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CalendarEvents {
@@ -101,8 +102,8 @@ model CalendarEvents {
 model hit_counts {
   target_type hit_target_type
   target_id   String
-  hit_date    DateTime @db.Date
-  count      Int      @default(0)
+  hit_date    DateTime        @db.Date
+  count       Int             @default(0)
 
   @@id([target_type, target_id, hit_date])
   @@index([hit_date])

@@ -1,6 +1,7 @@
-import express from "express";
+import express, {type Request, type Response} from "express";
 import prisma, {type Employee} from "@repo/database";
-import { clerkClient } from "@clerk/express";
+import { getAuth, clerkClient } from "@clerk/express";
+
 
 import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.schemas.ts';
 import validate  from '../lib/zod/middleware.ts';
@@ -87,6 +88,52 @@ employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, r
     });
 
 })
+
+//checks if employee is a new user
+employeeRoute.get('/new-user', async (req: express.Request, res: express.Response) => {
+    const { userId, isAuthenticated } = getAuth(req);
+
+    if (!isAuthenticated) {
+        return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    try {
+        const employee = await prisma.employee.findFirst({
+            where: { clerkUserId: userId },
+            select: { newUser: true }
+        });
+
+        if (!employee) {
+            return res.status(404).json({ error: "Employee not found" });
+        }
+
+        return res.status(200).json({ newUser: employee.newUser });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Failed to check new user status" });
+    }
+});
+
+//dismiss manual popup-- no longer new user
+employeeRoute.post('/new-user/dismiss', async (req: express.Request, res: express.Response) => {
+    const { userId, isAuthenticated } = getAuth(req);
+
+    if (!isAuthenticated) {
+        return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    try {
+        const employee = await prisma.employee.updateMany({
+            where: { clerkUserId: userId },
+            data: { newUser: false }
+        });
+
+        return res.status(200).json({ message: "New user status cleared" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Failed to update new user status" });
+    }
+});
 
 function createEmployee(eData: Partial<Employee>, res: express.Response) {
     if (!eData.uname ||

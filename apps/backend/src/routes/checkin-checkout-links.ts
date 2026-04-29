@@ -1,54 +1,10 @@
 import Router, { type Request, type Response } from "express"
 import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBodyLink, GetLockQuery } from '../lib/zod/routes.schemas.ts'
-import { validate } from "../lib/zod/middleware.ts";
+import validate from "../lib/zod/middleware.ts";
 import prisma from "@repo/database";
 
-//import prisma, { Prisma, type Employee } from "@repo/database"
-
 const CheckoutLinks = Router()
-
-// CheckoutLinks.get('/me', requireAuth(), async (req, res) => {
-//
-//     // Use `getAuth()` to get the user's `userId`
-//     const { userId, isAuthenticated } = getAuth(req)
-//     const clerkUser = await clerkClient.users.getUser(userId as string)
-//
-//     if (!isAuthenticated) {
-//         return res.status(401).json({ error: "Not authenticated" })
-//     }
-//
-//
-//     try {
-//         if(!clerkUser) throw new Error("Authenticated user doesn't exist in clerk.")
-//
-//         const currentUser: Employee = await prisma.employee.upsert({
-//             where: { clerkUserId: userId, uname: clerkUser.username as string },
-//             update: {},
-//             create: {
-//                 clerkUserId: userId,
-//                 uname: clerkUser.username as string,
-//                 first_name: clerkUser.firstName ?? "firstname",
-//                 last_name: clerkUser.lastName ?? "lastname",
-//                 roles: [ "UnderWriter" ],
-//                 bucket: {
-//                     create: {
-//                         public: true, // Resources avaliable to public.
-//                         file_size_limit: 52428800 // 50MB
-//                     }
-//                 },
-//                 email: clerkUser.primaryEmailAddress?.emailAddress ?? "example@email.com"
-//             }
-//         })
-//
-//         return res.status(200).json(currentUser)
-//     } catch(error: any) {
-//         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-//             console.log(error.code, error.message)
-//         }
-//         res.status(403).json({"message":`Employee in clerk but missing supabase record. (${error})`})
-//     }
-// })
 
 async function updateLinkLock(req: Request, res: Response) {
     try {

@@ -93,27 +93,27 @@ async function createNotif(doc: Document, action: string) {
     console.log(await res.json());
 }
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-
-    return Boolean(data);
-}
+// async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
+//
+//
+//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+//         headers: {
+//             Authorization: `Bearer ${sessionToken}`,
+//             "Content-Type": "application/json"
+//         },
+//         method: "PUT",
+//         body: JSON.stringify({
+//             id: documentID,
+//             status: status
+//         })
+//     })
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch document.");
+//     }
+//     const data = await res.json();
+//
+//     return Boolean(data);
+// }
 
 function buildExpirationDate(
   expirationDate?: Date,

@@ -4,7 +4,6 @@ import {Dialog, DialogClose, DialogContent, DialogTrigger} from "@/components/ui
 import DocumentViewer from "@/components/docViewer.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-import * as React from "react";
 import {Button} from "@/components/ui/button.tsx";
 import {getToken} from "@clerk/react";
 

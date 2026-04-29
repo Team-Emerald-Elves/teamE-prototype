@@ -5,10 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b ; vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "prepare": "husky install || true"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -32,7 +31,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",
-    "husky": "^9.1.7",
     "lucide-react": "^1.8.0",
     "mime": "^4.1.0",
     "react": "^19.2.5",

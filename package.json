@@ -1,7 +1,6 @@
 {
 	"devDependencies": {
-		"dotenv-cli": "^11.0.0",
-		"husky": "^9.1.7"
+		"dotenv-cli": "^11.0.0"
 	},
 	"scripts": {
 		"prepare": "husky"

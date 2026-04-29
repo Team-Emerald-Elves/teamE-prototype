@@ -119,6 +119,7 @@ export default function LinksTable<TData extends Links, TValue>({
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
     const [isTagOpen, setIsTagOpen] = useState(false);
+    const [visible, setVisible] = useState(true);
 
 
 
@@ -309,8 +310,8 @@ export default function LinksTable<TData extends Links, TValue>({
         return (
             <>
                 <Tabs value={tab} onValueChange={setTab}>
-                <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="max-w-10xl mx-auto w-full px-10 py-7">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-hidden flex flex-col h-[80vh]">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -503,7 +504,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 })}
                             </TableBody>
                         </Table>
-                        <div className="flex items-center justify-end space-x-2 py-4">
+                        <div className="flex items-center justify-end space-x-2 py-4 border-t mt-auto shrink-0">
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -567,7 +568,7 @@ export default function LinksTable<TData extends Links, TValue>({
         return(
             <>
             <Tabs value={tab} onValueChange={setTab}>
-                <div className="max-w-10xl mx-auto w-full px-10 py-10">
+                <div className="max-w-10xl mx-auto w-full px-10 py-7">
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
@@ -664,6 +665,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </div>
                             ))}
                         </div>
+                        <div className={`transition-opacity duration-150 ${visible ? 'opacity-100' : 'opacity-0'}`}>
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">
                                 {table.getHeaderGroups().map((headerGroup) => (
@@ -821,6 +823,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 })}
                             </TableBody>
                         </Table>
+                        </div>
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>

@@ -1,6 +1,6 @@
 import PageHeader from "../components/page-header.tsx"
 import { Card } from "@/components/ui/card.tsx"
-
+import { useEffect } from "react";
 
 
 const teamMembers = [
@@ -19,6 +19,10 @@ const teamMembers = [
 
 
 export default function AboutUs() {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, []);
+
     return (
         <div className="space-y-8 max-w">
             <PageHeader title="About Us" />

@@ -127,10 +127,6 @@ function Navbar(props: NavbarProps) {
                             </NavigationMenuItem>
                         )}
 
-                        <NavigationMenuItem>
-                            <NavigationMenuLink render={<Link to="/aboutus">About Us</Link>} className={navigationMenuTriggerStyle()}>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
 
                         <NavigationMenuItem>
                             <NavigationMenuLink render={<Link to="/credits">Credits</Link>} className={navigationMenuTriggerStyle()}>

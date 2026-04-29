@@ -17,8 +17,7 @@ import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
 
 
-import {Show, SignInButton, SignUpButton, UserButton} from '@clerk/react'
-import CenterDiv from "./components/center-div.tsx";
+import {Show, UserButton} from '@clerk/react'
 import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 

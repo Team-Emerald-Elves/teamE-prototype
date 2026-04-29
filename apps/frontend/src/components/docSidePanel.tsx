@@ -1,10 +1,5 @@
 import {type ReactElement, useEffect, useState} from "react";
-import {Button} from "@/components/ui/button.tsx";
 import {type Document} from "@/components/docCols.tsx"
-import DocTag from "@/components/doctag.tsx"
-import FavoriteStar from "@/components/favoriteStar.tsx";
-import ContentForm from "@/components/contentForm.tsx";
-import CenterDiv from "@/components/center-div.tsx";
 import {TagInput} from "@/components/tagInput.tsx"
 
 type DocSidePanelProps = {
@@ -51,7 +46,7 @@ async function removeTag(docId: number, tag: string) {
 
 function DocSidePanel(props: DocSidePanelProps): ReactElement {
     const [tagList, setTagList] = useState<string[]>([]);
-    const [allowSave, setAllowSave] = useState(false);
+    const [, setAllowSave] = useState(false);
     const [currDoc, setCurrDoc] = useState<Document>({
         ...props.doc!
     });

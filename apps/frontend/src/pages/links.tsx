@@ -13,10 +13,9 @@ import {useEffect, useState} from "react";
 // };
 
 function Links() {
-    const [roles, setRoles] = useState<string[]>([]);
+    const [, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState<any>(null);
-    const [links, setLinks] = useState<Links[]>([]);
+    const [, setMe] = useState<any>(null);
 
     useEffect(() => {
         if (!isSignedIn) {

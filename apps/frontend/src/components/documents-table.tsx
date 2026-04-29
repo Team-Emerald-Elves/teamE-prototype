@@ -36,7 +36,7 @@ import {getToken, useAuth} from "@clerk/react";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 type Document = {
     id: number;
     url: string;
@@ -167,9 +167,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
-    const [token, setToken] = useState<string>();
+    const [, setToken] = useState<string>();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);

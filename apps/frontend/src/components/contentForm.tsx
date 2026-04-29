@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label"
 import DateAndTime from './date.tsx'
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-import {useAuth, useUser} from '@clerk/react'
+import {useAuth} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
@@ -93,7 +93,7 @@ function ContentForm(props: contentFormProps) {
 
     // const [roles, setRoles] = useState<string[]>([]);
     // const {user} = useUser()
-    const { getToken, isSignedIn } = useAuth();
+    const { getToken} = useAuth();
     // const [me, setMe] = useState(null);
     //
     // useEffect(() => {

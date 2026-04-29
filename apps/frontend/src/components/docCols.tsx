@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog"
 import mime from 'mime'
 import DocumentViewer from "@/components/docViewer.tsx";
-import {TableCell} from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
 import {getToken} from "@clerk/react";

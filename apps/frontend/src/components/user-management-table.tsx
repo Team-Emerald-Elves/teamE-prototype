@@ -121,7 +121,7 @@ import {
 import { Button } from './ui/button.tsx'
 
 import {HugeiconsIcon} from "@hugeicons/react";
-import {SlidersHorizontalIcon, UserCircleIcon, X} from '@hugeicons/core-free-icons';
+import {SlidersHorizontalIcon, X} from '@hugeicons/core-free-icons';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -141,11 +141,7 @@ import {
     InputGroupInput,
 } from "@/components/ui/input-group"
 import {useEffect, useState} from "react";
-import {getToken, useAuth, useUser} from "@clerk/react";
-import FavoriteStar from "@/components/favoriteStar.tsx";
-import AddLinksForm from "@/components/addlinksform.tsx";
-import Editlinksform from "@/components/editlinksform.tsx";
-import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
+import {useAuth} from "@clerk/react";
 import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
 import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx";
 import EmployeeForm from "@/components/employeeForm.tsx";
@@ -167,9 +163,9 @@ interface EmployeeProps<TData extends Employee, TValue> {
 export default function EmployeeTable<TData extends Employee, TValue>({
                                                                     columns,
                                                                 }: EmployeeProps<TData, TValue>) {
-    const [roles, setRoles] = useState<string[]>([]);
+    const [, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [, setMe] = useState(null);
     const [token, setToken] = useState<string>();
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [roleFilters, setRoleFilters] =  useState( [

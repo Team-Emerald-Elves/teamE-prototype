@@ -26,7 +26,7 @@ async function getEmployees() {
 
 
 function UserManagementPage(){
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [, setEmployees] = useState<Employee[]>([]);
 
     useEffect(() => {
         getEmployees()

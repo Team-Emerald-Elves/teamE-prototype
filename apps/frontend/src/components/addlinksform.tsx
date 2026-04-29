@@ -11,7 +11,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {getToken, useAuth} from "@clerk/react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
@@ -100,7 +100,7 @@ async function updateLinks(body: editlinksRequest, token: string | null, reload:
     const newLink = await res.json();
     createNotif(newLink, "created");
 
-    reload(prev => !prev)
+    reload((prev: any) => !prev)
     return newLink;
 }
 
@@ -129,7 +129,7 @@ function AddLinksForm(props: linkProp) {
         }
     }, [link]);
 
-    const [me, setMe] = useState(null);
+    //const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) return;

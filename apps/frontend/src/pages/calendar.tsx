@@ -1,6 +1,5 @@
 import FullCalendarComponent from "@/components/fullCalendar.tsx";
 import AddEventButton from "@/components/addEventButton.tsx";
-import EventForm from "@/components/eventForm.tsx";
 import PageHeader from "@/components/page-header.tsx";
 import {useState} from "react";
 import EventDetails from "@/components/eventDetailsPopup.tsx";

@@ -1,6 +1,6 @@
 
-import {useState, useEffect, useCallback, createContext, useContext} from "react";
-import {getToken, useAuth} from "@clerk/react"
+import {useState, useEffect, useCallback} from "react";
+import {useAuth} from "@clerk/react"
 import {DocumentsTable} from "../components/documents-table.tsx"
 import { columns, type Document } from "../components/docCols.tsx"
 import PageHeader from "../components/page-header.tsx"
@@ -23,7 +23,7 @@ async function getDocumentsAdmin(token: string) {
     return data
 }
 
-const reloadContext= createContext <(() => Promise<void>) | null>(null);
+//const reloadContext= createContext <(() => Promise<void>) | null>(null);
 
 // export const useReload = () => {
 //     const context= useContext(reloadContext);
@@ -33,8 +33,8 @@ const reloadContext= createContext <(() => Promise<void>) | null>(null);
 
 export default function Documents() {
     const { getToken, isSignedIn } = useAuth();
-    const [roles, setRoles] = useState<string[]>([]);
-    const [docs, setDocs] = useState<Document[]>([]);
+    //const [roles, setRoles] = useState<string[]>([]);
+    const [, setDocs] = useState<Document[]>([]);
 
     const refreshDocs = useCallback(async () => {
         if (!isSignedIn) return;

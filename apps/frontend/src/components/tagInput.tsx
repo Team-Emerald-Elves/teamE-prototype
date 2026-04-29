@@ -11,7 +11,7 @@ interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     remove: (string) => void;
 }
 
-const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>((props, ref) => {
+const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>((props) => {
 
     const { placeholder, tags, setTags, className, remove } = props;
 
@@ -34,7 +34,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>((props, ref) 
         }
     };
 
-    const removeTag = (tagToRemove: string) => {
+    const removeTag = (tagToRemove: string, remove: any) => {
         remove(tagToRemove);
         setTags(tags.filter((tag) => tag !== tagToRemove));
     };

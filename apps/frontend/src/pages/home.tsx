@@ -35,9 +35,9 @@ const HeroBanner = ({ firstname }: HeroBannerProps) => (
 function Home() {
     const [roles, setRoles] = useState<string[]>([]);
     const [firstname, setfirstname] = useState("");
-    const {user} = useUser()
+    useUser()
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const [, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) {

@@ -33,6 +33,8 @@ import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import { useEffect, useState} from "react";
 import {getToken, useAuth} from "@clerk/react";
+import { Info } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
@@ -430,7 +432,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             <>
                 <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto px-10 w-fulll py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -985,6 +987,42 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 Next
                             </Button>
                         </div>
+
+                        {/* Info popover - bottom left of card */}
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="top" align="start" className="w-72">
+                                    <p className="font-medium text-sm mb-2">Documents</p>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage and organize all your documents in one place.
+                                    </p>
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">Stats</p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">Total documents</span>
+                                            <span className="font-medium">{docs.length}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">Features</p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>Favorite documents for quick access</li>
+                                            <li>Search and filter by type, status, or role</li>
+                                            <li>Edit document metadata and details</li>
+                                            <li>Delete documents you no longer need</li>
+                                            <li>Lock documents to prevent edits</li>
+                                            <li>Sort by any column header</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
                     </div>
                 </div>
                 </Tabs>
@@ -996,7 +1034,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             <>
                 <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto px-10 w-full py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <InputGroup
@@ -1558,6 +1596,42 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 })}
                             </TableBody>
                         </Table>
+
+                        {/* Info popover - bottom left of card */}
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="top" align="start" className="w-72">
+                                    <p className="font-medium text-sm mb-2">Documents</p>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage and organize all your documents in one place.
+                                    </p>
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">Stats</p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">Total documents</span>
+                                            <span className="font-medium">{docs.length}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">Features</p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>Favorite documents for quick access</li>
+                                            <li>Search and filter by type, status, or role</li>
+                                            <li>Edit document metadata and details</li>
+                                            <li>Delete documents you no longer need</li>
+                                            <li>Lock documents to prevent edits</li>
+                                            <li>Sort by any column header</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
                     </div>
                     <div className="flex items-center justify-end space-x-2 py-4">
                         <Button

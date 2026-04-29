@@ -119,7 +119,8 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 import { Button } from './ui/button.tsx'
-
+import { Info } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {SlidersHorizontalIcon, UserCircleIcon, X} from '@hugeicons/core-free-icons';
 import {
@@ -285,7 +286,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
@@ -417,6 +418,40 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                 Next
                             </Button>
                         </div>
+
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="top" align="start" className="w-72">
+                                    <p className="font-medium text-sm mb-2">User Management</p>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage employees and their roles.
+                                    </p>
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">Stats</p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">Total employees</span>
+                                            <span className="font-medium">{employees.length}</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">Features</p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>Create new employee accounts</li>
+                                            <li>✏Edit employee details and roles</li>
+                                            <li>Delete employees from the system</li>
+                                            <li>Search employees by name</li>
+                                            <li>Filter employees by role</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
                     </div>
                 </div>
             </>

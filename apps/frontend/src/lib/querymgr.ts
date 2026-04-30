@@ -155,11 +155,9 @@ class QueryMgr {
         this.wait = (then: () => void) => {
             then();
         }
-        this.waitList.forEach((cb) => {
-            if (this.loggedIn) {
-                cb();
-            }
-        })
+        for (const cb of this.waitList) {
+            cb();
+        }
         console.log("Qmgr Ready");
     }
     wait = (then: () => void) => {

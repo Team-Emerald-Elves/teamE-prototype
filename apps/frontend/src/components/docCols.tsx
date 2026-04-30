@@ -224,10 +224,21 @@ export const columns: ColumnDef<Document>[] = [
             const type = doc.mime_type
             const roles = doc.assigned_role;
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
+            const docType = doc.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");
             let statusBackground = "bg-slate-400"
             const typeBackground = "bg-neutral-200"
             let roleBackground = "bg-gray-200"
             const customBackground = "bg-indigo-300"
+            let docBackground = "bg-gray-200"
+
+            switch (docType) {
+                case 'Reference':
+                    docBackground = "bg-sky-200"
+                    break;
+                case 'Workflow':
+                    docBackground = "bg-indigo-200"
+                    break;
+            }
             switch (status) {
                 case 'Not Started':
                     statusBackground = "bg-red-200";
@@ -267,6 +278,7 @@ export const columns: ColumnDef<Document>[] = [
                 <div className="flex flex-wrap gap-1">
                     <DocTag background={typeBackground}>{mime.getExtension(type)}</DocTag>
                     <DocTag background={roleBackground}>{roles}</DocTag>
+                    <DocTag background={docBackground}>{docType}</DocTag>
                     <DocTag background={statusBackground}>{status}</DocTag>
                     {doc.meta_tags.map(tag => (
                         <DocTag background={customBackground}>{tag}</DocTag>

@@ -4930,6 +4930,8 @@ snapshots:
 
   '@fontsource-variable/inter@5.2.8': {}
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   '@fortawesome/fontawesome-common-types@7.2.0': {}
 
   '@fortawesome/fontawesome-svg-core@7.2.0':
@@ -4953,6 +4955,10 @@ snapshots:
       '@fortawesome/fontawesome-svg-core': 7.2.0
       react: 19.2.4
 
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   '@fullcalendar/core@6.1.20':
     dependencies:
       preact: 10.12.1

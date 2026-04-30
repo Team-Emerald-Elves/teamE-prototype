@@ -3,6 +3,7 @@ import {useAuth} from "@clerk/react";
 import PageHeader from "../components/page-header.tsx"
 import { columns, type Links } from "../components/linksCols.tsx"
 import {useEffect, useState} from "react";
+import qmgr from "@/lib/querymgr.ts";
 
 
 // const linkContext = createContext <(() => Promise<void>) | null>(null);
@@ -14,31 +15,22 @@ import {useEffect, useState} from "react";
 
 function LinksPage() {
     const [roles, setRoles] = useState<string[]>([]);
-    const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState<any>(null);
-    const [links, setLinks] = useState<Links[]>([]);
+    const {  isSignedIn } = useAuth();
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
                 }
-            });
-
-            const data = await res.json();
-            setMe(data);
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
-        }
-
-        load();
+                const data = res.data!;
+                setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            })
+        })
         }, []);
         
         // async function getLinks() {

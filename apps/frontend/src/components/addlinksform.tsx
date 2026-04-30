@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select.tsx"
 
 import type { Employee } from '../../../../packages/database/lib/prismadefs.ts'
+import qmgr from '@/lib/querymgr.ts'
 
 type Links = {
     id: number
@@ -71,25 +72,27 @@ function AddLinksForm(props: linkProp) {
     });
 
     async function createNotif(link: Links, action: string) {
-    const token = await getToken();
+        const token = await getToken();
 
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                public: true,
-                targetRoles: [link.owner, "Administrator"],
-                title: `${me!.first_name} ${me!.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+        qmgr.wait( async () => {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [link.owner, "Administrator"],
+                    title: `${me!.first_name} ${me!.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+                })
             })
-        })
 
-        if (!res.ok) {
-            throw new Error("failed to create view notification")
-        }
-        console.log(await res.json());
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
+        })
     }
 
     const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
@@ -131,30 +134,26 @@ function AddLinksForm(props: linkProp) {
     useEffect(() => {
         if (!isSignedIn) return;
 
-        async function load() {
-            const token = await getToken();
-
-            setMe( await (await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        qmgr.wait(() => {
+            qmgr.getMe((res) => {
+                if (!res.success) {
+                    return;
                 }
-            })).json());
+                setMe(res.data!)
+                const rawRoles = me!.roles as string[];
+                const lowered = rawRoles.map(r => r.toLowerCase());
 
-            const rawRoles = me!.roles as string[];
-            const lowered = rawRoles.map(r => r.toLowerCase());
+                setRoles(rawRoles);
+                setRoleKeys(lowered);
 
-            setRoles(rawRoles);
-            setRoleKeys(lowered);
-
-            const isAdmin = lowered.includes("administrator");
+                const isAdmin = lowered.includes("administrator");
 
 
-            if (!isAdmin && rawRoles.length > 0) {
-                setSelectedRole(rawRoles[0]);
-            }
-        }
-
-        load();
+                if (!isAdmin && rawRoles.length > 0) {
+                    setSelectedRole(rawRoles[0]);
+                }
+            })
+        })
     }, [isSignedIn]);
 
     const isAdmin = roleKeys.includes("administrator");

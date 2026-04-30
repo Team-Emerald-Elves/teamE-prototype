@@ -25,6 +25,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr.ts";
 
 export type Document = {
     id: number;
@@ -107,34 +108,33 @@ async function removeTag(lId: string, tag: string) {
 }
 
 async function createNotif(link: Links, action: string) {
-    const token = await getToken();
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+            const me = res1.data!;
+            console.log(me);
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${qmgr.getToken()}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [link.owner, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+                })
+            })
 
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [link.owner, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
         })
     })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
 export const columns: ColumnDef<Links>[] = [

@@ -116,7 +116,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         getEmployees()
             .then(setEmployees)
             .catch(console.error);
-    }, [filters, reload]);
+    }, [reload]);
 
 
     const [sorting, setSorting] = React.useState<SortingState>([])

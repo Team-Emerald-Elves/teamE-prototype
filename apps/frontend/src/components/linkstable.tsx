@@ -313,7 +313,7 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
@@ -570,7 +570,7 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
@@ -586,7 +586,7 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="relative inline-block text-left">
                                 <button
                                     onClick={() => setIsDropdownOpen(prev => !prev)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md "
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon icon={SlidersHorizontalIcon}/>
@@ -599,7 +599,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                         <div className="py-2">
 
                                             {/* TAGS */}
-                                            <div className="px-2 mt-2">
+                                            <div className="px-2 mt-1">
                                                     <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
                                                         {tagFilters.map(option => (
                                                             <label key={option.id} className="flex justify-between items-center text-sm">

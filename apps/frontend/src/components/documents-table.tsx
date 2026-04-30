@@ -450,7 +450,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
-                                <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                                <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                     <InputGroupInput
                                         placeholder="Search"
                                         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -474,7 +474,7 @@ export function DocumentsTable<TData extends Document, TValue>({
 
                                     {isDropdownOpen && (
                                         <div
-                                            className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                            className="absolute right-0 z-10 mt-2 w-41 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                             <div className="py-1">
                                                 <div className="relative inline-block text-left">
                                                     <div className="flex gap-x-0.5">
@@ -494,23 +494,16 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsDocumentOpen(!isDocumentOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36">
+                                                            className={`flex px-4 py-1 ml-2  text-gray-800 rounded-md hover:bg-gray-300 ${isDocumentOpen && 'bg-gray-300'} text-xs w-36`}>
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={File01Icon}/></div>
                                                             Document Type
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isDocumentOpen) {
-                                                                setIsDocumentOpen(!isDocumentOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isDocumentOpen && (
                                                         <div
-                                                            className=" flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                                            className="flex flex-col gap-4 absolute left-full top-0 z-10 mt-2 ml-3.5 w-33 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                                                             <div className="py-1">
                                                                 {docFilters.map((option) => (
                                                                     <div key={option.id}
@@ -550,19 +543,12 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsTypeOpen(!isTypeOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md ${isTypeOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}
                                                         >
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={Folder01Icon}/></div>
                                                             File Type
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isTypeOpen) {
-                                                                setIsTypeOpen(!isTypeOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isTypeOpen && (
@@ -606,20 +592,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsRoleOpen(!isRoleOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md ${isRoleOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}
                                                         >
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={UserGroupIcon}/>
                                                             </div>
                                                             Role
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isRoleOpen) {
-                                                                setIsRoleOpen(!isRoleOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div> : null}
 
                                                     {isRoleOpen && (
@@ -663,18 +642,16 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsTagOpen(!isTagOpen);
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md ${isTagOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}
                                                         >
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={PencilEdit02Icon}/></div>
                                                             Custom Tags
                                                         </button>
-                                                        <button onClick={() => setIsTagOpen(false)} className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isTagOpen && (
-                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg ring-1 ring-black ring-opacity-5 rounded-md">
                                                             <div className="py-1">
                                                                 {tagFilters.map((option) => (
                                                                     <div key={option.id} className="flex items-center justify-between">
@@ -710,17 +687,15 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsStatusOpen(!isStatusOpen);
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md ${isStatusOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}
                                                         ><div className="pr-1"><HugeiconsIcon size={16} icon={DocumentValidationIcon}/></div>
                                                             Status
                                                         </button>
-                                                        <button onClick={() => setIsTagOpen(false)} className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isStatusOpen && (
-                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
                                                             <div className="py-1">
                                                                 {statusFilters.map((option) => (
                                                                     <div key={option.id} className="flex items-center justify-between">
@@ -1053,7 +1028,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <InputGroup
-                                    className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                                    className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                     <InputGroupInput
                                         placeholder="Search"
                                         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -1097,18 +1072,11 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsDocumentOpen(!isDocumentOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36">
+                                                            className={`flex px-4 py-1 ml-2  text-gray-800 rounded-md ${isDocumentOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}>
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={File01Icon}/></div>
                                                             Document Type
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isDocumentOpen) {
-                                                                setIsDocumentOpen(!isDocumentOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isDocumentOpen && (
@@ -1153,19 +1121,12 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsTypeOpen(!isTypeOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center ${isTypeOpen && 'bg-gray-300'} text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36`}
                                                         >
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={Folder01Icon}/></div>
                                                             File Type
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isTypeOpen) {
-                                                                setIsTypeOpen(!isTypeOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isTypeOpen && (
@@ -1209,20 +1170,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsRoleOpen(!isRoleOpen)
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center text-gray-800 rounded-md ${isRoleOpen && 'bg-gray-300'} hover:bg-gray-300 text-xs w-36`}
                                                         >
                                                             <div className="pr-1"><HugeiconsIcon size={16} icon={UserGroupIcon}/>
                                                             </div>
                                                             Role
                                                         </button>
-                                                        <button onClick={() => {
-                                                            if (isRoleOpen) {
-                                                                setIsRoleOpen(!isRoleOpen)
-                                                            }
-                                                        }}
-                                                                className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div> : null}
 
                                                     {isRoleOpen && (
@@ -1266,17 +1220,14 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsTagOpen(!isTagOpen);
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36">
+                                                            className={`flex px-4 py-1 ml-2 justify-center items-center ${isTagOpen && 'bg-gray-300'} text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36`}>
                                                         <div className="pr-1"><HugeiconsIcon size={16} icon={PencilEdit02Icon}/></div>
                                                     Custom Tags
-                                                        </button>
-                                                        <button onClick={() => setIsTagOpen(false)} className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
                                                         </button>
                                                     </div>
 
                                                     {isTagOpen && (
-                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
                                                             <div className="py-1">
                                                                 {tagFilters.map((option) => (
                                                                     <div key={option.id} className="flex items-center justify-between">
@@ -1312,17 +1263,15 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                 }
                                                                 setIsStatusOpen(!isStatusOpen);
                                                             }}
-                                                            className="flex px-4 py-1 ml-2 justify-center items-center  text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
+                                                            className={`"flex px-4 py-1 ml-2 justify-center items-center ${isStatusOpen && 'bg-gray-300'} text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36`}
                                                         ><div className="pr-1"><HugeiconsIcon size={16} icon={DocumentValidationIcon}/></div>
                                                             Status
                                                         </button>
-                                                        <button onClick={() => setIsTagOpen(false)} className="text-black">
-                                                            <div className="ml-3"><HugeiconsIcon size={16} icon={X}/></div>
-                                                        </button>
+
                                                     </div>
 
                                                     {isStatusOpen && (
-                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md">
+                                                        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-40 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5">
                                                             <div className="py-1">
                                                                 {statusFilters.map((option) => (
                                                                     <div key={option.id} className="flex items-center justify-between">

@@ -438,7 +438,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             <Button variant = "destructive" size = "icon">
                                                                 <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                             </Button>
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>
@@ -714,7 +714,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                         <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                     </Button>
                                                                 )}
-                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                     const token = await getToken();
                                                                     await setLinkLock(token, link.id, false, setReload)
                                                                 }}><LockOpen /></Button>
@@ -769,7 +769,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                     <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                 </Button>
                                                             )}
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>

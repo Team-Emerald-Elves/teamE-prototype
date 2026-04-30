@@ -911,7 +911,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     <Button onClick={async () => await handleDownload(doc)}>
                                                         <HugeiconsIcon icon={Download01Icon} />
                                                     </Button>
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
                                                         await setDocumentLock(token, doc.id, false)
                                                     }}><LockOpen /></Button>
@@ -1537,7 +1537,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             <Button onClick={async () => await handleDownload(doc)}>
                                                                 <HugeiconsIcon icon={Download01Icon} />
                                                             </Button>
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setDocumentLock(token, doc.id, false)
                                                             }}><LockOpen /></Button>

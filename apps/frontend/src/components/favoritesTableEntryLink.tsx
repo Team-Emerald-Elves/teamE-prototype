@@ -88,7 +88,7 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
     return (
         <TableRow
             key={props.l.id}
-            className="hover:bg-gray-50 transition h-12"
+            className="hover:bg-(--table-hover) transition h-12"
         >
             <FavoriteStar
                 doc={props.l}
@@ -96,11 +96,11 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
                 onToggleOn={props.onToggleOn}
             />
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.l.link_name}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <a
                     href={props.l.url}
                     target="_blank"
@@ -112,15 +112,15 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
                 </a>
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.l.owner}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {created.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
 

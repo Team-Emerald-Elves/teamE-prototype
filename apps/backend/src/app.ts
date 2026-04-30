@@ -35,6 +35,7 @@ import {
   supaBaseRouter
 } from "./routes/index.ts"
 import setReadRoute from "./routes/set-read.ts";
+import layoutRoute from "./routes/layouts.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;

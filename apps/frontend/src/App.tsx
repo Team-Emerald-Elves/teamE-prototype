@@ -66,7 +66,6 @@ function App() {
             </Show>
 
             <Show when="signed-in">
-                {/* Wait for me to load */}
                     <div className="app">
                         <Navbar >
                             <UserButton />

@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodObject, ZodError } from 'zod';
 
-const validate = (schema: ZodObject) => 
+export const validate = (schema: ZodObject) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       // Validate body, query, and params at once if needed

@@ -733,10 +733,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         </div>
                                     )}
                                 </div>
-                                <div className="relative inline-block text-left">
-                                    <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-4 py-4 ml-2 "> Refresh </Button>
-                                </div>
-                                <div className="flex justify-end ml-auto">
+                                <div className="flex px-4 py-1 justify-end ml-auto">
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}
@@ -1307,8 +1304,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex justify-end ml-auto">
-                                    <Button type="button" onClick={() => setReload(prev => !prev)}> Refresh </Button>
+                                <div className="flex px-4 py-1 justify-end ml-auto">
                                     <ContentForm
                                         type="Create"
                                         currentID={Math.trunc((Math.random() * 10000) % 10000)}

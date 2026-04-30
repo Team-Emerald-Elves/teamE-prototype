@@ -327,23 +327,22 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="relative inline-block text-left">
-                                {tab === "All" ?
                                 <button
                                     onClick={() => setIsDropdownOpen(prev => !prev)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon icon={SlidersHorizontalIcon}/>
                                     </div>
                                     Filter Tags
-                                </button> : null }
+                                </button>
 
                                 {isDropdownOpen && (
                                     <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2">
 
                                             {/* TAGS */}
-                                            <div className="px-2 mt-2">
+                                            <div className="px-2 ">
 
                                                 {/*{isTagOpen && (*/}
                                                     <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">

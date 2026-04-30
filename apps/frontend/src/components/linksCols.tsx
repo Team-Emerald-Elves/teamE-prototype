@@ -174,7 +174,7 @@ export const columns: ColumnDef<Links>[] = [
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline"
+                    className="underline"
                     onClick={async () => { createNotif(link, "opened");  addHitCount(link) }}
                 >
                     {link.url}

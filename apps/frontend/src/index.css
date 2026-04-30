@@ -132,4 +132,7 @@ html, body, #root {
   html {
     @apply font-normal;
     }
+    button:not([disabled]), [role="button"]:not([disabled]) {
+        cursor: pointer;
+    }
 }

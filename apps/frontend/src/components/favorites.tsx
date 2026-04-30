@@ -2,7 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
-import { Info } from "lucide-react"
+import { Info } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 
 import {
@@ -115,6 +116,7 @@ export default function Favorites() {
 
                     <TabsContent value="docs">
                         <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                            <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
                             <Table className="border rounded-lg overflow-hidden">
                                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                     <TableRow>
@@ -188,6 +190,8 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
+                            </ScrollArea>
+
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>
@@ -227,7 +231,7 @@ export default function Favorites() {
 
                 <TabsContent value = "links">
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-
+                        <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
                                     <Table className="border rounded-lg overflow-hidden">
                                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                             <TableRow>
@@ -299,6 +303,7 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
+                        </ScrollArea>
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>

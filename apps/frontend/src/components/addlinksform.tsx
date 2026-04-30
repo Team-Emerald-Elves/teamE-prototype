@@ -11,7 +11,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getToken, useAuth } from "@clerk/react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon } from "@hugeicons/core-free-icons";
@@ -24,30 +24,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select.tsx";
+import type { Links as linksData } from '@repo/database'
+import { Percent } from "lucide-react";
 
-type Links = {
-    id: number;
-    link_name: string;
-    url: string;
-    owner: string;
-};
+type linksDataExt = linksData & {
+    type?: string
+}
+
 
 type editlinksRequest = {
     action: string;
-    linkData: Links;
+    linkData: linksDataExt;
 };
 
-type linkProp = {
-    id?: number;
-    type: string;
-    size: boolean;
-    url: string;
-    owner?: string;
-    name: string;
-    reload: (any) => void;
-};
-
-async function createNotif(link: Links, action: string) {
+async function createNotif(link: linksDataExt, action: string) {
     const token = await getToken();
 
     const res1 = await fetch(
@@ -96,7 +86,7 @@ const ALL_ROLES = [
 async function updateLinks(
     body: editlinksRequest,
     token: string | null,
-    reload: (any) => void,
+    reload: (any: any) => void,
 ) {
     console.log(body);
 
@@ -119,11 +109,11 @@ async function updateLinks(
     const newLink = await res.json();
     createNotif(newLink, "created");
 
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return newLink;
 }
 
-function AddLinksForm(props: linkProp) {
+function AddLinksForm(props: linksDataExt) {
     const { getToken, isSignedIn } = useAuth();
     const token = getToken();
 
@@ -132,11 +122,7 @@ function AddLinksForm(props: linkProp) {
     const [selectedRole, setSelectedRole] = useState<string>("");
     const [isFilled, setIsFilled] = useState<boolean>(false);
 
-    const [link, setLink] = useState({
-        link_name: props.name,
-        url: props.url,
-        owner: props.owner,
-    });
+    const [link, setLink] = useState<linksDataExt>(props);
 
     useEffect(() => {
         if (link.link_name && link.url) {
@@ -145,8 +131,6 @@ function AddLinksForm(props: linkProp) {
             setIsFilled(false);
         }
     }, [link]);
-
-    const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -242,7 +226,7 @@ function AddLinksForm(props: linkProp) {
                             <Select
                                 value={selectedRole}
                                 onValueChange={(value) =>
-                                    setSelectedRole(value)
+                                    setSelectedRole(value as string)
                                 }
                                 disabled={!isAdmin}
                             >
@@ -283,11 +267,12 @@ function AddLinksForm(props: linkProp) {
                             size="lg"
                             className="bg-primary text-primary-foreground"
                             onClick={() => {
-                                setLink({
+                                setLink((prev: linksDataExt) => { return {
+                                    ...prev,
                                     link_name: "",
                                     url: "",
                                     owner: "",
-                                });
+                                }});
 
                                 setSelectedRole(isAdmin ? "" : roles[0] || "");
                             }}
@@ -312,12 +297,15 @@ function AddLinksForm(props: linkProp) {
                                                 link_name: link.link_name,
                                                 url: link.url,
                                                 owner: finalRole,
+                                                meta_tags: link.meta_tags,
+                                                created_at: link.created_at,
+                                                updated_at: link.updated_at
                                             },
                                         };
                                         try {
                                             await updateLinks(
                                                 bodyData,
-                                                token,
+                                                token as Promise<string>,
                                                 props.reload,
                                             );
                                             console.log(

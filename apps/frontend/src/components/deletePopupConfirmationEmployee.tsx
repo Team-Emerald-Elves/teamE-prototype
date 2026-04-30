@@ -23,13 +23,13 @@ import { useEffect, useState } from "react";
 // };
 type deleteConfirmationPopupProps = {
     target: string;
-    reload: (any) => void;
+    reload: (any: any) => void;
 };
 
 async function removeEmployee(
     employeeID: string,
     token: string,
-    reload: (any) => void,
+    reload: (any: any) => void,
 ) {
     const data = {
         action: "delete",
@@ -50,7 +50,7 @@ async function removeEmployee(
             `Failed to delete employee (status ${res.status}): ${errorText}`,
         );
     }
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return res.json();
 }
 export function EmployeeConfirmationPopup(props: deleteConfirmationPopupProps) {

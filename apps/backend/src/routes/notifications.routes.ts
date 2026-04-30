@@ -8,7 +8,6 @@ import prisma, {
     type Notification,
     type UserRoles,
 } from "@repo/database";
-import { extend } from "zod/mini";
 
 const notifyRouter: Router = Router();
 

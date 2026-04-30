@@ -4,12 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/react";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
@@ -26,11 +22,9 @@ type EventDetailsProps = {
 export default function EventDetails(props: EventDetailsProps) {
     const [empID, setEmpID] = useState("");
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 

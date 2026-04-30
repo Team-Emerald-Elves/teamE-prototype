@@ -2,18 +2,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "./ui/button.tsx";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import DocumentViewer from "@/components/docViewer.tsx";
-import { TableCell } from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Download01Icon } from "@hugeicons/core-free-icons";
-import * as React from "react";
 
 type Employee = {
     id: string;
@@ -102,7 +91,7 @@ export const columns: ColumnDef<Employee>[] = [
             );
         },
         cell: ({ row }) => {
-            const emp = row.original.roles[0];
+            const emp = row.original.roles![0];
 
             let roleBackground = "bg-gray-200";
 

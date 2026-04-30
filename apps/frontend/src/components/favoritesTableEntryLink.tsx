@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import * as React from "react";
 import { getToken } from "@clerk/react";
+import type { documentContent, Links as linksData } from "@repo/database";
 
 type Document = {
     id: number;
@@ -29,9 +29,9 @@ type Links = {
 };
 
 type FavoriteProps = {
-    l: Links;
-    onToggleOff: (link: Document | Links) => void;
-    onToggleOn: (link: Document | Links) => void;
+    l: linksData;
+    onToggleOff: (link: documentContent | linksData) => void;
+    onToggleOn: (link: documentContent | linksData) => void;
 };
 
 async function addHitCount(link: Links) {
@@ -53,7 +53,7 @@ async function addHitCount(link: Links) {
     }
 }
 
-async function createNotif(link: Links, action: string) {
+async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
     const res1 = await fetch(

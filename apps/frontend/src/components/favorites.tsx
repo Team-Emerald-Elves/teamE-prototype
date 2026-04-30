@@ -23,36 +23,12 @@ import {
 import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 import { getToken } from "@clerk/react";
 import FavoritesTableEntryLink from "@/components/favoritesTableEntryLink.tsx";
+import type { documentContent, Links as linksData } from "@repo/database";
 
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock: boolean;
-    created_at: string;
-};
-
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-    favorite: boolean;
-    created_at: string;
-    updated_at: string;
-};
 
 export default function Favorites() {
-    const [favoriteDocs, setFavoriteDocs] = useState<Document[]>([]);
-    const [favoriteLinks, setFavoriteLinks] = useState<Links[]>([]);
+    const [favoriteDocs, setFavoriteDocs] = useState<documentContent[]>([]);
+    const [favoriteLinks, setFavoriteLinks] = useState<linksData[]>([]);
     const [reload, setReload] = useState(false);
 
     //const currentFavorite: string = "links";
@@ -166,7 +142,7 @@ export default function Favorites() {
                                     <FavoritesTableEntry
                                         key={d.id}
                                         d={d}
-                                        onToggleOff={async (doc: Document) => {
+                                        onToggleOff={async (doc: documentContent) => {
                                             const token = await getToken();
                                             //need to send true for favorite and send the doc id and the employee id
                                             const newValue = !doc.favorite;
@@ -200,7 +176,7 @@ export default function Favorites() {
                                             );
                                             setReload((prev) => !prev);
                                         }}
-                                        onToggleOn={async (doc: Document) => {
+                                        onToggleOn={async (doc: documentContent) => {
                                             //need to send true for favorite and send the doc id and the employee id
                                             const token = await getToken();
                                             const newValue = !doc.favorite;
@@ -319,7 +295,7 @@ export default function Favorites() {
                                     <FavoritesTableEntryLink
                                         key={l.id}
                                         l={l}
-                                        onToggleOff={async (link: Links) => {
+                                        onToggleOff={async (link: linksData) => {
                                             const token = await getToken();
                                             //need to send true for favorite and send the doc id and the employee id
                                             const newValue = !link.favorite;

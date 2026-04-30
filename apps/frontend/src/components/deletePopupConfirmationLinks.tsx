@@ -10,27 +10,19 @@ import {
 } from "@/components/ui/dialog";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
-import type { Links } from "./types/linkstable.d.ts";
+import type { Links as linksData } from "@repo/database";
 import { getToken } from "@clerk/react";
 
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-    favorite: boolean;
-};
-
 type deleteConfirmationPopupProps = {
-    link: Links;
-    reload: (any) => void;
+    link: linksData;
+    reload: (any: any) => void;
 };
 
 type editlinksRequest = {
     action: string;
-    linkData: Links;
+    linkData: linksData;
 };
-async function createNotif(link: Links, action: string) {
+async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
     const res1 = await fetch(
@@ -84,7 +76,7 @@ async function createNotif(link: Links, action: string) {
 //     }
 //     return res.json();
 // }
-async function removeLink(body: editlinksRequest, reload: (any) => void) {
+async function removeLink(body: editlinksRequest, reload: (any: any) => void) {
     console.log(body);
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: "POST",
@@ -101,7 +93,7 @@ async function removeLink(body: editlinksRequest, reload: (any) => void) {
             `Failed to update link (status ${res.status}): ${errorText}`,
         );
     }
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return res.json();
 }
 

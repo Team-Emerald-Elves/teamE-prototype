@@ -3,13 +3,10 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
     Field,
-    FieldContent,
-    FieldGroup,
     FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -55,9 +52,7 @@ export default function EventForm({
         return d;
     });
 
-    const getTime = (date: Date) => date.toTimeString().slice(0, 5);
-
-    async function handleSubmit(event) {
+    async function handleSubmit(event: any) {
         event.preventDefault();
 
         const token = await getToken();
@@ -98,7 +93,7 @@ export default function EventForm({
 
         setOpen(false);
         setSelectedEvent(null);
-        setReload((prev) => !prev);
+        setReload((prev: any) => !prev);
     }
 
     async function deleteEvent() {
@@ -133,7 +128,7 @@ export default function EventForm({
 
             setOpen(false);
             setSelectedEvent(null);
-            setReload((prev) => !prev);
+            setReload((prev: any) => !prev);
         } catch (err) {
             console.error("Delete error:", err);
         }

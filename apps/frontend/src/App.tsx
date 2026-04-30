@@ -20,32 +20,6 @@ import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
 
 function App() {
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch("http://localhost:3000/api/tests/me", {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
-    //     }
-    //
-    //     load();
-    // }, [isSignedIn, roles]);
 
     return (
         <BrowserRouter>

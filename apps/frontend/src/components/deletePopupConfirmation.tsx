@@ -12,31 +12,16 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { getToken } from "@clerk/react";
 import { useEffect, useState } from "react";
-
-export type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    lock: boolean;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock_name: string;
-    meta_tags: string[];
-    created_at: string;
-};
+import type { documentContent } from "@repo/database";
 
 type deleteConfirmationPopupProps = {
-    target: Document;
-    refresh: (any) => void;
-};
+    target: documentContent
+    refresh?: (any: any) => void
+}
 
-async function createNotif(doc: Document, action: string) {
+
+
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     const res1 = await fetch(
@@ -73,11 +58,8 @@ async function createNotif(doc: Document, action: string) {
     console.log(await res.json());
 }
 
-async function removeDocument(
-    document: Document,
-    token: string,
-    refresh: (any) => void,
-) {
+async function removeDocument(document: documentContent, token: string, refresh: (any: any) => void) {
+
     const data = {
         id: document.id,
     };
@@ -99,7 +81,7 @@ async function removeDocument(
 
         createNotif(document, "deleted");
 
-        refresh((prev) => !prev);
+        refresh((prev: any) => !prev)
         return response.json();
     });
 }
@@ -132,7 +114,7 @@ export function DeleteConfirmationPopup(props: deleteConfirmationPopupProps) {
                                 removeDocument(
                                     props.target,
                                     sessionToken,
-                                    props.refresh,
+                                    props.refresh as (any: any) => any,
                                 );
                             }}
                         >

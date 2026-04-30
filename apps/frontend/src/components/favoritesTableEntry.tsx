@@ -9,9 +9,9 @@ import {
 import DocumentViewer from "@/components/docViewer.tsx";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Download01Icon } from "@hugeicons/core-free-icons";
-import * as React from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { getToken } from "@clerk/react";
+import type { documentContent } from "@repo/database";
 
 type Document = {
     id: number;
@@ -29,7 +29,7 @@ type Document = {
     created_at: string;
 };
 
-const handleDownload = async (doc: Document) => {
+const handleDownload = async (doc: documentContent) => {
     try {
         addHitCount(doc);
         createNotif(doc, "downloaded");
@@ -56,12 +56,12 @@ const handleDownload = async (doc: Document) => {
 };
 
 type FavoriteProps = {
-    d: Document;
-    onToggleOff: (doc: Document) => void;
-    onToggleOn: (doc: Document) => void;
+    d: documentContent;
+    onToggleOff: (doc: documentContent) => void;
+    onToggleOn: (doc: documentContent) => void;
 };
 
-async function addHitCount(doc: Document) {
+async function addHitCount(doc: documentContent) {
     const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
         {

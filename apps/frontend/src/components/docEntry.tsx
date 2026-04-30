@@ -5,21 +5,10 @@ import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation";
-
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    lastModified: string;
-    expirationDate: string;
-    mime_type: string;
-    role: string;
-    contentOwner: string;
-    status: string;
-};
+import type { documentContent } from "@repo/database";
 
 type favoriteProps = {
-    d: Document;
+    d: documentContent;
 };
 
 export default function DocTableEntry(props: favoriteProps) {
@@ -39,17 +28,17 @@ export default function DocTableEntry(props: favoriteProps) {
             <TableCell className="text-gray-700">{props.d.mime_type}</TableCell>
 
             <TableCell className="text-gray-700">
-                {props.d.expirationDate}
+                {props.d.expiration_date.toDateString()}
             </TableCell>
 
-            <TableCell className="text-gray-700">{props.d.status}</TableCell>
+            <TableCell className="text-gray-700">{props.d.document_status}</TableCell>
 
             <TableCell className="text-gray-700">
-                {props.d.contentOwner}
+                {props.d.content_owner}
             </TableCell>
 
             <TableCell className="text-gray-700">
-                {props.d.lastModified}
+                {props.d.last_modified.toDateString()}
             </TableCell>
 
             <TableCell>
@@ -58,16 +47,16 @@ export default function DocTableEntry(props: favoriteProps) {
                         type="Edit"
                         currentID={props.d.id}
                         currentName={props.d.name}
-                        currentURL={props.d.url}
-                        currentContentOwner={props.d.contentOwner}
-                        currentRole={props.d.role}
-                        currentExpirationDate="Tomorrow"
+                        currentURL={props.d.url as string}
+                        currentContentOwner={props.d.content_owner as string}
+                        currentRole={props.d.assigned_role as string}
+                        currentExpirationDate={new Date(Date.now() + 8.64e+7)}
                         currentExpirationTime="10:30:00"
-                        currentStatus={props.d.status}
+                        currentStatus={props.d.document_status}
                         size={false}
                     />
 
-                    <DeleteConfirmationPopup target={props.d.id.toString()} />
+                    <DeleteConfirmationPopup target={props.d} />
                 </div>
             </TableCell>
         </TableRow>

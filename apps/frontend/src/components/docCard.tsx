@@ -1,18 +1,10 @@
 import { Card } from "@/components/ui/card";
 import ContentForm from "./contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation.tsx";
-type Document = {
-    name: string;
-    url: string;
-    id: number;
-    bucketID: string;
-    lastModified: string;
-    expirationDate: string;
-    mimeType: string;
-    documentStatus: number;
-};
+import type { documentContent } from "@repo/database";
+
 type documentCardProps = {
-    document: Document;
+    document: documentContent;
     name: string;
     type: string;
 };
@@ -40,11 +32,11 @@ function DocumentCard(props: documentCardProps) {
                         <ContentForm
                             type="Edit"
                             currentName={props.document.name}
-                            currentURL={props.document.url}
+                            currentURL={props.document.url as string}
                             currentContentOwner="Bobby Tanner"
                             currentRole="Underwriter"
                             currentExpirationDate={
-                                props.document.expirationDate
+                                props.document.expiration_date
                             }
                             currentExpirationTime="07:30:00"
                             currentStatus="In Progress"
@@ -52,7 +44,7 @@ function DocumentCard(props: documentCardProps) {
                             size={false}
                         />
 
-                        <DeleteConfirmationPopup target={props.name} />
+                        <DeleteConfirmationPopup target={props.document} />
                     </div>
                 </div>
             </div>

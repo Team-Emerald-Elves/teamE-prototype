@@ -132,7 +132,7 @@ export function HitCounts() {
                         time.
                     </CardDescription>
                 </div>
-                <Select value={timeRange} onValueChange={setTimeRange}>
+                <Select value={timeRange} onValueChange={() => setTimeRange}>
                     <SelectTrigger
                         className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
                         aria-label="Select a value"

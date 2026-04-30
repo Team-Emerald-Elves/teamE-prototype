@@ -7,10 +7,6 @@ import { Pie, PieChart } from "recharts";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-    CardFooter,
 } from "@/components/ui/card";
 import {
     ChartContainer,

@@ -29,7 +29,7 @@ import { Label } from "@/components/ui/label";
 import DateAndTime from "./date.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
-import { useAuth, useUser } from "@clerk/react";
+import { useAuth } from "@clerk/react";
 import { Edit03Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
@@ -45,9 +45,9 @@ type contentFormProps = {
     currentStatus: string;
     currentID: number;
     size: boolean;
-    lock: string;
-    refresh?: (any) => void;
-    roles: string[];
+    lock?: string;
+    refresh?: (any: any) => void;
+    roles?: string[];
 };
 
 type Employee = {
@@ -92,33 +92,7 @@ async function getEmployees(sessionToken: string) {
 }
 
 function ContentForm(props: contentFormProps) {
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const {user} = useUser()
-    const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.roles as string[]))
-    //     }
-    //
-    //     load();
-    // }, []);
-
+    const { getToken } = useAuth();
     const now = new Date();
     const formattedDate = now.toLocaleString();
     const ROLE_LABELS: Record<string, string> = {
@@ -129,14 +103,14 @@ function ContentForm(props: contentFormProps) {
         exceloperator: "ExcelOperator",
         actuarialanalyst: "ActuarialAnalyst",
     };
-    const currentRole = ROLE_LABELS[props.roles.at(0)];
+    const currentRole = ROLE_LABELS[props.roles.at(0) as string];
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
+        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46",
         role: props.currentRole ?? currentRole,
         document_type: "",
         expirationDate: props.currentExpirationDate ?? "",
@@ -313,13 +287,13 @@ function ContentForm(props: contentFormProps) {
                                                   (u) =>
                                                       u.id ===
                                                       formData.contentOwner,
-                                              ).first_name +
+                                              )!.first_name +
                                               " " +
                                               employees.find(
                                                   (u) =>
                                                       u.id ===
                                                       formData.contentOwner,
-                                              ).last_name
+                                              )!.last_name
                                             : "Select"
                                     }
                                     onValueChange={(value) => {
@@ -544,7 +518,7 @@ function ContentForm(props: contentFormProps) {
                         <SubmitConfirmationPopup
                             formData={formData}
                             type={props.type}
-                            refresh={props.refresh}
+                            refresh={props.refresh as (any: any) => any}
                             open={setOpen}
                             disabled={!isFilled}
                         />

@@ -37,7 +37,7 @@ type CreateEmployeeRequest = {
 
 async function createEmployee(
     body: CreateEmployeeRequest,
-    reload: (any) => void,
+    reload: (any: any) => void,
 ) {
     console.log(body);
     const res = await fetch(
@@ -58,11 +58,11 @@ async function createEmployee(
             `Failed to create employee (status ${res.status}): ${errorText}`,
         );
     }
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return res;
 }
 type Props = {
-    reload: (any) => void;
+    reload: (any: any) => void;
 };
 function CreateEmployeeForm(props: Props) {
     const [open, setOpen] = useState(false);

@@ -56,7 +56,6 @@ function Navbar(props: NavbarProps) {
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
         let interval: number;

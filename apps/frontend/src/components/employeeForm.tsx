@@ -47,12 +47,12 @@ type Employee = {
 
 type empProps = {
     employee?: Employee;
-    reload: (any) => void;
+    reload: (any: any) => void;
 };
 
 async function updateEmployee(
     body: EditEmployeeRequest,
-    reload: (any) => void,
+    reload: (any: any) => void,
 ) {
     console.log(body);
     const res = await fetch(
@@ -73,7 +73,7 @@ async function updateEmployee(
             `Failed to update employee (status ${res.status}): ${errorText}`,
         );
     }
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return res.json();
 }
 function EmployeeForm(props: empProps): JSX.Element {

@@ -42,7 +42,7 @@ type linkProp = {
     url: string;
     owner?: string;
     name: string;
-    reload: (any) => void;
+    reload: (any: any) => void;
 };
 async function createNotif(link: Links, action: string) {
     const token = await getToken();
@@ -90,7 +90,7 @@ const ALL_ROLES = [
     "ActuarialAnalyst",
 ];
 
-async function updateLinks(body: editlinksRequest, reload: (any) => void) {
+async function updateLinks(body: editlinksRequest, reload: (any: any) => void) {
     console.log(body);
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
         method: "POST",
@@ -111,7 +111,7 @@ async function updateLinks(body: editlinksRequest, reload: (any) => void) {
     const newLink = await res.json();
     createNotif(newLink, "updated");
 
-    reload((prev) => !prev);
+    reload((prev: any) => !prev);
     return newLink;
 }
 
@@ -234,7 +234,7 @@ function EditLinksForm(props: linkProp) {
                             <Select
                                 value={selectedRole}
                                 onValueChange={(value) =>
-                                    setSelectedRole(value)
+                                    setSelectedRole(value as string)
                                 }
                                 disabled={!isAdmin}
                             >

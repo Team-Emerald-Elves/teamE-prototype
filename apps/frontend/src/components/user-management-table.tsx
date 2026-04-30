@@ -287,7 +287,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                 <div className="max-w-10xl mx-auto px-10 py-10">
                     <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("full_name")?.getFilterValue() as string) ?? ""}

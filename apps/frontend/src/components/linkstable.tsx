@@ -311,7 +311,7 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
@@ -337,7 +337,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </button> : null }
 
                                 {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2">
 
                                             {/* TAGS */}
@@ -386,7 +386,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option.id} className=" flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                <div key={option.id} className=" flex rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5 ">
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
@@ -533,7 +533,7 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={(table.getColumn("link_name")?.getFilterValue() as string) ?? ""}
@@ -605,7 +605,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
+                                <div key={option.id} className=" flex  rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5 ">
                                     <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));

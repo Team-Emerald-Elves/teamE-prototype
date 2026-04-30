@@ -101,6 +101,7 @@
     --tab-bg: #e6e6e6;
     --calendar-bg: #ecf4f9;
     --lock-color: #c5e6e8;
+    --input-text: var(--color-gray-500);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -145,6 +146,7 @@
         --tab-bg: #2b2a2a;
         --calendar-bg: #222525;
         --lock-color: #c5e6e8;
+        --input-text: var(--color-gray-300);
     }
 }
 html, body, #root {

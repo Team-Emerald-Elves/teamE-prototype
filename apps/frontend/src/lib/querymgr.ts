@@ -17,6 +17,7 @@ async function postRequest(endpoint: string, token: string, body: string | objec
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
             body: tBody
         });
@@ -84,7 +85,8 @@ class QueryMgr {
     private loggedIn: boolean = false;
     private token: string = "";
     private waitList: (() => void)[];
-    private me: Backend.Employee | undefined;
+    private me: Promise<Backend.Employee> | undefined;
+    private employees: Promise<Backend.Employee[]> | undefined;
     
     constructor() {
         this.waitList = [];
@@ -107,16 +109,30 @@ class QueryMgr {
     }
     async getMe(callBack: (res: ApiRes<Backend.Employee>) => void): Promise<void> {
         if (this.me) {
-            callBack(new ApiRes(true, this.me))
+            callBack(new ApiRes(true,  await this.me))
             return;
         }
-        const res = await getRequest("/api/tests/me", this.token);
+        const res = getRequest("/api/tests/me", this.token);
         if (!res) {
             callBack(new ApiRes(false));
             return;
         }
-        this.me = res as Backend.Employee;
-        callBack(new ApiRes(true, this.me))
+        this.me = res as Promise<Backend.Employee>;
+        callBack(new ApiRes(true, await this.me))
+    }
+
+    async getEmployees(callBack: (res: ApiRes<Backend.Employee[]>) => void): Promise<void> {
+        if (this.employees) {
+            callBack(new ApiRes(true, await this.employees))
+            return;
+        }
+        const res = await postRequest("/employee", this.token, { action: "list" });
+        if (!res) {
+            callBack(new ApiRes(false));
+            return;
+        }
+        this.employees = res as Promise<Backend.Employee[]>;
+        callBack(new ApiRes(true, await this.employees))
     }
 
     async auth(authData: UseAuthReturn) {

@@ -140,7 +140,7 @@ function AddLinksForm(props: linkProp) {
                     return;
                 }
                 setMe(res.data!)
-                const rawRoles = me!.roles as string[];
+                const rawRoles = res.data!.roles as string[];
                 const lowered = rawRoles.map(r => r.toLowerCase());
 
                 setRoles(rawRoles);

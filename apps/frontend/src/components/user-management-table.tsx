@@ -40,16 +40,8 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
 import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx";
 import EmployeeForm from "@/components/employeeForm.tsx";
-
-type Employee = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    uname: string;
-    email?: string;
-    roles?: string[];
-    imageUrl: string;
-};
+import qmgr from "@/lib/querymgr.ts";
+import type { Employee } from "@/../../packages/database/lib/prismadefs.ts"
 
 interface EmployeeProps<TData extends Employee, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -74,30 +66,6 @@ export default function EmployeeTable<TData extends Employee, TValue>({
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
 
-    async function getEmployees() {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                action: "list"
-            })
-        });
-
-        if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
-            window.location.replace("/");
-        }
-
-        if (!res.ok) {
-            throw new Error("Failed to fetch employees");
-        }
-        const data = await res.json();
-        console.log(data)
-
-        return data;
-    }
-
 
 
     useEffect(() => {
@@ -113,9 +81,14 @@ export default function EmployeeTable<TData extends Employee, TValue>({
 
     }, []);
     useEffect(() => {
-        getEmployees()
-            .then(setEmployees)
-            .catch(console.error);
+        qmgr.wait( async () => {
+            qmgr.getEmployees( async (res) => {
+                if (!res.success) {
+                    console.error(res.error);
+                }
+                setEmployees(res.data!)
+            })
+        })
     }, [reload]);
 
 

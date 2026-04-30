@@ -15,7 +15,6 @@ interface LinkRequest {
 }
 
 linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response) => {
-    console.log("BODY: ", req.body)
     const lReq: LinkRequest = req.body as LinkRequest;
 
     if (!lReq) {
@@ -75,7 +74,6 @@ async function listLinks(
             return res.status(401).json({ error: "Not authenticated" });
         }
         const body = req.body
-        console.log(body)
 
         // 1. Get employee (for favorites)
         const employee = await prisma.employee.findFirst({

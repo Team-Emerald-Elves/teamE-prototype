@@ -28,6 +28,8 @@ import {useAuth, useUser} from '@clerk/react'
 import {Edit03Icon, PlusSignIcon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
+import qmgr from '@/lib/querymgr.ts';
+import type { Employee } from "@/../../packages/database/lib/prismadefs.ts"
 
 type contentFormProps = {
     type: string,
@@ -44,15 +46,6 @@ type contentFormProps = {
     refresh?: (any: any) => void,
     roles: string[],
 }
-
-type Employee = {
-    id: string;
-    first_name: string
-    last_name: string
-    username: string
-    email?: string
-    roles?: string[]
-};
 
 type FormDataType = {
     name: string
@@ -142,10 +135,13 @@ function ContentForm(props: contentFormProps) {
 
     useEffect(() => {
 
-        getToken().then( token => {
-        getEmployees(token as string)
-            .then(setEmployees)
-            .catch(console.error)
+        qmgr.wait( async () => {
+            qmgr.getEmployees( async (res) => {
+                if (!res.success) {
+                    console.error(res.error);
+                }
+                setEmployees(res.data!)
+            })
         })
     }, []);
 

@@ -339,7 +339,6 @@ supaBaseRouter.put(
 
 
         try {
-            console.log(document)
             // Update contents for document.
             const newDoc = await prisma.documentContent.update({
                 where: {
@@ -382,7 +381,6 @@ supaBaseRouter.delete(
 
 
         try {
-            console.log(document)
             // Update contents for document.
             const doc = await prisma.documentContent.findFirstOrThrow({
                 where: {
@@ -507,7 +505,6 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             if (a.assigned_role === b.assigned_role) return 0
             return (a.assigned_role === keyToMatch) ? -1 : 1
         })
-        console.log(sortedDocs);
         res.status(200).json(sortedDocs);
 
     } catch (error) {

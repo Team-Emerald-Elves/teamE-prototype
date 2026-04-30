@@ -179,6 +179,7 @@ export function DocumentsTable<TData extends Document, TValue>({
     const [tagFilters, setTagFilters] =  useState<FilterItem[]>([]);
 
     const [tab, setTab] = useState("All");
+    const [myRole, setMyRole] = useState("");
 
 
     async function getDocumentsAdmin() {
@@ -734,7 +735,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         currentName=""
                                         currentURL=""
                                         currentContentOwner="Select Content Owner"
-                                        currentRole="Select Role"
+                                        currentRole= "Select Role"
                                         currentExpirationDate={new Date()}
                                         currentExpirationTime="10:30:00"
                                         currentStatus="Select Status"
@@ -1332,7 +1333,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         currentName=""
                                         currentURL=""
                                         currentContentOwner="Select Content Owner"
-                                        currentRole="Select Role"
+                                        currentRole=""
                                         currentExpirationDate={new Date()}
                                         currentExpirationTime="10:30:00"
                                         currentStatus="Select Status"

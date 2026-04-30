@@ -134,6 +134,7 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
     filePayload: fileData.formData.filePayload,
     fileName: fileData.formData.fileName
   }
+  console.log(data.assigned_role);
 
 
   const endpoint =

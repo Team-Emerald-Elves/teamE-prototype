@@ -17,7 +17,7 @@ notifyRouter.get(
         }
 
         try {
-            const employee = await prisma.employee.findUnique({
+            const employee: Employee = await prisma.employee.findUnique({
                 where: {
                     clerkUserId: userId
                 },
@@ -79,6 +79,9 @@ notifyRouter.get(
         }
     }
 )
+
+
+// Create notifications.
 
 notifyRouter.post(
     '/create-notification',

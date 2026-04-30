@@ -87,15 +87,23 @@ function ContentForm(props: contentFormProps) {
 
     const now = new Date();
     const formattedDate = now.toLocaleString();
-
+    const ROLE_LABELS: Record<string, string> = {
+        administrator: "Administrator",
+        businessanalyst: "BusinessAnalyst",
+        underwriter: "UnderWriter",
+        businessoperator: "BusinessOperator",
+        exceloperator: "ExcelOperator",
+        actuarialanalyst: "ActuarialAnalyst",
+    };
+    const currentRole = ROLE_LABELS[props.roles.at(0)];
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
-        contentOwner: employees.length > 0 ? employees[0].id : "",
-        role: props.currentRole,
+        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46" ?? "",
+        role: props.currentRole ?? currentRole,
         document_type: "",
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",

@@ -1,0 +1,4 @@
+- Adds workspace librarys: prettier with ts support.
+- ESlinting removed 20% of bugfixes.
+- Manually fixed tsc issues for clean build.
+- Updated docker compose file to serve web service.

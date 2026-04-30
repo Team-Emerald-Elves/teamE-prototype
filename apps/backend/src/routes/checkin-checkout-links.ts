@@ -1,5 +1,5 @@
 import Router, { type Request, type Response } from "express"
-import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
+import { getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBodyLink, GetLockQuery } from '../lib/zod/routes.schemas.ts'
 import validate from "../lib/zod/middleware.ts";
 import prisma from "@repo/database";
@@ -9,13 +9,6 @@ const CheckoutLinks = Router()
 async function updateLinkLock(req: Request, res: Response) {
     try {
         const { id, status } = req.body ?? {}
-
-
-        console.log("BODY:", req.body)
-        console.log("TYPES:", {
-            id: typeof req.body?.id,
-            status: typeof req.body?.status
-        })
 
         if (typeof id !== "string" || typeof status !== "boolean") {
             return res.status(400).json({

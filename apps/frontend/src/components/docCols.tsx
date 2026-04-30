@@ -14,6 +14,7 @@ import {TableCell} from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
 import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr.ts";
 
 export type Document = {
     id: number;
@@ -53,32 +54,34 @@ async function addHitCount (doc: Document) {
 async function createNotif(doc: Document) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    qmgr.wait(() => {
+        qmgr.getMe(async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
 
-    const me = await res1.json();
-    console.log(me);
+            const me = res1.data!;
+            console.log(me);
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} accessed ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} accessed ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
         })
     })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
 export const columns: ColumnDef<Document>[] = [

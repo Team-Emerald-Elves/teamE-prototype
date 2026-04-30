@@ -40,34 +40,8 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Info } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
-
-type Links = {
-   id: string;
-   link_name: string;
-   url: string;
-   owner: string;
-   favorite: boolean;
-   lock: string;
-   lock_name: string;
-   created_at: string;
-   updated_at: string;
-   meta_tags: string[];
-};
-
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    lock: boolean;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-};
+import qmgr from "@/lib/querymgr.ts";
+import type { Links, Document } from "@/../../packages/database/lib/prismadefs.ts";
 
 async function setLinkLock(sessionToken: string | null, linkID: string, status: boolean, setReload: (any) => void): Promise<string> {
 
@@ -102,9 +76,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                 }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const[links, setLinks] = useState<Links[]>([]);
-    const [token, setToken] = useState<string>();
     const[empID, setEmpID] = useState("");
     const [roleFilters, setRoleFilters] =  useState( [
         {key: 'owner', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
@@ -144,7 +116,9 @@ export default function LinksTable<TData extends Links, TValue>({
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                action: "list",
+            })
         });
 
         if (!res.ok) {
@@ -155,40 +129,34 @@ export default function LinksTable<TData extends Links, TValue>({
     }
 
     useEffect(() => {
-        getLinks()
-            .then((data) => {
-                if (links.length === 0) {
-                    setTagFilters(getTagFilters(data));
-                }
-                setLinks(data);})
-            .catch(console.error);
+        qmgr.wait(() => {
+            getLinks()
+                .then((data) => {
+                    if (links.length === 0) {
+                        setTagFilters(getTagFilters(data));
+                    }
+                    setLinks(data);})
+                .catch(console.error);
+        })
     }, [filters, reload]);
 
 
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
                 }
-            });
-
-            const data = await res.json();
-            setMe(data);
-            setToken(token as string)
-            setEmpID(data.id);
-            setRoles((data.roles as string[]))
-        }
-        load();
+                const data = await res.data!;
+                setEmpID(data.id);
+                setRoles((data.roles as string[]))
+            })
+        })
 
     }, []);
 

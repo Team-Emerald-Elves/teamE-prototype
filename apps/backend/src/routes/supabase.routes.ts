@@ -11,7 +11,6 @@ import type { IDocumentContent } from './types.d.ts'
 import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
 import validate from '../lib/zod/middleware.ts'
 import mime from 'mime'
-import {buildWhereClause} from "../lib/filters.ts";
 
 const supaBaseRouter = Router()
 
@@ -340,7 +339,6 @@ supaBaseRouter.put(
 
 
         try {
-            console.log(document)
             // Update contents for document.
             const newDoc = await prisma.documentContent.update({
                 where: {
@@ -383,7 +381,6 @@ supaBaseRouter.delete(
 
 
         try {
-            console.log(document)
             // Update contents for document.
             const doc = await prisma.documentContent.findFirstOrThrow({
                 where: {
@@ -443,12 +440,10 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         });
 
         const favoriteSet = new Set(employee.favorites);
-
-        const whereClauseReg = buildWhereClause(req.body, {})
         
         // get all documents
         const documents = await prisma.documentContent.findMany({
-                where: whereClauseReg
+
             }
         );
 
@@ -510,7 +505,6 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             if (a.assigned_role === b.assigned_role) return 0
             return (a.assigned_role === keyToMatch) ? -1 : 1
         })
-        console.log(sortedDocs);
         res.status(200).json(sortedDocs);
 
     } catch (error) {

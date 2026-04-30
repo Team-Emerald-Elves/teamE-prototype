@@ -24,17 +24,12 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select.tsx"
-
-type Links = {
-    id: string,
-    link_name: string,
-    url: string,
-    owner: string
-}
+import qmgr from '@/lib/querymgr.ts'
+import type { Links } from '@/../../packages/database/lib/prismadefs.ts'
 
 type editlinksRequest = {
     action: string,
-    linkData: Links
+    linkData: Partial<Links>
 }
 
 type linkProp = {
@@ -47,32 +42,34 @@ type linkProp = {
 async function createNotif(link: Links, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
 
-    const me = await res1.json();
-    console.log(me);
+            const me = res1.data!;
+            console.log(me);
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [link.owner, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [link.owner, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+                })
+            })
+
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
         })
     })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
 const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
@@ -101,7 +98,7 @@ async function updateLinks(body: editlinksRequest, reload: (any) => void) {
 }
 
 function EditLinksForm(props: linkProp) {
-    const { getToken, isSignedIn } = useAuth();
+    const { isSignedIn } = useAuth();
 
     const [roles, setRoles] = useState<string[]>([]);
     const [roleKeys, setRoleKeys] = useState<string[]>([]);
@@ -126,36 +123,29 @@ function EditLinksForm(props: linkProp) {
     useEffect(() => {
         if (!isSignedIn) return;
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
                 }
-            });
+                const rawRoles = res.data?.roles!;
+                const lowered = rawRoles.map(r => r.toLowerCase());
 
-            const data = await res.json();
+                setRoles(rawRoles);
+                setRoleKeys(lowered);
 
-            const rawRoles = data.roles as string[];
-            const lowered = rawRoles.map(r => r.toLowerCase());
+                const isAdmin = lowered.includes("administrator");
 
-            setRoles(rawRoles);
-            setRoleKeys(lowered);
+                // default role logic
+                if (!isAdmin && rawRoles.length > 0) {
+                    setSelectedRole(rawRoles[0]);
+                }
 
-            const isAdmin = lowered.includes("administrator");
-
-            // default role logic
-            if (!isAdmin && rawRoles.length > 0) {
-                setSelectedRole(rawRoles[0]);
-            }
-
-            if (isAdmin && props.owner) {
-                setSelectedRole(props.owner);
-            }
-        }
-
-        load();
+                if (isAdmin && props.owner) {
+                    setSelectedRole(props.owner);
+                }
+            })
+        })
     }, []);
 
     const isAdmin = roleKeys.includes("administrator");
@@ -218,7 +208,7 @@ function EditLinksForm(props: linkProp) {
 
                             <Select
                                 value={selectedRole}
-                                onValueChange={(value) => setSelectedRole(value)}
+                                onValueChange={(value) => setSelectedRole(value!)}
                                 disabled={!isAdmin}
                             >
                                 <SelectTrigger>

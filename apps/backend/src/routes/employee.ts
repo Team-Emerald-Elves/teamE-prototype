@@ -7,7 +7,6 @@ import { ListEmployeesModel, EmployeeRequestModel } from '../lib/zod/routes.sche
 import validate  from '../lib/zod/middleware.ts';
 
 import path from "path";
-import {buildWhereClause, buildWhereClausesEmployee} from "../lib/filters.ts";
 
 const employeeRoute = express()
 
@@ -16,16 +15,15 @@ interface EmployeeRequest{
     employeeData: Partial<Employee> | undefined;
 }
 
-employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
-    const {action} = req.query;
-    const {id, uname, first_name, last_name, email} = req.query as Partial<Employee>
-    const eReq: EmployeeRequest = req.body as EmployeeRequest;
-    // if (!eReq.employeeData) {
-    //     res.status(400).json({
-    //         error: "INVALID_EMPLOYEE_DATA"
-    //     });
-    //     return;
-    // }
+employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, res: express.Response)=> {
+    const eReq: EmployeeRequest = req.body;
+
+    if (!eReq || !(eReq.action ?? "")) {
+        res.status(400).json({
+            error: "No action specified"
+        })
+        return
+    }
 
     if (eReq.action == "create") {
         createEmployee(eReq.employeeData!, res);
@@ -42,51 +40,13 @@ employeeRoute.post('/', (req: express.Request, res: express.Response)=> {
         return;
     }
 
-    if (!action || action === 'list') {
-        listEmployees({id, uname, first_name, last_name, email}, req, res);
+    if (eReq.action === 'list') {
+        listEmployees(eReq.employeeData, res);
         return;
     }
     res.status(200).json({
         error: "INVALID_EMPLOYEE_QUERY"
     })
-})
-
-employeeRoute.post('/', validate(EmployeeRequestModel), (req: express.Request, res: express.Response) => {
-    const eReq: EmployeeRequest = req.body as EmployeeRequest;
-
-    if (eReq.action == "list") {
-        eReq.employeeData!.roles = undefined
-        listEmployees(eReq.employeeData!, req, res);
-        return;
-    }
-
-    if (!eReq.employeeData) {
-        res.status(400).json({
-            error: "INVALID_EMPLOYEE_DATA"
-        });
-        return;
-    }
-
-    if (eReq.action == "create") {
-        createEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    if (eReq.action == "edit") {
-        editEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    if (eReq.action == "delete") {
-        deleteEmployee(eReq.employeeData, res);
-        return;
-    }
-
-    // No/invalid action
-    res.status(400).json({
-        error: "INVALID_ACTION"
-    });
-
 })
 
 //checks if employee is a new user
@@ -219,14 +179,12 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, req: express.Request, res: express.Response) {
+async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
 
     try {
 
-        const whereClauseReg = buildWhereClausesEmployee(req.body, {})
 
         const employees = await prisma.employee.findMany({
-            where: whereClauseReg,
             orderBy: {
                 first_name: "asc",
             },

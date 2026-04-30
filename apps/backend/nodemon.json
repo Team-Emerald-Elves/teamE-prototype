@@ -1,5 +1,5 @@
 {
-  "exec": "node --trace-warnings --trace-deprecation ./src/app.ts",
+  "exec": "bun --trace-warnings --trace-deprecation ./src/app.ts",
   "watch" : ["src"],
   "ext": "ts"
 }

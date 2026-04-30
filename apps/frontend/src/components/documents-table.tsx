@@ -39,28 +39,13 @@ import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    lock: string;
-    expiration_date: Date;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock_name: string;
-    meta_tags: string[];
-    created_at: string;
-};
+import type { Document } from "@/../../packages/database/lib/prismadefs.ts"
+import qmgr from "@/lib/querymgr.ts";
 
 const handleDownload = async (doc: Document) => {
     try {
         createNotif(doc, "downloaded");
-        const response = await fetch(doc.url);
+        const response = await fetch(doc.url!);
 
         if (!response.ok) {
             throw new Error("Failed to fetch file");
@@ -84,55 +69,33 @@ const handleDownload = async (doc: Document) => {
 
 async function createNotif(doc: Document, action: string) {
     const token = await getToken();
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+            const me = res1.data!;
+            console.log(me);
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-        })
-    })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
-}
-
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean, setReload: (any) => void): Promise<string> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-    setReload(prev => !prev);
-    return String(data);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+        
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
+                })
+            })
 }
 
 interface DocProps<TData extends Document, TValue> {
@@ -169,9 +132,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
-    const [token, setToken] = useState<string>();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
@@ -283,28 +244,26 @@ export function DocumentsTable<TData extends Document, TValue>({
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-            async function load() {
-                if(!isSignedIn) {
-                    return;
-                }
-                const token = await getToken();
+        async function load() {
+            if(!isSignedIn) {
+                return;
+            }
 
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            qmgr.wait(() => {
+                qmgr.getMe( async (res) => {
+                    if (!res.success) {
+                        throw new Error("Unable to get me");
                     }
-                });
 
-            const data = await res.json();
-            setMe(data);
-            setEmpID(data.id);
-            setMyRole(data.roles.at(0))
-            setToken(token as string)
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+                    const data = await res.data!;
+                    setEmpID(data.id);
+                    setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+                })
+            })
+
         }
         load();
     }, []);
@@ -441,6 +400,26 @@ export function DocumentsTable<TData extends Document, TValue>({
             return tabFilter ? [...withoutRoles, tabFilter] : withoutRoles;
         });
     }, [tab,empID]);
+
+    async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+            headers: {
+                Authorization: `Bearer ${sessionToken}`,
+                "Content-Type": "application/json"
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                id: documentID,
+                status: status
+            })
+        })
+        if (!res.ok) {
+            throw new Error("Failed to fetch document.");
+        }
+        const data = await res.json();
+        setReload(prev => !prev);
+        return String(data);
+    }
 
     if(roles.includes("administrator")) {
         return (
@@ -894,7 +873,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, true, setReload)
+                                                        await setDocumentLock(token, doc.id, true)
                                                     }}><Lock /></Button>
                                                 </div>
                                             </TableCell>
@@ -934,7 +913,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, false, setReload)
+                                                        await setDocumentLock(token, doc.id, false)
                                                     }}><LockOpen /></Button>
 
                                                 </div>
@@ -1517,7 +1496,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                                                                         onClick={async () => {
                                                                             const token = await getToken();
-                                                                            await setDocumentLock(token, doc.id, true, setReload)
+                                                                            await setDocumentLock(token, doc.id, true)
                                                                         }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>
@@ -1530,9 +1509,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     type="Edit"
                                                                     currentID={doc.id}
                                                                     currentName={doc.name}
-                                                                    currentURL={doc.url}
-                                                                    currentContentOwner={doc.content_owner}
-                                                                    currentRole={doc.assigned_role}
+                                                                    currentURL={doc.url!}
+                                                                    currentContentOwner={doc.content_owner!}
+                                                                    currentRole={doc.assigned_role!}
                                                                     currentExpirationDate={doc.expiration_date}
                                                                     currentExpirationTime="10:30:00"
                                                                     currentStatus={doc.document_status}
@@ -1560,7 +1539,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             </Button>
                                                             <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
-                                                                await setDocumentLock(token, doc.id, false, setReload)
+                                                                await setDocumentLock(token, doc.id, false)
                                                             }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (

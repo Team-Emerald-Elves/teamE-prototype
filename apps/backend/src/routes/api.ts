@@ -1,13 +1,13 @@
 import Router, { type Request, type Response } from "express"
-import { requireAuth, getAuth, clerkClient, type EmailAddress } from '@clerk/express'
+import { getAuth, clerkClient, type EmailAddress } from '@clerk/express'
 import { UpdateLockBody, GetLockQuery } from '../lib/zod/routes.schemas.ts'
 import validate from "../lib/zod/middleware.ts";
-
 import prisma, { Prisma, type Employee } from "@repo/database"
+import { Resend  } from "resend";
 
 const APIRouter = Router()
 
-APIRouter.get('/me', requireAuth(), async (req, res) => {
+APIRouter.get('/me', async (req, res) => {
   
     // Use `getAuth()` to get the user's `userId`
     const { userId, isAuthenticated } = getAuth(req)
@@ -154,6 +154,22 @@ async function getLock(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).json({ message: "Failed to get lock", error });
     }
+}
+
+export async function invite(email: string, password: string) {
+    const resend = new Resend(process.env.RESEND_KEY!);
+
+    const eRes = await resend.emails.send({
+        from: `Hanover <${process.env.INVITE_EMAIL}>`,
+        to: email,
+        subject: 'Invited',
+        html: `<p>Congrats on sending your <strong>Email test!<br></strong> Your password:${password}</p>`
+    });
+    if (eRes.error) {
+        console.log("Email invite error: ", JSON.stringify(eRes));
+        return false;
+    }
+    return true;
 }
 
 APIRouter.put('/update-lock', validate(UpdateLockBody), updateLock)

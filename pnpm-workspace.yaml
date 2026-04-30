@@ -5,6 +5,7 @@ allowBuilds:
   '@clerk/shared': true
   '@iamjariwala/react-doc-viewer': true
   '@prisma/engines': true
+  bun: true
   canvas: true
   esbuild: false
   msw: false

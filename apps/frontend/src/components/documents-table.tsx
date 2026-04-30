@@ -402,7 +402,7 @@ export function DocumentsTable<TData extends Document, TValue>({
             <>
                 <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto px-10 w-fulll py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-(--card) rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                             <div className="flex items-center mb-4">
                                 <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -767,13 +767,13 @@ export function DocumentsTable<TData extends Document, TValue>({
                             ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-left px-5"> Favorite </TableHead>
+                                        <TableHead className=" text-(--table-titles) text-left px-5"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-left px-5" key={header.id}>
+                                                <TableHead className=" text-(--table-titles) text-left px-5" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -783,7 +783,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461] px-5 text-right">Actions</TableHead>
+                                        <TableHead className="text-(--table-titles) px-5 text-right">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>

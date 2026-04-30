@@ -308,7 +308,7 @@ export default function LinksTable<TData extends Links, TValue>({
             <>
                 <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -408,13 +408,13 @@ export default function LinksTable<TData extends Links, TValue>({
                             ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
+                                        <TableHead className=" text-(--table-titles) text-center"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                <TableHead className=" text-(--table-titles) text-center" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -424,7 +424,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461] text-center">Actions</TableHead>
+                                        <TableHead className="text-(--table-titles) text-center">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -450,7 +450,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 {link.lock === "none" ? (
                                                     <TableCell>
                                                         <div className="flex items-center gap-1 justify-end">
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, true, setReload)
                                                             }}><Lock /></Button>
@@ -469,7 +469,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             <Button variant = "destructive" size = "icon">
                                                                 <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                             </Button>
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>
@@ -478,7 +478,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                     <TableCell><p>{link.lock_name}</p></TableCell> )
                                                 }
                                             </TableRow> ) : (
-                                            <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                            <TableRow key={row.id} className="bg-(--tab-bg)">
                                                 <FavoriteStar
                                                     doc={link}
                                                     onToggleOn={(link) => toggleFavorite(link, false)}
@@ -530,7 +530,7 @@ export default function LinksTable<TData extends Links, TValue>({
             <>
             <Tabs value={tab} onValueChange={setTab}>
                 <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex flex-col">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -627,13 +627,13 @@ export default function LinksTable<TData extends Links, TValue>({
                             ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461] text-center">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles) text-center">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className=" text-[#0b4461] text-center"> Favorite </TableHead>
+                                        <TableHead className=" xt-(--table-titles) text-center"> Favorite </TableHead>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                <TableHead className=" xt-(--table-titles) text-center" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -643,7 +643,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461] text-center">Actions</TableHead>
+                                        <TableHead className="text-(--table-titles) text-center">Actions</TableHead>
                                     </TableRow>
                                 ))}
                             </TableHeader>
@@ -681,7 +681,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                 <Button
                                                                     variant="outline"
                                                                     size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                    className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground"
                                                                     onClick={async () => {
                                                                         const token = await getToken();
                                                                         await setLinkLock(token, link.id, true, setReload)
@@ -709,7 +709,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                         <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                     </Button>
                                                                 )}
-                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground" onClick={async () => {
                                                                     const token = await getToken();
                                                                     await setLinkLock(token, link.id, false, setReload)
                                                                 }}><LockOpen /></Button>
@@ -719,7 +719,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 }
                                             </TableRow>
                                         ) : (
-                                            <TableRow key={row.id} className="bg-[#e6e8e8]">
+                                            <TableRow key={row.id} className="bg-(--tab-bg)">
                                                 <FavoriteStar
                                                     doc={link}
                                                     onToggleOn={(link) => toggleFavorite(link, false)}
@@ -736,7 +736,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             <Button
                                                                 variant="outline"
                                                                 size="icon"
-                                                                className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground"
                                                                 onClick={async () => {
                                                                     const token = await getToken();
                                                                     await setLinkLock(token, link.id, true, setReload)
@@ -764,7 +764,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                     <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                 </Button>
                                                             )}
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-(--lock-color) text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>

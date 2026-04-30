@@ -187,17 +187,17 @@ export default function Favorites() {
                     </TabsContent>
 
                     <TabsContent value = "links">
-                        <div className="bg-white rounded-xl shadow-sm border p-4">
+                        <div className="bg-card rounded-xl shadow-sm border p-4">
 
                                     <Table className="border rounded-lg overflow-hidden">
-                                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                        <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                             <TableRow>
-                                                <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                                                <TableHead className="text-(--table-titles) text-center font-medium text-sm">Favorite</TableHead>
+                                                <TableHead className="text-(--table-titles) font-medium text-sm">Title</TableHead>
+                                                <TableHead className="text-(--table-titles) font-medium text-sm">URL</TableHead>
+                                                <TableHead className="text-(--table-titles) font-medium text-sm">Role</TableHead>
+                                                <TableHead className="text-(--table-titles) font-medium text-sm">Created</TableHead>
+                                                <TableHead className="text-(--table-titles) font-medium text-sm">Last Modified</TableHead>
                                             </TableRow>
                                         </TableHeader>
 

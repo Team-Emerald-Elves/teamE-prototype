@@ -39,7 +39,7 @@ export default function RoleLegend({
                                 className="h-2.5 w-2.5 rounded-full flex-shrink-0"
                                 style={{ backgroundColor: color }}
                             />
-                            <span className="text-[11px] text-muted-foreground truncate">
+                            <span className="text-[11px] text(--table-text) truncate">
                                 {role}
                             </span>
                         </div>

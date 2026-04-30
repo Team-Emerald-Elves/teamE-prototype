@@ -40,7 +40,7 @@ export default function CalendarPage() {
                     <AddEventButton setOpen={setOpen} />
                 </div>
 
-                <div className="p-5 w-full bg-white rounded-xl shadow-sm border flex-1">
+                <div className="p-5 w-full bg-card rounded-xl shadow-sm border flex-1">
                     <FullCalendarComponent
                         setOpen={setOpen}
                         setSelectedEvent={setSelectedEvent}

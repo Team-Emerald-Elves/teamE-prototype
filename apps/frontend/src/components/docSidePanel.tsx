@@ -72,7 +72,7 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
 
     return (
         <>
-            <div className={"float-right inline w-60 mt-6 bg-muted/20 rounded-xs " + (props.className ? props.className : "")}>
+            <div className={"float-right inline w-60 mt-6 bg-light-muted/20 rounded-xs " + (props.className ? props.className : "")}>
                 <div>
                     Tags
                     <br/>

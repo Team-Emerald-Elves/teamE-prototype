@@ -285,7 +285,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         return (
             <>
                 <div className="max-w-10xl mx-auto px-10 py-10">
-                    <div className="bg-white rounded-xl shadow-sm border p-4">
+                    <div className="bg-card rounded-xl shadow-sm border p-4">
                         <div className="flex items-center mb-4">
                             <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
@@ -309,13 +309,13 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                     Filter
                                 </button>
                                 {isRoleOpen && (
-                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div className="absolute right-0 mt-2 z-10 w-48 origin-top-right rounded-md bg-card shadow-lg ring-1 ring-ring ring-opacity-5">
                                         <div className="py-1">
                                             {roleFilters.map((option) => (
                                                 <div key={option.id}
                                                      className="flex items-center justify-between">
                                                     <label htmlFor={option.id}
-                                                           className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                           className="text-sm font-medium text-(--subheader-color) cursor-pointer ml-2 ">{option.id}</label>
                                                     <input
                                                         id={option.id}
                                                         type="checkbox"
@@ -336,8 +336,8 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                         </div>
                         <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
                             {filters.map((option) => (
-                                <div key={option.id} className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 ">
-                                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs "> {option.id}</p>
+                                <div key={option.id} className=" flex rounded-md bg-card shadow-lg ring-1 ring-opacity-5 ring-ring">
+                                    <p className=" px-2 py-1 text-(--subheader-color) rounded-md text-xs "> {option.id}</p>
                                     <button onClick={() => {
                                         setFilters((filter) => filter.filter((filterId) => filterId !== option));
 
@@ -353,12 +353,12 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                             ))}
                         </div>
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
                                         {headerGroup.headers.map((header) => {
                                             return (
-                                                <TableHead className=" text-[#0b4461] text-center" key={header.id}>
+                                                <TableHead className=" text-(--table-titles) text-center" key={header.id}>
                                                     {header.isPlaceholder
                                                         ? null
                                                         : flexRender(
@@ -368,7 +368,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                                 </TableHead>
                                             )
                                         })}
-                                        <TableHead className="text-[#0b4461] text-center px-1">
+                                        <TableHead className="text-(--table-titles) text-center px-1">
                                             Actions
                                         </TableHead>
                                     </TableRow>

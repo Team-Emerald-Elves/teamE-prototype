@@ -61,8 +61,8 @@ export default function FullCalendarComponent({
                 }
             }
             dayHeaderClassNames={() => [
-                "bg-[#ecf4f9]",
-                "text-[#0b4461]",
+                "bg-(--calendar-bg)",
+                "text-(--table-titles)",
             ]}
 
             events={events}

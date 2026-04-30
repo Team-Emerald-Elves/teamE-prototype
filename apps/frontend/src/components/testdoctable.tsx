@@ -102,7 +102,7 @@ export function TestDoc<TData, TValue>({
 
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
-        <div className="bg-white rounded-xl shadow-sm border p-4">
+        <div className="bg-card rounded-xl shadow-sm border p-4">
             <div className="flex items-center mb-4">
                 <InputGroup className="max-w-md py-4 border-2 shadow-md hover:shadow-xl transition-all duration-100 cursor-pointer bg-white">
                     <InputGroupInput
@@ -131,7 +131,7 @@ export function TestDoc<TData, TValue>({
                     />
             </div>
             <Table className="border rounded-lg overflow-hidden">
-                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                <TableHeader className="bg-(--card-header) text-(table-titles)">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {

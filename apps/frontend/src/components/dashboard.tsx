@@ -41,9 +41,9 @@ interface DashboardProps {
 }
 
 function pickDefault(roles: string[]): SavedDashboard {
-    for (const r of roles) {
+    /*for (const r of roles) {
         if (defaultLayouts[r]) return defaultLayouts[r];
-    }
+    }*/
     return fallbackLayout;
 }
 
@@ -78,7 +78,7 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
         return () => {
             cancelled = true;
         };
-    }, [isSignedIn]);
+    }, []);
 
     useEffect(() => {
         if (!loaded || hasSaved) return;
@@ -107,8 +107,7 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
         setLayout((l) => l.filter((item) => item.i !== id));
     };
 
-    const constrainedLayout = useMemo(
-        () =>
+    const constrainedLayout = useMemo(() =>
             layout.map((item) => {
                 const def = widgetRegistry[item.i];
                 if (!def) return item;
@@ -118,9 +117,11 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
                     minH: def.minH,
                     maxW: def.maxW,
                     maxH: def.maxH,
+                    static:!isEditing,
+                    isResizable:false,
                 };
             }),
-        [layout],
+        [layout,isEditing],
     );
 
     return (
@@ -131,11 +132,11 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
                     layout={constrainedLayout}
                     cols={12}
                     rowHeight={60}
+                    autoSize={true}
                     width={width}
                     margin={[12, 12]}
-                    isDraggable={isEditing}
-                    isResizable={isEditing}
-                    draggableHandle=".widget-drag-handle"
+                    isDraggable={true}
+                    isResizable={false}
                     onLayoutChange={(l) => setLayout(l)}
                 >
                     {activeWidgets.map((id) => {

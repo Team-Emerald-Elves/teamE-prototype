@@ -1,44 +1,47 @@
+import { Router, type Request, type Response } from "express";
+import { getAuth } from "@clerk/express";
+import prisma, {
+    Status,
+    UserRoles,
+    type documentContent,
+} from "@repo/database";
+import { createSupabaseForRequest } from "../lib/supabase.ts";
+import type { IDocumentContent } from "./types.d.ts";
 
-import { Router, type Request, type Response } from 'express'
-import { getAuth } from '@clerk/express'
-import prisma, { Status,
-                 UserRoles,
-                 type documentContent,
-} from '@repo/database'
-import { createSupabaseForRequest } from '../lib/supabase.ts'
-import type { IDocumentContent } from './types.d.ts'
+import {
+    DocumentContentModel,
+    DeleteDocumentContentModel,
+} from "../lib/zod/routes.schemas.ts";
+import validate from "../lib/zod/middleware.ts";
+import mime from "mime";
+import { buildWhereClause } from "../lib/filters.ts";
 
-import { DocumentContentModel, DeleteDocumentContentModel } from '../lib/zod/routes.schemas.ts'
-import validate from '../lib/zod/middleware.ts'
-import mime from 'mime'
-import {buildWhereClause} from "../lib/filters.ts";
-
-const supaBaseRouter = Router()
+const supaBaseRouter = Router();
 
 function toExpirationDate(value: unknown): Date {
-  if (value instanceof Date && !isNaN(value.getTime())) {
-    return value
-  }
-
-  if (typeof value === 'string') {
-    const parsed = new Date(value)
-    if (!isNaN(parsed.getTime())) {
-      return parsed
+    if (value instanceof Date && !isNaN(value.getTime())) {
+        return value;
     }
-  }
 
-  return new Date(Date.now() + 24 * 60 * 60 * 1000)
+    if (typeof value === "string") {
+        const parsed = new Date(value);
+        if (!isNaN(parsed.getTime())) {
+            return parsed;
+        }
+    }
+
+    return new Date(Date.now() + 24 * 60 * 60 * 1000);
 }
 
 async function getMimeFromUrl(url: string): Promise<string | null> {
-  try {
-    const response = await fetch(url, { method: 'HEAD' });
-    // The server tells you exactly what the file is
-    return response.headers.get('Content-Type');
-  } catch (error) {
-    console.error("Failed to fetch headers:", error);
-    return null;
-  }
+    try {
+        const response = await fetch(url, { method: "HEAD" });
+        // The server tells you exactly what the file is
+        return response.headers.get("Content-Type");
+    } catch (error) {
+        console.error("Failed to fetch headers:", error);
+        return null;
+    }
 }
 
 function base64ToArrayBuffer(base64: string) {
@@ -55,71 +58,79 @@ supaBaseRouter.post(
     validate(DocumentContentModel),
     //requireAuth(),
     async (req: Request, res: Response) => {
-
-        const { userId, isAuthenticated } = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req);
         console.log("Uid: ", userId);
         if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
+            return res.status(401).json({ error: "Not authenticated" });
         }
-        const document: IDocumentContent = req.body
+        const document: IDocumentContent = req.body;
         const supabaseClient = await createSupabaseForRequest();
 
         try {
             // Get the authenticated employee.
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: userId
+                    clerkUserId: userId,
                 },
                 include: {
-                    bucket: true
-                }
-            })
+                    bucket: true,
+                },
+            });
 
             // Create contents for document.
 
-            const expirationDate = toExpirationDate(document.expiration_date)
-            
-            const documentStatus = Object.values(Status).includes(document.document_status as Status)
-            ? (document.document_status as Status)
-            : Status.not_started
+            const expirationDate = toExpirationDate(document.expiration_date);
 
-            const assignedRole = Object.values(UserRoles).includes(document.assigned_role as UserRoles)
-            ? (document.assigned_role as UserRoles)
-            : UserRoles.UnderWriter
+            const documentStatus = Object.values(Status).includes(
+                document.document_status as Status,
+            )
+                ? (document.document_status as Status)
+                : Status.not_started;
+
+            const assignedRole = Object.values(UserRoles).includes(
+                document.assigned_role as UserRoles,
+            )
+                ? (document.assigned_role as UserRoles)
+                : UserRoles.UnderWriter;
 
             if (!document.filePayload) {
-
-                console.log('Document source file is streamed.')
-                document.mime_type = await getMimeFromUrl(document.url as string) ?? "text/plain"
-
+                console.log("Document source file is streamed.");
+                document.mime_type =
+                    (await getMimeFromUrl(document.url as string)) ??
+                    "text/plain";
             } else {
-            
-                console.log('Document source file is being uploaded.')
-                const decoded: ArrayBuffer = base64ToArrayBuffer(document.filePayload)
-                document.mime_type = mime.getType(document.fileName)
+                console.log("Document source file is being uploaded.");
+                const decoded: ArrayBuffer = base64ToArrayBuffer(
+                    document.filePayload,
+                );
+                document.mime_type = mime.getType(document.fileName);
 
                 // Upload document to authenticated employee with supabase bucket association.
 
-                console.log(`File name: ${document.fileName}, mimetype: ${document.mime_type}`)
+                console.log(
+                    `File name: ${document.fileName}, mimetype: ${document.mime_type}`,
+                );
 
                 const { data, error } = await supabaseClient.storage
                     .from(employee.bucket!.id)
                     .upload(document.fileName, decoded, {
                         contentType: document.mime_type,
-                        upsert: true
-                    })
+                        upsert: true,
+                    });
 
                 if (!data || error) {
-                    throw new Error(`Failed to upload document '${document.name}' for user '${employee.uname}'. (${error})`)
+                    throw new Error(
+                        `Failed to upload document '${document.name}' for user '${employee.uname}'. (${error})`,
+                    );
                 } else {
                     const { data } = await supabaseClient.storage
                         .from(employee.bucket!.id)
                         .getPublicUrl(document.fileName);
-                    document.url = data.publicUrl
-                    console.log("Public file URL: " + document.url)
+                    document.url = data.publicUrl;
+                    console.log("Public file URL: " + document.url);
                 }
             }
-            
+
             const documentContents = await prisma.documentContent.create({
                 data: {
                     name: document.name ?? "Not found.",
@@ -130,10 +141,9 @@ supaBaseRouter.post(
                     mime_type: document.mime_type ?? "text/plain",
                     expiration_date: expirationDate,
                     document_status: documentStatus,
-                    document_type: document.document_type ?? "Reference"
-
-                }
-            })
+                    document_type: document.document_type ?? "Reference",
+                },
+            });
 
             const ROLE_COLORS: Record<string, string> = {
                 Administrator: "#6D28D9",
@@ -150,116 +160,129 @@ supaBaseRouter.post(
                 data: {
                     title: documentContents.name,
                     start_date: documentContents.expiration_date,
-                    end_date: new Date(documentContents.expiration_date.getTime() + 1000 * 60 * 60),
+                    end_date: new Date(
+                        documentContents.expiration_date.getTime() +
+                            1000 * 60 * 60,
+                    ),
                     all_day: false,
                     emp_id: null,
                     lock: "none",
                     doc_id: documentContents.id,
                     color: color,
-                }
-            })
+                },
+            });
 
             return res.status(200).json(documentContents);
-    } catch (error)
-    {
-        res.status(401).json(`{"message":"Error creating document in bucket: ${error}"}`)
-    }
-})
+        } catch (error) {
+            res.status(401).json(
+                `{"message":"Error creating document in bucket: ${error}"}`,
+            );
+        }
+    },
+);
 
 supaBaseRouter.delete(
-    '/delete-document',
+    "/delete-document",
     validate(DeleteDocumentContentModel),
     // requireAuth(),
     async (req: Request, res: Response) => {
-        
-        const { userId, isAuthenticated } = getAuth(req)
+        const { userId, isAuthenticated } = getAuth(req);
         const { id, name } = req.body;
-        const supabaseClient = await createSupabaseForRequest()
+        const supabaseClient = await createSupabaseForRequest();
 
         if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
+            return res.status(401).json({ error: "Not authenticated" });
         }
-
-    try {
-
-        const employee = await prisma.employee.findFirstOrThrow({
-            where: {
-                clerkUserId: userId
-            },
-            include: {
-                bucket: true
-            }
-        })
-
-        const event = await prisma.calendarEvents.findFirstOrThrow({
-            where: {
-                doc_id: id
-            }
-        })
-
-        await prisma.calendarEvents.delete({
-            where: {
-                id: event.id
-            }
-        })
-
-        prisma.documentContent.findFirst({
-            where: {
-                id: id
-            }
-        }).then( async (d) => {
-            const { data, error } = await supabaseClient.storage
-            .from(employee.bucket!.id).remove([(d?.name as string).trim()])
-
-            if (!data || error) {
-                console.error(`Failed to delete document '${name}' for user '${employee.uname}'.`)
-            }
-        }).catch((error: any) => {
-            console.error("No bucket associated with employee: " + error)
-        })
-
-        
-        // delete existing content for document.
-        await prisma.documentContent.delete({
-            where: {
-                id: id
-            },
-        }).catch((error) => {
-            console.error("Couldn't delete document meta infomation.")
-        })
-
-        res.sendStatus(200)
-
-    } catch (error) {
-        res.status(401).json(`{"message":"Error deleting document in bucket: ${error}"}`)
-    }
-})
-
-supaBaseRouter.put(
-    '/update-document',
-    validate(DocumentContentModel),
-    // requireAuth(),
-    async (req: Request, res: Response) => {
-        const { userId, isAuthenticated } = getAuth(req)
-
-        if (!isAuthenticated) {
-            return res.status(401).json({ error: "Not authenticated" })
-        }
-
-        const document: IDocumentContent = req.body
-
-        const supabaseClient = await createSupabaseForRequest()
-
 
         try {
             const employee = await prisma.employee.findFirstOrThrow({
                 where: {
-                    clerkUserId: userId
+                    clerkUserId: userId,
                 },
                 include: {
-                    bucket: true
-                }
-            })
+                    bucket: true,
+                },
+            });
+
+            const event = await prisma.calendarEvents.findFirstOrThrow({
+                where: {
+                    doc_id: id,
+                },
+            });
+
+            await prisma.calendarEvents.delete({
+                where: {
+                    id: event.id,
+                },
+            });
+
+            prisma.documentContent
+                .findFirst({
+                    where: {
+                        id: id,
+                    },
+                })
+                .then(async (d) => {
+                    const { data, error } = await supabaseClient.storage
+                        .from(employee.bucket!.id)
+                        .remove([(d?.name as string).trim()]);
+
+                    if (!data || error) {
+                        console.error(
+                            `Failed to delete document '${name}' for user '${employee.uname}'.`,
+                        );
+                    }
+                })
+                .catch((error: any) => {
+                    console.error(
+                        "No bucket associated with employee: " + error,
+                    );
+                });
+
+            // delete existing content for document.
+            await prisma.documentContent
+                .delete({
+                    where: {
+                        id: id,
+                    },
+                })
+                .catch((error) => {
+                    console.error("Couldn't delete document meta infomation.");
+                });
+
+            res.sendStatus(200);
+        } catch (error) {
+            res.status(401).json(
+                `{"message":"Error deleting document in bucket: ${error}"}`,
+            );
+        }
+    },
+);
+
+supaBaseRouter.put(
+    "/update-document",
+    validate(DocumentContentModel),
+    // requireAuth(),
+    async (req: Request, res: Response) => {
+        const { userId, isAuthenticated } = getAuth(req);
+
+        if (!isAuthenticated) {
+            return res.status(401).json({ error: "Not authenticated" });
+        }
+
+        const document: IDocumentContent = req.body;
+
+        const supabaseClient = await createSupabaseForRequest();
+
+        try {
+            const employee = await prisma.employee.findFirstOrThrow({
+                where: {
+                    clerkUserId: userId,
+                },
+                include: {
+                    bucket: true,
+                },
+            });
 
             // Update contents for document.
             const newDoc = await prisma.documentContent.update({
@@ -270,19 +293,20 @@ supaBaseRouter.put(
                     name: document.name ?? "Not found.",
                     url: document.url ?? "Local upload",
                     content_owner: document.content_owner ?? "Not Found.",
-                    assigned_role: document.assigned_role ?? UserRoles.UnderWriter,
+                    assigned_role:
+                        document.assigned_role ?? UserRoles.UnderWriter,
                     bucketId: employee.bucket!.id,
                     mime_type: document.mime_type ?? "text/plain",
                     expiration_date: toExpirationDate(document.expiration_date),
                     document_status: document.document_status,
-                    document_type: document.document_type ?? "Reference"
-                }
-            })
+                    document_type: document.document_type ?? "Reference",
+                },
+            });
             const event = await prisma.calendarEvents.findFirstOrThrow({
                 where: {
-                    doc_id: document.id
-                }
-            })
+                    doc_id: document.id,
+                },
+            });
 
             const ROLE_COLORS: Record<string, string> = {
                 Administrator: "#6D28D9",
@@ -295,26 +319,33 @@ supaBaseRouter.put(
 
             await prisma.calendarEvents.update({
                 where: {
-                    id: event.id
+                    id: event.id,
                 },
                 data: {
                     title: newDoc.name,
                     start_date: newDoc.expiration_date,
-                    end_date: new Date(newDoc.expiration_date.getTime() + 1000 * 60 * 60),
+                    end_date: new Date(
+                        newDoc.expiration_date.getTime() + 1000 * 60 * 60,
+                    ),
                     color: ROLE_COLORS[newDoc.assigned_role as string],
-                }
-            })
+                },
+            });
 
             console.log("New doc created: ", newDoc);
 
-            const {data, error} = await supabaseClient.storage
-                .from(employee.bucket!.id).update((document.name as string).trim(), document.filePayload as string)
+            const { data, error } = await supabaseClient.storage
+                .from(employee.bucket!.id)
+                .update(
+                    (document.name as string).trim(),
+                    document.filePayload as string,
+                );
 
             if (!data || error) {
-                throw new Error(`Failed to modify document '${document.name}' for user '${employee.uname}'.`)
+                throw new Error(
+                    `Failed to modify document '${document.name}' for user '${employee.uname}'.`,
+                );
             }
             return res.status(200).json(newDoc);
-
         } catch (error) {
             console.error("Update document error:", error);
 
@@ -323,24 +354,20 @@ supaBaseRouter.put(
                 error: String(error),
             });
         }
-    }
-)
+    },
+);
 
 interface IDocTagContent {
     id: number;
     meta_tags: string[];
 }
 supaBaseRouter.put(
-    '/update-document-tags',
+    "/update-document-tags",
     // requireAuth(),
     async (req: Request, res: Response) => {
-
-
-        const document: IDocTagContent = req.body
-
+        const document: IDocTagContent = req.body;
 
         try {
-            console.log(document)
             // Update contents for document.
             const newDoc = await prisma.documentContent.update({
                 where: {
@@ -348,17 +375,15 @@ supaBaseRouter.put(
                 },
                 data: {
                     meta_tags: document.meta_tags,
-                }
-            })
+                },
+            });
 
             console.log("New doc created: ", newDoc);
 
-
             if (!newDoc) {
-                throw new Error(`Failed to update tags.`)
+                throw new Error(`Failed to update tags.`);
             }
-            res.sendStatus(200)
-
+            res.sendStatus(200);
         } catch (error) {
             console.error("Update document error:", error);
 
@@ -367,32 +392,28 @@ supaBaseRouter.put(
                 error: String(error),
             });
         }
-    }
-)
+    },
+);
 interface IDocTagContentRemove {
     id: number;
     tag: string;
 }
 supaBaseRouter.delete(
-    '/remove-document-tag',
+    "/remove-document-tag",
     // requireAuth(),
     async (req: Request, res: Response) => {
-
-
-        const document: IDocTagContentRemove = req.body
-
+        const document: IDocTagContentRemove = req.body;
 
         try {
-            console.log(document)
             // Update contents for document.
             const doc = await prisma.documentContent.findFirstOrThrow({
                 where: {
                     id: document.id,
                 },
-            })
+            });
 
             const updatedTags = (doc.meta_tags || []).filter(
-                (t: string) => t !== document.tag
+                (t: string) => t !== document.tag,
             );
 
             const newDoc = await prisma.documentContent.update({
@@ -406,12 +427,10 @@ supaBaseRouter.delete(
 
             console.log("New doc created: ", newDoc);
 
-
             if (!newDoc) {
-                throw new Error(`Failed to update tags.`)
+                throw new Error(`Failed to update tags.`);
             }
-            res.sendStatus(200)
-
+            res.sendStatus(200);
         } catch (error) {
             console.error("Update document error:", error);
 
@@ -420,10 +439,10 @@ supaBaseRouter.delete(
                 error: String(error),
             });
         }
-    }
-)
+    },
+);
 
-supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
+supaBaseRouter.post("/list-documents", async (req: Request, res: Response) => {
     const { userId, isAuthenticated } = getAuth(req);
 
     if (!isAuthenticated) {
@@ -431,39 +450,34 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
     }
 
     try {
-
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,
             },
             select: {
                 favorites: true,
-                roles: true
+                roles: true,
             },
         });
 
         const favoriteSet = new Set(employee.favorites);
 
-        const whereClauseReg = buildWhereClause(req.body, {})
-        
+        const whereClauseReg = buildWhereClause(req.body, {});
+
         // get all documents
         const documents = await prisma.documentContent.findMany({
-                where: whereClauseReg
-            }
+            where: whereClauseReg,
+        });
+
+        const ownerIds = documents.map(
+            (doc: documentContent) => doc.content_owner,
         );
-
-
-
-        const ownerIds = documents.map((doc: documentContent) => doc.content_owner);
 
         const lockIds = documents
             .map((doc: documentContent) => doc.lock)
             .filter((id) => id && id !== "none");
 
-        const allEmployeeIds = [
-            ...new Set([...ownerIds, ...lockIds])
-        ];
-
+        const allEmployeeIds = [...new Set([...ownerIds, ...lockIds])];
 
         const employees = await prisma.employee.findMany({
             where: {
@@ -476,14 +490,12 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
             },
         });
 
-
         const employeeMap = new Map(
             employees.map((emp) => [
                 emp.id,
                 `${emp.first_name} ${emp.last_name}`,
-            ])
+            ]),
         );
-
 
         const formattedDocs = documents.map((doc) => ({
             ...doc,
@@ -506,190 +518,174 @@ supaBaseRouter.post('/list-documents', async (req: Request, res: Response) => {
         });
         const keyToMatch: string = employee.roles[0] as string;
 
-        sortedDocs.sort((a,b) => {
-            if (a.assigned_role === b.assigned_role) return 0
-            return (a.assigned_role === keyToMatch) ? -1 : 1
-        })
-        console.log(sortedDocs);
+        sortedDocs.sort((a, b) => {
+            if (a.assigned_role === b.assigned_role) return 0;
+            return a.assigned_role === keyToMatch ? -1 : 1;
+        });
         res.status(200).json(sortedDocs);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Failed to fetch documents" });
     }
 });
 
-supaBaseRouter.post(
-    "/get-hit-counts",
-    async (req: Request, res: Response) => {
-        const { start, end } = req.body;
+supaBaseRouter.post("/get-hit-counts", async (req: Request, res: Response) => {
+    const { start, end } = req.body;
 
-        if (!start || !end) {
-            return res.status(400).json({
-                message: "start and end dates are required",
+    if (!start || !end) {
+        return res.status(400).json({
+            message: "start and end dates are required",
+        });
+    }
+
+    try {
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
+
+        const endDate = new Date(end);
+        endDate.setHours(0, 0, 0, 0);
+
+        const hits = await prisma.hit_counts.groupBy({
+            by: ["hit_date", "target_type", "target_id"],
+            where: {
+                hit_date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            _sum: {
+                count: true,
+            },
+        });
+
+        //filter docs by reference and workflow
+        const documentIds = [
+            ...new Set(
+                hits
+                    .filter((h) => h.target_type === "DOCUMENT")
+                    .map((h) => Number(h.target_id)),
+            ),
+        ];
+
+        const docs =
+            documentIds.length > 0
+                ? await prisma.documentContent.findMany({
+                      where: {
+                          id: { in: documentIds },
+                      },
+                      select: {
+                          id: true,
+                          document_type: true,
+                      },
+                  })
+                : [];
+
+        const docTypeMap = new Map(
+            docs.map((d) => [
+                String(d.id),
+                d.document_type?.toLowerCase() || "",
+            ]),
+        );
+
+        const dateRange: string[] = [];
+        const cursor = new Date(startDate);
+
+        while (cursor <= endDate) {
+            dateRange.push(cursor.toISOString().split("T")[0] as string);
+            cursor.setDate(cursor.getDate() + 1);
+        }
+
+        type ChartRow = {
+            date: string;
+            documents: number;
+            links: number;
+            reference: number;
+            workflow: number;
+        };
+
+        const chartMap = new Map<string, ChartRow>();
+
+        for (const date of dateRange) {
+            chartMap.set(date, {
+                date,
+                documents: 0,
+                links: 0,
+                reference: 0,
+                workflow: 0,
             });
         }
 
-        try {
-            const startDate = new Date(start);
-            startDate.setHours(0, 0, 0, 0);
+        for (const row of hits) {
+            const date = row.hit_date.toISOString().split("T")[0];
+            const count = row._sum.count ?? 0;
 
-            const endDate = new Date(end);
-            endDate.setHours(0, 0, 0, 0);
+            const entry = chartMap.get(date as string);
+            if (!entry) continue;
 
+            if (row.target_type === "DOCUMENT") {
+                entry.documents += count;
 
+                const docType = docTypeMap.get(row.target_id);
 
-            const hits = await prisma.hit_counts.groupBy({
-                by: ["hit_date", "target_type", "target_id"],
-                where: {
-                    hit_date: {
-                        gte: startDate,
-                        lte: endDate,
-                    },
-                },
-                _sum: {
-                    count: true,
-                },
-            });
-
-            //filter docs by reference and workflow
-            const documentIds = [
-                ...new Set(
-                    hits
-                        .filter((h) => h.target_type === "DOCUMENT")
-                        .map((h) => Number(h.target_id))
-                ),
-            ];
-
-            const docs =
-                documentIds.length > 0
-                    ? await prisma.documentContent.findMany({
-                        where: {
-                            id: { in: documentIds },
-                        },
-                        select: {
-                            id: true,
-                            document_type: true,
-                        },
-                    })
-                    : [];
-
-            const docTypeMap = new Map(
-                docs.map((d) => [
-                    String(d.id),
-                    d.document_type?.toLowerCase() || "",
-                ])
-            );
-
-
-            const dateRange: string[] = [];
-            const cursor = new Date(startDate);
-
-            while (cursor <= endDate) {
-                dateRange.push(cursor.toISOString().split("T")[0] as string);
-                cursor.setDate(cursor.getDate() + 1);
-            }
-
-
-            type ChartRow = {
-                date: string;
-                documents: number;
-                links: number;
-                reference: number;
-                workflow: number;
-            };
-
-            const chartMap = new Map<string, ChartRow>();
-
-            for (const date of dateRange) {
-                chartMap.set(date, {
-                    date,
-                    documents: 0,
-                    links: 0,
-                    reference: 0,
-                    workflow: 0,
-                });
-            }
-
-
-            for (const row of hits) {
-                const date = row.hit_date.toISOString().split("T")[0];
-                const count = row._sum.count ?? 0;
-
-                const entry = chartMap.get(date as string);
-                if (!entry) continue;
-
-                if (row.target_type === "DOCUMENT") {
-                    entry.documents += count;
-
-                    const docType = docTypeMap.get(row.target_id);
-
-                    if (docType === "reference") {
-                        entry.reference += count;
-                    }
-
-                    if (docType === "workflow") {
-                        entry.workflow += count;
-                    }
+                if (docType === "reference") {
+                    entry.reference += count;
                 }
 
-                if (row.target_type === "LINK") {
-                    entry.links += count;
+                if (docType === "workflow") {
+                    entry.workflow += count;
                 }
             }
 
-
-            return res.status(200).json([...chartMap.values()]);
-        } catch (error) {
-            console.error("Hit count chart error:", error);
-
-            return res.status(500).json({
-                message: "Error generating hit count chart",
-                error: String(error),
-            });
+            if (row.target_type === "LINK") {
+                entry.links += count;
+            }
         }
+
+        return res.status(200).json([...chartMap.values()]);
+    } catch (error) {
+        console.error("Hit count chart error:", error);
+
+        return res.status(500).json({
+            message: "Error generating hit count chart",
+            error: String(error),
+        });
     }
-);
-supaBaseRouter.post(
-    "/add-hit-count",
-    async (req: Request, res: Response) => {
-        console.log("reached hit count add")
-        const { type, id,  } = req.body;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+});
+supaBaseRouter.post("/add-hit-count", async (req: Request, res: Response) => {
+    console.log("reached hit count add");
+    const { type, id } = req.body;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-        try {
-            const hit = await prisma.hit_counts.upsert({
-                    where: {
-                        target_type_target_id_hit_date: {
-                            target_type: type,
-                            target_id: String(id),
-                            hit_date: today
-                        }
-                    },
-                    update: {
-                        count: { increment: 1 }
-                    },
-                    create: {
-                        target_type: type,
-                        target_id: String(id),
-                        hit_date: today,
-                        count: 1
-                    }
-                });;
+    try {
+        const hit = await prisma.hit_counts.upsert({
+            where: {
+                target_type_target_id_hit_date: {
+                    target_type: type,
+                    target_id: String(id),
+                    hit_date: today,
+                },
+            },
+            update: {
+                count: { increment: 1 },
+            },
+            create: {
+                target_type: type,
+                target_id: String(id),
+                hit_date: today,
+                count: 1,
+            },
+        });
 
+        return res.status(200).json(hit);
+    } catch (error) {
+        console.error("Hit count chart error:", error);
 
-
-            return res.status(200).json(hit);
-        } catch (error) {
-            console.error("Hit count chart error:", error);
-
-            return res.status(500).json({
-                message: "Error generating hit count chart",
-                error: String(error),
-            });
-        }
+        return res.status(500).json({
+            message: "Error generating hit count chart",
+            error: String(error),
+        });
     }
-);
+});
 
-export default supaBaseRouter
+export default supaBaseRouter;

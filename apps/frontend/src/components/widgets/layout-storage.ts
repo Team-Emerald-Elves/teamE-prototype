@@ -19,15 +19,23 @@ async function postLayout(body: LayoutRequest, token: string | null) {
 
     if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(`Layout request failed (status ${res.status}): ${errorText}`);
+        throw new Error(
+            `Layout request failed (status ${res.status}): ${errorText}`,
+        );
     }
 
     return res.json();
 }
 
-export async function loadLayout(token: string | null): Promise<SavedDashboard | null> {
+export async function loadLayout(
+    token: string | null,
+): Promise<SavedDashboard | null> {
     const data = await postLayout({ action: "list" }, token);
-    if (!data || !Array.isArray(data.layout) || !Array.isArray(data.activeWidgets)) {
+    if (
+        !data ||
+        !Array.isArray(data.layout) ||
+        !Array.isArray(data.activeWidgets)
+    ) {
         return null;
     }
     return {
@@ -36,6 +44,9 @@ export async function loadLayout(token: string | null): Promise<SavedDashboard |
     };
 }
 
-export async function saveLayouts(dashboard: SavedDashboard, token: string | null) {
+export async function saveLayouts(
+    dashboard: SavedDashboard,
+    token: string | null,
+) {
     return postLayout({ action: "create", layoutData: dashboard }, token);
 }

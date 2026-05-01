@@ -2,10 +2,9 @@ import FullCalendarComponent from "@/components/fullCalendar.tsx";
 import AddEventButton from "@/components/addEventButton.tsx";
 import EventForm from "@/components/eventForm.tsx";
 import PageHeader from "@/components/page-header.tsx";
-import {useState} from "react";
+import { useState } from "react";
 import EventDetails from "@/components/eventDetailsPopup.tsx";
 import RoleLegend from "@/components/roleLegend.tsx";
-
 
 export default function CalendarPage() {
     const [open, setOpen] = useState(false);
@@ -17,7 +16,6 @@ export default function CalendarPage() {
         <>
             {/* make this wrapper relative so we can anchor legend */}
             <div className="relative">
-
                 <PageHeader
                     title="Calendar"
                     description="Keep track of important events here."
@@ -41,10 +39,13 @@ export default function CalendarPage() {
                 <div className="mb-2 ml-2">
                     <AddEventButton setOpen={setOpenAdd} />
                 </div>
-                <EventForm open={openAdd}
-                           setOpen={setOpenAdd}
-                           selectedEvent={selectedEvent}
-                           setSelectedEvent={setSelectedEvent} setReload={setReload}/>
+                <EventForm
+                    open={openAdd}
+                    setOpen={setOpenAdd}
+                    selectedEvent={selectedEvent}
+                    setSelectedEvent={setSelectedEvent}
+                    setReload={setReload}
+                />
 
                 <div className="p-5 w-full bg-white rounded-xl shadow-sm border flex-1">
                     <FullCalendarComponent

@@ -4,7 +4,7 @@ import { getAuth } from "@clerk/express";
 import type { Layout } from "react-grid-layout";
 
 import { LayoutRequestPostModel } from "../lib/zod/routes.schemas.ts";
-import { validate } from "../lib/zod/middleware.ts";
+import validate from "../lib/zod/middleware.ts";
 
 const layoutRoute = express();
 
@@ -18,31 +18,35 @@ interface LayoutRequest {
     layoutData: LayoutData | undefined;
 }
 
-layoutRoute.post("/", validate(LayoutRequestPostModel), (req: express.Request, res: express.Response) => {
-    const lReq: LayoutRequest = req.body as LayoutRequest;
+layoutRoute.post(
+    "/",
+    validate(LayoutRequestPostModel),
+    (req: express.Request, res: express.Response) => {
+        const lReq: LayoutRequest = req.body as LayoutRequest;
 
-    if (!lReq) {
-        res.status(400).json({ error: "INVALID_LAYOUT_POST" });
-        return;
-    }
+        if (!lReq) {
+            res.status(400).json({ error: "INVALID_LAYOUT_POST" });
+            return;
+        }
 
-    if (lReq.action == "list" || !lReq.action) {
-        getLayout(req, res);
-        return;
-    }
+        if (lReq.action == "list" || !lReq.action) {
+            getLayout(req, res);
+            return;
+        }
 
-    if (!lReq.layoutData) {
-        res.status(400).json({ error: "INVALID_LAYOUT_DATA" });
-        return;
-    }
+        if (!lReq.layoutData) {
+            res.status(400).json({ error: "INVALID_LAYOUT_DATA" });
+            return;
+        }
 
-    if (lReq.action == "create" || lReq.action == "edit") {
-        saveLayout(req, lReq.layoutData, res);
-        return;
-    }
+        if (lReq.action == "create" || lReq.action == "edit") {
+            saveLayout(req, lReq.layoutData, res);
+            return;
+        }
 
-    res.status(400).json({ error: "INVALID_ACTION" });
-});
+        res.status(400).json({ error: "INVALID_ACTION" });
+    },
+);
 
 async function getLayout(req: express.Request, res: express.Response) {
     try {
@@ -77,7 +81,11 @@ async function getLayout(req: express.Request, res: express.Response) {
     }
 }
 
-async function saveLayout(req: express.Request, lData: LayoutData, res: express.Response) {
+async function saveLayout(
+    req: express.Request,
+    lData: LayoutData,
+    res: express.Response,
+) {
     try {
         const { userId, isAuthenticated } = getAuth(req);
         if (!isAuthenticated) {
@@ -105,12 +113,16 @@ async function saveLayout(req: express.Request, lData: LayoutData, res: express.
 
         const saved = existing
             ? await prisma.layout.update({
-                where: { id: existing.id },
-                data: { layout: layoutJson, widgets: activeWidgets },
-            })
+                  where: { id: existing.id },
+                  data: { layout: layoutJson, widgets: activeWidgets },
+              })
             : await prisma.layout.create({
-                data: { owner: employee.id, layout: layoutJson, widgets: activeWidgets },
-            });
+                  data: {
+                      owner: employee.id,
+                      layout: layoutJson,
+                      widgets: activeWidgets,
+                  },
+              });
 
         return res.status(200).json({
             layout: saved.layout,

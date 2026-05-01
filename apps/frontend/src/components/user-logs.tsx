@@ -3,12 +3,11 @@ import {
     TableBody,
     TableCell,
     TableRow,
-} from "@/components/ui/log-table.tsx"
+} from "@/components/ui/log-table.tsx";
 
-import { CircleUserRound, Dot, FileText, Info } from 'lucide-react';
+import { Dot, Info } from "lucide-react";
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import {
     Card,
@@ -16,23 +15,27 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import {useEffect, useState} from "react";
-import {getToken} from "@clerk/react";
+} from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { getToken } from "@clerk/react";
 
-import { Button } from "@/components/ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
 type Notification = {
-    createdAt: string
-    creatorId?: string
-    employeeId?: string
-    id: string
-    public: boolean
-    targetRoles: string[]
-    title: string
-    profileIcon?: string
-}
+    createdAt: string;
+    creatorId?: string;
+    employeeId?: string;
+    id: string;
+    public: boolean;
+    targetRoles: string[];
+    title: string;
+    profileIcon?: string;
+};
 
 // const activity: ActivityLog[] = [
 //     { user: "Jane Doe",   time: "1:56PM", action: "updated", item: "doc.png",    date: "April 6, 2026" },
@@ -44,14 +47,17 @@ type Notification = {
 // ]
 
 function groupByDate(notifications: Notification[]) {
-    return notifications.reduce((groups, n) => {
-        if (!n.creatorId) return groups;
+    return notifications.reduce(
+        (groups, n) => {
+            if (!n.creatorId) return groups;
 
-        const key = new Date(n.createdAt).toLocaleDateString("en-US");
-        if (!groups[key]) groups[key] = []
-        groups[key].push(n)
-        return groups
-    }, {} as Record<string, Notification[]>)
+            const key = new Date(n.createdAt).toLocaleDateString("en-US");
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(n);
+            return groups;
+        },
+        {} as Record<string, Notification[]>,
+    );
 }
 
 function formatDateLabel(dateStr: string) {
@@ -59,7 +65,7 @@ function formatDateLabel(dateStr: string) {
         month: "long",
         day: "numeric",
         year: "numeric",
-    })
+    });
 }
 
 function formatTimeLabel(dateStr: string) {
@@ -67,16 +73,15 @@ function formatTimeLabel(dateStr: string) {
         hour: "numeric",
         minute: "2-digit",
         hour12: true,
-    })
+    });
 }
 
-
-export function UserLogs(){
-    const [grouped, setGrouped] = useState<Record<string, Notification[]>>({})
+export function UserLogs() {
+    const [grouped, setGrouped] = useState<Record<string, Notification[]>>({});
 
     useEffect(() => {
         async function fetchNotifs() {
-            const token = await getToken()
+            const token = await getToken();
 
             const res = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/api/notifs/get-notifications`,
@@ -85,58 +90,95 @@ export function UserLogs(){
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                }
-            )
+                },
+            );
 
-            const data: Notification[] = await res.json()
-            setGrouped(groupByDate(data))
+            const data: Notification[] = await res.json();
+            setGrouped(groupByDate(data));
         }
 
-        fetchNotifs()
-    }, [])
+        fetchNotifs();
+    }, []);
     return (
         <>
-            <Card className= "w-[40%] flex flex-col relative">
+            <Card className="flex flex-col relative ring-0">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
-                        <CardTitle className="text-2xl text-[#12324b]">User Activity</CardTitle>
+                        <CardTitle className="text-2xl text-[#12324b]">
+                            User Activity
+                        </CardTitle>
                         <CardDescription>
-                            Track recent actions performed by users, including creations, edits, deletes, and more.
+                            Track recent actions performed by users, including
+                            creations, edits, deletes, and more.
                         </CardDescription>
                     </div>
                 </CardHeader>
                 <CardContent className="p-0 overflow-hidden flex-1 min-h-0">
                     <ScrollArea className="h-full">
-                    {Object.entries(grouped).map(([date, logs]) => (
-                        <div key={date}>
-                            <p className="text-center text-xs font-semibold text-gray-500 py-1">
-                                {formatDateLabel(date)}
-                            </p>
-                            <Table>
-                                <TableBody>
-                                    {logs.map((n) => (
-                                        <TableRow key={n.id}>
-                                            <TableCell className="font-medium flex items-center text-sm">
-                                                <div className="flex gap-1 items-center font-normal">
-                                                  <img className="size-10 rounded-full" src={n.profileIcon}/>
+                        {Object.entries(grouped).map(([date, logs]) => (
+                            <div key={date}>
+                                <p className="text-center text-xs font-semibold text-gray-500 pb-1">
+                                    {formatDateLabel(date)}
+                                </p>
+                                <Table className="w-full">
+                                    <TableBody>
+                                        {logs.map((n) => (
+                                            <TableRow key={n.id}>
+                                                <TableCell className="font-medium flex items-center min-w-0 py-1.75 text-sm w-full">
+                                                    <div className="flex items-center justify-between font-normal min-w-0">
+                                                        <div className="flex items-center gap-1 min-w-0">
+                                                            <img
+                                                                className="size-10 rounded-full shrink-0"
+                                                                src={
+                                                                    n.profileIcon
+                                                                }
+                                                            />
 
-                                                    <div className="pl-5 font-semibold">{n.title.split(" ").slice(0, 2).join(" ")}{" "}</div>
-                                                    <span > {n.title.split(" ").slice(2, 3).join(" ")}{" "} </span>
-                                                    <span className="text-[#768b6c] font-semibold"> {n.title.split(" ").slice(3).join(" ")} </span>
-
-
-                                                    <div className="flex items-center">
-                                                        <div className="px-2"><Dot color="#a6a6a6" /></div>
-                                                        {formatTimeLabel(n.createdAt)}
+                                                            <div className="pl-5 font-semibold">
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(0, 2)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </div>
+                                                            <span>
+                                                                {" "}
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(2, 3)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </span>
+                                                            <span className="text-[#768b6c] font-semibold">
+                                                                {" "}
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(3)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center shrink-0 whitespace-nowrap text-right">
+                                                            <div className="px-3">
+                                                                <Dot color="#a6a6a6" />
+                                                            </div>
+                                                            <div className="flex justify-end">
+                                                                {formatTimeLabel(
+                                                                    n.createdAt,
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    ))}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        ))}
                     </ScrollArea>
                 </CardContent>
 
@@ -144,19 +186,42 @@ export function UserLogs(){
                 <div className="absolute top-3 right-3">
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                            >
                                 <Info className="h-4 w-4" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent side="top" align="start" className="w-64">
-                            <p className="font-medium text-sm mb-2">User Activity</p>
+                        <PopoverContent
+                            side="top"
+                            align="start"
+                            className="w-64"
+                        >
+                            <p className="font-medium text-sm mb-2">
+                                User Activity
+                            </p>
                             <p className="text-xs text-muted-foreground mb-3">
-                                A real-time log of all recent actions performed by users in the system.
+                                A real-time log of all recent actions performed
+                                by users in the system.
                             </p>
                             <div className="space-y-1">
-                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Actions tracked</p>
-                                {["Created", "Updated", "Deleted", "Approved", "Commented on", "Logged in"].map((action) => (
-                                    <div key={action} className="text-xs text-muted-foreground">
+                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
+                                    Actions tracked
+                                </p>
+                                {[
+                                    "Created",
+                                    "Updated",
+                                    "Deleted",
+                                    "Approved",
+                                    "Commented on",
+                                    "Logged in",
+                                ].map((action) => (
+                                    <div
+                                        key={action}
+                                        className="text-xs text-muted-foreground"
+                                    >
                                         {action}
                                     </div>
                                 ))}
@@ -164,8 +229,7 @@ export function UserLogs(){
                         </PopoverContent>
                     </Popover>
                 </div>
-
             </Card>
         </>
-    )
+    );
 }

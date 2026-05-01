@@ -26,7 +26,6 @@ async function favoriteLinksRoute(req: express.Request, res: express.Response) {
             return res.json([]);
         }
 
-
         // get the documents that are in the favorite list
         const links = await prisma.links.findMany({
             where: {
@@ -34,13 +33,12 @@ async function favoriteLinksRoute(req: express.Request, res: express.Response) {
             },
         });
 
-        const result = links.map(link => ({
+        const result = links.map((link) => ({
             ...link,
             favorite: true,
         }));
 
         return res.json(result);
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Failed to fetch favorites" });

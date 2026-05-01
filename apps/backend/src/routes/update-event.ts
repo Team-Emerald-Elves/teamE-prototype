@@ -10,13 +10,7 @@ async function updateEventRoute(req: express.Request, res: express.Response) {
     }
 
     try {
-        const {
-            id,
-            title,
-            start_date,
-            end_date,
-            all_day,
-        } = req.body;
+        const { id, title, start_date, end_date, all_day } = req.body;
 
         if (!id) {
             return res.status(400).json({ error: "Missing event id" });

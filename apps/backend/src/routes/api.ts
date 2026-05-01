@@ -67,24 +67,15 @@ APIRouter.get("/me", requireAuth(), async (req, res) => {
 
 async function updateLock(req: Request, res: Response) {
     try {
+        
         const { id, status } = req.body ?? {};
 
-        console.log("BODY:", req.body);
-        console.log("TYPES:", {
-            id: typeof req.body?.id,
-            status: typeof req.body?.status,
-        });
-
-        if (typeof id !== "number" || typeof status !== "boolean") {
-            return res.status(400).json({
-                message:
-                    "Invalid body. Expected { id: number, status: boolean }",
-            });
-        }
         const { userId, isAuthenticated } = getAuth(req);
+
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" });
         }
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,
@@ -96,7 +87,8 @@ async function updateLock(req: Request, res: Response) {
                     id: id,
                 },
                 data: {
-                    lock: employee.id,
+                    lock: employee.id === '' ? "none" : employee.id,
+                    lock_name: employee.first_name + ' ' + employee.last_name
                 },
             });
             const event = await prisma.calendarEvents.findFirstOrThrow({
@@ -110,28 +102,6 @@ async function updateLock(req: Request, res: Response) {
                 },
                 data: {
                     lock: employee.id,
-                },
-            });
-        } else {
-            await prisma.documentContent.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    lock: "none",
-                },
-            });
-            const event = await prisma.calendarEvents.findFirstOrThrow({
-                where: {
-                    doc_id: id,
-                },
-            });
-            await prisma.calendarEvents.update({
-                where: {
-                    id: event.id,
-                },
-                data: {
-                    lock: "none",
                 },
             });
         }

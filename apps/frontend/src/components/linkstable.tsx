@@ -355,7 +355,7 @@ export default function LinksTable<TData extends Links, TValue>({
                     {isUnlocked ? null : (
                         <div className="flex flex-col text-right">
                             <p className="text-xs">Checked out by:</p>
-                            <p className="text-sm font-medium">{link.lock}</p>
+                            <p className="text-sm font-medium">{link.lock_name}</p>
                         </div>
                     )}
                 </TableCell>
@@ -435,7 +435,7 @@ export default function LinksTable<TData extends Links, TValue>({
             <TableCell>
                 <div className="flex flex-col text-right">
                     <p className="text-xs">Checked out by:</p>
-                    <p className="text-sm font-medium">{link.lock}</p>
+                    <p className="text-sm font-medium">{link.lock_name}</p>
                 </div>
             </TableCell>
         );

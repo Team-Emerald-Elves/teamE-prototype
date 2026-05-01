@@ -21,31 +21,27 @@ async function updateLinkLock(req: Request, res: Response) {
                     "Invalid body. Expected { id: string, status: boolean }",
             });
         }
+
         const { userId, isAuthenticated } = getAuth(req);
+
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" });
         }
+
         const employee = await prisma.employee.findFirstOrThrow({
             where: {
                 clerkUserId: userId,
             },
         });
+
         if (status) {
             await prisma.links.update({
                 where: {
                     id: id,
                 },
                 data: {
-                    lock: employee.id,
-                },
-            });
-        } else {
-            await prisma.links.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    lock: "none",
+                    lock: employee.id === '' ? "none" : employee.id,
+                    lock_name: employee.first_name + ' ' + employee.last_name
                 },
             });
         }

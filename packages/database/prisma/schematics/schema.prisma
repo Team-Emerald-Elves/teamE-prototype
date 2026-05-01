@@ -69,6 +69,7 @@ model documentContent {
   content_owner   String?
   favorite        Boolean?   @default(false)
   lock            String?    @default("none")
+  lock_name       String?    @default("Unnamed")
   meta_tags       String[]
   created_at      DateTime   @default(now()) @db.Timestamp(6)
   expiration_warn Boolean    @default(false)
@@ -80,6 +81,7 @@ model Links {
   url        String
   owner      String
   lock       String?  @default("none")
+  lock_name       String?    @default("Unnamed")
   meta_tags  String[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

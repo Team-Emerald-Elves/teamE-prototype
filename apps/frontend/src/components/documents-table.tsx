@@ -995,7 +995,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                 Checked out by:
                                                             </p>
                                                             <p className="text-sm font-medium">
-                                                                {doc.lock}
+                                                                {doc.lock_name}
                                                             </p>
                                                         </div>
 

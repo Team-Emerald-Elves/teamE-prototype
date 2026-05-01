@@ -393,10 +393,6 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="flex gap-2 justify-end">
                         <Editlinksform
                             id={link.id}
-                            lock={link.lock}
-                            created_at={link.created_at}
-                            updated_at={link.updated_at}
-                            meta_tags={link.meta_tags}
                             link_name={link.link_name}
                             url={link.url}
                             owner={roles.at(0) as string}
@@ -517,10 +513,6 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="ml-auto">
                                 <AddLinksForm
                                     id={""}
-                                    lock={""}
-                                    created_at={new Date()}
-                                    updated_at={new Date()}
-                                    meta_tags={[]}
                                     link_name={""}
                                     url={""}
                                     owner={roles.at(0) as string}

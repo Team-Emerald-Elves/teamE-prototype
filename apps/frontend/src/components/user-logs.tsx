@@ -102,14 +102,14 @@ export function UserLogs() {
     return (
         <>
             <Card className="flex flex-col relative ring-0">
-                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
+                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-(--card)">
                     <div className="grid flex-1 gap-1">
-                        <CardTitle className="text-2xl text-[#12324b]">
+                        <CardTitle className="text-2xl text-(--card-title)">
                             User Activity
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-(--foreground)">
                             Track recent actions performed by users, including
-                            creations, edits, deletes, and more.
+                            creations, edits, logins, and more.
                         </CardDescription>
                     </div>
                 </CardHeader>

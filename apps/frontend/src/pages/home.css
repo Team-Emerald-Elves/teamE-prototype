@@ -1,10 +1,13 @@
-
 :root{
     --dark-blue: #00355f;
     --light-gray: #f1f1f1;
     --sans: "Plus Jakarta Sans", sans-serif;
     background: var(--light-gray);
 }
+
+html.dark  {
+        background: var(--background);
+    }
 
 .home-cards-container{
     display: grid;

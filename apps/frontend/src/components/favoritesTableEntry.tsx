@@ -155,14 +155,14 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             break;
     }
     return (
-        <TableRow key={props.d.id} className="hover:bg-gray-50 transition h-12">
+        <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-12">
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
                 onToggleOn={props.onToggleOn}
             />
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <Dialog>
                     <DialogTrigger asChild>
                         <button
@@ -191,26 +191,26 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             </TableCell>
 
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {exp.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.content_owner}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
 
             <TableCell>
-                <div className="flex flex-wrap gap-1 mt-2">
+                <div className="flex flex-wrap gap-1 mt-2 text-(--tags-text)">
                     <DocTag background={roleBackground}>{role}</DocTag>
                     <DocTag background={docBackground}>{type}</DocTag>
                     <DocTag background={statusBackground}>{status}</DocTag>
                 </div>
             </TableCell>
-            <TableCell className="flex text-[14px] font-small text-gray-700 justify-center w-full">
+            <TableCell className="flex text-[14px] font-small text-(--table-text) justify-center w-full">
                 <Button onClick={async () => await handleDownload(props.d)}>
                     <HugeiconsIcon icon={Download01Icon} />
                 </Button>

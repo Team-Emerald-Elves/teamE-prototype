@@ -12,6 +12,9 @@ import { getToken, useAuth } from "@clerk/react";
 import { Bell } from "lucide-react";
 import { NotifScroll } from "@/components/notifications.tsx";
 import qmgr from "@/lib/querymgr.ts";
+import {File01Icon, Moon02Icon, Sun03Icon} from "@hugeicons/core-free-icons";
+import {HugeiconsIcon} from "@hugeicons/react";
+import * as React from "react";
 
 interface NavbarProps {
     children?: ReactNode;
@@ -41,6 +44,24 @@ function Navbar(props: NavbarProps) {
         setShowNotification(!showNotification);
     };
     const [unread, setUnread] = useState<boolean>(false);
+    const [theme, setTheme] = useState<string>('light');
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        const initialTheme = savedTheme || (systemDark ? 'dark' : 'light');
+        document.documentElement.classList.add(initialTheme);
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+
+        document.documentElement.classList.remove(theme);
+        document.documentElement.classList.add(newTheme);
+        localStorage.setItem('theme', newTheme);
+        setTheme(newTheme);
+    }
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -73,7 +94,7 @@ function Navbar(props: NavbarProps) {
     }, []);
 
     return (
-        <header className="w-full bg-[#013C5A] text-white sticky top-0 z-50">
+        <header className="w-full bg-(--blue-primary) text-white sticky top-0 z-50">
             <div className="w-full flex items-center justify-between px-6 py-2">
                 {/*Left side*/}
                 <NavigationMenu>
@@ -127,7 +148,12 @@ function Navbar(props: NavbarProps) {
                         {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
 
                         {/*</NavigationMenuItem>*/}
-
+                        <NavigationMenuItem>
+                            <button onClick={toggleTheme}>{theme === "light" ?
+                                <HugeiconsIcon icon={Moon02Icon}/> :
+                                <HugeiconsIcon icon={Sun03Icon}/>}
+                            </button>
+                        </NavigationMenuItem>
                         <NavigationMenuItem>
                             <button
                                 onClick={async () => {

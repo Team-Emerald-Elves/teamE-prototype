@@ -808,10 +808,10 @@ export function DocumentsTable({ columns }: DocProps) {
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto px-10 w-full py-10">
-                <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="bg-(--card) rounded-xl shadow-sm border p-4 relative overflow-visible">
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={
@@ -884,16 +884,16 @@ export function DocumentsTable({ columns }: DocProps) {
                     />
 
                     <Table className="border rounded-lg overflow-hidden mt-6">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                        <TableHeader className="bg-(--card-header) text-(--table-titles)">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
-                                    <TableHead className="text-[#0b4461] text-left px-5">
+                                    <TableHead className="text-(--table-titles) text-left px-5">
                                         Favorite
                                     </TableHead>
 
                                     {headerGroup.headers.map((header) => (
                                         <TableHead
-                                            className="text-[#0b4461] text-left px-5"
+                                            className="text-(--table-titles) text-left px-5"
                                             key={header.id}
                                         >
                                             {header.isPlaceholder
@@ -906,7 +906,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                         </TableHead>
                                     ))}
 
-                                    <TableHead className="text-[#0b4461] px-5 text-right">
+                                    <TableHead className="text-(--table-titles) px-5 text-right">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -928,7 +928,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                             key={row.id}
                                             className={
                                                 isLockedByOther
-                                                    ? "bg-[#e6e8e8]"
+                                                    ? "bg-(--tab-bg)"
                                                     : undefined
                                             }
                                         >

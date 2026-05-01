@@ -393,10 +393,6 @@ export default function LinksTable<TData extends Links, TValue>({
                     <div className="flex gap-2 justify-end">
                         <Editlinksform
                             id={link.id}
-                            lock={link.lock}
-                            created_at={link.created_at}
-                            updated_at={link.updated_at}
-                            meta_tags={link.meta_tags}
                             link_name={link.link_name}
                             url={link.url}
                             owner={roles.at(0) as string}
@@ -444,7 +440,7 @@ export default function LinksTable<TData extends Links, TValue>({
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -517,10 +513,6 @@ export default function LinksTable<TData extends Links, TValue>({
                             <div className="ml-auto">
                                 <AddLinksForm
                                     id={""}
-                                    lock={""}
-                                    created_at={new Date()}
-                                    updated_at={new Date()}
-                                    meta_tags={[]}
                                     link_name={""}
                                     url={""}
                                     owner={roles.at(0) as string}
@@ -557,7 +549,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 {filters.map((option) => (
                                     <div
                                         key={option.id}
-                                        className="flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                                        className="flex rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5"
                                     >
                                         <p className="px-2 py-1 text-gray-800 rounded-md text-xs">
                                             {option.id}
@@ -579,16 +571,16 @@ export default function LinksTable<TData extends Links, TValue>({
                         )}
 
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className="text-[#0b4461] text-center">
+                                        <TableHead className="xt-(--table-titles) text-center">
                                             Favorite
                                         </TableHead>
 
                                         {headerGroup.headers.map((header) => (
                                             <TableHead
-                                                className="text-[#0b4461] text-center"
+                                                className="xt-(--table-titles) text-center"
                                                 key={header.id}
                                             >
                                                 {header.isPlaceholder
@@ -601,7 +593,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                             </TableHead>
                                         ))}
 
-                                        <TableHead className="text-[#0b4461] text-center">
+                                        <TableHead className="text-(--table-titles) text-center">
                                             Actions
                                         </TableHead>
                                     </TableRow>
@@ -621,7 +613,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                             key={row.id}
                                             className={
                                                 isLockedByOther
-                                                    ? "bg-[#e6e8e8]"
+                                                    ? "bg-(--tab-bg)"
                                                     : ""
                                             }
                                         >

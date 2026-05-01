@@ -13,7 +13,7 @@ const CheckoutLinks = Router();
 
 async function updateLinkLock(req: Request, res: Response) {
     try {
-        const { id, status } = req.body ?? {};
+        let { id, status } = req.body ?? {};
 
         if (typeof id !== "string" || typeof status !== "boolean") {
             return res.status(400).json({
@@ -34,17 +34,15 @@ async function updateLinkLock(req: Request, res: Response) {
             },
         });
 
-        if (status) {
-            await prisma.links.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    lock: employee.id === '' ? "none" : employee.id,
-                    lock_name: employee.first_name + ' ' + employee.last_name
-                },
-            });
-        }
+        await prisma.links.update({
+            where: {
+                id: id,
+            },
+            data: {
+                lock: status ? employee.id : "none",
+                lock_name: employee.first_name + ' ' + employee.last_name
+            },
+        });
 
         return res.status(200).json({ id, status });
     } catch (error) {

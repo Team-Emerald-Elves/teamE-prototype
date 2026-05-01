@@ -38,7 +38,7 @@ type editlinksRequest = {
     linkData: linksDataExt;
 };
 
-function AddLinksForm(props: linksDataExt) {
+function AddLinksForm(props: Partial<linksDataExt>) {
     const { getToken, isSignedIn } = useAuth();
     let token: string = "";
     getToken().then(

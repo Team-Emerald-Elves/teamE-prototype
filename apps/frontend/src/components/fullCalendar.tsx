@@ -60,7 +60,7 @@ export default function FullCalendarComponent({
                     center: "",
                     end: "prev today next",
                 }}
-                dayHeaderClassNames={() => ["bg-[#ecf4f9]", "text-[#0b4461]"]}
+                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--table-titles)"]}
                 events={events}
                 height="100%"
                 contentHeight="auto"

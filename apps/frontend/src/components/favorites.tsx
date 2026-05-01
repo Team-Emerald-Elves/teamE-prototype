@@ -77,13 +77,13 @@ export default function Favorites() {
                             icon={solidStar}
                             className="text-yellow-400 cursor-pointer"
                         />
-                        <h4 className="text-lg font-semibold text-gray-800">
+                        <h4 className="text-lg font-semibold text-(--subheader-color)">
                             Favorited
                         </h4>
                     </div>
 
                     <Link
-                        className="text-sm text-blue-900 hover:underline"
+                        className="text-sm text-(--internal-link-color) hover:underline"
                         //to="/documents"
                         to={
                             currentFavorite === "docs" ? "/documents" : "/links"
@@ -94,7 +94,7 @@ export default function Favorites() {
                 </div>
 
                 <Link
-                    className="text-sm text-blue-900 hover:underline"
+                    className="text-sm text-(--internal-link-color) hover:underline"
                     //to="/documents"
                     to={currentFavorite === "docs" ? "/documents" : "/links"}
                 >
@@ -108,38 +108,38 @@ export default function Favorites() {
                     <TabsTrigger value="links">Links</TabsTrigger>
                 </TabsList>
                 <TabsContent value="docs">
-                    <div className="bg-white rounded-xl border-0 p-4 relative">
+                    <div className="bg-(--card) rounded-xl border-0 p-4 relative">
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles))">
                                 <TableRow>
-                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm">
                                         Favorite
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Title
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Created
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Content Type
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Expiration Date
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Status
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Owner
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Role
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Last Modified
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -280,26 +280,26 @@ export default function Favorites() {
                 </TabsContent>
 
                 <TabsContent value="links">
-                    <div className="bg-white rounded-xl shadow-none border-0 p-4 relative overflow-visible">
+                    <div className="bg-card rounded-xl shadow-none border-0 p-4 relative overflow-visible">
                         <Table className="border rounded-lg overflow-hidden ">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 <TableRow>
-                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm">
                                         Favorite
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Title
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         URL
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Role
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Created
                                     </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Last Modified
                                     </TableHead>
                                 </TableRow>

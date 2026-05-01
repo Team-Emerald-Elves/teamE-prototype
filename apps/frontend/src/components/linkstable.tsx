@@ -557,7 +557,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 {filters.map((option) => (
                                     <div
                                         key={option.id}
-                                        className="flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                                        className="flex rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5"
                                     >
                                         <p className="px-2 py-1 text-gray-800 rounded-md text-xs">
                                             {option.id}
@@ -579,16 +579,16 @@ export default function LinksTable<TData extends Links, TValue>({
                         )}
 
                         <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className="text-[#0b4461] text-center">
+                                        <TableHead className="xt-(--table-titles) text-center">
                                             Favorite
                                         </TableHead>
 
                                         {headerGroup.headers.map((header) => (
                                             <TableHead
-                                                className="text-[#0b4461] text-center"
+                                                className="xt-(--table-titles) text-center"
                                                 key={header.id}
                                             >
                                                 {header.isPlaceholder
@@ -601,7 +601,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                             </TableHead>
                                         ))}
 
-                                        <TableHead className="text-[#0b4461] text-center">
+                                        <TableHead className="text-(--table-titles) text-center">
                                             Actions
                                         </TableHead>
                                     </TableRow>
@@ -621,7 +621,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                             key={row.id}
                                             className={
                                                 isLockedByOther
-                                                    ? "bg-[#e6e8e8]"
+                                                    ? "bg-(--lock-color)"
                                                     : ""
                                             }
                                         >

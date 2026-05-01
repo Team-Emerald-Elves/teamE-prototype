@@ -47,7 +47,7 @@ export default function CalendarPage() {
                     setReload={setReload}
                 />
 
-                <div className="p-5 w-full bg-white rounded-xl shadow-sm border flex-1">
+                <div className="p-5 w-full bg-card rounded-xl shadow-sm border flex-1">
                     <FullCalendarComponent
                         setOpen={setOpen}
                         setOpenAdd={setOpenAdd}

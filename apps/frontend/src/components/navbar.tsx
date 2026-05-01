@@ -73,7 +73,7 @@ function Navbar(props: NavbarProps) {
     }, []);
 
     return (
-        <header className="w-full bg-[#013C5A] text-white sticky top-0 z-50">
+        <header className="w-full bg-(--blue-primary) text-white sticky top-0 z-50">
             <div className="w-full flex items-center justify-between px-6 py-2">
                 {/*Left side*/}
                 <NavigationMenu>
@@ -127,7 +127,12 @@ function Navbar(props: NavbarProps) {
                         {/*    <NavigationMenuLink render={<Link to="/profile"><HugeiconsIcon icon = {UserSquareIcon} className = "size-6"/> </Link>} className={navigationMenuTriggerStyle()}></NavigationMenuLink>*/}
 
                         {/*</NavigationMenuItem>*/}
-
+                        <NavigationMenuItem>
+                            <button onClick={toggleTheme}>{theme === "light" ?
+                                <HugeiconsIcon icon={Moon02Icon}/> :
+                                <HugeiconsIcon icon={Sun03Icon}/>}
+                            </button>
+                        </NavigationMenuItem>
                         <NavigationMenuItem>
                             <button
                                 onClick={async () => {

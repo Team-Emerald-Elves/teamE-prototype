@@ -72,18 +72,18 @@ export default function FavoritesTableEntryLink(props: FavoriteProps) {
     const mod = new Date(props.l.updated_at);
     const created = new Date(props.l.created_at);
     return (
-        <TableRow key={props.l.id} className="hover:bg-gray-50 transition h-12">
+        <TableRow key={props.l.id} className="hover:bg-(--table-hover) transition h-12">
             <FavoriteStar
                 doc={props.l}
                 onToggleOff={props.onToggleOff}
                 onToggleOn={props.onToggleOn}
             />
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.l.link_name}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <a
                     href={props.l.url}
                     target="_blank"
@@ -98,15 +98,15 @@ export default function FavoritesTableEntryLink(props: FavoriteProps) {
                 </a>
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.l.owner}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {created.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
         </TableRow>

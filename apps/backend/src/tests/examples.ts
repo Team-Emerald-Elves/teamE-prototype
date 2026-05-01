@@ -1,5 +1,5 @@
 import UnitTest from "./lib/tests.ts";
-import { prisma } from "../lib/prisma.ts";
+import prisma from "@repo/database";
 import { createSupabaseForRequest } from "../lib/supabase";
 
 const testPrisma = new UnitTest(async (testvar) => {

@@ -211,8 +211,10 @@ export default function LinksTable<TData extends Links, TValue>({
             },
             body: JSON.stringify({
                 action: "list",
-                owner: ownerFilters.map((item) => item.value),
-                meta_tags: tagFilters.map((item) => item.value),
+                linkData: {
+                    owner: ownerFilters.map((item) => item.value)[0],
+                    meta_tags: tagFilters.map((item) => item.value),
+                }
             }),
         });
 

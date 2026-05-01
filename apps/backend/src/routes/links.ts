@@ -19,23 +19,6 @@ linkRoute.post(
     "/",
     validate(LinkRequestPostModel),
     (req: express.Request, res: express.Response) => {
-        const lReq: LinkRequest = req.body as LinkRequest;
-
-        if (!lReq) {
-            res.status(400).json({
-                error: "INVALID_ACTION",
-            });
-            res.status(200).json({
-                error: "INVALID_LINKS_QUERY",
-            });
-        }
-    },
-);
-
-linkRoute.post(
-    "/",
-    validate(LinkRequestPostModel),
-    (req: express.Request, res: express.Response) => {
         console.log("BODY: ", req.body);
         const lReq: LinkRequest = req.body as LinkRequest;
 

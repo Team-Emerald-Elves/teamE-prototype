@@ -1,9 +1,6 @@
 //for admins only
 
-import {
-    Card,
-    CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { FileText } from "lucide-react";
 import { UsersRound } from "lucide-react";

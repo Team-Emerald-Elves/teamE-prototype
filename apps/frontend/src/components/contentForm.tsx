@@ -33,24 +33,24 @@ import { useAuth } from "@clerk/react";
 import { Edit03Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
-import qmgr from '@/lib/querymgr.ts';
-import type { Employee } from "@/../../packages/database/lib/prismadefs.ts"
+import qmgr from "@/lib/querymgr.ts";
+import type { Employee } from "@/../../packages/database/lib/prismadefs.ts";
 
 type contentFormProps = {
-    type: string,
-    currentName: string,
-    currentURL: string,
-    currentContentOwner: string,
-    currentRole: string,
-    currentExpirationDate: Date,
-    currentExpirationTime: string,
-    currentStatus: string,
-    currentID: number,
-    size: boolean,
-    lock: string,
-    refresh?: (any: any) => void,
-    roles: string[],
-}
+    type: string;
+    currentName: string;
+    currentURL: string;
+    currentContentOwner: string;
+    currentRole: string;
+    currentExpirationDate: Date;
+    currentExpirationTime: string;
+    currentStatus: string;
+    currentID: number;
+    size: boolean;
+    lock: string;
+    refresh?: (any: any) => void;
+    roles: string[];
+};
 
 type FormDataType = {
     name: string;
@@ -139,15 +139,14 @@ function ContentForm(props: contentFormProps) {
     };
 
     useEffect(() => {
-
-        qmgr.wait( async () => {
-            qmgr.getEmployees( async (res) => {
+        qmgr.wait(async () => {
+            qmgr.getEmployees(async (res) => {
                 if (!res.success) {
                     console.error(res.error);
                 }
-                setEmployees(res.data!)
-            })
-        })
+                setEmployees(res.data!);
+            });
+        });
     }, []);
 
     const [sessionToken, setSessionToken] = useState("");
@@ -480,8 +479,20 @@ function ContentForm(props: contentFormProps) {
 
                     <p>Last Modified: {formattedDate}</p>
                     <DialogFooter>
-                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh!} open={setOpen} disabled={!isFilled}/>
+                        <DialogClose
+                            render={
+                                <Button variant="outline" size="lg">
+                                    Cancel
+                                </Button>
+                            }
+                        />
+                        <SubmitConfirmationPopup
+                            formData={formData}
+                            type={props.type}
+                            refresh={props.refresh!}
+                            open={setOpen}
+                            disabled={!isFilled}
+                        />
                     </DialogFooter>
                 </DialogContent>
             </form>

@@ -1,11 +1,13 @@
 import * as Backend from "../../../../packages/database/lib/prismadefs.ts";
 import type { UseAuthReturn } from "@clerk/react/types";
 
-const url: string = `${import.meta.env.VITE_BACKEND_URL}`
+const url: string = `${import.meta.env.VITE_BACKEND_URL}`;
 
-
-
-async function postRequest(endpoint: string, token: string, body: string | object) {
+async function postRequest(
+    endpoint: string,
+    token: string,
+    body: string | object,
+) {
     let tBody: string = "";
     if (typeof body !== "string") {
         tBody = JSON.stringify(body);
@@ -19,15 +21,17 @@ async function postRequest(endpoint: string, token: string, body: string | objec
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: tBody
+            body: tBody,
         });
         const rBody = await res.json();
         if (!res.ok || !rBody) {
-            let err: string = (rBody).error;
+            let err: string = rBody.error;
             if (!err) {
                 err = "nil";
             }
-            throw Error(`Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`);
+            throw Error(
+                `Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`,
+            );
         }
         return rBody as Object;
     } catch (err) {
@@ -43,13 +47,15 @@ async function getRequest(endpoint: string, token: string) {
                 Authorization: `Bearer ${token}`,
             },
         });
-        const body = await res.json()
+        const body = await res.json();
         if (!res.ok || !body) {
             let err: string = (await res.json()).error;
             if (!err) {
                 err = "nil";
             }
-            throw Error(`Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`);
+            throw Error(
+                `Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`,
+            );
         }
         return body as Object;
     } catch (err) {
@@ -67,7 +73,7 @@ class ApiRes<T> {
     constructor(success: boolean, data?: T) {
         this.code = 200;
         this.error = "placeholder";
-        this._data = data
+        this._data = data;
         this._success = success;
     }
 
@@ -87,7 +93,7 @@ class QueryMgr {
     private waitList: (() => void)[];
     private me: Promise<Backend.Employee> | undefined;
     private employees: Promise<Backend.Employee[]> | undefined;
-    
+
     constructor() {
         this.waitList = [];
     }
@@ -96,20 +102,30 @@ class QueryMgr {
         return this.token;
     }
 
-    async getDocuments(callBack: (res: ApiRes<Backend.Document[]>, docFilter?: Partial<Backend.Document>) => void): Promise<void> {
-        const res = await postRequest("/api/supabase/list-documents", this.token, "");
+    async getDocuments(
+        callBack: (
+            res: ApiRes<Backend.Document[]>,
+            docFilter?: Partial<Backend.Document>,
+        ) => void,
+    ): Promise<void> {
+        const res = await postRequest(
+            "/api/supabase/list-documents",
+            this.token,
+            "",
+        );
         if (!res) {
             callBack(new ApiRes(false));
             return;
         }
-        callBack(new ApiRes(true, res as Backend.Document[]))
-    
+        callBack(new ApiRes(true, res as Backend.Document[]));
+
         //console.log("Qmgr docs: ", res);
-        
     }
-    async getMe(callBack: (res: ApiRes<Backend.Employee>) => void): Promise<void> {
+    async getMe(
+        callBack: (res: ApiRes<Backend.Employee>) => void,
+    ): Promise<void> {
         if (this.me) {
-            callBack(new ApiRes(true,  await this.me))
+            callBack(new ApiRes(true, await this.me));
             return;
         }
         const res = getRequest("/api/tests/me", this.token);
@@ -118,28 +134,32 @@ class QueryMgr {
             return;
         }
         this.me = res as Promise<Backend.Employee>;
-        callBack(new ApiRes(true, await this.me))
+        callBack(new ApiRes(true, await this.me));
     }
 
-    async getEmployees(callBack: (res: ApiRes<Backend.Employee[]>) => void): Promise<void> {
+    async getEmployees(
+        callBack: (res: ApiRes<Backend.Employee[]>) => void,
+    ): Promise<void> {
         if (this.employees) {
-            callBack(new ApiRes(true, await this.employees))
+            callBack(new ApiRes(true, await this.employees));
             return;
         }
-        const res = await postRequest("/employee", this.token, { action: "list" });
+        const res = await postRequest("/employee", this.token, {
+            action: "list",
+        });
         if (!res) {
             callBack(new ApiRes(false));
             return;
         }
         this.employees = res as Promise<Backend.Employee[]>;
-        callBack(new ApiRes(true, await this.employees))
+        callBack(new ApiRes(true, await this.employees));
     }
 
     async auth(authData: UseAuthReturn) {
         authData.getToken().then((tkn) => {
             console.log("QMGR unable to auth.");
             this.token = tkn!;
-        })
+        });
         this.loggedIn = authData.isSignedIn ? true : false;
         if (this.loggedIn) {
             this.doneWait();
@@ -149,12 +169,12 @@ class QueryMgr {
         this.loggedIn = false;
         this.wait = (then: () => void) => {
             this.waitList.concat(then);
-        }
+        };
     }
     private async doneWait() {
         this.wait = (then: () => void) => {
             then();
-        }
+        };
         for (const cb of this.waitList) {
             cb();
         }
@@ -162,7 +182,7 @@ class QueryMgr {
     }
     wait = (then: () => void) => {
         this.waitList.concat(then);
-    }
+    };
 }
 
 const qmgr = new QueryMgr();

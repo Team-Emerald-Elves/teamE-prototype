@@ -4,10 +4,7 @@
 
 import { Pie, PieChart } from "recharts";
 
-import {
-    Card,
-    CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
     ChartContainer,
     ChartLegend,

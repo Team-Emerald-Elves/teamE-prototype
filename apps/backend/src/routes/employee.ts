@@ -237,11 +237,11 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
-
+async function listEmployees(
+    eData: Omit<Partial<Employee>, "roles"> | undefined,
+    res: express.Response,
+) {
     try {
-
-
         const employees = await prisma.employee.findMany({
             orderBy: {
                 first_name: "asc",

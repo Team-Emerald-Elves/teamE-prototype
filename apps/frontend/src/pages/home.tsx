@@ -20,7 +20,6 @@ function Home() {
             return;
         }
 
-
         qmgr.wait(() => {
             qmgr.getMe(async (res) => {
                 if (!res.success) {
@@ -28,9 +27,13 @@ function Home() {
                 }
                 const data = await res.data!;
                 setfirstname(data.first_name);
-                setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
-            })
-        })
+                setRoles(
+                    (data.roles as string[]).map((role: string) =>
+                        role.toLowerCase(),
+                    ),
+                );
+            });
+        });
     }, []);
 
     return (
@@ -40,13 +43,16 @@ function Home() {
                 <div className="hero-image"></div>
                 <div className="hero-content justify-content-start">
                     <div className="hero-content-top flex items-center">
-                        <UserAvatar/>
+                        <UserAvatar />
                         <div className="hero-text px-5 justify-center text-lg/10">
-                            <h1>Hello,<br/> {firstname}</h1>
+                            <h1>
+                                Hello,
+                                <br /> {firstname}
+                            </h1>
                         </div>
                     </div>
                     <div className="hero-content-bottom py-5 pl-2">
-                        <SearchBar/>
+                        <SearchBar />
                     </div>
                 </div>
             </div>
@@ -61,7 +67,7 @@ function Home() {
                         {isEditing ? "Done" : "Edit dashboard"}
                     </button>
                 </div>
-                <Dashboard roles={roles} isEditing={isEditing}/>
+                <Dashboard roles={roles} isEditing={isEditing} />
             </div>
         </>
     );

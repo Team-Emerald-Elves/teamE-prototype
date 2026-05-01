@@ -2,9 +2,9 @@ import "../App.css";
 
 import UserManagementTable from "../components/user-management-table";
 import PageHeader from "@/components/page-header.tsx";
-import { columns } from "../components/employeeCols.tsx"
+import { columns } from "../components/employeeCols.tsx";
 
-function UserManagementPage(){
+function UserManagementPage() {
     return (
         <>
             <PageHeader

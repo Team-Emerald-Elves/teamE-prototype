@@ -138,13 +138,19 @@ export const UpdateFavoriteModel = z.object({
 
 //layouts.ts
 const LayoutDataModel = z.object({
-    layout: z.array(z.object({
-        i: z.string(),
-        x: z.number(),
-        y: z.number(),
-        w: z.number(),
-        h: z.number(),
-    }).passthrough()).optional(),
+    layout: z
+        .array(
+            z
+                .object({
+                    i: z.string(),
+                    x: z.number(),
+                    y: z.number(),
+                    w: z.number(),
+                    h: z.number(),
+                })
+                .passthrough(),
+        )
+        .optional(),
     activeWidgets: z.array(z.string()).optional(),
 });
 

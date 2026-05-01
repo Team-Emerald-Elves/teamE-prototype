@@ -101,7 +101,7 @@ export function UserLogs() {
     }, []);
     return (
         <>
-            <Card className= "flex flex-col relative ring-0">
+            <Card className="flex flex-col relative ring-0">
                 <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-white">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-2xl text-[#12324b]">
@@ -115,31 +115,63 @@ export function UserLogs() {
                 </CardHeader>
                 <CardContent className="p-0 overflow-hidden flex-1 min-h-0">
                     <ScrollArea className="h-full">
-                    {Object.entries(grouped).map(([date, logs]) => (
-                        <div key={date}>
-                            <p className="text-center text-xs font-semibold text-gray-500 pb-1">
-                                {formatDateLabel(date)}
-                            </p>
-                            <Table className = "w-full">
-                                <TableBody>
-                                    {logs.map((n) => (
-                                        <TableRow key={n.id}>
-                                            <TableCell className="font-medium flex items-center min-w-0 py-1.75 text-sm w-full">
-                                                <div className="flex items-center justify-between font-normal min-w-0">
-                                                    <div className="flex items-center gap-1 min-w-0">
-                                                        <img className="size-10 rounded-full shrink-0" src={n.profileIcon}/>
+                        {Object.entries(grouped).map(([date, logs]) => (
+                            <div key={date}>
+                                <p className="text-center text-xs font-semibold text-gray-500 pb-1">
+                                    {formatDateLabel(date)}
+                                </p>
+                                <Table className="w-full">
+                                    <TableBody>
+                                        {logs.map((n) => (
+                                            <TableRow key={n.id}>
+                                                <TableCell className="font-medium flex items-center min-w-0 py-1.75 text-sm w-full">
+                                                    <div className="flex items-center justify-between font-normal min-w-0">
+                                                        <div className="flex items-center gap-1 min-w-0">
+                                                            <img
+                                                                className="size-10 rounded-full shrink-0"
+                                                                src={
+                                                                    n.profileIcon
+                                                                }
+                                                            />
 
-                                                    <div className="pl-5 font-semibold">{n.title.split(" ").slice(0, 2).join(" ")}{" "}</div>
-                                                    <span > {n.title.split(" ").slice(2, 3).join(" ")}{" "} </span>
-                                                    <span className="text-[#768b6c] font-semibold"> {n.title.split(" ").slice(3).join(" ")} </span>
-                                                    </div>
-                                                    <div className="flex items-center shrink-0 whitespace-nowrap text-right">
-                                                        <div className="px-3"><Dot color="#a6a6a6" /></div>
-                                                        <div className="flex justify-end">
-                                                            {formatTimeLabel(n.createdAt)}
+                                                            <div className="pl-5 font-semibold">
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(0, 2)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </div>
+                                                            <span>
+                                                                {" "}
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(2, 3)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </span>
+                                                            <span className="text-[#768b6c] font-semibold">
+                                                                {" "}
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(3)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center shrink-0 whitespace-nowrap text-right">
+                                                            <div className="px-3">
+                                                                <Dot color="#a6a6a6" />
+                                                            </div>
+                                                            <div className="flex justify-end">
+                                                                {formatTimeLabel(
+                                                                    n.createdAt,
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))}

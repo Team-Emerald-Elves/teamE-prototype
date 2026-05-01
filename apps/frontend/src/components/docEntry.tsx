@@ -31,7 +31,9 @@ export default function DocTableEntry(props: favoriteProps) {
                 {props.d.expiration_date.toDateString()}
             </TableCell>
 
-            <TableCell className="text-gray-700">{props.d.document_status}</TableCell>
+            <TableCell className="text-gray-700">
+                {props.d.document_status}
+            </TableCell>
 
             <TableCell className="text-gray-700">
                 {props.d.content_owner}
@@ -52,7 +54,7 @@ export default function DocTableEntry(props: favoriteProps) {
                         currentURL={props.d.url as string}
                         currentContentOwner={props.d.content_owner as string}
                         currentRole={props.d.assigned_role as string}
-                        currentExpirationDate={new Date(Date.now() + 8.64e+7)}
+                        currentExpirationDate={new Date(Date.now() + 8.64e7)}
                         currentExpirationTime="10:30:00"
                         currentStatus={props.d.document_status}
                         size={false}

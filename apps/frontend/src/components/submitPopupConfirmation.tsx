@@ -7,10 +7,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import qmgr from "@/lib/querymgr";
-import { getToken } from "@clerk/react"
-import {useEffect, useState} from "react";
+import { getToken } from "@clerk/react";
+import { useEffect, useState } from "react";
 import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
@@ -34,49 +34,52 @@ type SubmitConfirmationPopupProps = {
 };
 
 export type IFile = {
-  id: number
-  name: string
-  url?: string
-  content_owner: string
-  expiration_date?: string
-  mime_type?: string
-  assigned_role: string
-  document_type: string
-  document_status: string
-  filePayload?: string
-  fileName?: string
-}
+    id: number;
+    name: string;
+    url?: string;
+    content_owner: string;
+    expiration_date?: string;
+    mime_type?: string;
+    assigned_role: string;
+    document_type: string;
+    document_status: string;
+    filePayload?: string;
+    fileName?: string;
+};
 
 async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [doc.assigned_role, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
-    })
+        });
+    });
 }
 
 function buildExpirationDate(
@@ -175,10 +178,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                     Submit
                 </Button>
             ) : (
-                <Dialog
-                    open={open}
-                    onOpenChange={setOpen}
-                >
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger>
                         <Button
                             type="submit"

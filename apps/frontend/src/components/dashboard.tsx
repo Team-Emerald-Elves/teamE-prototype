@@ -47,10 +47,15 @@ function pickDefault(roles: string[]): SavedDashboard {
     return fallbackLayout;
 }
 
-export default function Dashboard({ roles, isEditing = false }: DashboardProps) {
+export default function Dashboard({
+    roles,
+    isEditing = false,
+}: DashboardProps) {
     const initial = useMemo(() => pickDefault(roles), [roles]);
     const [layout, setLayout] = useState<Layout[]>(initial.layout as Layout[]);
-    const [activeWidgets, setActiveWidgets] = useState<string[]>(initial.activeWidgets);
+    const [activeWidgets, setActiveWidgets] = useState<string[]>(
+        initial.activeWidgets,
+    );
     const [loaded, setLoaded] = useState(false);
     const [hasSaved, setHasSaved] = useState(false);
     const { getToken, isSignedIn } = useAuth();
@@ -124,7 +129,6 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
     );
 
     return (
-
         <div ref={ref}>
             {width > 0 && (
                 <GridLayout

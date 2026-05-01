@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/navigation-menu";
 import { type ReactNode, useEffect, useState } from "react";
 import CenterDiv from "./center-div.tsx";
-import {getToken, useAuth} from "@clerk/react";
-import { Bell } from 'lucide-react';
-import {NotifScroll} from '@/components/notifications.tsx';
-import qmgr from '@/lib/querymgr.ts';
+import { getToken, useAuth } from "@clerk/react";
+import { Bell } from "lucide-react";
+import { NotifScroll } from "@/components/notifications.tsx";
+import qmgr from "@/lib/querymgr.ts";
 
 interface NavbarProps {
     children?: ReactNode;
@@ -50,15 +50,19 @@ function Navbar(props: NavbarProps) {
 
         async function load() {
             qmgr.wait(() => {
-                qmgr.getMe( async (res) => {
+                qmgr.getMe(async (res) => {
                     if (!res.success) {
                         throw new Error("Unable to get me");
                     }
                     const data = res.data!;
                     setUnread(data.unreadNotif as boolean);
-                    setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
-                })
-            })
+                    setRoles(
+                        (data.roles as string[]).map((role: string) =>
+                            role.toLowerCase(),
+                        ),
+                    );
+                });
+            });
         }
 
         load();

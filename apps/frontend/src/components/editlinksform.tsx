@@ -8,13 +8,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useEffect, useState } from "react"
-import {getToken, useAuth} from "@clerk/react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Edit03Icon } from "@hugeicons/core-free-icons"
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
+import { getToken, useAuth } from "@clerk/react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Edit03Icon } from "@hugeicons/core-free-icons";
 import {
     Select,
     SelectContent,
@@ -22,15 +22,15 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
-} from "@/components/ui/select.tsx"
-import qmgr from '@/lib/querymgr.ts'
-import type { Links as linksData } from '@repo/database/types'
+    SelectValue,
+} from "@/components/ui/select.tsx";
+import qmgr from "@/lib/querymgr.ts";
+import type { Links as linksData } from "@repo/database/types";
 
 type editlinksRequest = {
-    action: string,
-    linkData: Partial<linksData>
-}
+    action: string;
+    linkData: Partial<linksData>;
+};
 
 type linkProp = linksData & {
     reload: (any: any) => void;
@@ -39,7 +39,7 @@ async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
@@ -47,27 +47,28 @@ async function createNotif(link: linksData, action: string) {
             const me = res1.data!;
             console.log(me);
 
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                public: true,
-                targetRoles: [link.owner, "Administrator"],
-                title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
-            }),
-        },
-    );
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [link.owner, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+                    }),
+                },
+            );
 
-    if (!res.ok) {
-        throw new Error("failed to create view notification");
-    }
-    console.log(await res.json());
-    })})
+            if (!res.ok) {
+                throw new Error("failed to create view notification");
+            }
+            console.log(await res.json());
+        });
+    });
 }
 
 const ALL_ROLES = [
@@ -113,7 +114,7 @@ function EditLinksForm(props: linkProp) {
     const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
-        ...props
+        ...props,
     });
 
     useEffect(() => {
@@ -128,12 +129,12 @@ function EditLinksForm(props: linkProp) {
         if (!isSignedIn) return;
 
         qmgr.wait(() => {
-            qmgr.getMe( async (res) => {
+            qmgr.getMe(async (res) => {
                 if (!res.success) {
                     throw new Error("Unable to get me");
                 }
                 const rawRoles = res.data?.roles!;
-                const lowered = rawRoles.map(r => r.toLowerCase());
+                const lowered = rawRoles.map((r) => r.toLowerCase());
 
                 setRoles(rawRoles);
                 setRoleKeys(lowered);
@@ -148,8 +149,8 @@ function EditLinksForm(props: linkProp) {
                 if (isAdmin && props.owner) {
                     setSelectedRole(props.owner);
                 }
-            })
-        })
+            });
+        });
     }, []);
 
     const isAdmin = roleKeys.includes("administrator");

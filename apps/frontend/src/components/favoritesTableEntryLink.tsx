@@ -1,14 +1,17 @@
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import {getToken} from "@clerk/react";
+import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type {Links as linksData, documentContent} from "@repo/database/types"
-
+import type { Links as linksData, documentContent } from "@repo/database/types";
 
 type FavoriteProps = {
     l: linksData;
-    onToggleOff: (link: documentContent | linksData & {favorite?: boolean}) => void;
-    onToggleOn:  (link: documentContent | linksData & {favorite?: boolean}) => void;
+    onToggleOff: (
+        link: documentContent | (linksData & { favorite?: boolean }),
+    ) => void;
+    onToggleOn: (
+        link: documentContent | (linksData & { favorite?: boolean }),
+    ) => void;
 };
 
 async function addHitCount(link: linksData) {
@@ -34,32 +37,35 @@ async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [link.owner, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [link.owner, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
-    })
+        });
+    });
 }
 
 export default function FavoritesTableEntryLink(props: FavoriteProps) {

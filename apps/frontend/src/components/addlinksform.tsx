@@ -24,15 +24,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select.tsx";
-import type { Links as linksData } from '@repo/database/types'
-import type { Employee } from '../../../../packages/database/lib/prismadefs.ts'
-import qmgr from '@/lib/querymgr.ts'
+import type { Links as linksData } from "@repo/database/types";
+import type { Employee } from "../../../../packages/database/lib/prismadefs.ts";
+import qmgr from "@/lib/querymgr.ts";
 
 type linksDataExt = linksData & {
-    type?: string,
-    reload?: (any: any) => any
-}
-
+    type?: string;
+    reload?: (any: any) => any;
+};
 
 type editlinksRequest = {
     action: string;
@@ -41,12 +40,15 @@ type editlinksRequest = {
 
 function AddLinksForm(props: linksDataExt) {
     const { getToken, isSignedIn } = useAuth();
-    let token: string =  ""
-    getToken().then((tkn) => {
-        token = tkn!;
-    }, (err) => {
-        console.error("Add links error (token):", err)
-    })
+    let token: string = "";
+    getToken().then(
+        (tkn) => {
+            token = tkn!;
+        },
+        (err) => {
+            console.error("Add links error (token):", err);
+        },
+    );
 
     const [roles, setRoles] = useState<string[]>([]); // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
@@ -59,50 +61,62 @@ function AddLinksForm(props: linksDataExt) {
     async function createNotif(link: linksData, action: string) {
         const token = await getToken();
 
-        qmgr.wait( async () => {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+        qmgr.wait(async () => {
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [link.owner, "Administrator"],
+                        title: `${me!.first_name} ${me!.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [link.owner, "Administrator"],
-                    title: `${me!.first_name} ${me!.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
+        });
     }
 
-    const ALL_ROLES = ["BusinessAnalyst", "UnderWriter", "Administrator", "BusinessOperator", "ExcelOperator", "ActuarialAnalyst"];
+    const ALL_ROLES = [
+        "BusinessAnalyst",
+        "UnderWriter",
+        "Administrator",
+        "BusinessOperator",
+        "ExcelOperator",
+        "ActuarialAnalyst",
+    ];
 
     async function updateLinks(body: editlinksRequest, token: string | null) {
-        console.log(body)
+        console.log(body);
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(body),
         });
 
         if (!res.ok) {
             const errorText = await res.text();
-            throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+            throw new Error(
+                `Failed to update link (status ${res.status}): ${errorText}`,
+            );
         }
         const newLink = await res.json();
         createNotif(newLink, "created");
 
-        props.reload!((prev: any) => !prev)
+        props.reload!((prev: any) => !prev);
         return newLink;
     }
 
@@ -122,21 +136,20 @@ function AddLinksForm(props: linksDataExt) {
                 if (!res.success) {
                     return;
                 }
-                setMe(res.data!)
+                setMe(res.data!);
                 const rawRoles = res.data!.roles as string[];
-                const lowered = rawRoles.map(r => r.toLowerCase());
+                const lowered = rawRoles.map((r) => r.toLowerCase());
 
                 setRoles(rawRoles);
                 setRoleKeys(lowered);
 
                 const isAdmin = lowered.includes("administrator");
 
-
                 if (!isAdmin && rawRoles.length > 0) {
                     setSelectedRole(rawRoles[0]);
                 }
-            })
-        })
+            });
+        });
     }, [isSignedIn]);
 
     const isAdmin = roleKeys.includes("administrator");
@@ -229,40 +242,55 @@ function AddLinksForm(props: linksDataExt) {
                     </FieldGroup>
 
                     <DialogFooter>
-                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
+                        <DialogClose
+                            render={
+                                <Button variant="outline" size="lg">
+                                    Cancel
+                                </Button>
+                            }
+                        />
 
-                        <DialogClose render={
-                            <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
-                                const finalRole =
-                                    isAdmin
-                                        ? selectedRole
-                                        : roles[0];
-                                const bodyData: editlinksRequest = {
-                                    action: "create",
-                                    linkData: {
-                                        id: props.id!,
-                                        created_at: props.created_at,
-                                        updated_at: props.updated_at,
-                                        lock: props.lock,
-                                        meta_tags: props.meta_tags,
-                                        link_name: link.link_name,
-                                        url: link.url,
-                                        owner: finalRole,
-                                    }
-
-                                };
-                                try {
-
-                                    await updateLinks(bodyData, token!);
-                                    console.log("link updated successfully");
-                                } catch (err) {
-                                    console.error(err);
-                                    console.log("Failed to update links");
-                                }
-                                }}
-                            >
-                                Submit
-                            </Button> }/>
+                        <DialogClose
+                            render={
+                                <Button
+                                    type="submit"
+                                    disabled={!isFilled}
+                                    className=" bg-secondary text-secondary-foreground"
+                                    size="lg"
+                                    onClick={async () => {
+                                        const finalRole = isAdmin
+                                            ? selectedRole
+                                            : roles[0];
+                                        const bodyData: editlinksRequest = {
+                                            action: "create",
+                                            linkData: {
+                                                id: props.id!,
+                                                created_at: props.created_at,
+                                                updated_at: props.updated_at,
+                                                lock: props.lock,
+                                                meta_tags: props.meta_tags,
+                                                link_name: link.link_name,
+                                                url: link.url,
+                                                owner: finalRole,
+                                            },
+                                        };
+                                        try {
+                                            await updateLinks(bodyData, token!);
+                                            console.log(
+                                                "link updated successfully",
+                                            );
+                                        } catch (err) {
+                                            console.error(err);
+                                            console.log(
+                                                "Failed to update links",
+                                            );
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            }
+                        />
                     </DialogFooter>
                 </DialogContent>
             </form>

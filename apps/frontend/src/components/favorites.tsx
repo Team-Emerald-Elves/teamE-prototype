@@ -68,8 +68,8 @@ export default function Favorites() {
     }, [reload]);
 
     //if (currentFavorite === "docs") {
-        return (
-            <>
+    return (
+        <>
             <div className="max-w-10xl mx-auto relative">
                 <div className="flex items-center justify-between mb-4 pt-2">
                     <div className="flex items-center gap-2">
@@ -82,9 +82,12 @@ export default function Favorites() {
                         </h4>
                     </div>
 
-                    <Link className="text-sm text-blue-900 hover:underline"
-                          //to="/documents"
-                          to={currentFavorite === "docs" ? "/documents" : "/links"}
+                    <Link
+                        className="text-sm text-blue-900 hover:underline"
+                        //to="/documents"
+                        to={
+                            currentFavorite === "docs" ? "/documents" : "/links"
+                        }
                     >
                         View All
                     </Link>
@@ -104,32 +107,56 @@ export default function Favorites() {
                     <TabsTrigger value="docs">Documents</TabsTrigger>
                     <TabsTrigger value="links">Links</TabsTrigger>
                 </TabsList>
-                    <TabsContent value="docs">
-                        <div className="bg-white rounded-xl border-0 p-4 relative">
-                            <Table className="border rounded-lg overflow-hidden">
-                                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                    <TableRow>
-                                        <TableHead
-                                            className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
-                                        <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {favoriteDocs.map((d) => (
-                                        <FavoritesTableEntry key={d.id}
-                                             d={d}
-                                             onToggleOff={async (doc: documentContent | linksData) => {
-                                                 const token = await getToken()
-                                                 //need to send true for favorite and send the doc id and the employee id
-                                                 const newValue = !(doc as documentContent).favorite;
+                <TabsContent value="docs">
+                    <div className="bg-white rounded-xl border-0 p-4 relative">
+                        <Table className="border rounded-lg overflow-hidden">
+                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                <TableRow>
+                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
+                                        Favorite
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Title
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Created
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Content Type
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Expiration Date
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Status
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Owner
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Role
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Last Modified
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Actions
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {favoriteDocs.map((d) => (
+                                    <FavoritesTableEntry
+                                        key={d.id}
+                                        d={d}
+                                        onToggleOff={async (
+                                            doc: documentContent | linksData,
+                                        ) => {
+                                            const token = await getToken();
+                                            //need to send true for favorite and send the doc id and the employee id
+                                            const newValue = !(
+                                                doc as documentContent
+                                            ).favorite;
 
                                             await fetch(
                                                 `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
@@ -160,10 +187,14 @@ export default function Favorites() {
                                             );
                                             setReload((prev) => !prev);
                                         }}
-                                        onToggleOn={async (doc: documentContent | linksData) => {
+                                        onToggleOn={async (
+                                            doc: documentContent | linksData,
+                                        ) => {
                                             //need to send true for favorite and send the doc id and the employee id
                                             const token = await getToken();
-                                            const newValue = !(doc as documentContent).favorite;
+                                            const newValue = !(
+                                                doc as documentContent
+                                            ).favorite;
 
                                             await fetch(
                                                 `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
@@ -197,7 +228,6 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
-
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>
@@ -249,26 +279,44 @@ export default function Favorites() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value = "links">
+                <TabsContent value="links">
                     <div className="bg-white rounded-xl shadow-none border-0 p-4 relative overflow-visible">
                         <Table className="border rounded-lg overflow-hidden ">
-                                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                            <TableRow>
-                                                <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
-                                                <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
+                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                <TableRow>
+                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
+                                        Favorite
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Title
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        URL
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Role
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Created
+                                    </TableHead>
+                                    <TableHead className="text-[#0b4461] font-medium text-sm">
+                                        Last Modified
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
 
                             <TableBody>
                                 {favoriteLinks.map((l) => (
                                     <FavoritesTableEntryLink
                                         key={l.id}
                                         l={l}
-                                        onToggleOff={async (link: documentContent | linksData & {favorite?: boolean}) => {
+                                        onToggleOff={async (
+                                            link:
+                                                | documentContent
+                                                | (linksData & {
+                                                      favorite?: boolean;
+                                                  }),
+                                        ) => {
                                             const token = await getToken();
                                             //need to send true for favorite and send the doc id and the employee id
                                             const newValue = !link.favorite;
@@ -302,7 +350,13 @@ export default function Favorites() {
                                             );
                                             setReload((prev) => !prev);
                                         }}
-                                        onToggleOn={async (link: linksData & {favorite?: boolean} | documentContent) => {
+                                        onToggleOn={async (
+                                            link:
+                                                | (linksData & {
+                                                      favorite?: boolean;
+                                                  })
+                                                | documentContent,
+                                        ) => {
                                             //need to send true for favorite and send the doc id and the employee id
                                             const token = await getToken();
                                             const newValue = !link.favorite;
@@ -391,6 +445,6 @@ export default function Favorites() {
                     </div>
                 </TabsContent>
             </Tabs>
-    </>
+        </>
     );
 }

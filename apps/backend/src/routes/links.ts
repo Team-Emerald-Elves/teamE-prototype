@@ -1,6 +1,6 @@
 import express from "express";
 import prisma, { type Links } from "@repo/database";
-import { getAuth } from '@clerk/express'
+import { getAuth } from "@clerk/express";
 import {
     LinkRequestGetModel,
     LinkRequestPostModel,
@@ -15,18 +15,22 @@ interface LinkRequest {
     linkData: Partial<Links> | undefined;
 }
 
-linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: express.Response) => {
-    const lReq: LinkRequest = req.body as LinkRequest;
+linkRoute.post(
+    "/",
+    validate(LinkRequestPostModel),
+    (req: express.Request, res: express.Response) => {
+        const lReq: LinkRequest = req.body as LinkRequest;
 
-    if (!lReq) {
-        res.status(400).json({
-            error: "INVALID_ACTION",
-        });
-        res.status(200).json({
-            error: "INVALID_LINKS_QUERY",
-        });
-    }
-});
+        if (!lReq) {
+            res.status(400).json({
+                error: "INVALID_ACTION",
+            });
+            res.status(200).json({
+                error: "INVALID_LINKS_QUERY",
+            });
+        }
+    },
+);
 
 linkRoute.post(
     "/",
@@ -93,7 +97,7 @@ async function listLinks(
         if (!isAuthenticated) {
             return res.status(401).json({ error: "Not authenticated" });
         }
-        const body = req.body
+        const body = req.body;
 
         // 1. Get employee (for favorites)
         const employee = await prisma.employee.findFirst({
@@ -165,7 +169,7 @@ async function listLinks(
 }
 
 async function createLink(
-    lData: Partial<Links> & Pick<Links, "link_name" | "url" | "owner" >,
+    lData: Partial<Links> & Pick<Links, "link_name" | "url" | "owner">,
     res: express.Response,
 ) {
     if (!lData || !lData.link_name || !lData.url) {

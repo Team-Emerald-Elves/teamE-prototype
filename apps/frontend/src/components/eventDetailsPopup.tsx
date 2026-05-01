@@ -2,11 +2,7 @@ import EventForm from "@/components/eventForm.tsx";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/react";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import ExpiringBar from "@/components/expiringBar.tsx";
@@ -29,15 +25,14 @@ export default function EventDetails(props: EventDetailsProps) {
             return;
         }
 
-
         qmgr.wait(() => {
-            qmgr.getMe( async (res) => {
+            qmgr.getMe(async (res) => {
                 if (!res.success) {
                     throw new Error("Unable to get me");
                 }
                 setEmpID(res.data!.id);
-            })
-        })
+            });
+        });
     }, [isSignedIn]);
 
     const [open, setOpen] = useState(false);

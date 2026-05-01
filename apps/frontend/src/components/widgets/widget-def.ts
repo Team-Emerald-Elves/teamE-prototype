@@ -1,6 +1,5 @@
 import type { Layout } from "react-grid-layout";
 
-
 export interface WidgetProps {
     isEditing: boolean;
 }
@@ -17,7 +16,6 @@ export interface WidgetDefinition {
     icon?: React.ComponentType<{ size?: number }>;
     allowedRoles?: string[];
 }
-
 
 export type WidgetRegistry = Record<string, WidgetDefinition>;
 

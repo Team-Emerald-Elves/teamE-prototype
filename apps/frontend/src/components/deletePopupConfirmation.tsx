@@ -16,45 +16,52 @@ import type { documentContent } from "@repo/database/types";
 import qmgr from "@/lib/querymgr";
 
 type deleteConfirmationPopupProps = {
-    target: documentContent
-    refresh?: (any: any) => void
-}
+    target: documentContent;
+    refresh?: (any: any) => void;
+};
 
-
-
-async function createNotif(doc: documentContent, action: string): Promise<void> {
+async function createNotif(
+    doc: documentContent,
+    action: string,
+): Promise<void> {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res) => {
+        qmgr.getMe(async (res) => {
             if (!res.success) {
-                console.error("Failed to get me")
+                console.error("Failed to get me");
                 return;
             }
 
-            const nRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const nRes = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${res.data!.first_name} ${res.data!.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [doc.assigned_role, "Administrator"],
-                    title: `${res.data!.first_name} ${res.data!.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-                })
-            })
-        
+            );
+
             if (!nRes.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await nRes.json());
-        })
-    })
+        });
+    });
 }
 
-async function removeDocument(document: documentContent, token: string, refresh: (any: any) => void) {
-
+async function removeDocument(
+    document: documentContent,
+    token: string,
+    refresh: (any: any) => void,
+) {
     const data = {
         id: document.id,
     };
@@ -76,7 +83,7 @@ async function removeDocument(document: documentContent, token: string, refresh:
 
         createNotif(document, "deleted");
 
-        refresh((prev: any) => !prev)
+        refresh((prev: any) => !prev);
         return response.json();
     });
 }

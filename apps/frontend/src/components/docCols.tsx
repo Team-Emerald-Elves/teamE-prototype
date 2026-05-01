@@ -3,11 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "./ui/button.tsx";
-import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import mime from "mime";
 import DocumentViewer from "@/components/docViewer.tsx";
 import DocTag from "@/components/doctag.tsx";

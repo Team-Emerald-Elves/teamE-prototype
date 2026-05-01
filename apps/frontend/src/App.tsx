@@ -1,27 +1,26 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/home.tsx';
-import Documents from './pages/documents.tsx';
-import Profile from './pages/profile.tsx';
-import UnderwriterDummy from './pages/underwriterdummypage.tsx'
-import BusinessDummy from './pages/buisnessanalystdummy.tsx'
-import Navbar from './components/navbar.tsx'
-import LinksPage from './pages/links.tsx'
-import LoginSignup from './pages/login-signup.tsx'
-import NotFound from './pages/not-found.tsx'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/home.tsx";
+import Documents from "./pages/documents.tsx";
+import Profile from "./pages/profile.tsx";
+import UnderwriterDummy from "./pages/underwriterdummypage.tsx";
+import BusinessDummy from "./pages/buisnessanalystdummy.tsx";
+import Navbar from "./components/navbar.tsx";
+import LinksPage from "./pages/links.tsx";
+import LoginSignup from "./pages/login-signup.tsx";
+import NotFound from "./pages/not-found.tsx";
+import "./App.css";
 import UserManagementPage from "@/pages/user-management-page.tsx";
 import Footer from "./components/footer.tsx";
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
-import {Show, useAuth, UserButton} from '@clerk/react'
+import { Show, useAuth, UserButton } from "@clerk/react";
 //import CenterDiv from "./components/center-div.tsx";
 import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
-import qmgr from './lib/querymgr.ts';
+import qmgr from "./lib/querymgr.ts";
 
 function App() {
-
     qmgr.auth(useAuth());
     return (
         <BrowserRouter>

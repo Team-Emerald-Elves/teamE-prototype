@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useEffect, useMemo, useState } from "react"
+import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -12,13 +12,10 @@ import {
     getSortedRowModel,
     type SortingState,
     useReactTable,
-} from "@tanstack/react-table"
-import { Search, Info } from "lucide-react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import {
-    SlidersHorizontalIcon,
-    X,
-} from "@hugeicons/core-free-icons"
+} from "@tanstack/react-table";
+import { Search, Info } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { SlidersHorizontalIcon, X } from "@hugeicons/core-free-icons";
 
 import {
     Table,
@@ -27,35 +24,35 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table.tsx"
-import { Button } from "./ui/button.tsx"
+} from "@/components/ui/table.tsx";
+import { Button } from "./ui/button.tsx";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover.tsx"
+} from "@/components/ui/popover.tsx";
 import {
     InputGroup,
     InputGroupAddon,
     InputGroupInput,
-} from "@/components/ui/input-group"
+} from "@/components/ui/input-group";
 
-import CreateEmployeeForm from "@/components/createEmployeeForm.tsx"
-import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx"
-import EmployeeForm from "@/components/employeeForm.tsx"
-import qmgr from "@/lib/querymgr.ts"
+import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
+import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx";
+import EmployeeForm from "@/components/employeeForm.tsx";
+import qmgr from "@/lib/querymgr.ts";
 import { type Employee } from "@repo/database/types";
 
 interface EmployeeProps {
-    columns: ColumnDef<Employee, unknown>[]
+    columns: ColumnDef<Employee, unknown>[];
 }
 
 type RoleFilter = {
-    key: "roles"
-    value: string
-    id: string
-    state: boolean
-}
+    key: "roles";
+    value: string;
+    id: string;
+    state: boolean;
+};
 
 const initialRoleFilters: RoleFilter[] = [
     {
@@ -94,61 +91,62 @@ const initialRoleFilters: RoleFilter[] = [
         id: "Underwriter",
         state: false,
     },
-]
+];
 
-export default function EmployeeTable({
-    columns,
-}: EmployeeProps) {
-    const [employees, setEmployees] = useState<Employee[]>([])
-    const [roleFilters, setRoleFilters] = useState<RoleFilter[]>(initialRoleFilters)
-    const [isRoleOpen, setIsRoleOpen] = useState(false)
-    const [reload, setReload] = useState(false)
+export default function EmployeeTable({ columns }: EmployeeProps) {
+    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [roleFilters, setRoleFilters] =
+        useState<RoleFilter[]>(initialRoleFilters);
+    const [isRoleOpen, setIsRoleOpen] = useState(false);
+    const [reload, setReload] = useState(false);
 
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
-        React.useState<ColumnFiltersState>([])
+        React.useState<ColumnFiltersState>([]);
 
     useEffect(() => {
         qmgr.wait(async () => {
             qmgr.getEmployees(async (res) => {
                 if (!res.success) {
-                    console.error(res.error)
-                    return
+                    console.error(res.error);
+                    return;
                 }
 
-                setEmployees(res.data ?? [])
-            })
-        })
-    }, [reload])
+                setEmployees(res.data ?? []);
+            });
+        });
+    }, [reload]);
 
     const activeRoleFilters = useMemo(
         () => roleFilters.filter((filter) => filter.state),
         [roleFilters],
-    )
+    );
 
     const filteredEmployees = useMemo(() => {
         if (activeRoleFilters.length === 0) {
-            return employees
+            return employees;
         }
 
         return employees.filter((employee) => {
-            const roles = (employee as Employee & {
-                roles?: string[] | string | null
-            }).roles
+            const roles = (
+                employee as Employee & {
+                    roles?: string[] | string | null;
+                }
+            ).roles;
 
             if (!roles) {
-                return false
+                return false;
             }
 
             if (Array.isArray(roles)) {
                 return activeRoleFilters.some((filter) =>
                     roles.includes(filter.value),
-                )
+                );
             }
 
-            return activeRoleFilters.some((filter) => filter.value === roles)
-        })
-    }, [employees, activeRoleFilters])
+            return activeRoleFilters.some((filter) => filter.value === roles);
+        });
+    }, [employees, activeRoleFilters]);
 
     const table = useReactTable({
         data: filteredEmployees,
@@ -163,13 +161,13 @@ export default function EmployeeTable({
             sorting,
             columnFilters,
         },
-    })
+    });
 
     const handleCheckbox = (
         e: React.ChangeEvent<HTMLInputElement>,
         option: RoleFilter,
     ) => {
-        const { checked } = e.target
+        const { checked } = e.target;
 
         setRoleFilters((currentFilters) =>
             currentFilters.map((filter) =>
@@ -180,8 +178,8 @@ export default function EmployeeTable({
                       }
                     : filter,
             ),
-        )
-    }
+        );
+    };
 
     const removeRoleFilter = (option: RoleFilter) => {
         setRoleFilters((currentFilters) =>
@@ -193,8 +191,8 @@ export default function EmployeeTable({
                       }
                     : filter,
             ),
-        )
-    }
+        );
+    };
 
     return (
         <div className="max-w-10xl mx-auto px-10 py-10">
@@ -301,7 +299,8 @@ export default function EmployeeTable({
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
-                                                  header.column.columnDef.header,
+                                                  header.column.columnDef
+                                                      .header,
                                                   header.getContext(),
                                               )}
                                     </TableHead>
@@ -317,7 +316,7 @@ export default function EmployeeTable({
                     <TableBody>
                         {table.getRowModel().rows.length > 0 ? (
                             table.getRowModel().rows.map((row) => {
-                                const employee = row.original
+                                const employee = row.original;
 
                                 return (
                                     <TableRow key={row.id}>
@@ -338,7 +337,9 @@ export default function EmployeeTable({
                                                 <EmployeeForm
                                                     employee={{
                                                         ...employee,
-                                                        email: employee.email ?? undefined
+                                                        email:
+                                                            employee.email ??
+                                                            undefined,
                                                     }}
                                                     reload={setReload}
                                                 />
@@ -350,7 +351,7 @@ export default function EmployeeTable({
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                )
+                                );
                             })
                         ) : (
                             <TableRow>
@@ -443,5 +444,5 @@ export default function EmployeeTable({
                 </div>
             </div>
         </div>
-    )
+    );
 }

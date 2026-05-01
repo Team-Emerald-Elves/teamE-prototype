@@ -5,15 +5,19 @@ import { TableCell } from "@/components/ui/table.tsx";
 import { useState } from "react";
 import type { documentContent, Links as linksData } from "@repo/database/types";
 
-
 type FavoriteStarProps = {
     doc: documentContent | linksData;
     onToggleOn: (doc: documentContent | linksData) => void;
     onToggleOff: (doc: documentContent | linksData) => void;
-    className?: string
+    className?: string;
 };
 
-export default function FavoriteStar({ doc, onToggleOff, onToggleOn, className }: FavoriteStarProps) {
+export default function FavoriteStar({
+    doc,
+    onToggleOff,
+    onToggleOn,
+    className,
+}: FavoriteStarProps) {
     const [favorite, setFavorite] = useState((doc as documentContent).favorite);
 
     return (

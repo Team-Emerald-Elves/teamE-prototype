@@ -7,10 +7,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import DocumentViewer from "@/components/docViewer.tsx";
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon} from "@hugeicons/core-free-icons";
-import {Button} from "@/components/ui/button.tsx";
-import {getToken} from "@clerk/react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Download01Icon } from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/button.tsx";
+import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr";
 import type { documentContent, Links as linksData } from "@repo/database/types";
 
@@ -69,7 +69,7 @@ async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
@@ -77,27 +77,28 @@ async function createNotif(doc: documentContent, action: string) {
             const me = res1.data!;
             console.log(me);
 
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                public: true,
-                targetRoles: [doc.assigned_role, "Administrator"],
-                title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
-            }),
-        },
-    );
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
+                },
+            );
 
-    if (!res.ok) {
-        throw new Error("failed to create view notification");
-    }
-    console.log(await res.json());
-    })})
+            if (!res.ok) {
+                throw new Error("failed to create view notification");
+            }
+            console.log(await res.json());
+        });
+    });
 }
 
 export default function FavoritesTableEntry(props: FavoriteProps) {

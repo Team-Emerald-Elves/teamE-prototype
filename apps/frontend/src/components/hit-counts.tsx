@@ -115,7 +115,7 @@ export function HitCounts() {
     }, [timeRange]);
 
     return (
-        <Card className="pt-0 w-[60%] h-full relative">
+        <Card className="pt-0 h-full flex flex-col relative ring-0">
             <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-5 sm:flex-row">
                 <div className="grid flex-1 gap-1">
                     <CardTitle className = "text-2xl text-[#12324b]">Document Hit Counts</CardTitle>
@@ -143,10 +143,10 @@ export function HitCounts() {
                     </SelectContent>
                 </Select>
             </CardHeader>
-            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+            <CardContent className="flex-1 min-h-0 sm:px-6 sm:pt-6 shrink-0">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[400px] w-full"
+                    className="aspect-auto h-full w-full"
                 >
                     <AreaChart data={chartData}>
                         <defs>

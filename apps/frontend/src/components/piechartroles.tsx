@@ -93,7 +93,7 @@ export function ChartPieSeparatorNone() {
     }, []);
 
     return (
-        <Card className="flex flex-col h-full relative">
+        <Card className="flex flex-col h-full relative ring-0 py-0">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Employees by Role</CardTitle>
             </CardHeader>

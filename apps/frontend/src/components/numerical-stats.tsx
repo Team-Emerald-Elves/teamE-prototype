@@ -73,7 +73,7 @@ export function NumericalStats() {
     }, []);
     return (
         <>
-            <Card className="w-max-[500px] h-full mb-5 items-center relative">
+            <Card className="w-max-[500px] h-full ring-0 items-center relative">
                 <CardContent className="py-4 px-8 flex flex-row gap-3 items-center h-full">
                     {/* Stats grid */}
                     <div className="flex flex-col gap-7 items center">

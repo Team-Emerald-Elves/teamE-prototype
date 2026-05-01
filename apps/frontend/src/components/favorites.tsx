@@ -88,8 +88,8 @@ export default function Favorites() {
 
     //if (currentFavorite === "docs") {
         return (
-            <div className="max-w-10xl mx-auto px-6 py-6 relative">
-                <div className="flex items-center justify-between mb-4">
+            <div className="max-w-10xl mx-auto relative">
+                <div className="flex items-center justify-between mb-4 pt-2">
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon
                             icon={solidStar}
@@ -115,8 +115,7 @@ export default function Favorites() {
                 </TabsList>
 
                     <TabsContent value="docs">
-                        <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                            <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
+                        <div className="bg-white rounded-xl border-0 p-4 relative">
                             <Table className="border rounded-lg overflow-hidden">
                                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                     <TableRow>
@@ -190,7 +189,6 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
-                            </ScrollArea>
 
 
                         <div className="absolute bottom-3 left-3">
@@ -230,9 +228,8 @@ export default function Favorites() {
                 </TabsContent>
 
                 <TabsContent value = "links">
-                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                        <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
-                                    <Table className="border rounded-lg overflow-hidden">
+                    <div className="bg-white rounded-xl shadow-none border-0 p-4 relative overflow-visible">
+                        <Table className="border rounded-lg overflow-hidden ">
                                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                             <TableRow>
                                                 <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
@@ -303,7 +300,6 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
-                        </ScrollArea>
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>

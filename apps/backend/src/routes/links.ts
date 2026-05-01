@@ -165,7 +165,7 @@ async function listLinks(
 }
 
 async function createLink(
-    lData: Partial<Links> & Pick<Links, "link_name" | "url">,
+    lData: Partial<Links> & Pick<Links, "link_name" | "url" | "owner" >,
     res: express.Response,
 ) {
     if (!lData || !lData.link_name || !lData.url) {

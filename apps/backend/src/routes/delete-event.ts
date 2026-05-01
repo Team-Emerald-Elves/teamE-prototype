@@ -10,9 +10,7 @@ async function deleteEventRoute(req: express.Request, res: express.Response) {
     }
 
     try {
-        const {
-            id,
-        } = req.body;
+        const { id } = req.body;
 
         if (!id) {
             return res.status(400).json({ error: "Missing event id" });

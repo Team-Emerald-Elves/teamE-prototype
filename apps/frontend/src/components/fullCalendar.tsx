@@ -37,8 +37,12 @@ export default function FullCalendarComponent({
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                }
+                },
             );
+
+            if (!res.ok) {
+                throw new Error("Error fetching events.");
+            }
 
             const data = await res.json();
             setEvents(data);

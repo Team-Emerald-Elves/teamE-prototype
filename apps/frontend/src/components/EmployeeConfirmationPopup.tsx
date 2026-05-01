@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -7,23 +7,28 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-
+} from "@/components/ui/dialog";
 
 type ConfirmationPopupProps = {
-    onConfirm: () => void
-    triggerLabel?: string,
-    disabled: boolean,
-}
+    onConfirm: () => void;
+    triggerLabel?: string;
+    disabled: boolean;
+};
 
-
-export function ConfirmationPopup({ onConfirm, triggerLabel, disabled}: ConfirmationPopupProps) {
+export function ConfirmationPopup({
+    onConfirm,
+    triggerLabel,
+    disabled,
+}: ConfirmationPopupProps) {
     return (
         <>
-            { disabled ? (
+            {disabled ? (
                 <DialogTrigger
                     render={
-                        <Button disabled={true} className="bg-secondary text-background p-3">
+                        <Button
+                            disabled={true}
+                            className="bg-secondary text-background p-3"
+                        >
                             {triggerLabel}
                         </Button>
                     }
@@ -45,7 +50,11 @@ export function ConfirmationPopup({ onConfirm, triggerLabel, disabled}: Confirma
                             Are you sure you want to continue?
                         </p>
                         <DialogFooter>
-                            <DialogClose render={<Button variant="outline">Cancel</Button>} />
+                            <DialogClose
+                                render={
+                                    <Button variant="outline">Cancel</Button>
+                                }
+                            />
                             <DialogClose
                                 render={
                                     <Button type="submit" onClick={onConfirm}>
@@ -56,11 +65,9 @@ export function ConfirmationPopup({ onConfirm, triggerLabel, disabled}: Confirma
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            )
-            }
+            )}
         </>
-    )
+    );
 }
 
-
-export default ConfirmationPopup
+export default ConfirmationPopup;

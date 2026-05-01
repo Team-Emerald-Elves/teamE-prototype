@@ -7,6 +7,16 @@
   "config": {
     "backendENV": "../../apps/backend/.env"
   },
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./types": {
+      "types": "./types.ts",
+      "default": "./types.ts"
+    }
+  },
   "scripts": {
     "db:generate": "dotenv -e $npm_package_config_backendENV -- pnpm prisma generate",
     "db:migrate": "dotenv -e $npm_package_config_backendENV -- pnpm prisma migrate dev",

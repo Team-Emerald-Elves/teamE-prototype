@@ -6,9 +6,7 @@ interface ILinkTagContentRemove {
     tag: string;
 }
 async function linkTagDelete(req: express.Request, res: express.Response) {
-
-    const l: ILinkTagContentRemove = req.body
-
+    const l: ILinkTagContentRemove = req.body;
 
     try {
         // Update contents for document.
@@ -16,10 +14,10 @@ async function linkTagDelete(req: express.Request, res: express.Response) {
             where: {
                 id: l.id,
             },
-        })
+        });
 
         const updatedTags = (doc.meta_tags || []).filter(
-            (t: string) => t !== l.tag
+            (t: string) => t !== l.tag,
         );
 
         const newDoc = await prisma.links.update({
@@ -33,12 +31,10 @@ async function linkTagDelete(req: express.Request, res: express.Response) {
 
         console.log("New doc created: ", newDoc);
 
-
         if (!newDoc) {
-            throw new Error(`Failed to update tags.`)
+            throw new Error(`Failed to update tags.`);
         }
-        res.sendStatus(200)
-
+        res.sendStatus(200);
     } catch (error) {
         console.error("Update document error:", error);
 

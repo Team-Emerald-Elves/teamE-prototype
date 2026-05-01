@@ -1,4 +1,10 @@
-import {type ReactElement, type DragEvent, useState, useEffect, type ChangeEvent} from "react";
+import {
+    type ReactElement,
+    type DragEvent,
+    useState,
+    useEffect,
+    type ChangeEvent,
+} from "react";
 import CenterDiv from "./center-div.tsx";
 import fileImg from "../assets/file.svg";
 import "./fupload.css";
@@ -11,21 +17,20 @@ interface FileUploadProps {
 }
 
 function FileUpload(props: FileUploadProps): ReactElement {
-
     const [files, setFiles] = useState<File[]>([]);
     const [fileNames, setFileNames] = useState<string[]>([]);
 
     useEffect(() => {
         console.log("Uploaded: ", files);
         updateFileNames();
-       props.onUpload(files);
-    }, [files])
+        props.onUpload(files);
+    }, [files]);
 
     function updateFileNames() {
         setFileNames([]);
         files.forEach((f) => {
-            setFileNames((prev) => prev.concat(f.name))
-        })
+            setFileNames((prev) => prev.concat(f.name));
+        });
     }
 
     const dragHandler = (e: DragEvent) => {
@@ -36,16 +41,19 @@ function FileUpload(props: FileUploadProps): ReactElement {
         if (fileItems.length > 0) {
             e.preventDefault();
             fileItems.forEach((item) => {
-                if (item.type.startsWith("application") || item.type.startsWith("text")) {
+                if (
+                    item.type.startsWith("application") ||
+                    item.type.startsWith("text")
+                ) {
                     e.dataTransfer!.dropEffect = "copy";
-                    console.log("file size: ", item.getAsFile()?.size)
+                    console.log("file size: ", item.getAsFile()?.size);
                     console.log("fi: ", item.getAsFile());
                 } else {
                     e.dataTransfer!.dropEffect = "none";
                 }
-            })
+            });
         }
-    }
+    };
 
     const dropHandler = (e: DragEvent) => {
         e.preventDefault();
@@ -56,42 +64,60 @@ function FileUpload(props: FileUploadProps): ReactElement {
         if (tFiles && tFiles.length > 0) {
             setFiles(tFiles);
         } else {
-            console.error("0 Files dropped")
+            console.error("0 Files dropped");
         }
-    }
+    };
 
     const changeHandler = (e: ChangeEvent): void => {
         const target = e.target as HTMLInputElement;
 
-        console.log("Changing")
+        console.log("Changing");
 
         // .files is a FileList (array-like), not a true array
         if (target.files && target.files.length > 0) {
-            setFiles(Array.from(target.files))
-            console.log("TFiles: ", files)
+            setFiles(Array.from(target.files));
+            console.log("TFiles: ", files);
         } else {
-            console.error("Invalid files selected")
+            console.error("Invalid files selected");
         }
-    }
+    };
 
-    const fileInput: React.JSX.Element = <input type="file" id="dropZone" style={{width: "100%", height: "100%"}} onDragOver={dragHandler} onChange={changeHandler} onDrop={dropHandler}/>
+    const fileInput: React.JSX.Element = (
+        <input
+            type="file"
+            id="dropZone"
+            style={{ width: "100%", height: "100%" }}
+            onDragOver={dragHandler}
+            onChange={changeHandler}
+            onDrop={dropHandler}
+        />
+    );
 
-    return ( props.show ?
+    return props.show ? (
         <>
-            <CenterDiv style={{
-                borderRadius: "2rem",
-                width: "80%",
-            }}>
+            <CenterDiv
+                style={{
+                    borderRadius: "2rem",
+                    width: "80%",
+                }}
+            >
                 <div className="fupload">
                     {fileInput}
-                    <img src={fileImg} width="50rem" draggable="false" alt="file_image"/>
+                    <img
+                        src={fileImg}
+                        width="50rem"
+                        draggable="false"
+                        alt="file_image"
+                    />
                 </div>
                 <p>Files:</p>
-                <p>{fileNames.join(',')}</p>
-                <br/>
+                <p>{fileNames.join(",")}</p>
+                <br />
             </CenterDiv>
-        </> : <div hidden/>
-    )
+        </>
+    ) : (
+        <div hidden />
+    );
 }
 
 export default FileUpload;

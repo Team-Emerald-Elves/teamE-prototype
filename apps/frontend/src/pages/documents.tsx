@@ -1,29 +1,35 @@
-
-import {useState, useEffect, useCallback, createContext, useContext} from "react";
-import {getToken, useAuth} from "@clerk/react"
-import {DocumentsTable} from "../components/documents-table.tsx"
-import { columns, type Document } from "../components/docCols.tsx"
-import PageHeader from "../components/page-header.tsx"
+import {
+    useState,
+    useEffect,
+    useCallback,
+    createContext,
+    useContext,
+} from "react";
+import { getToken, useAuth } from "@clerk/react";
+import { DocumentsTable } from "../components/documents-table.tsx";
+import { columns, type Document } from "../components/docCols.tsx";
+import PageHeader from "../components/page-header.tsx";
 
 async function getDocumentsAdmin(token: string) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
         {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-        }
-    )
+        },
+    );
 
     if (!res.ok) {
-        throw new Error("Failed to fetch docs")
+        throw new Error("Failed to fetch docs");
     }
-    const data = await res.json()
-    return data
+    const data = await res.json();
+    return data;
 }
 
-const reloadContext= createContext <(() => Promise<void>) | null>(null);
+const reloadContext = createContext<(() => Promise<void>) | null>(null);
 
 // export const useReload = () => {
 //     const context= useContext(reloadContext);
@@ -38,7 +44,7 @@ export default function Documents() {
 
     const refreshDocs = useCallback(async () => {
         if (!isSignedIn) return;
-            const token = await getToken();
+        const token = await getToken();
         if (!token) return;
 
         const docsData = await getDocumentsAdmin(token);
@@ -49,17 +55,15 @@ export default function Documents() {
         refreshDocs();
     }, [refreshDocs]);
 
-
     return (
         <>
-
-                <PageHeader title="Documents" description="View your documents or modify them by adding, deleting, or updating existing ones."/>
-                    <div>
-
-                        <DocumentsTable columns={columns}  />
-                    </div>
-
+            <PageHeader
+                title="Documents"
+                description="View your documents or modify them by adding, deleting, or updating existing ones."
+            />
+            <div>
+                <DocumentsTable columns={columns} />
+            </div>
         </>
-    )
-
+    );
 }

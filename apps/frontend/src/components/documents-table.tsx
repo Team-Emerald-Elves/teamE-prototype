@@ -395,15 +395,15 @@ function SelectedFilters({
             {filters.map((filter) => (
                 <div
                     key={`${filter.key}-${filter.id}`}
-                    className=" flex  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 "
+                    className=" flex  rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5 "
                 >
-                    <p className=" px-2 py-1 text-gray-800 rounded-md text-xs ">
+                    <p className=" px-2 py-1 text-(--table-text) rounded-md text-xs ">
                         {filter.id}
                     </p>
 
                     <button
                         onClick={() => onRemove(filter)}
-                        className="text-black pr-2"
+                        className=" pr-2 text-(--table-text)"
                     >
                             <HugeiconsIcon size={16} icon={X} />
                     </button>

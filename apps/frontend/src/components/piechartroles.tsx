@@ -57,40 +57,18 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function ChartPieSeparatorNone() {
+export function ChartPieSeparatorNone(stats) {
+
+    console.log(stats)
     const [chartData, setChartData] = useState([
-        { role: "Underwriters:", employees: 0, fill: "#d2eafc"},
-        { role: "Business Analyst:", employees: 0, fill: "#b4dcfa" },
-        { role: "Actuarial Analyst:", employees: 0, fill: "#96cdf7" },
-        { role: "EXL Operations:", employees: 0, fill: "#87c6f6" },
-        { role: "Business Ops Rating Teams:", employees: 0, fill: "#69b8f4" },
+        { role: "Underwriters", employees: stats.stats.underwriterCount, fill: "#d2eafc" },
+        { role: "Business Analyst", employees: stats.stats.analystCount, fill: "#b4dcfa" },
+        { role: "Actuarial Analyst", employees: stats.stats.acCount, fill: "#96cdf7" },
+        { role: "EXL Operations", employees: stats.stats.exOpCount, fill: "#87c6f6" },
+        { role: "Business Ops Rating Teams", employees: stats.stats.busOpCount, fill: "#69b8f4" },
+        { role: "Admin", employees: stats.stats.adminCount, fill: "#4aa3f0" },
     ]);
 
-    useEffect(() => {
-        async function getStats() {
-            const token = await getToken();
-
-            const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/statistics`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            const data = await res.json();
-            setChartData([
-                { role: "Underwriters", employees: data.underwriterCount, fill: "#d2eafc" },
-                { role: "Business Analyst", employees: data.analystCount, fill: "#b4dcfa" },
-                { role: "Actuarial Analyst", employees: data.acCount, fill: "#96cdf7" },
-                { role: "EXL Operations", employees: data.exOpCount, fill: "#87c6f6" },
-                { role: "Business Ops Rating Teams", employees: data.busOpCount, fill: "#69b8f4" },
-                { role: "Admin", employees: data.adminCount, fill: "#4aa3f0" },
-            ]);
-
-        }
-        getStats()
-    }, []);
 
     return (
         <Card className="flex flex-col h-full relative">

@@ -1,6 +1,7 @@
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import {Link} from "react-router-dom";
 import {useAuth} from "@clerk/react";
@@ -64,14 +65,23 @@ export default function CalendarWeek() {
                     <Link to="/calendar" className="text-sm text-blue-900 hover:underline">View Full Calendar</Link>
                 </div>
                 <FullCalendar
-                    plugins={[dayGridPlugin, interactionPlugin]}
-                    initialView="dayGridWeek"
+                    plugins={[timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
                     headerToolbar={false}
 
                     dayHeaderClassNames={() => [
                         "bg-[#ecf4f9]",
                         "text-[#0b4461]",
                     ]}
+
+                    slotMinTime="08:00:00"
+                    slotMaxTime="20:00:00"
+
+                    eventContent={(arg) => (
+                        <div className="truncate">
+                            {arg.event.title}
+                        </div>
+                    )}
 
                     contentHeight="auto"
                     events={events}

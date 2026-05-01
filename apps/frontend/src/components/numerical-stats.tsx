@@ -36,41 +36,11 @@ function StatItem({ icon: Icon, value, label }) {
     )
 }
 
-export function NumericalStats() {
-    const [docTotal, setDocTotal] = useState(0);
-    const [empTotal, setEmpTotal] = useState(0);
-    const [undCount, setUndTotal] = useState(0);
-    const [busCount, setBusTotal] = useState(0);
-    const [busOpCount, setBusOpTotal] = useState(0);
-    const [exOpCount, setExOpTotal] = useState(0);
-    const [acCount, setAcTotal] = useState(0);
-    const [adminCount, setAdminTotal] = useState(0);
+export function NumericalStats(stats) {
+    const [docTotal, setDocTotal] = useState(stats.stats.docCount);
+    const [empTotal, setEmpTotal] = useState(stats.stats.empCount);
 
-    useEffect(() => {
-        async function getStats() {
-            const token = await getToken();
 
-            const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/statistics`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            const data = await res.json();
-            setDocTotal(data.docCount);
-            setEmpTotal(data.empCount);
-            setUndTotal(data.underwriterCount);
-            setBusTotal(data.analystCount);
-            setBusOpTotal(data.busOpCount);
-            setExOpTotal(data.exOpCount);
-            setAcTotal(data.acCount);
-            setAdminTotal(data.adminCount);
-
-        }
-        getStats()
-    }, []);
     return (
         <>
             <Card className="w-max-[500px] h-full mb-5 items-center relative">

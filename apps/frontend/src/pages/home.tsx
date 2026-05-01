@@ -1,7 +1,7 @@
 import "./home.css";
 //import {SearchBar} from "@/components/searchbar.tsx";
 import {useEffect, useState} from "react";
-import {useAuth} from "@clerk/react";
+import {getToken, useAuth} from "@clerk/react";
 import {useUser} from "@clerk/react";
 import {UserAvatar} from '@clerk/react'
 import Favorites from "@/components/favorites.tsx";
@@ -36,6 +36,7 @@ const HeroBanner = ({ firstname }: HeroBannerProps) => (
 function Home() {
     const [roles, setRoles] = useState<string[]>([]);
     const [firstname, setfirstname] = useState("");
+    const [stats, setStats] = useState({});
     const { isSignedIn } = useAuth();
 
     useEffect(() => {
@@ -54,6 +55,25 @@ function Home() {
                 setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
             })
         })
+    }, []);
+
+    useEffect(() => {
+        async function getStats() {
+            const token = await getToken();
+
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/statistics`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            const data = await res.json();
+            setStats(data);
+
+        }
+        getStats()
     }, []);
 
     // if (!me) {
@@ -104,13 +124,13 @@ function Home() {
                         <PageHeader title="Dashboard"/>
                         <div className = "flex gap-4 mx-5 mt-3 items-stretch h-[270px]">
                             <div className="w-[45%]">
-                                <NumericalStats/>
+                                <NumericalStats stats={stats}/>
                             </div>
                             <div className="w-275">
-                                <ChartPieSeparatorNone/>
+                                <ChartPieSeparatorNone stats={stats}/>
                             </div>
                             <div className="w-275">
-                                <ChartPieStacked/>
+                                <ChartPieStacked stats={stats}/>
                             </div>
 
 

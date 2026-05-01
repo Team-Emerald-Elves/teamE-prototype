@@ -14,7 +14,7 @@ type Employee = {
     imageUrl: string;
 };
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: ColumnDef<Employee, unknown>[] = [
     {
         id: "full_name", // important when using accessorFn
         accessorFn: (row) => `${row.first_name} ${row.last_name}`,

@@ -12,16 +12,60 @@ function Dialog({ ...props }: DialogPrimitive.Root.Props) {
     return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
-function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-    return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+type DialogTriggerProps = DialogPrimitive.Trigger.Props & {
+    asChild?: boolean;
+};
+
+function DialogTrigger({
+    asChild = false,
+    children,
+    ...props
+}: DialogTriggerProps) {
+    if (asChild && React.isValidElement(children)) {
+        return (
+            <DialogPrimitive.Trigger
+                data-slot="dialog-trigger"
+                render={children}
+                {...props}
+            />
+        );
+    }
+
+    return (
+        <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props}>
+            {children}
+        </DialogPrimitive.Trigger>
+    );
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
     return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
-function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
-    return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+type DialogCloseProps = DialogPrimitive.Close.Props & {
+    asChild?: boolean;
+};
+
+function DialogClose({
+    asChild = false,
+    children,
+    ...props
+}: DialogCloseProps) {
+    if (asChild && React.isValidElement(children)) {
+        return (
+            <DialogPrimitive.Close
+                data-slot="dialog-close"
+                render={children}
+                {...props}
+            />
+        );
+    }
+
+    return (
+        <DialogPrimitive.Close data-slot="dialog-close" {...props}>
+            {children}
+        </DialogPrimitive.Close>
+    );
 }
 
 function DialogOverlay({
@@ -51,6 +95,7 @@ function DialogContent({
     return (
         <DialogPortal>
             <DialogOverlay />
+
             <DialogPrimitive.Popup
                 data-slot="dialog-content"
                 className={cn(
@@ -60,20 +105,25 @@ function DialogContent({
                 {...props}
             >
                 {children}
+
                 {showCloseButton && (
                     <DialogPrimitive.Close
                         data-slot="dialog-close"
                         render={
                             <Button
+                                type="button"
                                 variant="ghost"
                                 className="absolute top-2 right-2"
                                 size="icon-sm"
-                            />
+                            >
+                                <HugeiconsIcon
+                                    icon={Cancel01Icon}
+                                    strokeWidth={2}
+                                />
+                                <span className="sr-only">Close</span>
+                            </Button>
                         }
-                    >
-                        <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />
-                        <span className="sr-only">Close</span>
-                    </DialogPrimitive.Close>
+                    />
                 )}
             </DialogPrimitive.Popup>
         </DialogPortal>
@@ -108,10 +158,15 @@ function DialogFooter({
             {...props}
         >
             {children}
+
             {showCloseButton && (
-                <DialogPrimitive.Close render={<Button variant="outline" />}>
-                    Close
-                </DialogPrimitive.Close>
+                <DialogPrimitive.Close
+                    render={
+                        <Button type="button" variant="outline">
+                            Close
+                        </Button>
+                    }
+                />
             )}
         </div>
     );

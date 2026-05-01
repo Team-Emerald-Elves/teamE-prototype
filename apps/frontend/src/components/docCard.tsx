@@ -31,6 +31,8 @@ function DocumentCard(props: documentCardProps) {
                     <div className="flex justify-end">
                         <ContentForm
                             type="Edit"
+                            roles={[props.document.assigned_role as string]}
+                            lock={props.document.lock as string}
                             currentName={props.document.name}
                             currentURL={props.document.url as string}
                             currentContentOwner="Bobby Tanner"

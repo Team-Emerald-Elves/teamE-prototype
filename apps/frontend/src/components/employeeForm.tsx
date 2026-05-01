@@ -251,7 +251,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                                 try {
                                     await updateEmployee(
                                         bodyData,
-                                        props.reload,
+                                        props.reload as (any: any) => void,
                                     );
                                     console.log(
                                         "Employee updated successfully",

@@ -44,10 +44,10 @@ import CreateEmployeeForm from "@/components/createEmployeeForm.tsx"
 import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx"
 import EmployeeForm from "@/components/employeeForm.tsx"
 import qmgr from "@/lib/querymgr.ts"
-import type { Employee } from "@repo/database/types"
+import { type Employee } from "@repo/database/types";
 
-interface EmployeeProps<TValue> {
-    columns: ColumnDef<Employee, TValue>[]
+interface EmployeeProps {
+    columns: ColumnDef<Employee, unknown>[]
 }
 
 type RoleFilter = {
@@ -96,9 +96,9 @@ const initialRoleFilters: RoleFilter[] = [
     },
 ]
 
-export default function EmployeeTable<TValue>({
+export default function EmployeeTable({
     columns,
-}: EmployeeProps<TValue>) {
+}: EmployeeProps) {
     const [employees, setEmployees] = useState<Employee[]>([])
     const [roleFilters, setRoleFilters] = useState<RoleFilter[]>(initialRoleFilters)
     const [isRoleOpen, setIsRoleOpen] = useState(false)

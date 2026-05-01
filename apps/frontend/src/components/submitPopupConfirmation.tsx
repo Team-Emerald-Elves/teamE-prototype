@@ -177,9 +177,6 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
             ) : (
                 <Dialog
                     open={open}
-                    onClose={() => {
-                        setOpen(false);
-                    }}
                     onOpenChange={setOpen}
                 >
                     <DialogTrigger>

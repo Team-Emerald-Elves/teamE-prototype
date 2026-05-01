@@ -46,6 +46,8 @@ export default function DocTableEntry(props: favoriteProps) {
                     <ContentForm
                         type="Edit"
                         currentID={props.d.id}
+                        roles={[props.d.assigned_role as string]}
+                        lock={props.d.lock as string}
                         currentName={props.d.name}
                         currentURL={props.d.url as string}
                         currentContentOwner={props.d.content_owner as string}

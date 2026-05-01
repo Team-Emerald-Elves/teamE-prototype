@@ -166,7 +166,7 @@ function EmployeeForm(props: empProps): JSX.Element {
                             </Field>
                         </div>
                        <Field>
-                            <Label htmlFor="role" className="w-22 text-right text-xs font-bold">Select Roles:</Label>
+                            <Label htmlFor="role" flassName="w-22 text-right text-xs font-bold">Select Roles:</Label>
                             <Select id="role" onValueChange={(value: string | null) =>
                                 setUser({ ...user, role: value ?? "" })
                             }>

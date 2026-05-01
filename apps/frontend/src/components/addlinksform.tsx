@@ -241,24 +241,7 @@ function AddLinksForm(props: linkProp) {
 
                     <DialogFooter>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-primary text-primary-foreground"
-                            onClick={() => {
-                                setLink({
-                                    link_name: "",
-                                    url: "",
-                                    owner: "",
-                                });
 
-                                setSelectedRole(
-                                    isAdmin ? "" : roles[0] || ""
-                                );
-                            }}
-                        >
-                            Clear
-                        </Button>
                         <DialogClose render={
                             <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
                                 const finalRole =

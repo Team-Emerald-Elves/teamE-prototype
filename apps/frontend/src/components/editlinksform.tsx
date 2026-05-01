@@ -235,22 +235,6 @@ function EditLinksForm(props: linkProp) {
                         <DialogClose
                             render={<Button variant="outline" size="lg">Cancel</Button>}
                         />
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-primary text-primary-foreground"
-                            onClick={() => {
-                                setLink({
-                                    link_name: "",
-                                    url: "",
-                                });
-                                setSelectedRole(
-                                    isAdmin ? props.owner || "" : roles[0] || ""
-                                );
-                            }}
-                        >
-                            Clear
-                        </Button>
                         <DialogClose
                             render={
                                 <Button

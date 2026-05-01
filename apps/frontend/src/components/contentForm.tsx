@@ -326,7 +326,6 @@ function ContentForm(props: contentFormProps) {
 
                     <p>Last Modified: {formattedDate}</p>
                     <DialogFooter>
-                        <Button variant="outline" size="lg" className=" relative bg-primary text-primary-foreground">Clear</Button>
                         <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
                         <SubmitConfirmationPopup formData={formData} type={props.type} refresh={props.refresh!} open={setOpen} disabled={!isFilled}/>
                     </DialogFooter>

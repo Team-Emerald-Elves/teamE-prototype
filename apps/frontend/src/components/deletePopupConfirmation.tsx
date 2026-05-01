@@ -12,7 +12,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { getToken } from "@clerk/react";
 import { useEffect, useState } from "react";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 import qmgr from "@/lib/querymgr";
 
 type deleteConfirmationPopupProps = {

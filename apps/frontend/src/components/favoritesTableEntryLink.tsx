@@ -2,7 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type {Links as linksData, documentContent} from "@repo/database"
+import type {Links as linksData, documentContent} from "@repo/database/types"
 
 
 type FavoriteProps = {

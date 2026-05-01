@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import ContentForm from "./contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation.tsx";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 
 type documentCardProps = {
     document: documentContent;

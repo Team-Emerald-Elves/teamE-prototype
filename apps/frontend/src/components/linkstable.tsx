@@ -45,7 +45,7 @@ import AddLinksForm from "@/components/addlinksform.tsx"
 import Editlinksform from "@/components/editlinksform.tsx"
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx"
 import qmgr from "@/lib/querymgr.ts"
-import { type Links } from "@repo/database"
+import { type Links } from "@repo/database/types"
 
 type FilterItem = {
   key: "owner" | "meta_tags"

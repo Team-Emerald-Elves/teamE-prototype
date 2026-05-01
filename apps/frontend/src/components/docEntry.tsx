@@ -5,7 +5,7 @@ import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 
 type favoriteProps = {
     d: documentContent;

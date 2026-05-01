@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
-import type { Links as linksData } from "@repo/database";
+import type { Links as linksData } from "@repo/database/types";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 

@@ -8,13 +8,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
-import { getToken, useAuth } from "@clerk/react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Edit03Icon } from "@hugeicons/core-free-icons";
+import { Field, FieldGroup } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useEffect, useState } from "react"
+import {getToken, useAuth} from "@clerk/react"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Edit03Icon } from "@hugeicons/core-free-icons"
 import {
     Select,
     SelectContent,
@@ -25,7 +25,7 @@ import {
     SelectValue
 } from "@/components/ui/select.tsx"
 import qmgr from '@/lib/querymgr.ts'
-import type { Links as linksData } from '@repo/database'
+import type { Links as linksData } from '@repo/database/types'
 
 type editlinksRequest = {
     action: string,
@@ -248,20 +248,6 @@ function EditLinksForm(props: linkProp) {
                                 </Button>
                             }
                         />
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-primary text-primary-foreground"
-                            onClick={() => {
-                                setSelectedRole(
-                                    isAdmin
-                                        ? props.owner || ""
-                                        : roles[0] || "",
-                                );
-                            }}
-                        >
-                            Clear
-                        </Button>
                         <DialogClose
                             render={
                                 <Button

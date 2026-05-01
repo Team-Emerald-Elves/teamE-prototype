@@ -3,9 +3,6 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Info } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area"
-
-
 import {
     Table,
     TableBody,
@@ -13,7 +10,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx";
-
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,11 +17,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-
 import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 import { getToken } from "@clerk/react";
 import FavoritesTableEntryLink from "@/components/favoritesTableEntryLink.tsx";
-import type { documentContent, Links as linksData } from "@repo/database";
+import type { documentContent, Links as linksData } from "@repo/database/types";
 
 export default function Favorites() {
     const [favoriteDocs, setFavoriteDocs] = useState<documentContent[]>([]);
@@ -73,17 +68,26 @@ export default function Favorites() {
     }, [reload]);
 
     //if (currentFavorite === "docs") {
-    return (
-        <div className="max-w-10xl mx-auto px-6 py-6 relative">
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <FontAwesomeIcon
-                        icon={solidStar}
-                        className="text-yellow-400 cursor-pointer"
-                    />
-                    <h4 className="text-lg font-semibold text-gray-800">
-                        Favorited
-                    </h4>
+        return (
+            <>
+            <div className="max-w-10xl mx-auto relative">
+                <div className="flex items-center justify-between mb-4 pt-2">
+                    <div className="flex items-center gap-2">
+                        <FontAwesomeIcon
+                            icon={solidStar}
+                            className="text-yellow-400 cursor-pointer"
+                        />
+                        <h4 className="text-lg font-semibold text-gray-800">
+                            Favorited
+                        </h4>
+                    </div>
+
+                    <Link className="text-sm text-blue-900 hover:underline"
+                          //to="/documents"
+                          to={currentFavorite === "docs" ? "/documents" : "/links"}
+                    >
+                        View All
+                    </Link>
                 </div>
 
                 <Link
@@ -101,8 +105,7 @@ export default function Favorites() {
                     <TabsTrigger value="links">Links</TabsTrigger>
                 </TabsList>
                     <TabsContent value="docs">
-                        <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                            <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
+                        <div className="bg-white rounded-xl border-0 p-4 relative">
                             <Table className="border rounded-lg overflow-hidden">
                                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                     <TableRow>
@@ -123,10 +126,10 @@ export default function Favorites() {
                                     {favoriteDocs.map((d) => (
                                         <FavoritesTableEntry key={d.id}
                                              d={d}
-                                             onToggleOff={async (doc: documentContent) => {
+                                             onToggleOff={async (doc: documentContent | linksData) => {
                                                  const token = await getToken()
                                                  //need to send true for favorite and send the doc id and the employee id
-                                                 const newValue = !doc.favorite;
+                                                 const newValue = !(doc as documentContent).favorite;
 
                                             await fetch(
                                                 `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
@@ -157,10 +160,10 @@ export default function Favorites() {
                                             );
                                             setReload((prev) => !prev);
                                         }}
-                                        onToggleOn={async (doc: documentContent) => {
+                                        onToggleOn={async (doc: documentContent | linksData) => {
                                             //need to send true for favorite and send the doc id and the employee id
                                             const token = await getToken();
-                                            const newValue = !doc.favorite;
+                                            const newValue = !(doc as documentContent).favorite;
 
                                             await fetch(
                                                 `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
@@ -194,7 +197,6 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
-                            </ScrollArea>
 
 
                         <div className="absolute bottom-3 left-3">
@@ -247,10 +249,9 @@ export default function Favorites() {
                     </div>
                 </TabsContent>
 
-                <TabsContent value="links">
-                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                        <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
-                                    <Table className="border rounded-lg overflow-hidden">
+                <TabsContent value = "links">
+                    <div className="bg-white rounded-xl shadow-none border-0 p-4 relative overflow-visible">
+                        <Table className="border rounded-lg overflow-hidden ">
                                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                             <TableRow>
                                                 <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
@@ -339,7 +340,6 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
-                        </ScrollArea>
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>
@@ -391,6 +391,6 @@ export default function Favorites() {
                     </div>
                 </TabsContent>
             </Tabs>
-        </div>
+    </>
     );
 }

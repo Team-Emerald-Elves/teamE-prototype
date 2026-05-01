@@ -85,6 +85,13 @@ model Links {
   updated_at DateTime @updatedAt
 }
 
+model Layout {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner   String?
+  layout  Json
+  widgets String[]
+}
+
 model CalendarEvents {
   id         Int       @id @default(autoincrement())
   title      String

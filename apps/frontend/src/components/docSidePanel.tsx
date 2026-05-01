@@ -1,6 +1,6 @@
 import { type ReactElement, useEffect, useState } from "react";
 import { TagInput } from "@/components/tagInput.tsx";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 
 type DocSidePanelProps = {
     className?: string;

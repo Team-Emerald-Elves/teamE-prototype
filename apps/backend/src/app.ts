@@ -35,6 +35,7 @@ import {
     supaBaseRouter,
 } from "./routes/index.ts";
 import setReadRoute from "./routes/set-read.ts";
+import layoutRoute from "./routes/layouts.ts";
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
@@ -66,10 +67,11 @@ app.use("/api/supabase", supaBaseRouter);
 
 app.use("/api/notifs", notifyRouter);
 
-app.use("/employee", employeeRoute); //validated in employee.ts
-app.use("/links", linkRoute); //validated in links.ts
-app.use("/api/tests", APIRouter);
-app.use("/checkin-checkout-links", CheckoutLinks);
+app.use('/employee', employeeRoute); //validated in employee.ts
+app.use('/links', linkRoute) //validated in links.ts
+app.use('/api/tests', APIRouter)
+app.use('/checkin-checkout-links', CheckoutLinks)
+app.use('/layouts', layoutRoute)
 
 app.get("/assigned", /* requireAuth(),*/ assignedRoute);
 app.get("/statistics", /* requireAuth(),*/ statsRoutes);

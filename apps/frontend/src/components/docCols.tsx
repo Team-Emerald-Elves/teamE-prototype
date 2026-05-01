@@ -1,4 +1,5 @@
 "use client";
+
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "./ui/button.tsx";
@@ -11,9 +12,9 @@ import mime from "mime";
 import DocumentViewer from "@/components/docViewer.tsx";
 import DocTag from "@/components/doctag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
-import {getToken} from "@clerk/react";
+import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 
 async function addHitCount(doc: documentContent) {
     const res = await fetch(
@@ -29,6 +30,7 @@ async function addHitCount(doc: documentContent) {
             }),
         },
     );
+
     if (!res.ok) {
         throw new Error("failed to add doc hit count");
     }
@@ -44,36 +46,45 @@ async function createNotif(doc: documentContent) {
             }
 
             const me = res1.data!;
-            console.log(me);
 
-                const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            public: true,
-                            targetRoles: [doc.assigned_role, "Administrator"],
-                            title: `${me.first_name} ${me.last_name} accessed ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
-                        }),
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
-                );
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [
+                            doc.assigned_role,
+                            "Administrator",
+                        ].filter(Boolean),
+                        title: `${me.first_name} ${me.last_name} accessed ${
+                            doc.name.substring(0, 12) +
+                            (doc.name.length >= 12 ? "..." : "")
+                        }`,
+                    }),
+                },
+            );
 
-                if (!res.ok) {
-                    throw new Error("failed to create view notification");
-                }
-                console.log(await res.json());
-    })})
+            if (!res.ok) {
+                throw new Error("failed to create view notification");
+            }
+        });
+    });
 }
 
-export const columns: ColumnDef<Document>[] = [
-    // {
-    //     accessorKey: "favorite",
-    //     header: "Favorite",
+function formatStatus(status: string) {
+    return status
+        .replaceAll("not_started", "Not Started")
+        .replaceAll("done", "Done")
+        .replaceAll("in_progress", "In Progress")
+        .replaceAll("needs_review", "Needs Review");
+}
 
+export const columns: ColumnDef<documentContent>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -95,14 +106,23 @@ export const columns: ColumnDef<Document>[] = [
 
             return (
                 <Dialog>
-                    <DialogTrigger
-                        onClick={async () => {
-                            createNotif(doc);
-                            addHitCount(doc);
-                        }}
-                        className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
-                    >
-                        {doc.name}
+                    <DialogTrigger asChild>
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                try {
+                                    await Promise.all([
+                                        createNotif(doc),
+                                        addHitCount(doc),
+                                    ]);
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                            }}
+                            className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
+                        >
+                            {doc.name}
+                        </button>
                     </DialogTrigger>
 
                     <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
@@ -110,6 +130,7 @@ export const columns: ColumnDef<Document>[] = [
                             <div className="w-full max-w-[min(1400px,80%)] h-full">
                                 <DocumentViewer doc={doc} />
                             </div>
+
                             <DocSidePanel doc={doc} />
                         </div>
                     </DialogContent>
@@ -163,7 +184,6 @@ export const columns: ColumnDef<Document>[] = [
             return <p>{date.toLocaleString()}</p>;
         },
     },
-
     {
         accessorKey: "content_owner",
         header: ({ column }) => {
@@ -216,23 +236,25 @@ export const columns: ColumnDef<Document>[] = [
                     }
                 >
                     Tags
-                    <ArrowUpDown className="ml-2 h-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
         cell: ({ row }) => {
             const doc = row.original;
+
             const type = doc.mime_type;
-            const roles = doc.assigned_role;
-            const status = doc.document_status
-                .replaceAll("not_started", "Not Started")
-                .replaceAll("done", "Done")
-                .replaceAll("in_progress", "In Progress")
-                .replaceAll("needs_review", "Needs Review");
-            let statusBackground = "bg-slate-400";
+            const roles = doc.assigned_role ?? "No Role";
+            const docType = doc.document_type ?? "No Type";
+            const status = formatStatus(doc.document_status);
+
             const typeBackground = "bg-neutral-200";
-            let roleBackground = "bg-gray-200";
+            const docBackground = "bg-cyan-200";
             const customBackground = "bg-indigo-300";
+
+            let statusBackground = "bg-slate-400";
+            let roleBackground = "bg-gray-200";
+
             switch (status) {
                 case "Not Started":
                     statusBackground = "bg-red-200";
@@ -247,6 +269,7 @@ export const columns: ColumnDef<Document>[] = [
                     statusBackground = "bg-green-300";
                     break;
             }
+
             switch (roles) {
                 case "Administrator":
                     roleBackground = "bg-purple-700";
@@ -271,13 +294,19 @@ export const columns: ColumnDef<Document>[] = [
             return (
                 <div className="flex flex-wrap gap-1">
                     <DocTag background={typeBackground}>
-                        {mime.getExtension(type)}
+                        {mime.getExtension(type) ?? "file"}
                     </DocTag>
+
                     <DocTag background={roleBackground}>{roles}</DocTag>
+
                     <DocTag background={docBackground}>{docType}</DocTag>
+
                     <DocTag background={statusBackground}>{status}</DocTag>
-                    {doc.meta_tags.map((tag) => (
-                        <DocTag background={customBackground}>{tag}</DocTag>
+
+                    {(doc.meta_tags ?? []).map((tag) => (
+                        <DocTag key={tag} background={customBackground}>
+                            {tag}
+                        </DocTag>
                     ))}
                 </div>
             );

@@ -3,7 +3,7 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { TableCell } from "@/components/ui/table.tsx";
 import { useState } from "react";
-import type { documentContent, Links as linksData } from "@repo/database";
+import type { documentContent, Links as linksData } from "@repo/database/types";
 
 
 type FavoriteStarProps = {

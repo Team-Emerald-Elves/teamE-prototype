@@ -25,8 +25,8 @@ linkRoute.post('/', validate(LinkRequestPostModel), (req: express.Request, res: 
         res.status(200).json({
             error: "INVALID_LINKS_QUERY",
         });
-    },
-);
+    }
+});
 
 linkRoute.post(
     "/",

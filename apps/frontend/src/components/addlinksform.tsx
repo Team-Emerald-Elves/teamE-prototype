@@ -24,7 +24,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select.tsx";
-import type { Links as linksData } from '@repo/database'
+import type { Links as linksData } from '@repo/database/types'
 import type { Employee } from '../../../../packages/database/lib/prismadefs.ts'
 import qmgr from '@/lib/querymgr.ts'
 
@@ -229,74 +229,40 @@ function AddLinksForm(props: linksDataExt) {
                     </FieldGroup>
 
                     <DialogFooter>
-                        <DialogClose
-                            render={
-                                <Button variant="outline" size="lg">
-                                    Cancel
-                                </Button>
-                            }
-                        />
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="bg-primary text-primary-foreground"
-                            onClick={() => {
-                                setLink((prev: linksDataExt) => { return {
-                                    ...prev,
-                                    link_name: "",
-                                    url: "",
-                                    owner: "",
-                                }});
+                        <DialogClose render={<Button variant="outline" size="lg">Cancel</Button>} />
 
-                                setSelectedRole(isAdmin ? "" : roles[0] || "");
-                            }}
-                        >
-                            Clear
-                        </Button>
-                        <DialogClose
-                            render={
-                                <Button
-                                    type="submit"
-                                    disabled={!isFilled}
-                                    className=" bg-secondary text-secondary-foreground"
-                                    size="lg"
-                                    onClick={async () => {
-                                        const finalRole = isAdmin
-                                            ? selectedRole
-                                            : roles[0];
-                                        const bodyData: editlinksRequest = {
-                                            action: "create",
-                                            linkData: {
-                                                id: props.id!,
-                                                link_name: link.link_name,
-                                                url: link.url,
-                                                owner: finalRole,
-                                                meta_tags: link.meta_tags,
-                                                created_at: link.created_at,
-                                                updated_at: link.updated_at,
-                                                lock: link.lock
-                                            },
-                                        };
-                                        try {
-                                            await updateLinks(
-                                                bodyData,
-                                                token,
-                                            );
-                                            console.log(
-                                                "link updated successfully",
-                                            );
-                                        } catch (err) {
-                                            console.error(err);
-                                            console.log(
-                                                "Failed to update links",
-                                            );
-                                        }
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            }
-                        />
+                        <DialogClose render={
+                            <Button type="submit" disabled={!isFilled} className=" bg-secondary text-secondary-foreground" size="lg" onClick={async () => {
+                                const finalRole =
+                                    isAdmin
+                                        ? selectedRole
+                                        : roles[0];
+                                const bodyData: editlinksRequest = {
+                                    action: "create",
+                                    linkData: {
+                                        id: props.id!,
+                                        created_at: props.created_at,
+                                        updated_at: props.updated_at,
+                                        lock: props.lock,
+                                        meta_tags: props.meta_tags,
+                                        link_name: link.link_name,
+                                        url: link.url,
+                                        owner: finalRole,
+                                    }
+
+                                };
+                                try {
+
+                                    await updateLinks(bodyData, token!);
+                                    console.log("link updated successfully");
+                                } catch (err) {
+                                    console.error(err);
+                                    console.log("Failed to update links");
+                                }
+                                }}
+                            >
+                                Submit
+                            </Button> }/>
                     </DialogFooter>
                 </DialogContent>
             </form>

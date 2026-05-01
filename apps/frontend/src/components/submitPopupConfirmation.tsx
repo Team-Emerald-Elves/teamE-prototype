@@ -11,7 +11,7 @@ import {
 import qmgr from "@/lib/querymgr";
 import { getToken } from "@clerk/react"
 import {useEffect, useState} from "react";
-import type { documentContent } from "@repo/database";
+import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
     type: string;

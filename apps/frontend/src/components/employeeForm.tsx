@@ -47,7 +47,7 @@ type Employee = {
 
 type empProps = {
     employee?: Employee;
-    reload: (any: any) => void;
+    reload?: (any: any) => void;
 };
 
 async function updateEmployee(

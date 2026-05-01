@@ -12,7 +12,7 @@ import {Download01Icon} from "@hugeicons/core-free-icons";
 import {Button} from "@/components/ui/button.tsx";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type { documentContent, Links as linksData } from "@repo/database";
+import type { documentContent, Links as linksData } from "@repo/database/types";
 
 const handleDownload = async (doc: documentContent) => {
     try {

@@ -44,7 +44,7 @@ import CreateEmployeeForm from "@/components/createEmployeeForm.tsx"
 import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx"
 import EmployeeForm from "@/components/employeeForm.tsx"
 import qmgr from "@/lib/querymgr.ts"
-import type { Employee } from "@repo/database"
+import type { Employee } from "@repo/database/types"
 
 interface EmployeeProps<TValue> {
     columns: ColumnDef<Employee, TValue>[]

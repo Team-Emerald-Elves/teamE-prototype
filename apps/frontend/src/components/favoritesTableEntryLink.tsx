@@ -1,40 +1,17 @@
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import { getToken } from "@clerk/react";
-import type { documentContent, Links as linksData } from "@repo/database";
+import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr";
+import type {Links as linksData, documentContent} from "@repo/database"
 
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock: boolean;
-};
-
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-    favorite: boolean;
-    created_at: string;
-    updated_at: string;
-};
 
 type FavoriteProps = {
     l: linksData;
-    onToggleOff: (link: documentContent | linksData) => void;
-    onToggleOn: (link: documentContent | linksData) => void;
+    onToggleOff: (link: documentContent | linksData & {favorite?: boolean}) => void;
+    onToggleOn:  (link: documentContent | linksData & {favorite?: boolean}) => void;
 };
 
-async function addHitCount(link: Links) {
+async function addHitCount(link: linksData) {
     const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
         {
@@ -56,38 +33,33 @@ async function addHitCount(link: Links) {
 async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    );
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+            const me = res1.data!;
+            console.log(me);
 
-    const me = await res1.json();
-    console.log(me);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [link.owner, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
+                })
+            })
 
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                public: true,
-                targetRoles: [link.owner, "Administrator"],
-                title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
-            }),
-        },
-    );
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification");
-    }
-    console.log(await res.json());
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
+        })
+    })
 }
 
 export default function FavoritesTableEntryLink(props: FavoriteProps) {

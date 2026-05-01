@@ -33,31 +33,24 @@ import { useAuth } from "@clerk/react";
 import { Edit03Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import FileUpload from "./fileUpload.tsx";
+import qmgr from '@/lib/querymgr.ts';
+import type { Employee } from "@/../../packages/database/lib/prismadefs.ts"
 
 type contentFormProps = {
-    type: string;
-    currentName: string;
-    currentURL: string;
-    currentContentOwner: string;
-    currentRole: string;
-    currentExpirationDate: Date;
-    currentExpirationTime: string;
-    currentStatus: string;
-    currentID: number;
-    size: boolean;
-    lock?: string;
-    refresh?: (any: any) => void;
-    roles?: string[];
-};
-
-type Employee = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    username: string;
-    email?: string;
-    roles?: string[];
-};
+    type: string,
+    currentName: string,
+    currentURL: string,
+    currentContentOwner: string,
+    currentRole: string,
+    currentExpirationDate: Date,
+    currentExpirationTime: string,
+    currentStatus: string,
+    currentID: number,
+    size: boolean,
+    lock: string,
+    refresh?: (any: any) => void,
+    roles: string[],
+}
 
 type FormDataType = {
     name: string;
@@ -72,24 +65,6 @@ type FormDataType = {
     filePayload?: string;
     fileName?: string;
 };
-
-async function getEmployees(sessionToken: string) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-    });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch employees");
-    }
-    const data = await res.json();
-
-    return data;
-}
 
 function ContentForm(props: contentFormProps) {
     const { getToken } = useAuth();
@@ -164,11 +139,15 @@ function ContentForm(props: contentFormProps) {
     };
 
     useEffect(() => {
-        getToken().then((token) => {
-            getEmployees(token as string)
-                .then(setEmployees)
-                .catch(console.error);
-        });
+
+        qmgr.wait( async () => {
+            qmgr.getEmployees( async (res) => {
+                if (!res.success) {
+                    console.error(res.error);
+                }
+                setEmployees(res.data!)
+            })
+        })
     }, []);
 
     const [sessionToken, setSessionToken] = useState("");

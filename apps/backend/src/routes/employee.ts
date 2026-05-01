@@ -9,8 +9,6 @@ import {
 import validate from "../lib/zod/middleware.ts";
 
 import path from "path";
-import { buildWhereClause, buildWhereClausesEmployee } from "../lib/filters.ts";
-
 const employeeRoute = express();
 
 interface EmployeeRequest {
@@ -46,7 +44,7 @@ employeeRoute.post("/", (req: express.Request, res: express.Response) => {
     }
 
     if (!action || action === "list") {
-        listEmployees({ id, uname, first_name, last_name, email }, req, res);
+        listEmployees({ id, uname, first_name, last_name, email }, res);
         return;
     }
     res.status(200).json({
@@ -62,7 +60,7 @@ employeeRoute.post(
 
         if (eReq.action == "list") {
             eReq.employeeData!.roles = undefined;
-            listEmployees(eReq.employeeData!, req, res);
+            listEmployees(eReq.employeeData!, res);
             return;
         }
 
@@ -239,16 +237,12 @@ async function deleteEmployee(eData: Partial<Employee>, res: express.Response) {
     }
 }
 
-async function listEmployees(
-    eData: Omit<Partial<Employee>, "roles"> | undefined,
-    req: express.Request,
-    res: express.Response,
-) {
+async function listEmployees(eData: Omit<Partial<Employee>, 'roles'> | undefined, res: express.Response) {
+
     try {
-        const whereClauseReg = buildWhereClausesEmployee(req.body, {});
+
 
         const employees = await prisma.employee.findMany({
-            where: whereClauseReg,
             orderBy: {
                 first_name: "asc",
             },

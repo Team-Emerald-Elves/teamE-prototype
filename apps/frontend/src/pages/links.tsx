@@ -1,8 +1,10 @@
 import LinksTable from "@/components/linkstable.tsx";
 import { useAuth } from "@clerk/react";
-import PageHeader from "../components/page-header.tsx";
-import { columns, type Links } from "../components/linksCols.tsx";
-import { useEffect, useState } from "react";
+import PageHeader from "../components/page-header.tsx"
+import { columns } from "../components/linksCols.tsx"
+import { useEffect } from "react";
+import qmgr from "@/lib/querymgr.ts";
+
 
 // const linkContext = createContext <(() => Promise<void>) | null>(null);
 // export const useLinks = () => {
@@ -11,8 +13,23 @@ import { useEffect, useState } from "react";
 //     return context;
 // };
 
-function Links() {
+function LinksPage() {
+    const {  isSignedIn } = useAuth();
 
+    useEffect(() => {
+        if (!isSignedIn) {
+            return;
+        }
+
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
+                }
+            })
+        })
+        }, []);
+    
     return (
         <>
             <PageHeader
@@ -29,4 +46,4 @@ function Links() {
     );
 }
 
-export default Links;
+export default LinksPage;

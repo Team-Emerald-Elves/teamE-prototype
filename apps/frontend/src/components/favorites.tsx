@@ -3,6 +3,8 @@ import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Info } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 
 import {
     Table,
@@ -24,7 +26,6 @@ import FavoritesTableEntry from "@/components/favoritesTableEntry.tsx";
 import { getToken } from "@clerk/react";
 import FavoritesTableEntryLink from "@/components/favoritesTableEntryLink.tsx";
 import type { documentContent, Links as linksData } from "@repo/database";
-
 
 export default function Favorites() {
     const [favoriteDocs, setFavoriteDocs] = useState<documentContent[]>([]);
@@ -99,53 +100,33 @@ export default function Favorites() {
                     <TabsTrigger value="docs">Documents</TabsTrigger>
                     <TabsTrigger value="links">Links</TabsTrigger>
                 </TabsList>
-
-                <TabsContent value="docs">
-                    <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                        <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                <TableRow>
-                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
-                                        Favorite
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Title
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Created
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Content Type
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Expiration Date
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Status
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Owner
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Role
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Last Modified
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Actions
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {favoriteDocs.map((d) => (
-                                    <FavoritesTableEntry
-                                        key={d.id}
-                                        d={d}
-                                        onToggleOff={async (doc: documentContent) => {
-                                            const token = await getToken();
-                                            //need to send true for favorite and send the doc id and the employee id
-                                            const newValue = !doc.favorite;
+                    <TabsContent value="docs">
+                        <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                            <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
+                            <Table className="border rounded-lg overflow-hidden">
+                                <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                    <TableRow>
+                                        <TableHead
+                                            className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Content Type</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Expiration Date</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Status</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Owner</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                                        <TableHead className="text-[#0b4461] font-medium text-sm">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {favoriteDocs.map((d) => (
+                                        <FavoritesTableEntry key={d.id}
+                                             d={d}
+                                             onToggleOff={async (doc: documentContent) => {
+                                                 const token = await getToken()
+                                                 //need to send true for favorite and send the doc id and the employee id
+                                                 const newValue = !doc.favorite;
 
                                             await fetch(
                                                 `${import.meta.env.VITE_BACKEND_URL}/update-favorite`,
@@ -213,6 +194,8 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
+                            </ScrollArea>
+
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>
@@ -266,36 +249,25 @@ export default function Favorites() {
 
                 <TabsContent value="links">
                     <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
-                        <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-                                <TableRow>
-                                    <TableHead className="text-[#0b4461] text-center font-medium text-sm">
-                                        Favorite
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Title
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        URL
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Role
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Created
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Last Modified
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
+                        <ScrollArea className=" max-h-[40vh] overflow-y-scroll">
+                                    <Table className="border rounded-lg overflow-hidden">
+                                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                                            <TableRow>
+                                                <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Title</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">URL</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Role</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Created</TableHead>
+                                                <TableHead className="text-[#0b4461] font-medium text-sm">Last Modified</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
 
                             <TableBody>
                                 {favoriteLinks.map((l) => (
                                     <FavoritesTableEntryLink
                                         key={l.id}
                                         l={l}
-                                        onToggleOff={async (link: linksData) => {
+                                        onToggleOff={async (link: documentContent | linksData & {favorite?: boolean}) => {
                                             const token = await getToken();
                                             //need to send true for favorite and send the doc id and the employee id
                                             const newValue = !link.favorite;
@@ -329,7 +301,7 @@ export default function Favorites() {
                                             );
                                             setReload((prev) => !prev);
                                         }}
-                                        onToggleOn={async (link: Links) => {
+                                        onToggleOn={async (link: linksData & {favorite?: boolean} | documentContent) => {
                                             //need to send true for favorite and send the doc id and the employee id
                                             const token = await getToken();
                                             const newValue = !link.favorite;
@@ -367,6 +339,7 @@ export default function Favorites() {
                                 ))}
                             </TableBody>
                         </Table>
+                        </ScrollArea>
 
                         <div className="absolute bottom-3 left-3">
                             <Popover>

@@ -78,7 +78,7 @@ model Links {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   link_name  String
   url        String
-  owner      String?
+  owner      String
   lock       String?  @default("none")
   meta_tags  String[]
   created_at DateTime @default(now())

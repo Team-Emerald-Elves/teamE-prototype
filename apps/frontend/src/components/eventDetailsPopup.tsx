@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import ExpiringBar from "@/components/expiringBar.tsx";
+import qmgr from "@/lib/querymgr";
 
 type EventDetailsProps = {
     selectedEvent: any;
@@ -21,31 +22,23 @@ type EventDetailsProps = {
 
 export default function EventDetails(props: EventDetailsProps) {
     const [empID, setEmpID] = useState("");
-    const { getToken, isSignedIn } = useAuth();
+    const { isSignedIn } = useAuth();
 
     useEffect(() => {
         if (!isSignedIn) {
             return;
         }
 
-        async function load() {
-            const token = await getToken();
 
-            const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
-            const data = await res.json();
-            setMe(data);
-            setEmpID(data.id);
-        }
-
-        load();
-    }, [getToken, isSignedIn]);
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
+                }
+                setEmpID(res.data!.id);
+            })
+        })
+    }, [isSignedIn]);
 
     const [open, setOpen] = useState(false);
 

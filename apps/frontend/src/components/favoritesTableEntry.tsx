@@ -7,33 +7,18 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import DocumentViewer from "@/components/docViewer.tsx";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Download01Icon } from "@hugeicons/core-free-icons";
-import { Button } from "@/components/ui/button.tsx";
-import { getToken } from "@clerk/react";
-import type { documentContent } from "@repo/database";
-
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock: boolean;
-    created_at: string;
-};
+import {HugeiconsIcon} from "@hugeicons/react";
+import {Download01Icon} from "@hugeicons/core-free-icons";
+import {Button} from "@/components/ui/button.tsx";
+import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr";
+import type { documentContent, Links as linksData } from "@repo/database";
 
 const handleDownload = async (doc: documentContent) => {
     try {
         addHitCount(doc);
         createNotif(doc, "downloaded");
-        const response = await fetch(doc.url);
+        const response = await fetch(doc.url!);
 
         if (!response.ok) {
             throw new Error("Failed to fetch file");
@@ -57,8 +42,8 @@ const handleDownload = async (doc: documentContent) => {
 
 type FavoriteProps = {
     d: documentContent;
-    onToggleOff: (doc: documentContent) => void;
-    onToggleOn: (doc: documentContent) => void;
+    onToggleOff: (doc: documentContent | linksData) => void;
+    onToggleOn: (doc: documentContent | linksData) => void;
 };
 
 async function addHitCount(doc: documentContent) {
@@ -80,20 +65,17 @@ async function addHitCount(doc: documentContent) {
     }
 }
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    );
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
 
-    const me = await res1.json();
-    console.log(me);
+            const me = res1.data!;
+            console.log(me);
 
     const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
@@ -115,6 +97,7 @@ async function createNotif(doc: Document, action: string) {
         throw new Error("failed to create view notification");
     }
     console.log(await res.json());
+    })})
 }
 
 export default function FavoritesTableEntry(props: FavoriteProps) {

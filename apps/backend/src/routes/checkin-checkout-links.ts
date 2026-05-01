@@ -15,12 +15,6 @@ async function updateLinkLock(req: Request, res: Response) {
     try {
         const { id, status } = req.body ?? {};
 
-        console.log("BODY:", req.body);
-        console.log("TYPES:", {
-            id: typeof req.body?.id,
-            status: typeof req.body?.status,
-        });
-
         if (typeof id !== "string" || typeof status !== "boolean") {
             return res.status(400).json({
                 message:

@@ -7,9 +7,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
-import { getToken } from "@clerk/react";
-import { useEffect, useState } from "react";
+} from "@/components/ui/dialog"
+import qmgr from "@/lib/querymgr";
+import { getToken } from "@clerk/react"
+import {useEffect, useState} from "react";
+import type { documentContent } from "@repo/database";
 
 type SubmitConfirmationPopupProps = {
     type: string;
@@ -32,98 +34,49 @@ type SubmitConfirmationPopupProps = {
 };
 
 export type IFile = {
-    id: number;
-    name: string;
-    url?: string;
-    content_owner: string;
-    expiration_date?: string;
-    mime_type?: string;
-    assigned_role: string;
-    document_type: string;
-    document_status: string;
-    filePayload?: string;
-    fileName?: string;
-};
-export type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    lock: boolean;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock_name: string;
-    meta_tags: string[];
-    created_at: string;
-};
-
-async function createNotif(doc: Document, action: string) {
-    const token = await getToken();
-
-    const res1 = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    );
-
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                public: true,
-                targetRoles: [doc.assigned_role, "Administrator"],
-                title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
-            }),
-        },
-    );
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification");
-    }
-    console.log(await res.json());
+  id: number
+  name: string
+  url?: string
+  content_owner: string
+  expiration_date?: string
+  mime_type?: string
+  assigned_role: string
+  document_type: string
+  document_status: string
+  filePayload?: string
+  fileName?: string
 }
 
-async function setDocumentLock(
-    sessionToken: string | null,
-    documentID: number,
-    status: boolean,
-): Promise<boolean> {
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`,
-        {
-            headers: {
-                Authorization: `Bearer ${sessionToken}`,
-                "Content-Type": "application/json",
-            },
-            method: "PUT",
-            body: JSON.stringify({
-                id: documentID,
-                status: status,
-            }),
-        },
-    );
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
+async function createNotif(doc: documentContent, action: string) {
+    const token = await getToken();
 
-    return Boolean(data);
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+            const me = res1.data!;
+            console.log(me);
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
+        })
+    })
 }
 
 function buildExpirationDate(

@@ -1,7 +1,9 @@
 import express from "express";
 import prisma, { type Employee } from "@repo/database";
-import { createClerkClient } from "@clerk/express";
-import { createSupabaseForRequest } from "../lib/supabase.ts";
+import { createClerkClient } from '@clerk/express';
+import { createSupabaseForRequest } from '../lib/supabase.ts'
+import { randomBytes } from "crypto";
+import { invite } from "./api.ts";
 
 const supabaseClient = await createSupabaseForRequest();
 
@@ -9,23 +11,31 @@ const clerkClient = createClerkClient({
     secretKey: process.env.CLERK_SECRET_KEY,
 });
 
-async function createEmployeeRoute(
-    req: express.Request,
-    res: express.Response,
-) {
-    const employee: Employee = req.body;
-    console.log("Employee: ", employee);
-    let user;
+async function createEmployeeRoute(req: express.Request, res: express.Response) {
+    const employee: Employee = req.body
+    const tempPwd: string = randomBytes(12).toString('base64url');
+    console.log("Employee: ", employee)
+    let user
     try {
         user = await clerkClient.users.createUser({
             firstName: employee.first_name,
             lastName: employee.last_name,
             emailAddress: [employee.email!],
             username: employee.uname,
-            password: "YQkxpzdR4P&HRzcQ3$!",
-        });
+            password: tempPwd,
+        })
     } catch (error) {
         console.error("Logged Error: ", error);
+        return;
+    }
+
+    const iRes = await invite(employee.email!, tempPwd);
+
+    if (!iRes) {
+        await clerkClient.users.deleteUser(user.id);
+        res.send(500).json({
+            error: "Invite unable to send."
+        })
         return;
     }
 

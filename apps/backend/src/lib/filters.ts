@@ -1,6 +1,8 @@
 export const buildWhereClause = (filters: any, additional: any) => {
-    const whereClause: any = { AND: [] };
-    if (Object.entries(additional).length > 0) {
+    const whereClause: any = {AND: [
+
+        ]};
+     if (Object.entries(additional).length > 0) {
         whereClause.AND.push(additional);
     }
     for (const [key, value] of Object.entries(filters)) {
@@ -27,7 +29,9 @@ export const buildWhereClause = (filters: any, additional: any) => {
 };
 
 export const buildWhereClausesEmployee = (filters: any, additional: any) => {
-    const whereClause: any = { AND: [] };
+    const whereClause: any = {AND: [
+
+        ]};
     if (Object.entries(additional).length > 0) {
         whereClause.AND.push(additional);
     }

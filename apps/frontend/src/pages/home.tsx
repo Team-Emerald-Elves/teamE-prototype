@@ -12,6 +12,7 @@ import PageHeader from "@/components/page-header.tsx";
 import { ChartPieSeparatorNone } from "@/components/piechartroles.tsx";
 import { ChartPieStacked } from "@/components/piechartdocuments.tsx";
 import CalendarWeek from "@/components/calendarWeekComponent.tsx";
+import qmgr from "@/lib/querymgr";
 
 interface HeroBannerProps {
     firstname: string;
@@ -38,19 +39,21 @@ const HeroBanner = ({ firstname }: HeroBannerProps) => (
 function Home() {
     const [roles, setRoles] = useState<string[]>([]);
     const [firstname, setfirstname] = useState("");
+<<<<<<< HEAD
     const { user } = useUser();
     const { getToken, isSignedIn } = useAuth();
     const [me, setMe] = useState(null);
+=======
+    const { isSignedIn } = useAuth();
+>>>>>>> main
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-        async function load() {
-            const token = await getToken();
 
+<<<<<<< HEAD
             const res = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
                 {
@@ -71,6 +74,18 @@ function Home() {
         }
 
         load();
+=======
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
+                }
+                const data = await res.data!;
+                setfirstname(data.first_name);
+                setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            })
+        })
+>>>>>>> main
     }, []);
 
     // if (!me) {

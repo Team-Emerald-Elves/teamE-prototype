@@ -22,42 +22,30 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select.tsx";
-
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-};
+    SelectValue
+} from "@/components/ui/select.tsx"
+import qmgr from '@/lib/querymgr.ts'
+import type { Links as linksData } from '@repo/database'
 
 type editlinksRequest = {
-    action: string;
-    linkData: Links;
-};
+    action: string,
+    linkData: Partial<linksData>
+}
 
-type linkProp = {
-    id?: string;
-    url: string;
-    owner?: string;
-    name: string;
+type linkProp = linksData & {
     reload: (any: any) => void;
 };
-async function createNotif(link: Links, action: string) {
+async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    );
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
 
-    const me = await res1.json();
-    console.log(me);
+            const me = res1.data!;
+            console.log(me);
 
     const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
@@ -79,6 +67,7 @@ async function createNotif(link: Links, action: string) {
         throw new Error("failed to create view notification");
     }
     console.log(await res.json());
+    })})
 }
 
 const ALL_ROLES = [
@@ -116,7 +105,7 @@ async function updateLinks(body: editlinksRequest, reload: (any: any) => void) {
 }
 
 function EditLinksForm(props: linkProp) {
-    const { getToken, isSignedIn } = useAuth();
+    const { isSignedIn } = useAuth();
 
     const [roles, setRoles] = useState<string[]>([]);
     const [roleKeys, setRoleKeys] = useState<string[]>([]);
@@ -124,8 +113,7 @@ function EditLinksForm(props: linkProp) {
     const [isFilled, setIsFilled] = useState<boolean>(false);
 
     const [link, setLink] = useState({
-        link_name: props.name,
-        url: props.url,
+        ...props
     });
 
     useEffect(() => {
@@ -139,39 +127,29 @@ function EditLinksForm(props: linkProp) {
     useEffect(() => {
         if (!isSignedIn) return;
 
-        async function load() {
-            const token = await getToken();
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
+                }
+                const rawRoles = res.data?.roles!;
+                const lowered = rawRoles.map(r => r.toLowerCase());
 
-            const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
+                setRoles(rawRoles);
+                setRoleKeys(lowered);
 
-            const data = await res.json();
+                const isAdmin = lowered.includes("administrator");
 
-            const rawRoles = data.roles as string[];
-            const lowered = rawRoles.map((r) => r.toLowerCase());
+                // default role logic
+                if (!isAdmin && rawRoles.length > 0) {
+                    setSelectedRole(rawRoles[0]);
+                }
 
-            setRoles(rawRoles);
-            setRoleKeys(lowered);
-
-            const isAdmin = lowered.includes("administrator");
-
-            // default role logic
-            if (!isAdmin && rawRoles.length > 0) {
-                setSelectedRole(rawRoles[0]);
-            }
-
-            if (isAdmin && props.owner) {
-                setSelectedRole(props.owner);
-            }
-        }
-
-        load();
+                if (isAdmin && props.owner) {
+                    setSelectedRole(props.owner);
+                }
+            })
+        })
     }, []);
 
     const isAdmin = roleKeys.includes("administrator");
@@ -275,10 +253,6 @@ function EditLinksForm(props: linkProp) {
                             size="lg"
                             className="bg-primary text-primary-foreground"
                             onClick={() => {
-                                setLink({
-                                    link_name: "",
-                                    url: "",
-                                });
                                 setSelectedRole(
                                     isAdmin
                                         ? props.owner || ""

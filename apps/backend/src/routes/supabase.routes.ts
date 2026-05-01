@@ -368,7 +368,6 @@ supaBaseRouter.put(
         const document: IDocTagContent = req.body;
 
         try {
-            console.log(document);
             // Update contents for document.
             const newDoc = await prisma.documentContent.update({
                 where: {
@@ -406,7 +405,6 @@ supaBaseRouter.delete(
         const document: IDocTagContentRemove = req.body;
 
         try {
-            console.log(document);
             // Update contents for document.
             const doc = await prisma.documentContent.findFirstOrThrow({
                 where: {
@@ -520,11 +518,10 @@ supaBaseRouter.post("/list-documents", async (req: Request, res: Response) => {
         });
         const keyToMatch: string = employee.roles[0] as string;
 
-        sortedDocs.sort((a, b) => {
-            if (a.assigned_role === b.assigned_role) return 0;
-            return a.assigned_role === keyToMatch ? -1 : 1;
-        });
-        console.log(sortedDocs);
+        sortedDocs.sort((a,b) => {
+            if (a.assigned_role === b.assigned_role) return 0
+            return (a.assigned_role === keyToMatch) ? -1 : 1
+        })
         res.status(200).json(sortedDocs);
     } catch (error) {
         console.error(error);

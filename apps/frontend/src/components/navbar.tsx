@@ -8,25 +8,14 @@ import {
 } from "@/components/ui/navigation-menu";
 import { type ReactNode, useEffect, useState } from "react";
 import CenterDiv from "./center-div.tsx";
-import { getToken, useAuth } from "@clerk/react";
-import { Bell } from "lucide-react";
-import { NotifScroll } from "@/components/notifications.tsx";
+import {getToken, useAuth} from "@clerk/react";
+import { Bell } from 'lucide-react';
+import {NotifScroll} from '@/components/notifications.tsx';
+import qmgr from '@/lib/querymgr.ts';
 
 interface NavbarProps {
     children?: ReactNode;
 }
-
-// async function getCurrentUserData() {
-//     const res = await fetch(`${import.meta.env.BACKEND_URL}/me`);
-
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch user data");
-//     }
-
-//     const data = res.json();
-//     console.log(data)
-
-// }
 
 async function setRead(setUnread: (a: boolean) => void) {
     const token = await getToken();
@@ -46,8 +35,7 @@ async function setRead(setUnread: (a: boolean) => void) {
 
 function Navbar(props: NavbarProps) {
     const [roles, setRoles] = useState<string[]>([]);
-    const { getToken, isSignedIn } = useAuth();
-    const [setMe] = useState(null);
+    const { isSignedIn } = useAuth();
     const [showNotification, setShowNotification] = useState(false);
     const toggleNotifs = () => {
         setShowNotification(!showNotification);
@@ -61,26 +49,16 @@ function Navbar(props: NavbarProps) {
         let interval: number;
 
         async function load() {
-            const token = await getToken();
-
-            const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
-
-            const data = await res.json();
-            console.log(data);
-            console.log(data.unreadNotif);
-            setUnread(data.unreadNotif);
-            setRoles(
-                (data.roles as string[]).map((role: string) =>
-                    role.toLowerCase(),
-                ),
-            );
+            qmgr.wait(() => {
+                qmgr.getMe( async (res) => {
+                    if (!res.success) {
+                        throw new Error("Unable to get me");
+                    }
+                    const data = res.data!;
+                    setUnread(data.unreadNotif as boolean);
+                    setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+                })
+            })
         }
 
         load();

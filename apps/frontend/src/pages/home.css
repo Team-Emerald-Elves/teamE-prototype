@@ -5,11 +5,9 @@
     background: var(--light-gray);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
+html.dark  {
         background: var(--background);
     }
-}
 
 .home-cards-container{
     display: grid;

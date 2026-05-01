@@ -952,7 +952,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                             key={row.id}
                                             className={
                                                 isLockedByOther
-                                                    ? "bg-[#e6e8e8]"
+                                                    ? "bg-(--tab-bg)"
                                                     : undefined
                                             }
                                         >

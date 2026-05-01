@@ -62,7 +62,7 @@ function Home() {
                     <button
                         type="button"
                         onClick={() => setIsEditing((v) => !v)}
-                        className="px-3 py-1 rounded border border-gray-300 bg-white hover:bg-gray-50 text-sm"
+                        className="px-3 py-1 rounded border border-(--muted-foreground) bg-(--input) hover:bg-gray-50 text-sm"
                     >
                         {isEditing ? "Done" : "Edit dashboard"}
                     </button>

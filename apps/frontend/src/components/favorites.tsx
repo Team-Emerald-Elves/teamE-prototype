@@ -92,14 +92,6 @@ export default function Favorites() {
                         View All
                     </Link>
                 </div>
-
-                <Link
-                    className="text-sm text-(--internal-link-color) hover:underline"
-                    //to="/documents"
-                    to={currentFavorite === "docs" ? "/documents" : "/links"}
-                >
-                    View All
-                </Link>
             </div>
 
             <Tabs value={currentFavorite} onValueChange={setCurrentFavorite}>

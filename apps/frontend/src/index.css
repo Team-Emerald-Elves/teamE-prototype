@@ -103,7 +103,10 @@ html.light {
     --calendar-bg: #ecf4f9;
     --lock-color: #c5e6e8;
     --input-text: var(--color-gray-500);
+    --filter-background: var(--color-gray-50);
+    --filter-hover: var(--color-gray-300);
 }
+
 
 html.dark {
     --blue-primary: #013C5A;
@@ -157,6 +160,8 @@ html.dark {
     --calendar-bg: #222525;
     --lock-color: #c5e6e8;
     --input-text: var(--color-gray-300);
+    --filter-background: var(--color-gray-800);
+    --filter-hover: var(--color-gray-950);
 }
 
 html, body, #root {

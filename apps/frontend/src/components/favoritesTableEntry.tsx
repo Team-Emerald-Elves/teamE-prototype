@@ -204,7 +204,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             </TableCell>
 
             <TableCell>
-                <div className="flex flex-wrap gap-1 mt-2 text-(--tags-text)">
+                <div className="flex flex-wrap gap-1 mt-2 text-(--tab-text)">
                     <DocTag background={roleBackground}>{role}</DocTag>
                     <DocTag background={docBackground}>{type}</DocTag>
                     <DocTag background={statusBackground}>{status}</DocTag>

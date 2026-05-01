@@ -294,7 +294,7 @@ function FilterOptions({
     ) => void;
 }) {
     return (
-        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-44 rounded-md bg-white shadow-lg ring-1 ring-black/5">
+        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-44 rounded-md bg-(--filter-background) shadow-lg ring-1 ring-black/5">
             <div className="py-1">
                 {group.filters.map((option) => (
                     <div
@@ -303,7 +303,7 @@ function FilterOptions({
                     >
                         <label
                             htmlFor={option.id}
-                            className="text-sm font-medium text-gray-800 cursor-pointer"
+                            className="text-sm font-medium text-(--table-text) cursor-pointer"
                         >
                             {option.id}
                         </label>
@@ -337,7 +337,7 @@ function FilterMenu({
     ) => void;
 }) {
     return (
-        <div className="absolute right-0 z-10 mt-2 w-41 rounded-md bg-white shadow-lg ring-1 ring-black/5">
+        <div className="absolute right-0 z-10 mt-2 w-41 rounded-md bg-(--filter-background) shadow-lg ring-1 ring-black/5">
             <div className="py-1">
                 {groups
                     .filter((group) => group.show !== false)
@@ -355,7 +355,7 @@ function FilterMenu({
                                                 : group.key,
                                         )
                                     }
-                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && 'bg-gray-300'} text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36`}>
+                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && 'bg-(--filter-hover)'} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}>
                                     <span className="pr-1">
                                         <HugeiconsIcon
                                             size={16}
@@ -837,7 +837,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                     onClick={() =>
                                         setIsDropdownOpen((current) => !current)
                                     }
-                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
                                 >
                                     <span className="pr-1">
                                         <HugeiconsIcon

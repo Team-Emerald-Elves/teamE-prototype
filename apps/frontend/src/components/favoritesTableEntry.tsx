@@ -198,16 +198,17 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             <TableCell className="text-[14px] font-small text-gray-700">
                 {props.d.content_owner}
             </TableCell>
+
             <TableCell className="text-[14px] font-small text-gray-700">
                 {mod.toLocaleString()}
             </TableCell>
-            <div className="flex flex-wrap gap-1 mt-2">
-                <DocTag background={roleBackground}>{role}</DocTag>
-                <DocTag background={docBackground}>{type}</DocTag>
-                <DocTag background={statusBackground}>{status}</DocTag>
-            </div>
-            <TableCell>
 
+            <TableCell>
+                <div className="flex flex-wrap gap-1 mt-2">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                    <DocTag background={docBackground}>{type}</DocTag>
+                    <DocTag background={statusBackground}>{status}</DocTag>
+                </div>
             </TableCell>
             <TableCell className="flex text-[14px] font-small text-gray-700 justify-center w-full">
                 <Button onClick={async () => await handleDownload(props.d)}>

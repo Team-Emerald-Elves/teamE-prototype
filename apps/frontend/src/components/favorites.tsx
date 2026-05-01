@@ -119,25 +119,16 @@ export default function Favorites() {
                                         Title
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Created
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Content Type
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
                                         Expiration Date
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Status
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
                                         Owner
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Role
+                                        Last Modified
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Last Modified
+                                        Tags
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
                                         Actions
@@ -295,9 +286,6 @@ export default function Favorites() {
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
                                         Role
-                                    </TableHead>
-                                    <TableHead className="text-[#0b4461] font-medium text-sm">
-                                        Created
                                     </TableHead>
                                     <TableHead className="text-[#0b4461] font-medium text-sm">
                                         Last Modified

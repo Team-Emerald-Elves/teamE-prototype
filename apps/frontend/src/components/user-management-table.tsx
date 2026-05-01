@@ -198,7 +198,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
         <div className="max-w-10xl mx-auto px-10 py-10">
             <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
                 <div className="flex items-center mb-4">
-                    <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                    <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                         <InputGroupInput
                             placeholder="Search"
                             value={
@@ -221,7 +221,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     <div className="relative inline-block text-left">
                         <button
                             onClick={() => setIsRoleOpen((open) => !open)}
-                            className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                            className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                         >
                             <div className="pr-1">
                                 <HugeiconsIcon icon={SlidersHorizontalIcon} />

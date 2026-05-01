@@ -4,7 +4,7 @@ import { getAuth } from "@clerk/express";
 import type { Layout } from "react-grid-layout";
 
 import { LayoutRequestPostModel } from "../lib/zod/routes.schemas.ts";
-import { validate } from "../lib/zod/middleware.ts";
+import validate from "../lib/zod/middleware.ts";
 
 const layoutRoute = express();
 

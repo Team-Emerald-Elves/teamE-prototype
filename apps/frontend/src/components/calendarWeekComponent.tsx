@@ -56,9 +56,9 @@ export default function CalendarWeek() {
     }, [getToken]);
 
     return (
-        <div className="max-w-10xl mx-auto px-6 py-6">
+        <div className="max-w-10xl mx-auto px-6 py-1">
 
-            <div className="bg-white rounded-xl shadow-sm border p-4">
+            <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold text-gray-800">{getCurrentWeekLabel()}</h4>
                     <Link to="/calendar" className="text-sm text-blue-900 hover:underline">View Full Calendar</Link>

@@ -11,14 +11,14 @@ interface Props {
 export default function WidgetWrapper({widgetId, label, isEditing, onRemove, children,}: Props) {
     return (
         //AI GENERATED STYLING
-        <div className="h-full flex flex-col bg-card border rounded-lg shadow-sm overflow-hidden">
+        <div className="h-full flex flex-col bg-card border rounded-lg shadow-sm">
             <div
                 className={`
-          flex items-center justify-between px-3 py-2 border-b text-sm font-medium
-          ${isEditing ? "widget-drag-handle cursor-grab bg-muted/50" : ""}`}>
-                <div className="flex items-center gap-2">
+          flex items-center justify-between px-3 py-2 border-0 text-sm font-medium
+          overflow-hidden transition-all duration-200 ease-in-out
+          ${isEditing ? "widget-drag-handle cursor-grab bg-muted/50 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
+                <div className="flex items-center gap-2 ">
                     {isEditing && <GripHorizontal size={14} className="text-muted-foreground" />}
-                    <span>{label}</span>
                 </div>
                 {isEditing && (
                     <button
@@ -30,7 +30,7 @@ export default function WidgetWrapper({widgetId, label, isEditing, onRemove, chi
                     </button>
                 )}
             </div>
-            <div className="flex-1 overflow-auto p-3">
+            <div className="flex-1 overflow-auto px-5 pb-1">
                 {children}
             </div>
         </div>

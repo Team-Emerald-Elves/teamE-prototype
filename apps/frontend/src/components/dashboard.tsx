@@ -124,6 +124,7 @@ export default function Dashboard({ roles, isEditing = false }: DashboardProps) 
     );
 
     return (
+
         <div ref={ref}>
             {width > 0 && (
                 <GridLayout

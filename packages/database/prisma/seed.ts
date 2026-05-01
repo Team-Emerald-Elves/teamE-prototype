@@ -1,4 +1,4 @@
-import prisma from '../index.ts';
+import prisma from "../index.ts";
 //import { type Employee } from '../prisma/generated/client.ts'
 /*
 const IDS = {
@@ -15,7 +15,6 @@ const IDS = {
 };
 */
 async function main() {
-
     await prisma.documentContent.createMany({
         skipDuplicates: true,
         data: [
@@ -28,7 +27,7 @@ async function main() {
                 last_modified: new Date("2024-11-15"),
                 expiration_date: new Date("2026-11-15"),
                 document_status: "done",
-                document_type: "Reference"
+                document_type: "Reference",
             },
             {
                 name: "Learning Foundations Progress Tracker",
@@ -700,5 +699,10 @@ async function main() {
 }
 
 main()
-    .catch((e) => { console.error(e); process.exit(1);})
-    .finally(async() => {await prisma.$disconnect()})
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

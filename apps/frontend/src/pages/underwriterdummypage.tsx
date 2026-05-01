@@ -1,8 +1,6 @@
-import '../App.css'
+import "../App.css";
 
-function UnderwriterDummy(){
-    return (
-        <h1 className="text-primary">Underwriter Dummy Page</h1>
-    )
+function UnderwriterDummy() {
+    return <h1 className="text-primary">Underwriter Dummy Page</h1>;
 }
 export default UnderwriterDummy;

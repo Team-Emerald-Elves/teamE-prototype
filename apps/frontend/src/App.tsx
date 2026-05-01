@@ -1,101 +1,83 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/home.tsx';
-import Documents from './pages/documents.tsx';
-import Profile from './pages/profile.tsx';
-import UnderwriterDummy from './pages/underwriterdummypage.tsx'
-import BusinessDummy from './pages/buisnessanalystdummy.tsx'
-import Navbar from './components/navbar.tsx'
-import Links from './pages/links.tsx'
-import LoginSignup from './pages/login-signup.tsx'
-import NotFound from './pages/not-found.tsx'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/home.tsx";
+import Documents from "./pages/documents.tsx";
+import Profile from "./pages/profile.tsx";
+import UnderwriterDummy from "./pages/underwriterdummypage.tsx";
+import BusinessDummy from "./pages/buisnessanalystdummy.tsx";
+import Navbar from "./components/navbar.tsx";
+import LinksPage from "./pages/links.tsx";
+import LoginSignup from "./pages/login-signup.tsx";
+import NotFound from "./pages/not-found.tsx";
+import "./App.css";
 import UserManagementPage from "@/pages/user-management-page.tsx";
 import Footer from "./components/footer.tsx";
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
-import {Show, UserButton} from '@clerk/react'
+import { Show, useAuth, UserButton } from "@clerk/react";
 //import CenterDiv from "./components/center-div.tsx";
 import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
+import qmgr from "./lib/querymgr.ts";
 
 function App() {
-    // const [roles, setRoles] = useState<string[]>([]);
-    // const { getToken, isSignedIn } = useAuth();
-    // const [me, setMe] = useState(null);
-    //
-    // useEffect(() => {
-    //     if (!isSignedIn) {
-    //         setMe(null);
-    //         return;
-    //     }
-    //
-    //     async function load() {
-    //         const token = await getToken();
-    //
-    //         const res = await fetch("http://localhost:3000/api/tests/me", {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         });
-    //
-    //         const data = await res.json();
-    //         setMe(data);
-    //         setRoles((data.me.roles as string[]).map((role: string) => role.toLowerCase()))
-    //     }
-    //
-    //     load();
-    // }, [isSignedIn, roles]);
-
+    qmgr.auth(useAuth());
     return (
         <BrowserRouter>
             <Show when="signed-out">
                 <Routes>
-                    <Route path = "/login" element={<LoginSignup/>} />
+                    <Route path="/login" element={<LoginSignup />} />
                 </Routes>
                 <LoginSignup />
-                {/*<Home />
-                <CenterDiv>
-                    <SignInButton>
-                        <button className="clerk-button">Sign in</button>
-                    </SignInButton>
-                    <SignUpButton>
-                        <button className="clerk-button">Sign up</button>
-                    </SignUpButton>
-                </CenterDiv>*/}
             </Show>
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
-                    <div className="app">
-                        <Navbar >
-                            <UserButton />
-                        </Navbar>
+                <div className="app">
+                    <Navbar>
+                        <UserButton />
+                    </Navbar>
 
-                        <main className="main">
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/documents" element={<Documents/>} />
-                                <Route path="/employee-management" element={<UserManagementPage />} />
-                                <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
-                                <Route path="/business-dummy" element={<BusinessDummy />} />
-                                <Route path="/links" element={<Links />} />
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="*" element={<NotFound />} />
-                                <Route path="/favorites" element={<FavoritesPage />} />
-                                <Route path="/statistics" element={<StatisticsPage />} />
-                                <Route path="/calendar" element={<CalendarPage />} />
-                                <Route path="/aboutus" element={<AboutUs />} />
-                                <Route path="/credits" element={<Credits />} />
-                            </Routes>
-                        </main>
-                        <Footer />
-                    </div>
-
+                    <main className="main">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/documents" element={<Documents />} />
+                            <Route
+                                path="/employee-management"
+                                element={<UserManagementPage />}
+                            />
+                            <Route
+                                path="/underwriter-dummy"
+                                element={<UnderwriterDummy />}
+                            />
+                            <Route
+                                path="/business-dummy"
+                                element={<BusinessDummy />}
+                            />
+                            <Route path="/links" element={<LinksPage />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="*" element={<NotFound />} />
+                            <Route
+                                path="/favorites"
+                                element={<FavoritesPage />}
+                            />
+                            <Route
+                                path="/statistics"
+                                element={<StatisticsPage />}
+                            />
+                            <Route
+                                path="/calendar"
+                                element={<CalendarPage />}
+                            />
+                            <Route path="/aboutus" element={<AboutUs />} />
+                            <Route path="/credits" element={<Credits />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
             </Show>
         </BrowserRouter>
     );
 }
 
-
-export default App
+export default App;

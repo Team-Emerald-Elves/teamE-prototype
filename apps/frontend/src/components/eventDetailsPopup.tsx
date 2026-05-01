@@ -1,19 +1,12 @@
 import EventForm from "@/components/eventForm.tsx";
-import {useEffect, useState} from "react";
-import { Button } from "@/components/ui/button"
-import {useAuth} from "@clerk/react";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@clerk/react";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import ExpiringBar from "@/components/expiringBar.tsx";
+import qmgr from "@/lib/querymgr";
 
 type EventDetailsProps = {
     selectedEvent: any;
@@ -21,35 +14,26 @@ type EventDetailsProps = {
     setReload: (reload: any) => void;
     openEvent: boolean;
     setOpenEvent: (event: any) => void;
-}
-
+};
 
 export default function EventDetails(props: EventDetailsProps) {
     const [empID, setEmpID] = useState("");
-    const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
+    const { isSignedIn } = useAuth();
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        qmgr.wait(() => {
+            qmgr.getMe(async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
                 }
+                setEmpID(res.data!.id);
             });
-            const data = await res.json();
-            setMe(data);
-            setEmpID(data.id);
-        }
-
-        load();
-    }, [getToken, isSignedIn]);
+        });
+    }, [isSignedIn]);
 
     const [open, setOpen] = useState(false);
 
@@ -70,46 +54,100 @@ export default function EventDetails(props: EventDetailsProps) {
         console.log(props.selectedEvent.extendedProps.contentOwner);
     }
 
-
-
-
     return (
         <>
-            <Dialog open={props.openEvent} onOpenChange={(isOpen) => {
-                props.setOpenEvent(isOpen);
+            <Dialog
+                open={props.openEvent}
+                onOpenChange={(isOpen) => {
+                    props.setOpenEvent(isOpen);
 
-                if (!isOpen) {
-                    props.setSelectedEvent(null);
-                }}}>
+                    if (!isOpen) {
+                        props.setSelectedEvent(null);
+                    }
+                }}
+            >
                 <DialogContent className="overflow-visible max-w-3xl">
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-xl font-bold">{props.selectedEvent?.title}</h3>
-                        {props.selectedEvent?.extendedProps.doc_id !== -1 ? <ExpiringBar createdAt={props.selectedEvent?.extendedProps.created_at} expiresAt={props.selectedEvent?.start} /> :
-                            <div><p>Start Date: {props.selectedEvent?.start.toLocaleString()}</p> <p> End Date: {props.selectedEvent?.end.toLocaleString()}</p></div> }
+                        <h3 className="text-xl font-bold">
+                            {props.selectedEvent?.title}
+                        </h3>
+                        {props.selectedEvent?.extendedProps.doc_id !== -1 ? (
+                            <ExpiringBar
+                                createdAt={
+                                    props.selectedEvent?.extendedProps
+                                        .created_at
+                                }
+                                expiresAt={props.selectedEvent?.start}
+                            />
+                        ) : (
+                            <div>
+                                <p>
+                                    Start Date:{" "}
+                                    {props.selectedEvent?.start.toLocaleString()}
+                                </p>{" "}
+                                <p>
+                                    {" "}
+                                    End Date:{" "}
+                                    {props.selectedEvent?.end.toLocaleString()}
+                                </p>
+                            </div>
+                        )}
                     </div>
-                    {props.selectedEvent?.extendedProps.doc_id !== -1 ?
+                    {props.selectedEvent?.extendedProps.doc_id !== -1 ? (
                         <div className="flex items-center gap-x-2">
-                        <FontAwesomeIcon icon={faCircle} style={{ color: props.selectedEvent?.backgroundColor }} />
-                        <p>{props.selectedEvent && role}</p>
-                    </div> : null}
+                            <FontAwesomeIcon
+                                icon={faCircle}
+                                style={{
+                                    color: props.selectedEvent?.backgroundColor,
+                                }}
+                            />
+                            <p>{props.selectedEvent && role}</p>
+                        </div>
+                    ) : null}
 
-                    {props.selectedEvent?.extendedProps.doc_id !== -1 ? <div><p>Owned By: {props.selectedEvent?.extendedProps?.contentOwner ? props.selectedEvent?.extendedProps?.contentOwner : "Unknown"}</p></div> : null}
+                    {props.selectedEvent?.extendedProps.doc_id !== -1 ? (
+                        <div>
+                            <p>
+                                Owned By:{" "}
+                                {props.selectedEvent?.extendedProps
+                                    ?.contentOwner
+                                    ? props.selectedEvent?.extendedProps
+                                          ?.contentOwner
+                                    : "Unknown"}
+                            </p>
+                        </div>
+                    ) : null}
 
-                    {(eventEmpId !== "none") && (props.selectedEvent?.extendedProps.doc_id !== -1) && <p>Checked Out By: {props.selectedEvent?.extendedProps.checkedOut}</p>}
+                    {eventEmpId !== "none" &&
+                        props.selectedEvent?.extendedProps.doc_id !== -1 && (
+                            <p>
+                                Checked Out By:{" "}
+                                {props.selectedEvent?.extendedProps.checkedOut}
+                            </p>
+                        )}
 
-                    {((eventEmpId === empID) || (props.selectedEvent?.extendedProps.doc_id === -1)) &&
-                        <Button onClick={() => {setOpen(true); props.setOpenEvent(false)}}>Edit Event</Button>}
+                    {(eventEmpId === empID ||
+                        props.selectedEvent?.extendedProps.doc_id === -1) && (
+                        <Button
+                            onClick={() => {
+                                setOpen(true);
+                                props.setOpenEvent(false);
+                            }}
+                        >
+                            Edit Event
+                        </Button>
+                    )}
                 </DialogContent>
-                <DialogFooter>
-
-                </DialogFooter>
+                <DialogFooter></DialogFooter>
             </Dialog>
 
-
-            <EventForm open={open}
-                       setOpen={setOpen}
-                       selectedEvent={props.selectedEvent}
-                       setSelectedEvent={props.setSelectedEvent} setReload={props.setReload}/>
+            <EventForm
+                open={open}
+                setOpen={setOpen}
+                selectedEvent={props.selectedEvent}
+                setSelectedEvent={props.setSelectedEvent}
+                setReload={props.setReload}
+            />
         </>
-    )
+    );
 }

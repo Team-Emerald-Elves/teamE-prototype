@@ -1,36 +1,25 @@
-import {TableCell, TableRow} from "@/components/ui/table.tsx";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import {Dialog, DialogClose, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 import DocumentViewer from "@/components/docViewer.tsx";
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon} from "@hugeicons/core-free-icons";
-import * as React from "react";
-import {Button} from "@/components/ui/button.tsx";
-import {getToken} from "@clerk/react";
-import DocTag from "@/components/doctag.tsx";
-import mime from "mime";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Download01Icon } from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/button.tsx";
+import { getToken } from "@clerk/react";
+import qmgr from "@/lib/querymgr";
+import type { documentContent, Links as linksData } from "@repo/database/types";
+import DocTag from "@/components/docTag.tsx";
 
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock: boolean;
-    created_at: string;
-};
-
-const handleDownload = async (doc: Document) => {
+const handleDownload = async (doc: documentContent) => {
     try {
         addHitCount(doc);
         createNotif(doc, "downloaded");
-        const response = await fetch(doc.url);
+        const response = await fetch(doc.url!);
 
         if (!response.ok) {
             throw new Error("Failed to fetch file");
@@ -52,61 +41,68 @@ const handleDownload = async (doc: Document) => {
     }
 };
 
-
 type FavoriteProps = {
-    d: Document;
-    onToggleOff: (doc: Document) => void;
-    onToggleOn: (doc: Document) => void;
+    d: documentContent;
+    onToggleOff: (doc: documentContent | linksData) => void;
+    onToggleOn: (doc: documentContent | linksData) => void;
 };
 
-async function addHitCount (doc: Document) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
-        headers: {
-            "Content-Type": "application/json"
+async function addHitCount(doc: documentContent) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                id: doc.id,
+                type: "DOCUMENT",
+            }),
         },
-        method: "POST",
-        body: JSON.stringify({
-            id: doc.id,
-            type: "DOCUMENT"
-        })
-    })
+    );
     if (!res.ok) {
-        throw new Error("failed to add doc hit count")
+        throw new Error("failed to add doc hit count");
     }
 }
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+    qmgr.wait(() => {
+        qmgr.getMe(async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+
+            const me = res1.data!;
+            console.log(me);
+
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
+                },
+            );
+
+            if (!res.ok) {
+                throw new Error("failed to create view notification");
+            }
+            console.log(await res.json());
+        });
     });
-
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-        })
-    })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
-export default function FavoritesTableEntry(props: FavoriteProps)  {
+export default function FavoritesTableEntry(props: FavoriteProps) {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
     const type = props.d.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");;
@@ -159,10 +155,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             break;
     }
     return (
-        <TableRow
-            key={props.d.id}
-            className="hover:bg-gray-50 transition h-12"
-        >
+        <TableRow key={props.d.id} className="hover:bg-gray-50 transition h-12">
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
@@ -172,7 +165,13 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             <TableCell className="text-[14px] font-small text-gray-700">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button onClick={async () => {createNotif(props.d, "accessed"); addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button
+                            onClick={async () => {
+                                createNotif(props.d, "accessed");
+                                addHitCount(props.d);
+                            }}
+                            className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
+                        >
                             {props.d.name}
                         </button>
                     </DialogTrigger>
@@ -215,8 +214,6 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                     <HugeiconsIcon icon={Download01Icon} />
                 </Button>
             </TableCell>
-
-
         </TableRow>
-    )
+    );
 }

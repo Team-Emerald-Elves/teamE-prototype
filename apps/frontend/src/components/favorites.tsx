@@ -2,7 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
-import { Info } from "lucide-react"
+import { Info } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 
 import {
@@ -189,6 +190,7 @@ export default function Favorites() {
                             </TableBody>
                         </Table>
 
+
                         <div className="absolute bottom-3 left-3">
                             <Popover>
                                 <PopoverTrigger asChild>
@@ -227,8 +229,7 @@ export default function Favorites() {
 
                 <TabsContent value = "links">
                     <div className="bg-white rounded-xl shadow-none border-0 p-4 relative overflow-visible">
-
-                                    <Table className="border rounded-lg overflow-hidden ">
+                        <Table className="border rounded-lg overflow-hidden ">
                                         <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
                                             <TableRow>
                                                 <TableHead className="text-[#0b4461] text-center font-medium text-sm">Favorite</TableHead>

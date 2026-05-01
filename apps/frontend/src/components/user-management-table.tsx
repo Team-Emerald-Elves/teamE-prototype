@@ -1,113 +1,3 @@
-// import '../App.css'
-//
-// import {
-//     Table,
-//     TableBody,
-//     TableCell,
-//     TableHead,
-//     TableHeader,
-//     TableRow,
-// } from "@/components/ui/table"
-//
-// import {HugeiconsIcon} from "@hugeicons/react";
-// import { UserCircleIcon } from '@hugeicons/core-free-icons';
-// import {useEffect, useState} from "react";
-// import EmployeeForm from "@/components/employeeForm.tsx";
-// import {EmployeeConfirmationPopup} from "@/components/deletePopupConfirmationEmployee.tsx";
-// import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
-// import * as React from "react";
-//
-//
-// type Employee = {
-//     id: string;
-//     first_name: string;
-//     last_name: string;
-//     uname: string;
-//     email?: string;
-//     roles?: string[];
-//     imageUrl: string;
-// };
-//
-// async function getEmployees() {
-//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`);
-//
-//     if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
-//         window.location.replace("/");
-//     }
-//
-//     if (!res.ok) {
-//         throw new Error("Failed to fetch employees");
-//     }
-//     const data = await res.json();
-//     console.log(data)
-//
-//     return data;
-// }
-//
-//
-// function UserManagementTable(){
-//
-//     const [employees, setEmployees] = useState<Employee[]>([]);
-//
-//     useEffect(() => {
-//         getEmployees()
-//             .then(setEmployees)
-//             .catch(console.error);
-//     }, []);
-//
-//
-//     return (
-//         <>
-//             <div className="max-w-10xl mx-auto px-6 py-6">
-//                 <div className="bg-white rounded-xl shadow-sm border p-4">
-//                     <div className="flex items-center mb-4 justify-end ml-auto">
-//                         <CreateEmployeeForm />
-//                     </div>
-//             <Table className="border rounded-lg overflow-hidden">
-//                 <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
-//                     <TableRow>
-//                         <TableHead className=" text-[#0b4461] text-center">Name</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Username</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Email</TableHead>
-//                         <TableHead className=" text-[#0b4461] text-center">Role</TableHead>
-//                         <TableHead className="text-[#0b4461]  flex text-center items-center pl-[35px]">Action</TableHead>
-//                     </TableRow>
-//                 </TableHeader>
-//                 <TableBody>
-//                     {employees.map((emp) => (
-//                         <TableRow key={emp.id}>
-//                             <TableCell className="font-medium text-center">
-//                                 <div className="flex gap-3 text-center items-center">
-//                                     <img className="size-8 rounded-full" src={emp.imageUrl}/>
-//                                     {emp.first_name} {emp.last_name}
-//                                 </div>
-//                             </TableCell>
-//
-//                             <TableCell className="text-center">{emp.uname}</TableCell>
-//                             <TableCell className="text-center">{emp.email}</TableCell>
-//                             <TableCell className="text-center">{emp.roles?.at(0) ?? "No Roles" }</TableCell>
-//
-//                             <TableCell className="flex items-center text-center gap-3">
-//                                 <div className="flex justify-end">
-//                                     <EmployeeForm employee={emp}/>
-//                                 </div>
-//
-//                                 <EmployeeConfirmationPopup target={emp.id} />
-//
-//                             </TableCell>
-//                         </TableRow>
-//                     ))}
-//                 </TableBody>
-//             </Table>
-//             </div>
-//             </div>
-//         </>
-//     )
-// }
-//
-// export default UserManagementTable;
-
-
 "use client"
 import * as React from "react"
 import {
@@ -150,16 +40,8 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import CreateEmployeeForm from "@/components/createEmployeeForm.tsx";
 import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmployee.tsx";
 import EmployeeForm from "@/components/employeeForm.tsx";
-
-type Employee = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    uname: string;
-    email?: string;
-    roles?: string[];
-    imageUrl: string;
-};
+import qmgr from "@/lib/querymgr.ts";
+import type { Employee } from "@/../../packages/database/lib/prismadefs.ts"
 
 interface EmployeeProps<TData extends Employee, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -168,9 +50,7 @@ interface EmployeeProps<TData extends Employee, TValue> {
 export default function EmployeeTable<TData extends Employee, TValue>({
                                                                     columns,
                                                                 }: EmployeeProps<TData, TValue>) {
-    const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const [token, setToken] = useState<string>();
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [roleFilters, setRoleFilters] =  useState( [
@@ -186,64 +66,30 @@ export default function EmployeeTable<TData extends Employee, TValue>({
     const [isRoleOpen, setIsRoleOpen] = useState(false);
     const [reload, setReload] = useState<boolean>(false);
 
-    async function getEmployees() {
-        const payload: Record<string, string[]> = {};
-
-        if (filters.length > 0) {
-            payload['roles'] = filters.map(d => [d.value]);
-        }
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/employee`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if ((res.status === 401 || res.status === 403) && !window.location.href.endsWith("/employee-management")) {
-            window.location.replace("/");
-        }
-
-        if (!res.ok) {
-            throw new Error("Failed to fetch employees");
-        }
-        const data = await res.json();
-        console.log(data)
-
-        return data;
-    }
-
 
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
         async function load() {
             const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const data = await res.json();
-            setMe(data);
-            setToken(token as string)
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+            setToken(token as string);
         }
         load();
 
     }, []);
     useEffect(() => {
-        getEmployees()
-            .then(setEmployees)
-            .catch(console.error);
-    }, [filters, reload]);
+        qmgr.wait( async () => {
+            qmgr.getEmployees( async (res) => {
+                if (!res.success) {
+                    console.error(res.error);
+                }
+                setEmployees(res.data!)
+            })
+        })
+    }, [reload]);
 
 
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -265,6 +111,55 @@ export default function EmployeeTable<TData extends Employee, TValue>({
         },
 
     })
+    const currentPage = table.getState().pagination.pageIndex
+    const pageCount = table.getPageCount()
+
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = []
+        const showEllipsisStart = currentPage > 2
+        const showEllipsisEnd = currentPage < pageCount - 3
+
+        if (pageCount <= 7) {
+            return Array.from({ length: pageCount }, (_, i) => i)
+        }
+
+        pages.push(0)
+
+        if (showEllipsisStart) {
+            pages.push("...")
+            if(currentPage < pageCount - 2) {
+                pages.push(currentPage - 1, currentPage, currentPage + 1)
+            }
+            else if (currentPage < pageCount - 1) {
+                pages.push(currentPage -2,currentPage - 1, currentPage)
+            }
+            else{
+                pages.push(currentPage -3,currentPage - 2, currentPage - 1)
+            }
+        } else {
+            pages.push(1, 2, 3)
+        }
+
+        if (showEllipsisEnd) {
+            pages.push("...")
+        } else if (currentPage < pageCount - 3) {
+            pages.push(pageCount - 3, pageCount - 2)
+        }
+
+        if (currentPage >= pageCount - 3) {
+            console.log("current page", currentPage)
+            console.log("page count", pageCount)
+            for (let i = Math.max(4, currentPage - 1); i < pageCount - 5; i++) {
+                if (!pages.includes(i) && (currentPage < pageCount - 3)) {
+                    pages.push(i)
+                }
+            }
+        }
+
+        pages.push(pageCount - 1)
+
+        return pages
+    }
 
 
     const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, option: { key: string; value: string; id: string; state: boolean }) => {
@@ -304,7 +199,7 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                             <div className="relative inline-block text-left">
                                 <button
                                     onClick={() => setIsRoleOpen(!isRoleOpen)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                     Filter
@@ -400,20 +295,37 @@ export default function EmployeeTable<TData extends Employee, TValue>({
                                 })}
                             </TableBody>
                         </Table>
-                        <div className="flex items-center justify-end space-x-2 py-4">
+                        <div className="flex items-center justify-center gap-1 py-4">
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.previousPage()}
                                 disabled={!table.getCanPreviousPage()}
+                                onClick={() => table.previousPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Previous
                             </Button>
+                            {getPageNumbers().map((page, index) =>
+                                    typeof page === "number" ? (
+                                        <Button
+                                            className="h-8 w-8 p-0"
+                                            key={index}
+                                            onClick={() => table.setPageIndex(page)}
+                                            size="sm"
+                                            variant={currentPage === page ? "default" : "outline"}
+                                        >
+                                            {page + 1}
+                                        </Button>
+                                    ) : (
+                                        <span className="px-2" key={index}>
+                                    {page}
+                                    </span>
+                                    ),
+                            )}
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.nextPage()}
                                 disabled={!table.getCanNextPage()}
+                                onClick={() => table.nextPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Next
                             </Button>

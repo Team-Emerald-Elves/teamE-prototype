@@ -39,28 +39,13 @@ import FavoriteStar from "@/components/favoriteStar.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    lock: string;
-    expiration_date: Date;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-    lock_name: string;
-    meta_tags: string[];
-    created_at: string;
-};
+import type { Document } from "@/../../packages/database/lib/prismadefs.ts"
+import qmgr from "@/lib/querymgr.ts";
 
 const handleDownload = async (doc: Document) => {
     try {
         createNotif(doc, "downloaded");
-        const response = await fetch(doc.url);
+        const response = await fetch(doc.url!);
 
         if (!response.ok) {
             throw new Error("Failed to fetch file");
@@ -84,55 +69,33 @@ const handleDownload = async (doc: Document) => {
 
 async function createNotif(doc: Document, action: string) {
     const token = await getToken();
+    qmgr.wait(() => {
+        qmgr.getMe( async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
+            const me = res1.data!;
+            console.log(me);
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-        })
-    })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
-}
-
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean, setReload: (any) => void): Promise<string> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-    setReload(prev => !prev);
-    return String(data);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+        
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
+                })
+            })
 }
 
 interface DocProps<TData extends Document, TValue> {
@@ -169,9 +132,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                          }: DocProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const[docs, setDocs] = useState<Document[]>([]);
-    const [token, setToken] = useState<string>();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isDocumentOpen, setIsDocumentOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
@@ -283,28 +244,26 @@ export function DocumentsTable<TData extends Document, TValue>({
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-            async function load() {
-                if(!isSignedIn) {
-                    return;
-                }
-                const token = await getToken();
+        async function load() {
+            if(!isSignedIn) {
+                return;
+            }
 
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+            qmgr.wait(() => {
+                qmgr.getMe( async (res) => {
+                    if (!res.success) {
+                        throw new Error("Unable to get me");
                     }
-                });
 
-            const data = await res.json();
-            setMe(data);
-            setEmpID(data.id);
-            setMyRole(data.roles.at(0))
-            setToken(token as string)
-            setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+                    const data = await res.data!;
+                    setEmpID(data.id);
+                    setRoles((data.roles as string[]).map((role: string) => role.toLowerCase()))
+                })
+            })
+
         }
         load();
     }, []);
@@ -338,6 +297,56 @@ export function DocumentsTable<TData extends Document, TValue>({
         },
 
     })
+
+    const currentPage = table.getState().pagination.pageIndex
+    const pageCount = table.getPageCount()
+
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = []
+        const showEllipsisStart = currentPage > 2
+        const showEllipsisEnd = currentPage < pageCount - 3
+
+        if (pageCount <= 7) {
+            return Array.from({ length: pageCount }, (_, i) => i)
+        }
+
+        pages.push(0)
+
+        if (showEllipsisStart) {
+            pages.push("...")
+            if(currentPage < pageCount - 2) {
+                pages.push(currentPage - 1, currentPage, currentPage + 1)
+            }
+            else if (currentPage < pageCount - 1) {
+                pages.push(currentPage -2,currentPage - 1, currentPage)
+            }
+            else{
+                pages.push(currentPage -3,currentPage - 2, currentPage - 1)
+            }
+        } else {
+            pages.push(1, 2, 3)
+        }
+
+        if (showEllipsisEnd) {
+            pages.push("...")
+        } else if (currentPage < pageCount - 3) {
+            pages.push(pageCount - 3, pageCount - 2)
+        }
+
+        if (currentPage >= pageCount - 3) {
+            console.log("current page", currentPage)
+            console.log("page count", pageCount)
+            for (let i = Math.max(4, currentPage - 1); i < pageCount - 5; i++) {
+                if (!pages.includes(i) && (currentPage < pageCount - 3)) {
+                    pages.push(i)
+                }
+            }
+        }
+
+        pages.push(pageCount - 1)
+
+        return pages
+    }
     const toggleFavorite = async (doc: Document, nextValue: boolean) => {
         try {
             const token = await getToken();
@@ -414,6 +423,9 @@ export function DocumentsTable<TData extends Document, TValue>({
         );
     }
     useEffect(() => {
+        if(isDropdownOpen) {
+            setIsDropdownOpen(!isDropdownOpen)
+        }
         setFilters(prev => {
             const withoutRoles = prev.filter(f => f.key !== "assigned_role" && f.key !== "content_owner");
             if (tab === "All") return withoutRoles;
@@ -423,12 +435,41 @@ export function DocumentsTable<TData extends Document, TValue>({
             if (tab === "OwnedByMe") {
                 selectedOwned = myDocumentsButton.find(f => f.value === empID);
             }
+            const rolesFalse = roleFilters.map(role => ({
+                ...role,
+                state: false
+            }));
+            setRoleFilters(rolesFalse);
+            const ownedFalse = myDocumentsButton.map(owned => ({
+                ...owned,
+                state: false
+            }));
+            setMyDocumentsButton(ownedFalse);
 
             const tabFilter = selectedOwned || selectedRole;
             return tabFilter ? [...withoutRoles, tabFilter] : withoutRoles;
-
         });
     }, [tab,empID]);
+
+    async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<string> {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
+            headers: {
+                Authorization: `Bearer ${sessionToken}`,
+                "Content-Type": "application/json"
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                id: documentID,
+                status: status
+            })
+        })
+        if (!res.ok) {
+            throw new Error("Failed to fetch document.");
+        }
+        const data = await res.json();
+        setReload(prev => !prev);
+        return String(data);
+    }
 
     if(roles.includes("administrator")) {
         return (
@@ -454,7 +495,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 <div className="relative inline-block text-left">
                                         <button
                                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                            className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                            className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                         >
                                             <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                             Filter
@@ -504,7 +545,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -561,7 +602,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -619,7 +660,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -792,32 +833,32 @@ export function DocumentsTable<TData extends Document, TValue>({
                                         }
                                         setDocFilters(dcFilters =>
                                             dcFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                         setFileFilters(fiFilters =>
                                             fiFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                         setRoleFilters(rlFilters =>
                                             rlFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                         setTagFilters(tgFilters =>
                                             tgFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                         setStatusFilters(stFilters =>
                                             stFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                         setMyDocumentsButton(myFilters =>
                                             myFilters.map(filter =>
-                                                filter.id === option.id ? { ...filter, state: !filter.state } : filter
+                                                (filter.id === option.id && filter.state) ? { ...filter, state: false } : filter
                                             )
                                         );
                                     }} className="text-black pr-2">
@@ -882,7 +923,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     </Button>
                                                     <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, true, setReload)
+                                                        await setDocumentLock(token, doc.id, true)
                                                     }}><Lock /></Button>
                                                 </div>
                                             </TableCell>
@@ -920,9 +961,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                     <Button onClick={async () => await handleDownload(doc)}>
                                                         <HugeiconsIcon icon={Download01Icon} />
                                                     </Button>
-                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                    <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                         const token = await getToken();
-                                                        await setDocumentLock(token, doc.id, false, setReload)
+                                                        await setDocumentLock(token, doc.id, false)
                                                     }}><LockOpen /></Button>
 
                                                 </div>
@@ -972,20 +1013,37 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 })}
                             </TableBody>
                         </Table>
-                        <div className="flex items-center justify-end space-x-2 py-4">
+                        <div className="flex items-center justify-center gap-1 py-4">
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.previousPage()}
                                 disabled={!table.getCanPreviousPage()}
+                                onClick={() => table.previousPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Previous
                             </Button>
+                            {getPageNumbers().map((page, index) =>
+                                typeof page === "number" ? (
+                                    <Button
+                                        className="h-8 w-8 p-0"
+                                        key={index}
+                                        onClick={() => table.setPageIndex(page)}
+                                        size="sm"
+                                        variant={currentPage === page ? "default" : "outline"}
+                                    >
+                                        {page + 1}
+                                    </Button>
+                                ) : (
+                                    <span className="px-2" key={index}>
+                                    {page}
+                                    </span>
+                                ),
+                            )}
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.nextPage()}
                                 disabled={!table.getCanNextPage()}
+                                onClick={() => table.nextPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Next
                             </Button>
@@ -1057,7 +1115,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                 <div className="relative inline-block text-left">
                                     <button
                                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                        className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                     >
                                         <div className="pr-1"><HugeiconsIcon icon={SlidersHorizontalIcon}/></div>
                                         Filter
@@ -1107,7 +1165,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1164,7 +1222,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1222,7 +1280,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     <div key={option.id}
                                                                          className="flex items-center justify-between">
                                                                         <label htmlFor={option.id}
-                                                                               className="text-sm font-medium text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
+                                                                               className="text-sm  text-gray-800 cursor-pointer ml-2 ">{option.id}</label>
                                                                         <input
                                                                             id={option.id}
                                                                             type="checkbox"
@@ -1505,7 +1563,7 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                         className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                                                                         onClick={async () => {
                                                                             const token = await getToken();
-                                                                            await setDocumentLock(token, doc.id, true, setReload)
+                                                                            await setDocumentLock(token, doc.id, true)
                                                                         }}><Lock/></Button>
                                                             </div>
                                                         </TableCell>
@@ -1518,9 +1576,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                                     type="Edit"
                                                                     currentID={doc.id}
                                                                     currentName={doc.name}
-                                                                    currentURL={doc.url}
-                                                                    currentContentOwner={doc.content_owner}
-                                                                    currentRole={doc.assigned_role}
+                                                                    currentURL={doc.url!}
+                                                                    currentContentOwner={doc.content_owner!}
+                                                                    currentRole={doc.assigned_role!}
                                                                     currentExpirationDate={doc.expiration_date}
                                                                     currentExpirationTime="10:30:00"
                                                                     currentStatus={doc.document_status}
@@ -1546,9 +1604,9 @@ export function DocumentsTable<TData extends Document, TValue>({
                                                             <Button onClick={async () => await handleDownload(doc)}>
                                                                 <HugeiconsIcon icon={Download01Icon} />
                                                             </Button>
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
-                                                                await setDocumentLock(token, doc.id, false, setReload)
+                                                                await setDocumentLock(token, doc.id, false)
                                                             }}><LockOpen /></Button>
                                                         </div>
                                                     </TableCell>) : (
@@ -1636,20 +1694,37 @@ export function DocumentsTable<TData extends Document, TValue>({
                         </div>
 
                     </div>
-                    <div className="flex items-center justify-end space-x-2 py-4">
+                    <div className="flex items-center justify-center gap-1 py-4">
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
+                            onClick={() => table.previousPage()}
+                            size="sm"
+                            variant="outline"
                         >
                             Previous
                         </Button>
+                        {getPageNumbers().map((page, index) =>
+                            typeof page === "number"? (
+                                <Button
+                                    className="h-8 w-8 p-0"
+                                    key={index}
+                                    onClick={() => table.setPageIndex(page)}
+                                    size="sm"
+                                    variant={currentPage === page ? "default" : "outline"}
+                                >
+                                    {page + 1}
+                                </Button>
+                            ) : (
+                                <span className="px-2" key={index}>
+                                    {page}
+                                    </span>
+                            ),
+                        )}
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
+                            onClick={() => table.nextPage()}
+                            size="sm"
+                            variant="outline"
                         >
                             Next
                         </Button>

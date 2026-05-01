@@ -14,6 +14,7 @@ import {TableCell} from "@/components/ui/table.tsx";
 import DocTag from "@/components/doctag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
 import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr.ts";
 
 export type Document = {
     id: number;
@@ -53,32 +54,34 @@ async function addHitCount (doc: Document) {
 async function createNotif(doc: Document) {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    qmgr.wait(() => {
+        qmgr.getMe(async (res1) => {
+            if (!res1.success) {
+                throw new Error("Unable to get me");
+            }
 
-    const me = await res1.json();
-    console.log(me);
+            const me = res1.data!;
+            console.log(me);
 
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} accessed ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${me.first_name} ${me.last_name} accessed ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+
+            if (!res.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await res.json());
         })
     })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
 export const columns: ColumnDef<Document>[] = [
@@ -224,10 +227,21 @@ export const columns: ColumnDef<Document>[] = [
             const type = doc.mime_type
             const roles = doc.assigned_role;
             const status = doc.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");
+            const docType = doc.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");
             let statusBackground = "bg-slate-400"
             const typeBackground = "bg-neutral-200"
             let roleBackground = "bg-gray-200"
             const customBackground = "bg-indigo-300"
+            let docBackground = "bg-gray-200"
+
+            switch (docType) {
+                case 'Reference':
+                    docBackground = "bg-sky-200"
+                    break;
+                case 'Workflow':
+                    docBackground = "bg-indigo-200"
+                    break;
+            }
             switch (status) {
                 case 'Not Started':
                     statusBackground = "bg-red-200";
@@ -267,6 +281,7 @@ export const columns: ColumnDef<Document>[] = [
                 <div className="flex flex-wrap gap-1">
                     <DocTag background={typeBackground}>{mime.getExtension(type)}</DocTag>
                     <DocTag background={roleBackground}>{roles}</DocTag>
+                    <DocTag background={docBackground}>{docType}</DocTag>
                     <DocTag background={statusBackground}>{status}</DocTag>
                     {doc.meta_tags.map(tag => (
                         <DocTag background={customBackground}>{tag}</DocTag>

@@ -11,7 +11,6 @@ async function linkTagDelete(req: express.Request, res: express.Response) {
 
 
     try {
-        console.log(document)
         // Update contents for document.
         const doc = await prisma.links.findFirstOrThrow({
             where: {

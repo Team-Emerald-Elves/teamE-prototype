@@ -40,34 +40,8 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Info } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
-
-type Links = {
-   id: string;
-   link_name: string;
-   url: string;
-   owner: string;
-   favorite: boolean;
-   lock: string;
-   lock_name: string;
-   created_at: string;
-   updated_at: string;
-   meta_tags: string[];
-};
-
-type Document = {
-    id: number;
-    url: string;
-    name: string;
-    last_modified: string;
-    lock: boolean;
-    expiration_date: string;
-    mime_type: string;
-    document_type: string;
-    assigned_role: string;
-    content_owner: string;
-    document_status: string;
-    favorite: boolean;
-};
+import qmgr from "@/lib/querymgr.ts";
+import type { Links, Document } from "@/../../packages/database/lib/prismadefs.ts";
 
 async function setLinkLock(sessionToken: string | null, linkID: string, status: boolean, setReload: (any) => void): Promise<string> {
 
@@ -102,9 +76,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                 }: LinkProps<TData, TValue>) {
     const [roles, setRoles] = useState<string[]>([]);
     const { getToken, isSignedIn } = useAuth();
-    const [me, setMe] = useState(null);
     const[links, setLinks] = useState<Links[]>([]);
-    const [token, setToken] = useState<string>();
     const[empID, setEmpID] = useState("");
     const [roleFilters, setRoleFilters] =  useState( [
         {key: 'owner', value: 'ActuarialAnalyst', id: 'Actuarial Analyst', state: false},
@@ -144,7 +116,9 @@ export default function LinksTable<TData extends Links, TValue>({
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                action: "list",
+            })
         });
 
         if (!res.ok) {
@@ -155,40 +129,34 @@ export default function LinksTable<TData extends Links, TValue>({
     }
 
     useEffect(() => {
-        getLinks()
-            .then((data) => {
-                if (links.length === 0) {
-                    setTagFilters(getTagFilters(data));
-                }
-                setLinks(data);})
-            .catch(console.error);
+        qmgr.wait(() => {
+            getLinks()
+                .then((data) => {
+                    if (links.length === 0) {
+                        setTagFilters(getTagFilters(data));
+                    }
+                    setLinks(data);})
+                .catch(console.error);
+        })
     }, [filters, reload]);
 
 
 
     useEffect(() => {
         if (!isSignedIn) {
-            setMe(null);
             return;
         }
 
-        async function load() {
-            const token = await getToken();
-
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-
+        qmgr.wait(() => {
+            qmgr.getMe( async (res) => {
+                if (!res.success) {
+                    throw new Error("Unable to get me");
                 }
-            });
-
-            const data = await res.json();
-            setMe(data);
-            setToken(token as string)
-            setEmpID(data.id);
-            setRoles((data.roles as string[]))
-        }
-        load();
+                const data = await res.data!;
+                setEmpID(data.id);
+                setRoles((data.roles as string[]))
+            })
+        })
 
     }, []);
 
@@ -212,6 +180,56 @@ export default function LinksTable<TData extends Links, TValue>({
         },
 
     })
+
+    const currentPage = table.getState().pagination.pageIndex
+    const pageCount = table.getPageCount()
+
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = []
+        const showEllipsisStart = currentPage > 2
+        const showEllipsisEnd = currentPage < pageCount - 3
+
+        if (pageCount <= 7) {
+            return Array.from({ length: pageCount }, (_, i) => i)
+        }
+
+        pages.push(0)
+
+        if (showEllipsisStart) {
+            pages.push("...")
+            if(currentPage < pageCount - 2) {
+                pages.push(currentPage - 1, currentPage, currentPage + 1)
+            }
+            else if (currentPage < pageCount - 1) {
+                pages.push(currentPage -2,currentPage - 1, currentPage)
+            }
+            else{
+                pages.push(currentPage -3,currentPage - 2, currentPage - 1)
+            }
+        } else {
+            pages.push(1, 2, 3)
+        }
+
+        if (showEllipsisEnd) {
+            pages.push("...")
+        } else if (currentPage < pageCount - 3) {
+            pages.push(pageCount - 3, pageCount - 2)
+        }
+
+        if (currentPage >= pageCount - 3) {
+            console.log("current page", currentPage)
+            console.log("page count", pageCount)
+            for (let i = Math.max(4, currentPage - 1); i < pageCount - 5; i++) {
+                if (!pages.includes(i) && (currentPage < pageCount - 3)) {
+                    pages.push(i)
+                }
+            }
+        }
+
+        pages.push(pageCount - 1)
+
+        return pages
+    }
     const toggleFavorite = async (link: Document | Links, nextValue: boolean) => {
         try {
             const token = await getToken();
@@ -302,8 +320,6 @@ export default function LinksTable<TData extends Links, TValue>({
             table.getColumn("owner")?.setFilterValue(tab)
         }
     }, [tab,table]);
-    console.log(roles[0])
-    console.log(tab)
 
     if(roles.includes("Administrator")) {
         return (
@@ -327,23 +343,22 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </InputGroupAddon>
                             </InputGroup>
                             <div className="relative inline-block text-left">
-                                {tab === "All" ?
                                 <button
                                     onClick={() => setIsDropdownOpen(prev => !prev)}
-                                    className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon icon={SlidersHorizontalIcon}/>
                                     </div>
                                     Filter Tags
-                                </button> : null }
+                                </button>
 
                                 {isDropdownOpen && (
                                     <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2">
 
                                             {/* TAGS */}
-                                            <div className="px-2 mt-2">
+                                            <div className="px-2 ">
 
                                                 {/*{isTagOpen && (*/}
                                                     <div className="ml-2 mt-1 flex flex-col gap-1 max-h-40 overflow-y-auto">
@@ -471,7 +486,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                             <Button variant = "destructive" size = "icon">
                                                                 <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                             </Button>
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>
@@ -503,20 +518,37 @@ export default function LinksTable<TData extends Links, TValue>({
                                 })}
                             </TableBody>
                         </Table>
-                        <div className="flex items-center justify-end space-x-2 py-4">
+                        <div className="flex items-center justify-center gap-1 py-4">
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.previousPage()}
                                 disabled={!table.getCanPreviousPage()}
+                                onClick={() => table.previousPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Previous
                             </Button>
+                            {getPageNumbers().map((page, index) =>
+                                    typeof page === "number" ? (
+                                        <Button
+                                            className="h-8 w-8 p-0"
+                                            key={index}
+                                            onClick={() => table.setPageIndex(page)}
+                                            size="sm"
+                                            variant={currentPage === page ? "default" : "outline"}
+                                        >
+                                            {page + 1}
+                                        </Button>
+                                    ) : (
+                                        <span className="px-2" key={index}>
+                                    {page}
+                                    </span>
+                                    ),
+                            )}
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => table.nextPage()}
                                 disabled={!table.getCanNextPage()}
+                                onClick={() => table.nextPage()}
+                                size="sm"
+                                variant="outline"
                             >
                                 Next
                             </Button>
@@ -747,7 +779,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                         <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                     </Button>
                                                                 )}
-                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                                <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                     const token = await getToken();
                                                                     await setLinkLock(token, link.id, false, setReload)
                                                                 }}><LockOpen /></Button>
@@ -802,7 +834,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                                     <DeletePopupConfirmationLinks link={link} reload={setReload}/>
                                                                 </Button>
                                                             )}
-                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground" onClick={async () => {
+                                                            <Button variant="outline" size="icon" className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground" onClick={async () => {
                                                                 const token = await getToken();
                                                                 await setLinkLock(token, link.id, false, setReload)
                                                             }}><LockOpen /></Button>
@@ -857,20 +889,37 @@ export default function LinksTable<TData extends Links, TValue>({
                         </div>
 
                     </div>
-                    <div className="flex items-center justify-end space-x-2 py-4">
+                    <div className="flex items-center justify-center gap-1 py-4">
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
+                            onClick={() => table.previousPage()}
+                            size="sm"
+                            variant="outline"
                         >
                             Previous
                         </Button>
+                        {getPageNumbers().map((page, index) =>
+                                typeof page === "number" ? (
+                                    <Button
+                                        className="h-8 w-8 p-0"
+                                        key={index}
+                                        onClick={() => table.setPageIndex(page)}
+                                        size="sm"
+                                        variant={currentPage === page ? "default" : "outline"}
+                                    >
+                                        {page + 1}
+                                    </Button>
+                                ) : (
+                                    <span className="px-2" key={index}>
+                                    {page}
+                                    </span>
+                                ),
+                        )}
                         <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
+                            onClick={() => table.nextPage()}
+                            size="sm"
+                            variant="outline"
                         >
                             Next
                         </Button>

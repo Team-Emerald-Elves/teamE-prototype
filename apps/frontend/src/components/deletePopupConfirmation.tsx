@@ -12,6 +12,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete02Icon } from "@hugeicons/core-free-icons";
 import { getToken } from '@clerk/react'
 import { useEffect, useState } from "react";
+import qmgr from "@/lib/querymgr";
 
 export type Document = {
     id: number;
@@ -38,35 +39,35 @@ type deleteConfirmationPopupProps = {
 
 
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: Document, action: string): Promise<void> {
     const token = await getToken();
 
-    const res1 = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    qmgr.wait(() => {
+        qmgr.getMe( async (res) => {
+            if (!res.success) {
+                console.error("Failed to get me")
+                return;
+            }
 
-    const me = await res1.json();
-    console.log(me);
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            public: true,
-            targetRoles: [doc.assigned_role, "Administrator"],
-            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+            const nRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    public: true,
+                    targetRoles: [doc.assigned_role, "Administrator"],
+                    title: `${res.data!.first_name} ${res.data!.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
+                })
+            })
+        
+            if (!nRes.ok) {
+                throw new Error("failed to create view notification")
+            }
+            console.log(await nRes.json());
         })
     })
-
-    if (!res.ok) {
-        throw new Error("failed to create view notification")
-    }
-    console.log(await res.json());
 }
 
 async function removeDocument(document: Document, token: string, refresh: (any) => void) {

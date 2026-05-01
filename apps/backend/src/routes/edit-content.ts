@@ -1,5 +1,5 @@
 interface IContentEditor {
-    id:number;
+    id: number;
     name?: string;
     URL?: string;
     job_position?: string;

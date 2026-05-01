@@ -26,22 +26,21 @@ model Employee {
   favorites      Int[]
   favorite_links String[]
   roles          UserRoles[]    @default([])
-  Notifications  Notification[]
+  unreadNotif    Boolean?       @default(false)
+  newUser        Boolean?       @default(true)
   bucket         BucketMeta?
-  unreadNotif    Boolean        @default(false)
-  newUser        Boolean        @default(true)
+  Notifications  Notification[]
 }
 
 model Notification {
-  id         String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt  DateTime  @default(now())
-  title      String
-  creatorId  String?
-  employee   Employee? @relation(fields: [employeeId], references: [id])
-  employeeId String?   @db.Uuid
-
+  id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt   DateTime    @default(now())
+  title       String
+  creatorId   String?
+  employeeId  String?     @db.Uuid
   public      Boolean?    @default(false)
   targetRoles UserRoles[] @default([])
+  employee    Employee?   @relation(fields: [employeeId], references: [id])
 }
 
 model BucketMeta {
@@ -63,7 +62,6 @@ model documentContent {
   bucketId        String     @db.Uuid
   last_modified   DateTime   @updatedAt
   expiration_date DateTime
-  expiration_warn Boolean    @default(false)
   mime_type       String     @default("text/plain")
   document_status Status     @default(not_started)
   document_type   String?    @default("")
@@ -73,14 +71,15 @@ model documentContent {
   lock            String?    @default("none")
   meta_tags       String[]
   created_at      DateTime   @default(now()) @db.Timestamp(6)
+  expiration_warn Boolean    @default(false)
 }
 
 model Links {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   link_name  String
   url        String
-  owner      String?
-  lock       String?
+  owner      String
+  lock       String?  @default("none")
   meta_tags  String[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

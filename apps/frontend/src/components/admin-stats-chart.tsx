@@ -1,25 +1,21 @@
 //for admins only
 
-"use client"
+"use client";
 
-import { Pie, PieChart } from "recharts"
+import { Pie, PieChart } from "recharts";
 
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-    CardFooter
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     ChartContainer,
     ChartLegend,
     ChartLegendContent,
     type ChartConfig,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-export const description = "A pie chart with a legend"
+export const description = "A pie chart with a legend";
 
 const chartData = [
     { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -27,7 +23,7 @@ const chartData = [
     { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
     { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
     { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
+];
 
 const chartConfig = {
     visitors: {
@@ -53,7 +49,7 @@ const chartConfig = {
         label: "Other",
         color: "var(--chart-5)",
     },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartPieLegend() {
     return (
@@ -69,11 +65,16 @@ export function ChartPieLegend() {
                             layout="vertical"
                             align="right"
                             verticalAlign="middle"
-                            content={<ChartLegendContent nameKey="browser" className="flex flex-col items-start gap-2 text-base [&>*]:text-base"/>}
+                            content={
+                                <ChartLegendContent
+                                    nameKey="browser"
+                                    className="flex flex-col items-start gap-2 text-base [&>*]:text-base"
+                                />
+                            }
                         />
                     </PieChart>
                 </ChartContainer>
             </CardContent>
         </Card>
-    )
+    );
 }

@@ -1,4 +1,4 @@
-import { Button } from './ui/button.tsx'
+import { Button } from "./ui/button.tsx";
 import {
     Dialog,
     DialogClose,
@@ -7,14 +7,14 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {useCallback, useEffect, useState} from "react";
-import {getToken, useAuth} from "@clerk/react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { PlusSignIcon } from "@hugeicons/core-free-icons"
+} from "@/components/ui/dialog";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { PlusSignIcon } from "@hugeicons/core-free-icons";
 import {
     Select,
     SelectContent,
@@ -22,35 +22,24 @@ import {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
-} from "@/components/ui/select.tsx"
-
+    SelectValue,
+} from "@/components/ui/select.tsx";
+import type { Links as linksData } from '@repo/database/types'
 import type { Employee } from '../../../../packages/database/lib/prismadefs.ts'
 import qmgr from '@/lib/querymgr.ts'
 
-type Links = {
-    id: number
-    link_name: string,
-    url: string,
-    owner: string
+type linksDataExt = linksData & {
+    type?: string,
+    reload?: (any: any) => any
 }
+
 
 type editlinksRequest = {
-    action: string,
-    linkData: Links,
-}
+    action: string;
+    linkData: linksDataExt;
+};
 
-type linkProp = {
-    id?: number,
-    type: string,
-    size: boolean,
-    url: string,
-    owner?: string
-    name: string,
-    reload: (any: any) => void,
-}
-
-function AddLinksForm(props: linkProp) {
+function AddLinksForm(props: linksDataExt) {
     const { getToken, isSignedIn } = useAuth();
     let token: string =  ""
     getToken().then((tkn) => {
@@ -59,19 +48,15 @@ function AddLinksForm(props: linkProp) {
         console.error("Add links error (token):", err)
     })
 
-    const [roles, setRoles] = useState<string[]>([]);      // display values
+    const [roles, setRoles] = useState<string[]>([]); // display values
     const [roleKeys, setRoleKeys] = useState<string[]>([]); // lowercase logic values
     const [selectedRole, setSelectedRole] = useState<string>("");
     const [isFilled, setIsFilled] = useState<boolean>(false);
     const [me, setMe] = useState<Employee | undefined>(undefined);
 
-    const [link, setLink] = useState({
-        link_name: props.name,
-        url: props.url,
-        owner: props.owner,
-    });
+    const [link, setLink] = useState<linksDataExt>(props);
 
-    async function createNotif(link: Links, action: string) {
+    async function createNotif(link: linksData, action: string) {
         const token = await getToken();
 
         qmgr.wait( async () => {
@@ -117,16 +102,14 @@ function AddLinksForm(props: linkProp) {
         const newLink = await res.json();
         createNotif(newLink, "created");
 
-        props.reload((prev) => !prev)
+        props.reload!((prev: any) => !prev)
         return newLink;
     }
 
     useEffect(() => {
         if (link.link_name && link.url) {
             setIsFilled(true);
-
-        }
-        else {
+        } else {
             setIsFilled(false);
         }
     }, [link]);
@@ -216,7 +199,9 @@ function AddLinksForm(props: linkProp) {
 
                             <Select
                                 value={selectedRole}
-                                onValueChange={(value) => setSelectedRole(value ?? "")}
+                                onValueChange={(value) =>
+                                    setSelectedRole(value as string)
+                                }
                                 disabled={!isAdmin}
                             >
                                 <SelectTrigger>
@@ -227,12 +212,16 @@ function AddLinksForm(props: linkProp) {
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
 
-                                        {(isAdmin ? ALL_ROLES : roles).map((role) => (
-                                            <SelectItem key={role} value={role}>
-                                                {role}
-                                            </SelectItem>
-                                        ))}
-
+                                        {(isAdmin ? ALL_ROLES : roles).map(
+                                            (role) => (
+                                                <SelectItem
+                                                    key={role}
+                                                    value={role}
+                                                >
+                                                    {role}
+                                                </SelectItem>
+                                            ),
+                                        )}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -252,6 +241,10 @@ function AddLinksForm(props: linkProp) {
                                     action: "create",
                                     linkData: {
                                         id: props.id!,
+                                        created_at: props.created_at,
+                                        updated_at: props.updated_at,
+                                        lock: props.lock,
+                                        meta_tags: props.meta_tags,
                                         link_name: link.link_name,
                                         url: link.url,
                                         owner: finalRole,

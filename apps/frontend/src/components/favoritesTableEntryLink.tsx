@@ -1,44 +1,36 @@
-import {TableCell, TableRow} from "@/components/ui/table.tsx";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import * as React from "react";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts"
+import type {Links as linksData, documentContent} from "@repo/database/types"
 
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-    favorite: boolean;
-    created_at: string;
-    updated_at: string;
-};
 
 type FavoriteProps = {
-    l: Links;
-    onToggleOff: (link: Document | Links) => void;
-    onToggleOn: (link: Document | Links) => void;
+    l: linksData;
+    onToggleOff: (link: documentContent | linksData & {favorite?: boolean}) => void;
+    onToggleOn:  (link: documentContent | linksData & {favorite?: boolean}) => void;
 };
 
-async function addHitCount (link: Links) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
-        headers: {
-            "Content-Type": "application/json"
+async function addHitCount(link: linksData) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                id: link.id,
+                type: "LINK",
+            }),
         },
-        method: "POST",
-        body: JSON.stringify({
-            id: link.id,
-            type: "LINK"
-        })
-    })
+    );
     if (!res.ok) {
-        throw new Error("failed to add doc hit count")
+        throw new Error("failed to add doc hit count");
     }
 }
 
-
-async function createNotif(link: Links, action: string) {
+async function createNotif(link: linksData, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
@@ -70,14 +62,11 @@ async function createNotif(link: Links, action: string) {
     })
 }
 
-export default function FavoritesTableEntryLink(props: FavoriteProps)  {
+export default function FavoritesTableEntryLink(props: FavoriteProps) {
     const mod = new Date(props.l.updated_at);
     const created = new Date(props.l.created_at);
     return (
-        <TableRow
-            key={props.l.id}
-            className="hover:bg-gray-50 transition h-12"
-        >
+        <TableRow key={props.l.id} className="hover:bg-gray-50 transition h-12">
             <FavoriteStar
                 doc={props.l}
                 onToggleOff={props.onToggleOff}
@@ -94,7 +83,10 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline"
-                    onClick={async () => { createNotif(props.l, "opened");  addHitCount(props.l) }}
+                    onClick={async () => {
+                        createNotif(props.l, "opened");
+                        addHitCount(props.l);
+                    }}
                 >
                     {props.l.url}
                 </a>
@@ -111,8 +103,6 @@ export default function FavoritesTableEntryLink(props: FavoriteProps)  {
             <TableCell className="text-[14px] font-small text-gray-700">
                 {mod.toLocaleString()}
             </TableCell>
-
-
         </TableRow>
-    )
+    );
 }

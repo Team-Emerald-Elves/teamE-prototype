@@ -18,12 +18,7 @@ async function addEventRoute(req: express.Request, res: express.Response) {
 
         const employee_id = employee.id;
 
-        const {
-            title,
-            start_date,
-            end_date,
-            all_day,
-        } = req.body;
+        const { title, start_date, end_date, all_day } = req.body;
 
         if (!title || !start_date) {
             return res.status(400).json({
@@ -43,7 +38,7 @@ async function addEventRoute(req: express.Request, res: express.Response) {
             },
         });
 
-        console.log(newEvent)
+        console.log(newEvent);
 
         return res.status(201).json(newEvent);
     } catch (error) {

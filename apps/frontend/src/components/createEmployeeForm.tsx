@@ -1,7 +1,7 @@
-import '../App.css'
-import {useEffect, useState} from 'react'
+import "../App.css";
+import { useEffect, useState } from "react";
 
-import { Button } from './ui/button.tsx'
+import { Button } from "./ui/button.tsx";
 import {
     Dialog,
     DialogTrigger,
@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
     Select,
     SelectContent,
@@ -19,43 +19,51 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { FieldGroup, Field } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {PlusSignIcon} from "@hugeicons/core-free-icons";
-import {HugeiconsIcon} from "@hugeicons/react";
+} from "@/components/ui/select";
+import { FieldGroup, Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { PlusSignIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import ConfirmationPopup from "@/components/EmployeeConfirmationPopup.tsx";
 
 type CreateEmployeeRequest = {
-    uname?: string,
-    first_name?: string,
-    last_name?: string,
-    email?: string,
-    roles?: string[],
-}
+    uname?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    roles?: string[];
+};
 
-async function createEmployee(body: CreateEmployeeRequest, reload: (any) => void) {
-    console.log(body)
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-employee`, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+async function createEmployee(
+    body: CreateEmployeeRequest,
+    reload: (any: any) => void,
+) {
+    console.log(body);
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/create-employee`,
+        {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
         },
-        body: JSON.stringify(body),
-    });
+    );
 
     if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(`Failed to create employee (status ${res.status}): ${errorText}`);
+        throw new Error(
+            `Failed to create employee (status ${res.status}): ${errorText}`,
+        );
     }
-    reload(prev => !prev)
+    reload((prev: any) => !prev);
     return res;
 }
 type Props = {
-    reload: (any) => void;
-}
+    reload: (any: any) => void;
+};
 function CreateEmployeeForm(props: Props) {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState({
@@ -67,11 +75,15 @@ function CreateEmployeeForm(props: Props) {
     });
     const [isFilled, setIsFilled] = useState<boolean>(false);
     useEffect(() => {
-        if (user.fname && user.lname && user.username && user.email && user.roles) {
+        if (
+            user.fname &&
+            user.lname &&
+            user.username &&
+            user.email &&
+            user.roles
+        ) {
             setIsFilled(true);
-
-        }
-        else {
+        } else {
             setIsFilled(false);
         }
     }, [user]);
@@ -89,7 +101,8 @@ function CreateEmployeeForm(props: Props) {
                     <DialogTrigger
                         render={
                             <Button className="ml-auto px-4 py-4 text-base bg-[#5f935a] text-secondary-foreground">
-                                <HugeiconsIcon icon={PlusSignIcon} /> Create Employee
+                                <HugeiconsIcon icon={PlusSignIcon} /> Create
+                                Employee
                             </Button>
                         }
                     />
@@ -105,56 +118,68 @@ function CreateEmployeeForm(props: Props) {
                     <FieldGroup>
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
-                            <Label htmlFor="fname" className="w-24 text-right text-xs font-bold">
-                                First Name:
-                            </Label>
-                            <Input
-                                id="fname"
-                                name="fname"
-                                value={user.fname}
-                                onChange={handleChange}
-                                placeholder="First Name"
-                            />
+                                <Label
+                                    htmlFor="fname"
+                                    className="w-24 text-right text-xs font-bold"
+                                >
+                                    First Name:
+                                </Label>
+                                <Input
+                                    id="fname"
+                                    name="fname"
+                                    value={user.fname}
+                                    onChange={handleChange}
+                                    placeholder="First Name"
+                                />
                             </Field>
                             <Field>
-                            <Label htmlFor="lname" className="w-24 text-right text-xs font-bold">
-                                Last Name:
-                            </Label>
-                            <Input
-                                id="lname"
-                                name="lname"
-                                value={user.lname}
-                                onChange={handleChange}
-                                placeholder="Last Name"
-                            />
+                                <Label
+                                    htmlFor="lname"
+                                    className="w-24 text-right text-xs font-bold"
+                                >
+                                    Last Name:
+                                </Label>
+                                <Input
+                                    id="lname"
+                                    name="lname"
+                                    value={user.lname}
+                                    onChange={handleChange}
+                                    placeholder="Last Name"
+                                />
                             </Field>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
-                            <Label htmlFor="username" className="w-24 text-right text-xs font-bold">
-                                Username:
-                            </Label>
-                            <Input
-                                id="username"
-                                name="username"
-                                value={user.username}
-                                onChange={handleChange}
-                                placeholder="Username"
-                            />
+                                <Label
+                                    htmlFor="username"
+                                    className="w-24 text-right text-xs font-bold"
+                                >
+                                    Username:
+                                </Label>
+                                <Input
+                                    id="username"
+                                    name="username"
+                                    value={user.username}
+                                    onChange={handleChange}
+                                    placeholder="Username"
+                                />
                             </Field>
 
                             <Field>
-                            <Label htmlFor="email" className="w-24 text-right text-xs font-bold">
-                                Email:
-                            </Label>
-                            <Input
-                                id="email"
-                                name="email"
-                                value={user.email}
-                                onChange={handleChange}
-                                placeholder="Email"
-                            />
+                                <Label
+                                    htmlFor="email"
+                                    className="w-24 text-right text-xs font-bold"
+                                >
+                                    Email:
+                                </Label>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    value={user.email}
+                                    onChange={handleChange}
+                                    placeholder="Email"
+                                />
                             </Field>
                         </div>
 
@@ -173,12 +198,24 @@ function CreateEmployeeForm(props: Props) {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roles</SelectLabel>
-                                        <SelectItem value="BusinessAnalyst">Business Analyst</SelectItem>
-                                        <SelectItem value="UnderWriter">Underwriter</SelectItem>
-                                        <SelectItem value="ActuarialAnalyst">ActuarialAnalyst</SelectItem>
-                                        <SelectItem value="ExcelOperator">ExcelOperator</SelectItem>
-                                        <SelectItem value="BusinessOperator">BusinessOperator</SelectItem>
-                                        <SelectItem value="Administrator">Administrator</SelectItem>
+                                        <SelectItem value="BusinessAnalyst">
+                                            Business Analyst
+                                        </SelectItem>
+                                        <SelectItem value="UnderWriter">
+                                            Underwriter
+                                        </SelectItem>
+                                        <SelectItem value="ActuarialAnalyst">
+                                            ActuarialAnalyst
+                                        </SelectItem>
+                                        <SelectItem value="ExcelOperator">
+                                            ExcelOperator
+                                        </SelectItem>
+                                        <SelectItem value="BusinessOperator">
+                                            BusinessOperator
+                                        </SelectItem>
+                                        <SelectItem value="Administrator">
+                                            Administrator
+                                        </SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -197,14 +234,27 @@ function CreateEmployeeForm(props: Props) {
                                     first_name: user.fname,
                                     last_name: user.lname,
                                     email: user.email || undefined,
-                                    roles: user.roles ? [user.roles] : undefined,
+                                    roles: user.roles
+                                        ? [user.roles]
+                                        : undefined,
                                 };
                                 try {
-                                    const res = await createEmployee(bodyData, props.reload);
+                                    const res = await createEmployee(
+                                        bodyData,
+                                        props.reload,
+                                    );
                                     console.log(res);
-                                    console.log("Employee created successfully");
-                                    setUser({ fname: "", lname: "", username: "", email: "", roles: "" });
-                                    setOpen(false)
+                                    console.log(
+                                        "Employee created successfully",
+                                    );
+                                    setUser({
+                                        fname: "",
+                                        lname: "",
+                                        username: "",
+                                        email: "",
+                                        roles: "",
+                                    });
+                                    setOpen(false);
                                 } catch (err) {
                                     console.error(err);
                                 }

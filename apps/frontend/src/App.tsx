@@ -27,42 +27,58 @@ function App() {
         <BrowserRouter>
             <Show when="signed-out">
                 <Routes>
-                    <Route path = "/login" element={<LoginSignup/>} />
+                    <Route path="/login" element={<LoginSignup />} />
                 </Routes>
                 <LoginSignup />
             </Show>
 
             <Show when="signed-in">
                 {/* Wait for me to load */}
-                    <div className="app">
-                        <Navbar >
-                            <UserButton />
-                        </Navbar>
+                <div className="app">
+                    <Navbar>
+                        <UserButton />
+                    </Navbar>
 
-                        <main className="main">
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/documents" element={<Documents/>} />
-                                <Route path="/employee-management" element={<UserManagementPage />} />
-                                <Route path="/underwriter-dummy" element={<UnderwriterDummy />} />
-                                <Route path="/business-dummy" element={<BusinessDummy />} />
-                                <Route path="/links" element={<LinksPage />} />
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="*" element={<NotFound />} />
-                                <Route path="/favorites" element={<FavoritesPage />} />
-                                <Route path="/statistics" element={<StatisticsPage />} />
-                                <Route path="/calendar" element={<CalendarPage />} />
-                                <Route path="/aboutus" element={<AboutUs />} />
-                                <Route path="/credits" element={<Credits />} />
-                            </Routes>
-                        </main>
-                        <Footer />
-                    </div>
-
+                    <main className="main">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/documents" element={<Documents />} />
+                            <Route
+                                path="/employee-management"
+                                element={<UserManagementPage />}
+                            />
+                            <Route
+                                path="/underwriter-dummy"
+                                element={<UnderwriterDummy />}
+                            />
+                            <Route
+                                path="/business-dummy"
+                                element={<BusinessDummy />}
+                            />
+                            <Route path="/links" element={<LinksPage />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="*" element={<NotFound />} />
+                            <Route
+                                path="/favorites"
+                                element={<FavoritesPage />}
+                            />
+                            <Route
+                                path="/statistics"
+                                element={<StatisticsPage />}
+                            />
+                            <Route
+                                path="/calendar"
+                                element={<CalendarPage />}
+                            />
+                            <Route path="/aboutus" element={<AboutUs />} />
+                            <Route path="/credits" element={<Credits />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
             </Show>
         </BrowserRouter>
     );
 }
 
-
-export default App
+export default App;

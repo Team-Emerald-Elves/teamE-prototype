@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -11,27 +11,27 @@ import {
 import qmgr from "@/lib/querymgr";
 import { getToken } from "@clerk/react"
 import {useEffect, useState} from "react";
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts";
+import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
-  type: string
-  formData: {
-    id: number
-    name: string
-    url: string
-    contentOwner: string
-    role: string
-    document_type: string
-    expirationDate?: Date
-    expirationTime: string
-    document_status: string
-    filePayload?: string
-    fileName?: string
-  }
-  refresh: (any) => void
-  open: (arg:boolean) => void
-  disabled: boolean
-}
+    type: string;
+    formData: {
+        id: number;
+        name: string;
+        url: string;
+        contentOwner: string;
+        role: string;
+        document_type: string;
+        expirationDate?: Date;
+        expirationTime: string;
+        document_status: string;
+        filePayload?: string;
+        fileName?: string;
+    };
+    refresh: (any: any) => void;
+    open: (arg: boolean) => void;
+    disabled: boolean;
+};
 
 export type IFile = {
   id: number
@@ -47,7 +47,7 @@ export type IFile = {
   fileName?: string
 }
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
@@ -79,143 +79,162 @@ async function createNotif(doc: Document, action: string) {
     })
 }
 
-async function setDocumentLock(sessionToken: string | null, documentID: number, status: boolean): Promise<boolean> {
-
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tests/update-lock`, {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-            "Content-Type": "application/json"
-        },
-        method: "PUT",
-        body: JSON.stringify({
-            id: documentID,
-            status: status
-        })
-    })
-    if (!res.ok) {
-        throw new Error("Failed to fetch document.");
-    }
-    const data = await res.json();
-
-    return Boolean(data);
-}
-
 function buildExpirationDate(
-  expirationDate?: Date,
-  expirationTime?: string
+    expirationDate?: Date,
+    expirationTime?: string,
 ): string | undefined {
-  if (!expirationDate) return undefined
+    if (!expirationDate) return undefined;
 
-  const date = new Date(expirationDate)
+    const date = new Date(expirationDate);
 
-  if (expirationTime) {
-    const [hours = "0", minutes = "0", seconds = "0"] = expirationTime.split(":")
-    date.setHours(Number(hours), Number(minutes), Number(seconds), 0)
-  }
+    if (expirationTime) {
+        const [hours = "0", minutes = "0", seconds = "0"] =
+            expirationTime.split(":");
+        date.setHours(Number(hours), Number(minutes), Number(seconds), 0);
+    }
 
-  return date.toISOString()
+    return date.toISOString();
 }
 
-async function createDocument(fileData: SubmitConfirmationPopupProps, token: string, refresh: (any: any) => void) {
+async function createDocument(
+    fileData: SubmitConfirmationPopupProps,
+    token: string,
+    refresh: (any: any) => void,
+) {
+    const data: IFile = {
+        id: fileData.formData.id,
+        name: fileData.formData.name,
+        url: fileData.formData.url || "Local upload",
+        content_owner: fileData.formData.contentOwner,
+        expiration_date: buildExpirationDate(
+            fileData.formData.expirationDate,
+            fileData.formData.expirationTime,
+        ),
+        document_type: fileData.formData.document_type,
+        document_status: fileData.formData.document_status,
+        assigned_role: fileData.formData.role,
+        filePayload: fileData.formData.filePayload,
+        fileName: fileData.formData.fileName,
+    };
+    console.log(data.assigned_role);
 
-  const data: IFile = {
-    id: fileData.formData.id,
-    name: fileData.formData.name,
-    url: fileData.formData.url || "Local upload",
-    content_owner: fileData.formData.contentOwner,
-    expiration_date: buildExpirationDate(
-      fileData.formData.expirationDate,
-      fileData.formData.expirationTime
-    ),
-    document_type: fileData.formData.document_type,
-    document_status: fileData.formData.document_status,
-    assigned_role: fileData.formData.role,
-    filePayload: fileData.formData.filePayload,
-    fileName: fileData.formData.fileName
-  }
-  console.log(data.assigned_role);
+    const endpoint =
+        fileData.type === "Create"
+            ? "/api/supabase/create-document"
+            : "/api/supabase/update-document";
 
+    const method = fileData.type === "Create" ? "POST" : "PUT";
+    const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}${endpoint}`,
+        {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        },
+    );
 
-  const endpoint =
-    fileData.type === "Create"
-      ? "/api/supabase/create-document"
-      : "/api/supabase/update-document"
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(errorText);
+        throw new Error(errorText || "Network response was not ok");
+    }
 
-  const method = fileData.type === "Create" ? "POST" : "PUT"
-  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(data)
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-      console.error(errorText)
-    throw new Error(errorText || "Network response was not ok")
-  }
-
-  const newDoc = await response.json();
-  console.log(newDoc)
+    const newDoc = await response.json();
+    console.log(newDoc);
 
     if (fileData.type === "Create") {
-        createNotif(newDoc, "created")
-    }
-    else {
-        createNotif(newDoc, "updated")
+        createNotif(newDoc, "created");
+    } else {
+        createNotif(newDoc, "updated");
     }
 
-  refresh(prev => !prev)
+    refresh((prev: any) => !prev);
 
-  return newDoc
+    return newDoc;
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
-
-    const [sessionToken, setSessionToken] = useState("")
-    const [open, setOpen] = useState(false)
+    const [sessionToken, setSessionToken] = useState("");
+    const [open, setOpen] = useState(false);
     useEffect(() => {
-        getToken().then(t => setSessionToken(t ?? ""))
-    }, [])
+        getToken().then((t) => setSessionToken(t ?? ""));
+    }, []);
 
     return (
         <>
-            { info.disabled ? (
-                <Button type="submit" disabled={true} className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+            {info.disabled ? (
+                <Button
+                    type="submit"
+                    disabled={true}
+                    className=" bg-secondary text-secondary-foreground"
+                    size="lg"
+                >
+                    Submit
+                </Button>
             ) : (
-                <Dialog open={open} onClose={() => {setOpen(false)}} onOpenChange={setOpen}>
+                <Dialog
+                    open={open}
+                    onClose={() => {
+                        setOpen(false);
+                    }}
+                    onOpenChange={setOpen}
+                >
                     <DialogTrigger>
-                        <Button type="submit" className=" bg-secondary text-secondary-foreground" size="lg">Submit</Button>
+                        <Button
+                            type="submit"
+                            className=" bg-secondary text-secondary-foreground"
+                            size="lg"
+                        >
+                            Submit
+                        </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-sm">
                         <DialogHeader>
                             <DialogTitle>Are you sure?</DialogTitle>
                         </DialogHeader>
                         <DialogFooter>
-                            <DialogClose >
-                                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                            <DialogClose>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    Cancel
+                                </Button>
                             </DialogClose>
                             <DialogClose>
-                                <Button type="button" onClick={() => {
-                                    try{
-                                        createDocument(info, sessionToken, info.refresh);console.log("submitted sucsessfully!");
-                                        info.open(false);
-                                        console.log("closed ready for refresh");
-                                    }
-                                    catch (error) {
-                                        console.error("broke at",error)
-                                    }}}>Confirm</Button>
+                                <Button
+                                    type="button"
+                                    onClick={() => {
+                                        try {
+                                            createDocument(
+                                                info,
+                                                sessionToken,
+                                                info.refresh,
+                                            );
+                                            console.log(
+                                                "submitted sucsessfully!",
+                                            );
+                                            info.open(false);
+                                            console.log(
+                                                "closed ready for refresh",
+                                            );
+                                        } catch (error) {
+                                            console.error("broke at", error);
+                                        }
+                                    }}
+                                >
+                                    Confirm
+                                </Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            )
-            }
+            )}
         </>
-    )
+    );
 }
 
-export default SubmitConfirmationPopup
+export default SubmitConfirmationPopup;

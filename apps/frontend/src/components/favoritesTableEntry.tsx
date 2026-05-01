@@ -1,16 +1,20 @@
-import {TableCell, TableRow} from "@/components/ui/table.tsx";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import {Dialog, DialogClose, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 import DocumentViewer from "@/components/docViewer.tsx";
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Download01Icon} from "@hugeicons/core-free-icons";
-import * as React from "react";
 import {Button} from "@/components/ui/button.tsx";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts";
+import type { documentContent, Links as linksData } from "@repo/database/types";
 
-const handleDownload = async (doc: Document) => {
+const handleDownload = async (doc: documentContent) => {
     try {
         addHitCount(doc);
         createNotif(doc, "downloaded");
@@ -36,30 +40,32 @@ const handleDownload = async (doc: Document) => {
     }
 };
 
-
 type FavoriteProps = {
-    d: Document;
-    onToggleOff: (doc: Document) => void;
-    onToggleOn: (doc: Document) => void;
+    d: documentContent;
+    onToggleOff: (doc: documentContent | linksData) => void;
+    onToggleOn: (doc: documentContent | linksData) => void;
 };
 
-async function addHitCount (doc: Document) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
-        headers: {
-            "Content-Type": "application/json"
+async function addHitCount(doc: documentContent) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                id: doc.id,
+                type: "DOCUMENT",
+            }),
         },
-        method: "POST",
-        body: JSON.stringify({
-            id: doc.id,
-            type: "DOCUMENT"
-        })
-    })
+    );
     if (!res.ok) {
-        throw new Error("failed to add doc hit count")
+        throw new Error("failed to add doc hit count");
     }
 }
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
@@ -71,36 +77,35 @@ async function createNotif(doc: Document, action: string) {
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [doc.assigned_role, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-                })
-            })
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                public: true,
+                targetRoles: [doc.assigned_role, "Administrator"],
+                title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+            }),
+        },
+    );
 
-            if (!res.ok) {
-                throw new Error("failed to create view notification")
-            }
-            console.log(await res.json());
-        })
-    })
+    if (!res.ok) {
+        throw new Error("failed to create view notification");
+    }
+    console.log(await res.json());
+    })})
 }
 
-export default function FavoritesTableEntry(props: FavoriteProps)  {
+export default function FavoritesTableEntry(props: FavoriteProps) {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
     const created = new Date(props.d.created_at);
     return (
-        <TableRow
-            key={props.d.id}
-            className="hover:bg-gray-50 transition h-12"
-        >
+        <TableRow key={props.d.id} className="hover:bg-gray-50 transition h-12">
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
@@ -110,7 +115,13 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
             <TableCell className="text-[14px] font-small text-gray-700">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button onClick={async () => {createNotif(props.d, "accessed"); addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button
+                            onClick={async () => {
+                                createNotif(props.d, "accessed");
+                                addHitCount(props.d);
+                            }}
+                            className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
+                        >
                             {props.d.name}
                         </button>
                     </DialogTrigger>
@@ -160,10 +171,7 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                 <Button onClick={async () => await handleDownload(props.d)}>
                     <HugeiconsIcon icon={Download01Icon} />
                 </Button>
-
             </TableCell>
-
-
         </TableRow>
-    )
+    );
 }

@@ -1,10 +1,9 @@
-
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import {Link} from "react-router-dom";
-import {useAuth} from "@clerk/react";
-import {useEffect, useState} from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@clerk/react";
+import { useEffect, useState } from "react";
 
 function getCurrentWeekLabel() {
     const now = new Date();
@@ -37,11 +36,14 @@ export default function CalendarWeek() {
         async function fetchEvents() {
             const token = await getToken();
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-events`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/get-events`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 },
-            });
+            );
 
             if (!res.ok) {
                 throw new Error("Error fetching events.");
@@ -56,23 +58,27 @@ export default function CalendarWeek() {
     }, [getToken]);
 
     return (
-        <div className="max-w-10xl mx-auto px-6 py-1">
-
-            <div className="bg-white rounded-xl p-4">
+        <div className="max-w-10xl mx-auto px-6 py-6">
+            <div className="bg-white rounded-xl shadow-sm border p-4">
                 <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold text-gray-800">{getCurrentWeekLabel()}</h4>
-                    <Link to="/calendar" className="text-sm text-blue-900 hover:underline">View Full Calendar</Link>
+                    <h4 className="text-lg font-semibold text-gray-800">
+                        {getCurrentWeekLabel()}
+                    </h4>
+                    <Link
+                        to="/calendar"
+                        className="text-sm text-blue-900 hover:underline"
+                    >
+                        View Full Calendar
+                    </Link>
                 </div>
                 <FullCalendar
                     plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridWeek"
                     headerToolbar={false}
-
                     dayHeaderClassNames={() => [
                         "bg-[#ecf4f9]",
                         "text-[#0b4461]",
                     ]}
-
                     contentHeight="auto"
                     events={events}
                 />

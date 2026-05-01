@@ -32,7 +32,7 @@ type editlinksRequest = {
     linkData: Partial<linksData>;
 };
 
-type linkProp = linksData & {
+type linkProp = Partial<linksData> & {
     reload: (any: any) => void;
 };
 async function createNotif(link: linksData, action: string) {

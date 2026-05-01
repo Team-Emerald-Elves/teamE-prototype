@@ -51,6 +51,7 @@
 
 :root {
     --background: oklch(0.9702 0 0);
+    --border-strong: oklch(0.75 0 0);
     --foreground: oklch(0.1356 0.0255 246.59);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -87,6 +88,7 @@
 
 .dark {
     --background: oklch(0.145 0 0);
+    --border-strong: oklch(0.4 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
     --card-foreground: oklch(0.985 0 0);
@@ -134,5 +136,21 @@ html, body, #root {
     }
     button:not([disabled]), [role="button"]:not([disabled]) {
         cursor: pointer;
+    }
+    .fc {
+        --fc-border-color: var(--border-strong);
+    }
+    .fc .fc-event-title,
+    .fc .fc-event-time {
+        color: #000 !important;
+    }
+    .fc .fc-event-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+    .fc .fc-day-today {
+        background-color: #ecf4f9; /* light blue example */
     }
 }

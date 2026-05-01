@@ -5,6 +5,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/react";
 import { useEffect, useState } from "react";
+import RoleLegend from "@/components/roleLegend.tsx";
 
 function getCurrentWeekLabel() {
     const now = new Date();
@@ -65,6 +66,8 @@ export default function CalendarWeek() {
                     <h4 className="text-lg font-semibold text-gray-800">
                         {getCurrentWeekLabel()}
                     </h4>
+
+                        <RoleLegend />
                     <Link
                         to="/calendar"
                         className="text-sm text-blue-900 hover:underline"
@@ -77,18 +80,12 @@ export default function CalendarWeek() {
                     initialView="timeGridWeek"
                     headerToolbar={false}
                     dayHeaderClassNames={() => [
-                        "bg-[#ecf4f9]",
-                        "text-[#0b4461]",
+                        "bg-[#0b4461]",
+                        "text-white",
                     ]}
 
                     slotMinTime="08:00:00"
                     slotMaxTime="20:00:00"
-
-                    eventContent={(arg) => (
-                        <div className="truncate">
-                            {arg.event.title}
-                        </div>
-                    )}
 
                     contentHeight="auto"
                     events={events}

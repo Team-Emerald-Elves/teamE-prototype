@@ -65,16 +65,19 @@ export default function FullCalendarComponent({
                 events={events}
                 height="100%"
                 contentHeight="auto"
-
-                dateClick={() => setOpenAdd(true)}
+                navLinks={true}
+                navLinkDayClick={() => setOpenAdd(true)}
                 eventClick={(info) => {
+
+
                     setSelectedEvent(info.event);
                     setOpen(true);
+                    document.querySelectorAll(".fc-popover").forEach(el => el.remove());
                 }}
 
                 dayHeaderClassNames={() => [
-                    "bg-[#ecf4f9]",
-                    "text-[#0b4461]",
+                    "bg-[#0b4461]",
+                    "text-white",
                 ]}
 
 

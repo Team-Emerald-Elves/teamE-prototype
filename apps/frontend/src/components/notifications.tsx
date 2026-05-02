@@ -85,14 +85,14 @@ export function NotifScroll() {
     }
 
     return (
-        <ScrollArea className="h-80 w-90 rounded-md border bg-white shadow-md">
+        <ScrollArea className="h-80 w-90 rounded-md border bg-card shadow-md">
             <div>
-                <h4 className="px-3 py-2 text-md font-semibold text-[#12324b]">
+                <h4 className="px-3 py-2 text-md font-semibold text-(--table-titles)">
                     Notifications
                 </h4>
                 {Object.entries(grouped).map(([date, items]) => (
                     <div key={date}>
-                        <div className="top-0 z-10 bg-gray-100 px-2 py-2 text-xs font-semibold text-gray-500">
+                        <div className="top-0 z-10 bg-(--card-header) px-2 py-2 text-xs font-semibold text-gray-500">
                             {formatDateLabel(date)}
                         </div>
                         {items.map((n, i) => (
@@ -113,13 +113,13 @@ export function NotifScroll() {
                                     <div className="text-xs leading-snug">
                                         {n.creatorId ? (
                                             <>
-                                                <span className="font-semibold text-black">
+                                                <span className="font-semibold text-foreground">
                                                     {n.title
                                                         .split(" ")
                                                         .slice(0, 2)
                                                         .join(" ")}{" "}
                                                 </span>
-                                                <span className="text-gray-600">
+                                                <span className="text-(--table-text)">
                                                     {" "}
                                                     {n.title
                                                         .split(" ")
@@ -143,7 +143,7 @@ export function NotifScroll() {
                                                         .slice(0, -3)
                                                         .join(" ")}{" "}
                                                 </span>
-                                                <span className="text-gray-600">
+                                                <span className="text-(--table-text)">
                                                     {" "}
                                                     expiring tomorrow!{" "}
                                                 </span>

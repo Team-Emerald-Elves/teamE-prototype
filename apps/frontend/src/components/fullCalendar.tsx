@@ -75,12 +75,6 @@ export default function FullCalendarComponent({
                     document.querySelectorAll(".fc-popover").forEach(el => el.remove());
                 }}
 
-                dayHeaderClassNames={() => [
-                    "bg-gray-200",
-                    "text-gray-700",
-                ]}
-
-
                 headerToolbar={
                 {
                     start: '',
@@ -94,6 +88,9 @@ export default function FullCalendarComponent({
                 eventDidMount={(info) => {
                     info.el.title = info.event.title;
                 }}
+                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--table-titles)"]}
+
+                stickyHeaderDates={true}
 
                 dayMaxEvents={4}
                 slotMinTime="08:00:00"

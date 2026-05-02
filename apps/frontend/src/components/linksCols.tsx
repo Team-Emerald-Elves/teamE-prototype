@@ -208,7 +208,7 @@ export const columns: ColumnDef<Links>[] = [
 
             switch (role) {
                 case "Administrator":
-                    roleBackground = "bg-purple-700";
+                    roleBackground = "bg-purple-400";
                     break;
                 case "BusinessAnalyst":
                     roleBackground = "bg-blue-300";

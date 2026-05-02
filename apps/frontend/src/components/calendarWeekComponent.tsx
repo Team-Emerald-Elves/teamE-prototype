@@ -61,16 +61,17 @@ export default function CalendarWeek() {
 
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
-            <div className="bg-white rounded-xl shadow-sm border p-4">
+
+            <div className="bg-(--card) rounded-xl shadow-sm border p-4">
                 <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold text-gray-800">
+                    <h4 className="text-lg font-semibold text-(--card-title)">
                         {getCurrentWeekLabel()}
                     </h4>
 
                         <RoleLegend />
                     <Link
                         to="/calendar"
-                        className="text-sm text-blue-900 hover:underline"
+                        className="text-sm text-(--internal-link-color) hover:underline"
                     >
                         View Full Calendar
                     </Link>
@@ -81,8 +82,8 @@ export default function CalendarWeek() {
                     headerToolbar={false}
 
                     dayHeaderClassNames={() => [
-                        "bg-gray-200",
-                        "text-gray-700",
+                        "bg-(--calendar-bg)",
+                        "text-(--table-titles)",
                     ]}
 
                     slotMinTime="08:00:00"

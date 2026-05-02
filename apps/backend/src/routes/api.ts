@@ -68,7 +68,7 @@ APIRouter.get("/me", requireAuth(), async (req, res) => {
 async function updateLock(req: Request, res: Response) {
     try {
         
-        const { id, status } = req.body ?? {};
+        let { id, status } = req.body ?? {};
 
         const { userId, isAuthenticated } = getAuth(req);
 
@@ -81,30 +81,31 @@ async function updateLock(req: Request, res: Response) {
                 clerkUserId: userId,
             },
         });
-        if (status) {
-            await prisma.documentContent.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    lock: employee.id === '' ? "none" : employee.id,
-                    lock_name: employee.first_name + ' ' + employee.last_name
-                },
-            });
-            const event = await prisma.calendarEvents.findFirstOrThrow({
-                where: {
-                    doc_id: id,
-                },
-            });
-            await prisma.calendarEvents.update({
-                where: {
-                    id: event.id,
-                },
-                data: {
-                    lock: employee.id,
-                },
-            });
-        }
+
+        await prisma.documentContent.update({
+            where: {
+                id: id,
+            },
+            data: {
+                lock: status ? employee.id : "none",
+                lock_name: employee.first_name + ' ' + employee.last_name
+            },
+        });
+
+        const event = await prisma.calendarEvents.findFirstOrThrow({
+            where: {
+                doc_id: id,
+            },
+        });
+
+        await prisma.calendarEvents.update({
+            where: {
+                id: event.id,
+            },
+            data: {
+                lock: employee.id,
+            },
+        });
 
         return res.status(200).json({ id, status });
     } catch (error) {

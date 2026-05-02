@@ -288,7 +288,7 @@ export const columns: ColumnDef<documentContent>[] = [
             }
 
             return (
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1 text-(--tab-text)">
                     <DocTag background={typeBackground}>
                         {mime.getExtension(type) ?? "file"}
                     </DocTag>

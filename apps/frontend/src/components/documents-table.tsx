@@ -294,7 +294,7 @@ function FilterOptions({
     ) => void;
 }) {
     return (
-        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-44 rounded-md bg-white shadow-lg ring-1 ring-black/5">
+        <div className="flex flex-col gap-2 absolute left-full top-0 z-10 mt-2 ml-3.5 w-44 rounded-md bg-(--filter-background) shadow-lg ring-1 ring-black/5">
             <div className="py-1">
                 {group.filters.map((option) => (
                     <div
@@ -303,7 +303,7 @@ function FilterOptions({
                     >
                         <label
                             htmlFor={option.id}
-                            className="text-sm font-medium text-gray-800 cursor-pointer"
+                            className="text-sm font-medium text-(--table-text) cursor-pointer"
                         >
                             {option.id}
                         </label>
@@ -337,7 +337,7 @@ function FilterMenu({
     ) => void;
 }) {
     return (
-        <div className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black/5">
+        <div className="absolute right-0 z-10 mt-2 w-41 rounded-md bg-(--filter-background) shadow-lg ring-1 ring-black/5">
             <div className="py-1">
                 {groups
                     .filter((group) => group.show !== false)
@@ -355,8 +355,7 @@ function FilterMenu({
                                                 : group.key,
                                         )
                                     }
-                                    className="flex items-center px-4 py-1 ml-2 text-gray-800 rounded-md hover:bg-gray-300 text-xs w-36"
-                                >
+                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && 'bg-(--filter-hover)'} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}>
                                     <span className="pr-1">
                                         <HugeiconsIcon
                                             size={16}
@@ -364,15 +363,6 @@ function FilterMenu({
                                         />
                                     </span>
                                     {group.label}
-                                </button>
-
-                                <button
-                                    onClick={() => onActiveGroupChange(null)}
-                                    className="text-black"
-                                >
-                                    <span className="ml-3">
-                                        <HugeiconsIcon size={16} icon={X} />
-                                    </span>
                                 </button>
                             </div>
 
@@ -401,23 +391,21 @@ function SelectedFilters({
     }
 
     return (
-        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2">
+        <div className="py-1 mb-2 flex flex-row flex-wrap gap-2 mt-1">
             {filters.map((filter) => (
                 <div
                     key={`${filter.key}-${filter.id}`}
-                    className="flex rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                    className=" flex  rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5 "
                 >
-                    <p className="px-2 py-1 text-gray-800 rounded-md text-xs">
+                    <p className=" px-2 py-1 text-(--table-text) rounded-md text-xs ">
                         {filter.id}
                     </p>
 
                     <button
                         onClick={() => onRemove(filter)}
-                        className="text-black pr-2"
+                        className=" pr-2 text-(--table-text)"
                     >
-                        <span className="ml-1">
                             <HugeiconsIcon size={16} icon={X} />
-                        </span>
                     </button>
                 </div>
             ))}
@@ -820,10 +808,10 @@ export function DocumentsTable({ columns }: DocProps) {
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto px-10 w-full py-10">
-                <div className="bg-white rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="bg-(--card) rounded-xl shadow-sm border p-4 relative overflow-visible">
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={
@@ -849,7 +837,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                     onClick={() =>
                                         setIsDropdownOpen((current) => !current)
                                     }
-                                    className="flex px-4 py-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
                                 >
                                     <span className="pr-1">
                                         <HugeiconsIcon
@@ -871,19 +859,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                 )}
                             </div>
 
-                            <div className="relative inline-block text-left">
-                                <Button
-                                    type="button"
-                                    onClick={() =>
-                                        setReload((current) => !current)
-                                    }
-                                    className="flex px-4 py-4 ml-2"
-                                >
-                                    Refresh
-                                </Button>
-                            </div>
-
-                            <div className="flex justify-end ml-auto">
+                            <div className="flex justify-end ml-auto py-1">
                                 <CreateDocumentButton
                                     roles={roles}
                                     refresh={setReload}
@@ -907,17 +883,17 @@ export function DocumentsTable({ columns }: DocProps) {
                         onRemove={removeFilter}
                     />
 
-                    <Table className="border rounded-lg overflow-hidden">
-                        <TableHeader className="bg-[#ecf4f9] text-[#0b4461]">
+                    <Table className="border rounded-lg overflow-hidden mt-6">
+                        <TableHeader className="bg-(--card-header) text-(--table-titles)">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
-                                    <TableHead className="text-[#0b4461] text-left px-5">
+                                    <TableHead className="text-(--table-titles) text-left px-5">
                                         Favorite
                                     </TableHead>
 
                                     {headerGroup.headers.map((header) => (
                                         <TableHead
-                                            className="text-[#0b4461] text-left px-5"
+                                            className="text-(--table-titles) text-left px-5"
                                             key={header.id}
                                         >
                                             {header.isPlaceholder
@@ -930,7 +906,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                         </TableHead>
                                     ))}
 
-                                    <TableHead className="text-[#0b4461] px-5 text-right">
+                                    <TableHead className="text-(--table-titles) px-5 text-right">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -952,7 +928,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                             key={row.id}
                                             className={
                                                 isLockedByOther
-                                                    ? "bg-[#e6e8e8]"
+                                                    ? "bg-(--tab-bg)"
                                                     : undefined
                                             }
                                         >

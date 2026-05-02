@@ -1,13 +1,11 @@
 import "./home.css";
-import { SearchBar } from "@/components/searchbar.tsx";
 import Dashboard from "@/components/dashboard.tsx";
-//import {SearchBar} from "@/components/searchbar.tsx";
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/react";
 import { useUser } from "@clerk/react";
 import { UserAvatar } from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import { Pencil, Check} from 'lucide-react';
+import { Pencil, Check, RotateCcw} from 'lucide-react';
 
 function Home() {
     const [roles, setRoles] = useState<string[]>([]);
@@ -56,13 +54,12 @@ function Home() {
                 </div>
             </div>
 
-            <div className="home-content-container px-5 py-2">
+            <div className="home-content-container px-5 pt-3">
                 <div className="flex justify-start pl-3 flex-row gap-3">
                     <button
                         type="button"
                         onClick={() => setIsEditing((v) => !v)}
-                        className="group px-2 py-1 rounded-2xl bg-(--input) hover:brightness-120 duration-200 ease-in-out text-[10px] active:brightness-95"
-                    >
+                        className="group px-2 py-1 rounded-2xl bg-(--input) hover:brightness-120 duration-200 ease-in-out text-[10px] active:brightness-95">
                         <div className="flex flex-row items-center">
                             {isEditing ? <Check size = {12}/>:  <Pencil size={12}/>}
 
@@ -71,21 +68,22 @@ function Home() {
                             {isEditing ? "Done" : "Edit dashboard"}
                             </span>
 
-
-
                         </div>
 
                     </button>
 
                     {isEditing && (
-                        <button
-                            type="button"
-                            onClick={() => setResetKey(k => k + 1)}
-                            className="group px-2 py-1 text-(--table-text) rounded-2xl bg-(--input) hover:brightness-150 duration-100 ease-in-out text-[10px] active:brightness-95"
-                        >
-
-                            Reset
-                        </button>
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => setResetKey(k => k + 1)}
+                                className="group px-2 py-1 text-(--table-text) rounded-2xl bg-(--input) hover:brightness-150 duration-100 ease-in-out text-[10px] active:brightness-95">
+                                <div className="flex flex-row items-center gap-1">
+                                <RotateCcw size = {12}/>
+                                Reset Dashboard
+                                </div>
+                            </button>
+                            </>
                     )}
 
                 </div>

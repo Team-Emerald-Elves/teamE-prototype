@@ -92,7 +92,9 @@ export const widgetRegistry: WidgetRegistry = {
         // defaultW: 12,
         // defaultH: 8,
         minW: 12,
-        minH: 4,
+        minH: 6,
+        maxH: 6,
+        isResizable: false,
         icon: Calendar,
     },
 };

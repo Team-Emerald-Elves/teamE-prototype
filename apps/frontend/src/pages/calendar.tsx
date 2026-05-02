@@ -91,7 +91,7 @@ export default function CalendarPage() {
                         })}` : getCurrentWeekLabel(date)}
                         description="Keep track of important events here."
                     />
-                    <div className="flex gap-2 pt-3 px-9">
+                    <div className="flex gap-2 pt-7 px-9">
                         <button
                             onClick={() => {
                                 setView("dayGridMonth");
@@ -129,8 +129,9 @@ export default function CalendarPage() {
 
 
                 <div className="flex flex-col items-end gap-2 pt-25 pr-10">
+                    <AddEventButton setOpen={setOpenAdd} />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 pt-2">
 
                         <button
                             onClick={handlePrev}
@@ -154,7 +155,7 @@ export default function CalendarPage() {
                             <FontAwesomeIcon icon={faAngleRight} />
                         </button>
                     </div>
-                    <AddEventButton setOpen={setOpenAdd} />
+
                 </div>
             </div>
 

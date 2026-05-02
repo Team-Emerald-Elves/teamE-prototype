@@ -79,9 +79,10 @@ export default function CalendarWeek() {
                     plugins={[timeGridPlugin, interactionPlugin]}
                     initialView="timeGridWeek"
                     headerToolbar={false}
+
                     dayHeaderClassNames={() => [
-                        "bg-[#0b4461]",
-                        "text-white",
+                        "bg-gray-200",
+                        "text-gray-700",
                     ]}
 
                     slotMinTime="08:00:00"

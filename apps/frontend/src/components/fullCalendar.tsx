@@ -76,8 +76,8 @@ export default function FullCalendarComponent({
                 }}
 
                 dayHeaderClassNames={() => [
-                    "bg-[#0b4461]",
-                    "text-white",
+                    "bg-gray-200",
+                    "text-gray-700",
                 ]}
 
 

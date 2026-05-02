@@ -216,4 +216,12 @@ html, body, #root {
         background-color: black;
         color: white;
     }
+
+    .fc .fc-day-today {
+        background-color: #e0f2fe !important; /* light blue (similar intensity) */
+    }
+
+    .dark .fc .fc-day-today {
+        background-color: #172554 !important;
+    }
 }

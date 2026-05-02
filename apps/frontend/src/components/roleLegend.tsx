@@ -57,16 +57,7 @@ export default function RoleLegend({
                     </PopoverContent>
                 </Popover>
             </div>
-
-            <Card className="w-full max-w-sm shadow-sm pb-2">
-                {/* everything below is unchanged */}
-                <CardHeader>
-                    <CardTitle className="text-xs font-semibold">
-                        Role Legend
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {Object.entries(roleColors).map(([color, role]) => (
                             <div
                                 key={role}
@@ -82,8 +73,7 @@ export default function RoleLegend({
                             </div>
                         ))}
                     </div>
-                </CardContent>
-            </Card>
+
         </div>
     );
 }

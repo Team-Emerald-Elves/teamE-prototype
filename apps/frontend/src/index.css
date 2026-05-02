@@ -53,6 +53,7 @@
 html.light {
     /*light-mode theme*/
     --blue-primary: #013C5A;
+    --border-strong: oklch(0.75 0 0);
     --yellow-primary: #FFC107;
     --background: #f5f5f5;
     --foreground: oklch(0.1356 0.0255 246.59);
@@ -100,8 +101,11 @@ html.light {
     --header-subtext-color: oklch(0.3388 0.0755 238.86);
     --subheader-color: var(--color-gray-800);
     --tab-bg: #e6e6e6;
-    --calendar-bg: #ecf4f9;
-    --lock-color: #c5e6e8;
+    --calendar-bg: #e5e7eb;
+    --calendar-bg-foreground: #374151;
+    --second-button-cal: #e5e7eb;
+    --week-cal-text: black;
+    --lock-color: var(--color-gray-200);
     --input-text: var(--color-gray-500);
     --filter-background: var(--color-gray-50);
     --filter-hover: var(--color-gray-300);
@@ -112,6 +116,7 @@ html.dark {
     --blue-primary: #013C5A;
     --yellow-primary: #FFC107;
     --background: oklch(0.145 0 0);
+    --border-strong: oklch(0.75 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
     --card-header: oklch(0.19 0 0);
@@ -158,6 +163,9 @@ html.dark {
     --subheader-color: var(--color-gray-300);
     --tab-bg: #2b2a2a;
     --calendar-bg: #222525;
+    --calendar-bg-foreground: #e5e7eb;
+    --second-button-cal: #222525;
+    --week-cal-text: white;
     --lock-color: #c5e6e8;
     --input-text: var(--color-gray-300);
     --filter-background: var(--color-gray-800);
@@ -180,5 +188,40 @@ html, body, #root {
     }
     button:not([disabled]), [role="button"]:not([disabled]) {
         cursor: pointer;
+    }
+    .fc {
+        --fc-border-color: var(--border-strong);
+    }
+    .fc .fc-event-title,
+    .fc .fc-event-time {
+        color: var(--foreground) !important;
+    }
+    .fc .fc-event-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        padding: 2px
+    }
+    .fc .fc-day-today {
+        background-color: #ecf4f9; /* light blue example */
+    }
+
+    .fc .fc-timegrid-axis {
+        background-color: var(--background);
+        color: black;
+    }
+
+    .dark .fc .fc-timegrid-axis {
+        background-color: black;
+        color: white;
+    }
+
+    .fc .fc-day-today {
+        background-color: #e0f2fe !important; /* light blue (similar intensity) */
+    }
+
+    .dark .fc .fc-day-today {
+        background-color: #172554 !important;
     }
 }

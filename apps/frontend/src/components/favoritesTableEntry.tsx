@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr";
 import type { documentContent, Links as linksData } from "@repo/database/types";
+import DocTag from "@/components/docTag.tsx";
 
 const handleDownload = async (doc: documentContent) => {
     try {
@@ -104,7 +105,55 @@ async function createNotif(doc: documentContent, action: string) {
 export default function FavoritesTableEntry(props: FavoriteProps) {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
-    const created = new Date(props.d.created_at);
+    const type = props.d.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");;
+    const status = props.d.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");;
+    const role = props.d.assigned_role;
+    let statusBackground = "bg-slate-400"
+    let roleBackground = "bg-gray-200"
+    let docBackground = "bg-gray-200"
+
+    switch (type) {
+        case 'Reference':
+            docBackground = "bg-sky-200"
+            break;
+        case 'Workflow':
+            docBackground = "bg-indigo-200"
+            break;
+    }
+    switch (status) {
+        case 'Not Started':
+            statusBackground = "bg-red-200";
+            break;
+        case 'In Progress':
+            statusBackground = "bg-yellow-300";
+            break;
+        case 'Needs Review':
+            statusBackground = "bg-orange-300";
+            break;
+        case 'Done':
+            statusBackground = "bg-green-300";
+            break;
+    }
+    switch (role) {
+        case 'Administrator':
+            roleBackground = "bg-purple-700";
+            break;
+        case 'BusinessAnalyst':
+            roleBackground = "bg-blue-300";
+            break;
+        case 'UnderWriter':
+            roleBackground = "bg-pink-300";
+            break;
+        case 'ExcelOperator':
+            roleBackground = "bg-teal-400";
+            break;
+        case 'BusinessOperator':
+            roleBackground = "bg-violet-300";
+            break;
+        case 'ActuarialAnalyst':
+            roleBackground = "bg-fuchsia-300";
+            break;
+    }
     return (
         <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-12">
             <FavoriteStar
@@ -127,7 +176,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
                         </button>
                     </DialogTrigger>
 
-                    <DialogContent className="2xl:max-w-2xl h-[90vh] flex flex-col overflow-hidden">
+                    <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">
                             ✕
                         </DialogClose>
@@ -141,20 +190,9 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
                 </Dialog>
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-(--table-text)">
-                {created.toLocaleString()}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-(--table-text)">
-                {props.d.document_type}
-            </TableCell>
 
             <TableCell className="text-[14px] font-small text-(--table-text)">
                 {exp.toLocaleString()}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-(--table-text)">
-                {props.d.document_status}
             </TableCell>
 
             <TableCell className="text-[14px] font-small text-(--table-text)">
@@ -162,13 +200,17 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             </TableCell>
 
             <TableCell className="text-[14px] font-small text-(--table-text)">
-                {props.d.assigned_role}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
-            <TableCell className="text-[14px] font-small text-(--table-text)">
+
+            <TableCell>
+                <div className="flex flex-wrap gap-1 mt-2 text-(--tab-text)">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                    <DocTag background={docBackground}>{type}</DocTag>
+                    <DocTag background={statusBackground}>{status}</DocTag>
+                </div>
+            </TableCell>
+            <TableCell className="flex text-[14px] font-small text-(--table-text) justify-center w-full">
                 <Button onClick={async () => await handleDownload(props.d)}>
                     <HugeiconsIcon icon={Download01Icon} />
                 </Button>

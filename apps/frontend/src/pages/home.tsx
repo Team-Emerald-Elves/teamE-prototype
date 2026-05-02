@@ -51,9 +51,6 @@ function Home() {
                             </h1>
                         </div>
                     </div>
-                    <div className="hero-content-bottom py-5 pl-2">
-                        <SearchBar />
-                    </div>
                 </div>
             </div>
 

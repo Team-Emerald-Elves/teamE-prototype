@@ -443,7 +443,7 @@ export default function LinksTable<TData extends Links, TValue>({
                 <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
-                            <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={
@@ -468,7 +468,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                     onClick={() =>
                                         setIsDropdownOpen((prev) => !prev)
                                     }
-                                    className="flex px-4 py-1 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon
@@ -479,7 +479,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                 </button>
 
                                 {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-(--filter-background) rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                                         <div className="py-2 px-3">
                                             <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
                                                 {tagFilters.map((option) => (
@@ -549,16 +549,16 @@ export default function LinksTable<TData extends Links, TValue>({
                                 {filters.map((option) => (
                                     <div
                                         key={option.id}
-                                        className="flex rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5"
+                                        className="flex rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5"
                                     >
-                                        <p className="px-2 py-1 text-gray-800 rounded-md text-xs">
+                                        <p className="px-2 py-1 text-(--table-text) rounded-md text-xs">
                                             {option.id}
                                         </p>
                                         <button
                                             onClick={() => removeFilter(option)}
                                             className="text-black pr-2"
                                         >
-                                            <div className="ml-1">
+                                            <div className="ml-1 text-(--table-text)">
                                                 <HugeiconsIcon
                                                     size={16}
                                                     icon={X}

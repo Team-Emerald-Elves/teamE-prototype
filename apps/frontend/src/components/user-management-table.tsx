@@ -198,7 +198,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
         <div className="max-w-10xl mx-auto px-10 py-10">
             <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible">
                 <div className="flex items-center mb-4">
-                    <InputGroup className="flex-1 max-w-2xl h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
+                    <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
                         <InputGroupInput
                             placeholder="Search"
                             value={
@@ -221,7 +221,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     <div className="relative inline-block text-left">
                         <button
                             onClick={() => setIsRoleOpen((open) => !open)}
-                            className="flex px-4 py-1 ml-2 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                            className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
                         >
                             <div className="pr-1">
                                 <HugeiconsIcon icon={SlidersHorizontalIcon} />
@@ -269,9 +269,9 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     {activeRoleFilters.map((option) => (
                         <div
                             key={option.id}
-                            className="flex rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5"
+                            className="flex rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5"
                         >
-                            <p className="px-2 py-1 text-(--subheader-color) rounded-md text-xs">
+                            <p className="px-2 py-1 text-(--table-text) rounded-md text-xs">
                                 {option.id}
                             </p>
 
@@ -279,7 +279,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                                 onClick={() => removeRoleFilter(option)}
                                 className="text-black pr-2"
                             >
-                                <div className="ml-1">
+                                <div className="ml-1 text-(--table-text)">
                                     <HugeiconsIcon size={16} icon={X} />
                                 </div>
                             </button>

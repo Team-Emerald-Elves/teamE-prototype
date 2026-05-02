@@ -149,7 +149,7 @@ function Navbar(props: NavbarProps) {
 
                         {/*</NavigationMenuItem>*/}
                         <NavigationMenuItem>
-                            <button onClick={toggleTheme}>{theme === "light" ?
+                            <button className="mt-1" onClick={toggleTheme}>{theme === "light" ?
                                 <HugeiconsIcon icon={Moon02Icon}/> :
                                 <HugeiconsIcon icon={Sun03Icon}/>}
                             </button>

@@ -110,26 +110,19 @@ export default function Favorites() {
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Title
                                     </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
-                                        Created
-                                    </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
-                                        Content Type
-                                    </TableHead>
+                                   
+                                  
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Expiration Date
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
-                                        Status
-                                    </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Owner
-                                    </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
-                                        Role
-                                    </TableHead>
+                                    </TableHead>>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Last Modified
+                                    </TableHead>
+                                    <TableHead className="text-(--table-titles) font-medium text-sm">
+                                        Tags
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Actions
@@ -287,9 +280,6 @@ export default function Favorites() {
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Role
-                                    </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
-                                        Created
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Last Modified

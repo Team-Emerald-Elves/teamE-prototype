@@ -103,10 +103,6 @@ export default function FavoritesTableEntryLink(props: FavoriteProps) {
             </TableCell>
 
             <TableCell className="text-[14px] font-small text-(--table-text)">
-                {created.toLocaleString()}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
         </TableRow>

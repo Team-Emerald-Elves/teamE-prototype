@@ -57,7 +57,7 @@ export default function FullCalendarComponent({
     }, [view]);
 
     return (
-        <div className="h-full w-full">
+        <div className="h-full w-full ">
             <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -88,9 +88,11 @@ export default function FullCalendarComponent({
                 eventDidMount={(info) => {
                     info.el.title = info.event.title;
                 }}
-                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--table-titles)"]}
+                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--calendar-bg-foreground)"]}
 
                 stickyHeaderDates={true}
+
+                slotEventOverlap={false}
 
                 dayMaxEvents={4}
                 slotMinTime="08:00:00"

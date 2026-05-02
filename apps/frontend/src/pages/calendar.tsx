@@ -100,7 +100,7 @@ export default function CalendarPage() {
                             className={`px-3 py-1 rounded ${
                                 view === "dayGridMonth"
                                     ? "bg-[#0b4461] text-white"
-                                    : "bg-gray-200"
+                                    : "bg-(--second-button-cal)"
                             }`}
                         >
                             Month
@@ -113,7 +113,7 @@ export default function CalendarPage() {
                             className={`px-3 py-1 rounded ${
                                 view === "timeGridWeek"
                                     ? "bg-[#0b4461] text-white"
-                                    : "bg-gray-200"
+                                    : "bg-(--second-button-cal)"
                             }`}
                         >
                             Week
@@ -135,21 +135,21 @@ export default function CalendarPage() {
 
                         <button
                             onClick={handlePrev}
-                            className="px-3 py-1 bg-gray-200 rounded"
+                            className="px-3 py-1 bg-(--second-button-cal) rounded"
                         >
                             <FontAwesomeIcon icon={faAngleLeft} />
                         </button>
 
                         <button
                             onClick={handleToday}
-                            className="px-3 py-1 bg-gray-200 rounded"
+                            className="px-3 py-1 bg-(--second-button-cal) rounded"
                         >
                             Today
                         </button>
 
                         <button
                             onClick={handleNext}
-                            className="px-3 py-1 bg-gray-200 rounded"
+                            className="px-3 py-1 bg-(--second-button-cal) rounded"
                         >
 
                             <FontAwesomeIcon icon={faAngleRight} />
@@ -174,7 +174,7 @@ export default function CalendarPage() {
                 setReload={setReload}
             />
 
-            <div className="px-7 pt-1 h-full">
+            <div className="px-7 pt-1 h-full ">
                 <FullCalendarComponent
                     calendarRef={calendarRef}
                     setOpen={setOpen}

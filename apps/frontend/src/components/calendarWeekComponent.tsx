@@ -83,7 +83,7 @@ export default function CalendarWeek() {
 
                     dayHeaderClassNames={() => [
                         "bg-(--calendar-bg)",
-                        "text-(--table-titles)",
+                        "text-(--calendar-bg-foreground)",
                     ]}
 
                     slotMinTime="08:00:00"
@@ -91,6 +91,8 @@ export default function CalendarWeek() {
 
                     contentHeight="auto"
                     events={events}
+
+                    slotEventOverlap={false}
                 />
             </div>
         </div>

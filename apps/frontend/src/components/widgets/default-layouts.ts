@@ -8,7 +8,7 @@ const sharedLayout: RoleLayout = {
         { i: "favorites", x: 0, y: 0,  w: 12, h: 6, resizeHandles: ["s"] },
         { i: "userLogs",  x: 0, y: 8,  w: 5,  h: 9, resizeHandles: ["s"] },
         { i: "hitCounts", x: 5, y: 8,  w: 7,  h: 9 },
-        { i: "calendar",  x: 0, y: 14, w: 12, h: 6 },
+        { i: "calendar",  x: 0, y: 14, w: 12, h: 12 },
     ],
 };
 
@@ -37,6 +37,6 @@ export const fallbackLayout: RoleLayout = {
         //row 3
         { i: "userLogs", x: 0, y: 8, w: 5, h: 9, resizeHandles: ["s"]},
         { i: "hitCounts", x: 5, y: 8, w: 7, h: 9 },
-        { i: "calendar", x: 0, y: 14, w: 12, h: 6 },
+        { i: "calendar", x: 0, y: 14, w: 12, h: 12 },
     ],
 };

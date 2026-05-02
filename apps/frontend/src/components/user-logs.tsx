@@ -5,7 +5,7 @@ import {
     TableRow,
 } from "@/components/ui/log-table.tsx";
 
-import { Dot, Info } from "lucide-react";
+import { Info } from "lucide-react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -124,51 +124,27 @@ export function UserLogs() {
                                     <TableBody>
                                         {logs.map((n) => (
                                             <TableRow key={n.id}>
-                                                <TableCell className="font-medium flex items-center min-w-0 py-1.75 text-sm w-full">
-                                                    <div className="flex items-center justify-between font-normal min-w-0">
-                                                        <div className="flex items-center gap-1 min-w-0">
+                                                <TableCell className="py-2 text-sm">
+                                                    <div className="flex items-center w-full">
+                                                        <div className="flex items-center gap-1 flex-1 min-w-0">
                                                             <img
                                                                 className="size-10 rounded-full shrink-0"
-                                                                src={
-                                                                    n.profileIcon
-                                                                }
+                                                                src={n.profileIcon}
                                                             />
+                                                            <div className="flex-1 min-w-0 pl-5 truncate whitespace-nowrap overflow-hidden">
+                                                                <span className="font-semibold">
+                                                                    {n.title.split(" ").slice(0, 2).join(" ")}
+                                                                </span>{" "}
+                                                                {n.title.split(" ").slice(2, 3).join(" ")}{" "}
 
-                                                            <div className="pl-5 font-semibold">
-                                                                {n.title
-                                                                    .split(" ")
-                                                                    .slice(0, 2)
-                                                                    .join(
-                                                                        " ",
-                                                                    )}{" "}
+                                                                <span className="text-[#768b6c] font-semibold">
+                                                                    {n.title.split(" ").slice(3).join(" ")}
+                                                                </span>
                                                             </div>
-                                                            <span>
-                                                                {" "}
-                                                                {n.title
-                                                                    .split(" ")
-                                                                    .slice(2, 3)
-                                                                    .join(
-                                                                        " ",
-                                                                    )}{" "}
-                                                            </span>
-                                                            <span className="text-[#768b6c] font-semibold">
-                                                                {" "}
-                                                                {n.title
-                                                                    .split(" ")
-                                                                    .slice(3)
-                                                                    .join(
-                                                                        " ",
-                                                                    )}{" "}
-                                                            </span>
                                                         </div>
-                                                        <div className="flex items-center shrink-0 whitespace-nowrap text-right">
-                                                            <div className="px-3">
-                                                                <Dot color="#a6a6a6" />
-                                                            </div>
-                                                            <div className="flex justify-end">
-                                                                {formatTimeLabel(
-                                                                    n.createdAt,
-                                                                )}
+                                                        <div className="flex items-center justify-end shrink-0 w-[90px]">
+                                                            <div className="text-right whitespace-nowrap">
+                                                                {formatTimeLabel(n.createdAt)}
                                                             </div>
                                                         </div>
                                                     </div>

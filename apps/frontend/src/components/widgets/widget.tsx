@@ -22,7 +22,8 @@ export default function WidgetWrapper({
                 className={`
           flex items-center justify-between px-3 py-2 border-0 text-sm font-medium
           overflow-hidden transition-all duration-200 ease-in-out
-          ${isEditing ? "widget-drag-handle cursor-grab bg-muted/50 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
+          ${isEditing ? "max-h-16 widget-drag-handle cursor-grab bg-muted/50 opacity-100" 
+                    : "max-h-0 opacity-0 pointer-events-none"}`}
             >
                 <div className="flex items-center gap-2 ">
                     {isEditing && (

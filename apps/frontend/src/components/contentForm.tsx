@@ -82,17 +82,20 @@ function ContentForm(props: contentFormProps) {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
+    console.log()
+
     const [formData, setFormData] = useState<FormDataType>({
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
         contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46",
-        role: props.currentRole ?? currentRole,
+        role: props.currentRole === "Select Role" ? props.currentRole : ROLE_LABELS[props.currentRole],
         document_type: "",
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
         document_status: props.currentStatus ?? "",
         id: props.currentID,
     });
+
     useEffect(() => {
         if (
             formData.name &&
@@ -306,7 +309,7 @@ function ContentForm(props: contentFormProps) {
                                 </Select>
                             </Field>
 
-                            {isAdmin ? (
+
                                 <Field>
                                     <Label
                                         htmlFor="role"
@@ -315,17 +318,18 @@ function ContentForm(props: contentFormProps) {
                                         Select Role For Content
                                     </Label>
                                     <Select
-                                        value={formData.role}
+                                        value={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
                                         onValueChange={(value) =>
                                             setFormData((prev) => ({
                                                 ...prev,
                                                 role: value!,
                                             }))
                                         }
+                                        disabled={!isAdmin}
                                     >
                                         <SelectTrigger className="w-full max-w-48">
                                             <SelectValue
-                                                placeholder={props.currentRole}
+                                                placeholder={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -350,7 +354,7 @@ function ContentForm(props: contentFormProps) {
                                         </SelectContent>
                                     </Select>
                                 </Field>
-                            ) : null}
+
                         </div>
                         <Field>
                             <Label

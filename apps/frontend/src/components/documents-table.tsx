@@ -427,7 +427,7 @@ function CreateDocumentButton({
             currentName=""
             currentURL=""
             currentContentOwner="Select Content Owner"
-            currentRole="Select Role"
+            currentRole={roles.includes("administrator") ? "Select Role" : roles.at(0) as string}
             currentExpirationDate={new Date()}
             currentExpirationTime="10:30:00"
             currentStatus="Select Status"

@@ -2,7 +2,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "./ui/button.tsx";
-import DocTag from "@/components/doctag.tsx";
+import DocTag from "@/components/docTag.tsx";
 import { TagInput } from "@/components/tagInput.tsx";
 import { useState } from "react";
 import {

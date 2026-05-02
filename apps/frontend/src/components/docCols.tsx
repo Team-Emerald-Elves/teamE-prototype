@@ -6,7 +6,7 @@ import { Button } from "./ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import mime from "mime";
 import DocumentViewer from "@/components/docViewer.tsx";
-import DocTag from "@/components/doctag.tsx";
+import DocTag from "@/components/docTag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
 import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";

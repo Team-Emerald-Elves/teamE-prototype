@@ -6,6 +6,7 @@ interface Props {
     isEditing: boolean;
     onRemove: (id: string) => void;
     children: React.ReactNode;
+    isDragging: boolean;
 }
 
 export default function WidgetWrapper({
@@ -14,6 +15,7 @@ export default function WidgetWrapper({
     isEditing,
     onRemove,
     children,
+    isDragging
 }: Props) {
     return (
         //AI GENERATED STYLING
@@ -22,7 +24,9 @@ export default function WidgetWrapper({
                 className={`
           flex items-center justify-between px-3 py-2 border-0 text-sm font-medium
           overflow-hidden transition-all duration-200 ease-in-out
-          ${isEditing ? "widget-drag-handle cursor-grab bg-muted/50 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
+          ${isEditing 
+                    ? `max-h-16 widget-drag-handle ${isDragging ? "cursor-grabbing" : "cursor-grab"} bg-muted/50 opacity-100` 
+                    : "max-h-0 opacity-0 pointer-events-none"}`}
             >
                 <div className="flex items-center gap-2 ">
                     {isEditing && (

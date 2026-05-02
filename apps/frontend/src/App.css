@@ -70,3 +70,9 @@
     background-color: #0264b3;
     color: #f5f5f5;
 }
+
+.react-grid-placeholder{
+    background-color: #ff8989 !important;
+    opacity: 0.8;
+    border-radius: 15px;
+}

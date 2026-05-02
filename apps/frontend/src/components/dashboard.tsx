@@ -38,6 +38,7 @@ function useResizeObserver<T extends HTMLElement = HTMLDivElement>() {
 interface DashboardProps {
     roles: string[];
     isEditing?: boolean;
+    resetKey?: number;
 }
 
 function pickDefault(roles: string[]): SavedDashboard {
@@ -50,6 +51,7 @@ function pickDefault(roles: string[]): SavedDashboard {
 export default function Dashboard({
     roles,
     isEditing = false,
+    resetKey,
 }: DashboardProps) {
     const initial = useMemo(() => pickDefault(roles), [roles]);
     const [layout, setLayout] = useState<Layout[]>(initial.layout as Layout[]);
@@ -60,6 +62,14 @@ export default function Dashboard({
     const [hasSaved, setHasSaved] = useState(false);
     const { getToken, isSignedIn } = useAuth();
     const { ref, width } = useResizeObserver();
+    const [isDragging, setIsDragging] = useState(false);
+
+    useEffect(() => {
+        if (!resetKey) return; // skip on mount (0)
+        setLayout(initial.layout as Layout[]);
+        setActiveWidgets(initial.activeWidgets);
+        setHasSaved(false); // important: lets the default re-apply cleanly
+    }, [initial.activeWidgets, initial.layout, resetKey]);
 
     useEffect(() => {
         if (!isSignedIn) return;
@@ -107,10 +117,14 @@ export default function Dashboard({
         wasEditing.current = isEditing;
     }, [isEditing, layout, isSignedIn, activeWidgets, loaded, getToken]);
 
+
+
     const handleRemove = (id: string) => {
         setActiveWidgets((w) => w.filter((x) => x !== id));
         setLayout((l) => l.filter((item) => item.i !== id));
     };
+
+
 
     const constrainedLayout = useMemo(
         () =>
@@ -132,7 +146,7 @@ export default function Dashboard({
         <div ref={ref}>
             {width > 0 && (
                 <GridLayout
-                    className="layout"
+                    className={`layout ${isDragging ? "select-none" : ""}`}
                     layout={constrainedLayout}
                     cols={12}
                     rowHeight={60}
@@ -142,6 +156,8 @@ export default function Dashboard({
                     isResizable={isEditing}
                     draggableHandle=".widget-drag-handle"
                     onLayoutChange={(l) => setLayout(l)}
+                    onDragStart={() => setIsDragging(true)}
+                    onDragStop={() => setIsDragging(false)}
                 >
                     {activeWidgets.map((id) => {
                         const def = widgetRegistry[id];
@@ -154,6 +170,7 @@ export default function Dashboard({
                                     label={def.label}
                                     isEditing={isEditing}
                                     onRemove={handleRemove}
+                                    isDragging={isDragging}
                                 >
                                     <Inner isEditing={isEditing} />
                                 </WidgetWrapper>

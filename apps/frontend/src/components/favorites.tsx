@@ -117,7 +117,7 @@ export default function Favorites() {
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Owner
-                                    </TableHead>>
+                                    </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Last Modified
                                     </TableHead>

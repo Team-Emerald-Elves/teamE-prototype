@@ -1,6 +1,5 @@
 import Router, { type Request, type Response } from "express";
 import {
-    requireAuth,
     getAuth,
     clerkClient,
     type EmailAddress,

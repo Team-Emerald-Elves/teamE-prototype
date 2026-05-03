@@ -1,15 +1,11 @@
 import express from "express";
 import prisma, { type Employee } from "@repo/database";
-import { createClerkClient } from "@clerk/express";
+import { clerkClient } from "@clerk/express";
 import { createSupabaseForRequest } from "../lib/supabase.ts";
 import { randomBytes } from "crypto";
 import { invite } from "./api.ts";
 
 const supabaseClient = await createSupabaseForRequest();
-
-const clerkClient = createClerkClient({
-    secretKey: process.env.CLERK_SECRET_KEY,
-});
 
 async function createEmployeeRoute(
     req: express.Request,

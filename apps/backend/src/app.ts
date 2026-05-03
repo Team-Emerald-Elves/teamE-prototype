@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { clerkMiddleware, requireAuth } from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import editEmployeeRoute from "./routes/edit-employee.ts";
 import validate from "./lib/zod/middleware.ts";
 import cors from "cors";

@@ -18,13 +18,13 @@ type FullCalendarComponentProps = {
 };
 
 export default function FullCalendarComponent({
-                                                  setOpen,
-                                                  setOpenAdd,
-                                                  setSelectedEvent,
-                                                  reload,
-                                                  view,
-                                                  calendarRef,
-                                              }: FullCalendarComponentProps) {
+    setOpen,
+    setOpenAdd,
+    setSelectedEvent,
+    reload,
+    view,
+    calendarRef,
+}: FullCalendarComponentProps) {
     const [events, setEvents] = useState<any[]>([]);
 
     useEffect(() => {
@@ -68,32 +68,27 @@ export default function FullCalendarComponent({
                 navLinks={true}
                 navLinkDayClick={() => setOpenAdd(true)}
                 eventClick={(info) => {
-
-
                     setSelectedEvent(info.event);
                     setOpen(true);
-                    document.querySelectorAll(".fc-popover").forEach(el => el.remove());
+                    document
+                        .querySelectorAll(".fc-popover")
+                        .forEach((el) => el.remove());
                 }}
-
-                headerToolbar={
-                {
-                    start: '',
-                    center: '',
-                    end: '',
-                }
-            }
-
+                headerToolbar={{
+                    start: "",
+                    center: "",
+                    end: "",
+                }}
                 eventClassNames={() => ["cursor-pointer"]}
-
                 eventDidMount={(info) => {
                     info.el.title = info.event.title;
                 }}
-                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--calendar-bg-foreground)"]}
-
+                dayHeaderClassNames={() => [
+                    "bg-(--calendar-bg)",
+                    "text-(--calendar-bg-foreground)",
+                ]}
                 stickyHeaderDates={true}
-
                 slotEventOverlap={false}
-
                 dayMaxEvents={4}
                 slotMinTime="08:00:00"
                 slotMaxTime="20:00:00"

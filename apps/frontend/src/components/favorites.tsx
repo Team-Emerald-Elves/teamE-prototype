@@ -111,8 +111,7 @@ export default function Favorites() {
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Title
                                     </TableHead>
-                                   
-                                  
+
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Expiration Date
                                     </TableHead>

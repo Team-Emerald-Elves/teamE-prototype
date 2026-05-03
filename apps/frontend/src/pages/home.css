@@ -1,41 +1,43 @@
-:root{
+:root {
     --dark-blue: #00355f;
     --light-gray: #f1f1f1;
     --sans: "Plus Jakarta Sans", sans-serif;
     background: var(--light-gray);
 }
 
-html.dark  {
-        background: var(--background);
-    }
+html.dark {
+    background: var(--background);
+}
 
-.home-cards-container{
+.home-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 50px;
-
 }
 
-h1, h2, h3, h4, h5, body{
+h1,
+h2,
+h3,
+h4,
+h5,
+body {
     font-family: var(--sans);
-
 }
 
-h1{
+h1 {
     font-size: 32px;
     font-weight: bold;
     display: flex;
 }
 
-
-.home-header-container{
+.home-header-container {
     position: absolute;
     top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.hero-container{
+.hero-container {
     width: 100%;
     height: 150px;
     position: relative;
@@ -43,18 +45,22 @@ h1{
     align-items: center;
 }
 
-.hero-overlay{
+.hero-overlay {
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(1, 60, 90, 0.1));
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.5),
+        rgba(1, 60, 90, 0.1)
+    );
     position: absolute;
     inset: 0;
     z-index: 2;
 }
 
-.hero-image{
-    width:100%;
-    height:100%;
+.hero-image {
+    width: 100%;
+    height: 100%;
     background-image: url("/hanover-hero.webp");
     filter: brightness(60%);
     background-position: center top;
@@ -63,10 +69,9 @@ h1{
     background-repeat: no-repeat;
     position: absolute;
     top: 0;
-
 }
 
-.hero-content{
+.hero-content {
     padding-left: 30px;
     position: relative;
     z-index: 3;
@@ -77,12 +82,9 @@ h1{
     width: 100%;
 }
 
-
-.hero-content .cl-avatarBox{
+.hero-content .cl-avatarBox {
     width: 100px;
     height: 100px;
 }
-
-
 
 

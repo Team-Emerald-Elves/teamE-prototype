@@ -19,6 +19,7 @@ import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
 import qmgr from "./lib/querymgr.ts";
+import EBot from "./components/EBot.tsx";
 
 function App() {
     qmgr.auth(useAuth());
@@ -73,6 +74,7 @@ function App() {
                             <Route path="/credits" element={<Credits />} />
                         </Routes>
                     </main>
+                    <EBot />
                     <Footer />
                 </div>
             </Show>

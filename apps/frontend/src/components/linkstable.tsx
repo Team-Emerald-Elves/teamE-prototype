@@ -214,7 +214,7 @@ export default function LinksTable<TData extends Links, TValue>({
                 linkData: {
                     owner: ownerFilters.map((item) => item.value)[0],
                     meta_tags: tagFilters.map((item) => item.value),
-                }
+                },
             }),
         });
 
@@ -355,7 +355,9 @@ export default function LinksTable<TData extends Links, TValue>({
                     {isUnlocked ? null : (
                         <div className="flex flex-col text-right">
                             <p className="text-xs">Checked out by:</p>
-                            <p className="text-sm font-medium">{link.lock_name}</p>
+                            <p className="text-sm font-medium">
+                                {link.lock_name}
+                            </p>
                         </div>
                     )}
                 </TableCell>

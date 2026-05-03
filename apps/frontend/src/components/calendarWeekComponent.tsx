@@ -1,6 +1,6 @@
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/react";
@@ -68,7 +68,7 @@ export default function CalendarWeek() {
                         {getCurrentWeekLabel()}
                     </h4>
 
-                        <RoleLegend />
+                    <RoleLegend />
                     <Link
                         to="/calendar"
                         className="text-sm text-(--internal-link-color) hover:underline"
@@ -80,18 +80,14 @@ export default function CalendarWeek() {
                     plugins={[timeGridPlugin, interactionPlugin]}
                     initialView="timeGridWeek"
                     headerToolbar={false}
-
                     dayHeaderClassNames={() => [
                         "bg-(--calendar-bg)",
                         "text-(--calendar-bg-foreground)",
                     ]}
-
                     slotMinTime="08:00:00"
                     slotMaxTime="20:00:00"
-
                     contentHeight="auto"
                     events={events}
-
                     slotEventOverlap={false}
                 />
             </div>

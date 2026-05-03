@@ -127,7 +127,7 @@ export function HitCounts() {
                     <CardTitle className="text-2xl text-(--card-title)">
                         Document Hit Counts
                     </CardTitle>
-                    <CardDescription className = "text-(--foreground)">
+                    <CardDescription className="text-(--foreground)">
                         An overview of document hit counts over the selected
                         time.
                     </CardDescription>

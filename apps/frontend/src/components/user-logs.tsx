@@ -129,22 +129,49 @@ export function UserLogs() {
                                                         <div className="flex items-center gap-1 flex-1 min-w-0">
                                                             <img
                                                                 className="size-10 rounded-full shrink-0"
-                                                                src={n.profileIcon}
+                                                                src={
+                                                                    n.profileIcon
+                                                                }
                                                             />
                                                             <div className="flex-1 min-w-0 pl-5 truncate whitespace-nowrap overflow-hidden">
                                                                 <span className="font-semibold">
-                                                                    {n.title.split(" ").slice(0, 2).join(" ")}
+                                                                    {n.title
+                                                                        .split(
+                                                                            " ",
+                                                                        )
+                                                                        .slice(
+                                                                            0,
+                                                                            2,
+                                                                        )
+                                                                        .join(
+                                                                            " ",
+                                                                        )}
                                                                 </span>{" "}
-                                                                {n.title.split(" ").slice(2, 3).join(" ")}{" "}
-
+                                                                {n.title
+                                                                    .split(" ")
+                                                                    .slice(2, 3)
+                                                                    .join(
+                                                                        " ",
+                                                                    )}{" "}
                                                                 <span className="text-(--secondary) font-semibold">
-                                                                    {n.title.split(" ").slice(3).join(" ")}
+                                                                    {n.title
+                                                                        .split(
+                                                                            " ",
+                                                                        )
+                                                                        .slice(
+                                                                            3,
+                                                                        )
+                                                                        .join(
+                                                                            " ",
+                                                                        )}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center justify-end shrink-0 w-[90px]">
                                                             <div className="text-right whitespace-nowrap">
-                                                                {formatTimeLabel(n.createdAt)}
+                                                                {formatTimeLabel(
+                                                                    n.createdAt,
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>

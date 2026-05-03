@@ -5,7 +5,7 @@ import EventForm from "@/components/eventForm.tsx";
 import PageHeader from "@/components/page-header.tsx";
 import EventDetails from "@/components/eventDetailsPopup.tsx";
 import RoleLegend from "@/components/roleLegend.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -75,8 +75,7 @@ export default function CalendarPage() {
 
         if (view === "dayGridMonth") {
             newDate.setMonth(newDate.getMonth() - 1);
-        }
-        else {
+        } else {
             newDate.setDate(newDate.getDate() - 7);
         }
 
@@ -89,8 +88,7 @@ export default function CalendarPage() {
 
         if (view === "dayGridMonth") {
             newDate.setMonth(newDate.getMonth() + 1);
-        }
-        else {
+        } else {
             newDate.setDate(newDate.getDate() + 7);
         }
 
@@ -100,7 +98,6 @@ export default function CalendarPage() {
     const handleToday = () => {
         calendarRef.current?.getApi().today();
         setDate(new Date());
-
     };
 
     return (
@@ -177,18 +174,14 @@ export default function CalendarPage() {
                     </div>
                 </div>
 
-
                 <div className="flex items-center pt-40">
                     <RoleLegend />
                 </div>
-
-
 
                 <div className="flex flex-col items-end gap-2 pt-25 pr-10">
                     <AddEventButton setOpen={setOpenAdd} />
 
                     <div className="flex items-center gap-2 pt-2">
-
                         <button
                             onClick={handlePrev}
                             className="px-3 py-1 bg-(--second-button-cal) rounded"
@@ -207,21 +200,19 @@ export default function CalendarPage() {
                             onClick={handleNext}
                             className="px-3 py-1 bg-(--second-button-cal) rounded"
                         >
-
                             <FontAwesomeIcon icon={faAngleRight} />
                         </button>
                     </div>
-
                 </div>
             </div>
 
-                         <EventDetails
-                                openEvent={open}
-                                selectedEvent={selectedEvent}
-                                setReload={setReload}
-                                setSelectedEvent={setSelectedEvent}
-                                setOpenEvent={setOpen}
-                            />
+            <EventDetails
+                openEvent={open}
+                selectedEvent={selectedEvent}
+                setReload={setReload}
+                setSelectedEvent={setSelectedEvent}
+                setOpenEvent={setOpen}
+            />
             <EventForm
                 open={openAdd}
                 setOpen={setOpenAdd}

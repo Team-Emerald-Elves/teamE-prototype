@@ -355,7 +355,8 @@ function FilterMenu({
                                                 : group.key,
                                         )
                                     }
-                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && 'bg-(--filter-hover)'} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}>
+                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && "bg-(--filter-hover)"} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}
+                                >
                                     <span className="pr-1">
                                         <HugeiconsIcon
                                             size={16}
@@ -405,7 +406,7 @@ function SelectedFilters({
                         onClick={() => onRemove(filter)}
                         className=" pr-2 text-(--table-text)"
                     >
-                            <HugeiconsIcon size={16} icon={X} />
+                        <HugeiconsIcon size={16} icon={X} />
                     </button>
                 </div>
             ))}

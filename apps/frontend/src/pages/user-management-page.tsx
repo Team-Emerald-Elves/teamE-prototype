@@ -4,6 +4,7 @@ import { useState } from "react";
 import UserManagementTable from "../components/user-management-table";
 import PageHeader from "@/components/page-header.tsx";
 import { columns } from "../components/employeeCols.tsx";
+import {useEffect} from "react";
 
 const helpSections = [
     {
@@ -30,6 +31,7 @@ const helpSections = [
 
 function UserManagementPage() {
     const [helpOpen, setHelpOpen] = useState(false);
+
 
     return (
         <>

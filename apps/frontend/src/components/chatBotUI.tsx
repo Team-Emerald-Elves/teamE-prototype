@@ -9,17 +9,46 @@ import {
 } from "@/components/ui/popover"
 import {useState} from "react";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import type {IFile} from "@/components/submitPopupConfirmation.tsx";
+import type {documentContent} from "@repo/database";
+import {getToken} from "@clerk/react";
+import qmgr from "@/lib/querymgr.ts";
+import * as React from "react";
+import DateAndTime from "./date.tsx";
 
 interface Message{
     role: "user" | "model",
     text: string,
 }
+type SubmitConfirmationPopupProps = {
+    type: string;
+    formData: {
+        id: number;
+        name: string;
+        url: string;
+        contentOwner: string;
+        role: string;
+        document_type: string;
+        expirationDate?: Date;
+        expirationTime: string;
+        document_status: string;
+        filePayload?: string;
+        fileName?: string;
+    };
+    refresh: (any: any) => void;
+    open: (arg: boolean) => void;
+    disabled: boolean;
+};
+
 console.log("Vite Key Check:", import.meta.env.VITE_GEMINI_API_KEY);
 export default function ChatBot(){
     const[messages, setMessages] =useState<Message[]>([]);
     const[input, setInput] = useState("");
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     const [isLoading, setIsLoading] = useState(false);
+    const [roles, setRoles] = React.useState<string[]>([]);
+    const [empID, setEmpID] = React.useState("");
     const handleSend = async() => {
         if (!input.trim() || isLoading) return;
 
@@ -37,7 +66,7 @@ export default function ChatBot(){
     Pages and Features:
     
     - Home Page:
-      Displays a dashboard that includes:
+      Displays a customizable dashboard that includes:
       - Favorited links and documents
       - Statistics (e.g., document view counts)
       - Employee information
@@ -75,6 +104,162 @@ export default function ChatBot(){
     - Reference specific pages and features when helping users.
     - Be concise and helpful.
     `;
+    const operations = [
+        {
+            function_declarations:[
+                {
+                    name: "addDoc",
+                    description: "adds a document to the database",
+                    parameters:{
+                        type: "object",
+                        properties:{
+                            name: {type: "string", description: "The name/title of the document"},
+                            url: {type: "string", description: "The url of the document"},
+                        },
+                        required: ["name", "url"]
+                    }
+                },
+            ]
+        }
+    ]
+    async function createNotif(doc: documentContent, action: string) {
+        const token = await getToken();
+
+        qmgr.wait(() => {
+            qmgr.getMe(async (res1) => {
+                if (!res1.success) {
+                    throw new Error("Unable to get me");
+                }
+                const me = res1.data!;
+                console.log(me);
+
+                const res = await fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            public: true,
+                            targetRoles: [doc.assigned_role, "Administrator"],
+                            title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                        }),
+                    },
+                );
+
+                if (!res.ok) {
+                    throw new Error("failed to create view notification");
+                }
+                console.log(await res.json());
+            });
+        });
+    }
+
+    async function loadUser() {
+        const token = await getToken();
+
+        const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/tests/me`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+
+        if (!res.ok) {
+            throw new Error("Failed to get current user");
+        }
+
+        const data = await res.json();
+
+        setEmpID(data.id);
+        setRoles(
+            (data.roles as string[]).map((role) => role.toLowerCase()),
+        );
+    }
+
+    React.useEffect(() => {
+        loadUser();
+    }, []);
+
+    function buildExpirationDate(
+        expirationDate?: Date,
+        expirationTime?: string,
+    ): string | undefined {
+        if (!expirationDate) return undefined;
+
+        const date = new Date(expirationDate);
+
+        if (expirationTime) {
+            const [hours = "0", minutes = "0", seconds = "0"] =
+                expirationTime.split(":");
+            date.setHours(Number(hours), Number(minutes), Number(seconds), 0);
+        }
+
+        return date.toISOString();
+    }
+    async function createDocument(
+        fileData: SubmitConfirmationPopupProps,
+        token: string,
+        refresh: (any: any) => void,
+    ) {
+        const data: IFile = {
+            id: fileData.formData.id,
+            name: fileData.formData.name,
+            url: fileData.formData.url || "Local upload",
+            content_owner: fileData.formData.contentOwner,
+            expiration_date: buildExpirationDate(
+                fileData.formData.expirationDate,
+                fileData.formData.expirationTime,
+            ),
+            document_type: fileData.formData.document_type,
+            document_status: fileData.formData.document_status,
+            assigned_role: fileData.formData.role,
+            filePayload: fileData.formData.filePayload,
+            fileName: fileData.formData.fileName,
+        };
+        console.log(data.assigned_role);
+
+        const endpoint =
+            fileData.type === "Create"
+                ? "/api/supabase/create-document"
+                : "/api/supabase/update-document";
+
+        const method = fileData.type === "Create" ? "POST" : "PUT";
+        const response = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}${endpoint}`,
+            {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            },
+        );
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error(errorText || "Network response was not ok");
+        }
+
+        const newDoc = await response.json();
+        console.log(newDoc);
+
+        if (fileData.type === "Create") {
+            createNotif(newDoc, "created");
+        } else {
+            createNotif(newDoc, "updated");
+        }
+
+        refresh((prev: any) => !prev);
+
+        return newDoc;
+    }
 
     const generateResponse = async (history: Message[]) => {
             try{
@@ -90,10 +275,51 @@ export default function ChatBot(){
                         systemInstruction:{
                             parts:[{text: navInstructions}]
                         },
-                        contents: formattedContents
+                        contents: formattedContents,
+                        tools: operations,
                     },
                     { headers: { "Content-Type": "application/json" } }
                 );
+                const candidate = response.data.candidates[0].content;
+                const part = candidate.parts[0];
+
+                if(part.functionCall){
+                    const {name,args} = part.functionCall;
+
+                    if(name === "addDoc"){
+                        try{
+                            const token = await getToken();
+                            const newDoc = {
+                                type: "Create",
+                                formData: {
+                                    id:1,
+                                    name: args.name,
+                                    url: args.url,
+                                    contentOwner: empID,
+                                    role: "UnderWriter",
+                                    expirationDate: undefined,
+                                    document_status: "not_started",
+                                    document_type: "reference"
+                                }
+                            }
+                            const addDocument = await createDocument(newDoc as any, token, ()=>{})
+                             const functionResponse = {
+                                role: "function",
+                                 parts: [{
+                                    functionResponse: {
+                                        name: "addDoc",
+                                        response: {content: `Successfully created document: ${addDocument.name}`},
+                                    }
+                                 }]
+                             };
+                            await generateResponse([...history, candidate, functionResponse]);
+                            return;
+                        }
+                        catch(err) {
+                            console.error(err);
+                        }
+                    }
+                }
 
                 const botText = response.data.candidates[0]?.content?.parts[0]?.text || "No response received.";
 
@@ -121,7 +347,10 @@ export default function ChatBot(){
                                 ? "bg-[#5f935a] text-white ml-auto"
                                 : "bg-gray-200 text-gray-800 mr-auto"
                         }`} >
-                            {message.text}</div>
+                            <ReactMarkdown>
+                                {message.text}
+                            </ReactMarkdown>
+                        </div>
                     ))}
                 {isLoading && <div className="text-xs text-gray-400 animate-pulse">Thinking...</div>}
                 </div>

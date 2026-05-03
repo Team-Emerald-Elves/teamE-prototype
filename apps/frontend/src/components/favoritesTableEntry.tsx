@@ -210,10 +210,12 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
                     <DocTag background={statusBackground}>{status}</DocTag>
                 </div>
             </TableCell>
-            <TableCell className="flex text-[14px] font-small text-(--table-text) justify-center w-full">
-                <Button onClick={async () => await handleDownload(props.d)}>
-                    <HugeiconsIcon icon={Download01Icon} color = "white"  />
-                </Button>
+            <TableCell>
+                <div className="flex justify-center">
+                    <Button onClick={async () => await handleDownload(props.d)}>
+                        <HugeiconsIcon icon={Download01Icon} color = "white"  />
+                    </Button>
+                </div>
             </TableCell>
         </TableRow>
     );

@@ -6,13 +6,13 @@ import { Info } from "lucide-react";
 import {
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Popover,
     PopoverContent,
@@ -105,7 +105,7 @@ export default function Favorites() {
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-(--card-header) text-(--table-titles))">
                                 <TableRow>
-                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm rounded-bl-lg ">
                                         Favorite
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
@@ -125,7 +125,7 @@ export default function Favorites() {
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Tags
                                     </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm rounded-br-lg">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -212,6 +212,21 @@ export default function Favorites() {
                                         }}
                                     />
                                 ))}
+                                {favoriteDocs.length > 0 && (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={7}
+                                            className="text-center text-xs text-(--ring) py-5"
+                                        >
+                                            You've reached the end
+                                            <span className = "px-1">·</span>
+                                            {favoriteDocs.length} document{favoriteDocs.length !== 1 ? "s" : ""}
+
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+
+
                             </TableBody>
                         </Table>
 
@@ -268,7 +283,7 @@ export default function Favorites() {
                 <TabsContent value="links">
                     <div className="bg-card rounded-xl shadow-none border-0 p-4 relative overflow-visible">
                         <Table className="border rounded-lg overflow-hidden ">
-                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles) rounded-bl-lg">
                                 <TableRow>
                                     <TableHead className="text-(--table-titles) text-center font-medium text-sm">
                                         Favorite
@@ -282,7 +297,7 @@ export default function Favorites() {
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Role
                                     </TableHead>
-                                    <TableHead className="text-(--table-titles) font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) font-medium text-sm rounded-br-lg">
                                         Last Modified
                                     </TableHead>
                                 </TableRow>
@@ -375,6 +390,19 @@ export default function Favorites() {
                                         }}
                                     />
                                 ))}
+                                {favoriteLinks.length > 0 && (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={7}
+                                            className="text-center text-xs text-(--ring) py-5"
+                                        >
+                                            You've reached the end
+                                            <span className = "px-1">·</span>
+                                            {favoriteLinks.length} link{favoriteLinks.length !== 1 ? "s" : ""}
+
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
 

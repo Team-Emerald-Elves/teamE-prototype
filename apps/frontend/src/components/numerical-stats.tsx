@@ -20,7 +20,7 @@ function StatItem({ icon: Icon, value, label }) {
         <div className="flex flex-col items-center ">
             <div className="relative flex items-center justify-center size-[50px] min-w-[50px]">
                 <div className="absolute inset-0 rounded-full border-4 border-[#c2d2cf] border-b-transparent"></div>
-                <Icon size={26} color="#013C5A" />
+                <Icon size={26} color="var(--table-titles)" />
             </div>
             <span className="text-xl font-bold">{value}</span>
             <span className="text-s text-gray-500 font-semibold">{label}</span>

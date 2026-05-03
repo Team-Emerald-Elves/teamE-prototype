@@ -82,3 +82,7 @@ html {
     opacity: 0.8;
     border-radius: 15px;
 }
+
+.react-resizable-handle::after {
+    border-color: var(--table-text) !important;
+}

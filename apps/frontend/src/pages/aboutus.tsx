@@ -24,6 +24,7 @@ const teamMembers = [
         name: "Alex Law",
         role: "Full-Time Software Engineer",
         image: "/alexprofile.png",
+        quote: "Be 1% better than you were yesterday."
     },
     {
         name: "Zara Jaferi",

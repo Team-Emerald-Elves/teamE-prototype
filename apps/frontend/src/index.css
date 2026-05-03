@@ -121,7 +121,7 @@ html.dark {
     --card: oklch(0.205 0 0);
     --card-header: oklch(0.19 0 0);
     --card-title: #1f5681;
-    --table-titles: #136693;
+    --table-titles: #1d84bb;
     --table-hover: var(--color-gray-900);
     --table-text: var(--color-gray-50);
     --tab-text: var(--color-gray-950);

@@ -12,12 +12,13 @@ const teamMembers = [
         name: "Anastasia Kelnik",
         role: "Assistant Lead Software Engineer",
         image: "/anastasiaprofile.png",
-        quote: "How lucky i am  to have something that makes saying goodbye so hard. - Winnie the Pooh"
+        quote: "How lucky I am  to have something that makes saying goodbye so hard. - Winnie the Pooh"
     },
     {
         name: "Colin Teahan",
         role: "Assistant Lead Software Engineer",
         image: "/colinprofile.png",
+        quote: "To doubt everything or to believe everything are two equally convenient solutions; both dispense with the necessity of reflection. -Jules Henri Poincaré"
     },
     {
         name: "Alex Law",
@@ -46,6 +47,7 @@ const teamMembers = [
         name: "Sylvia Jacobs",
         role: "Project Manager",
         image: "/sylviajprofile.png",
+        quote: "One day we'll look back at where we started and be amazed by how far we've come - Technoblade"
     },
     {
         name: "Sylvia Strayer",

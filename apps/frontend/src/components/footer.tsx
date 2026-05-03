@@ -89,6 +89,11 @@ function Footer() {
                                         Credits
                                     </FooterLink>
                                 </li>
+                                <li>
+                                    <FooterLink to="/aboutus">
+                                        About Us
+                                    </FooterLink>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -212,7 +212,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             </TableCell>
             <TableCell className="flex text-[14px] font-small text-(--table-text) justify-center w-full">
                 <Button onClick={async () => await handleDownload(props.d)}>
-                    <HugeiconsIcon icon={Download01Icon} />
+                    <HugeiconsIcon icon={Download01Icon} color = "white"  />
                 </Button>
             </TableCell>
         </TableRow>

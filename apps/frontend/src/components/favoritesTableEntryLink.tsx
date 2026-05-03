@@ -72,7 +72,7 @@ export default function FavoritesTableEntryLink(props: FavoriteProps) {
     const mod = new Date(props.l.updated_at);
     const created = new Date(props.l.created_at);
     return (
-        <TableRow key={props.l.id} className="hover:bg-(--table-hover) transition h-12">
+        <TableRow key={props.l.id} className="hover:bg-(--table-hover) transition h-14">
             <FavoriteStar
                 doc={props.l}
                 onToggleOff={props.onToggleOff}

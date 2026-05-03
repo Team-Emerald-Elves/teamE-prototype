@@ -102,7 +102,7 @@ export function UserLogs() {
     return (
         <>
             <Card className="flex flex-col relative ring-0">
-                <CardHeader className="flex items-center gap-2 space-y-0 border-0 py-2 sm:flex-row bg-(--card)">
+                <CardHeader className="flex items-center gap-1 space-y-0 border-0 py-1 sm:flex-row bg-(--card)">
                     <div className="grid flex-1 gap-1">
                         <CardTitle className="text-2xl text-(--card-title)">
                             User Activity
@@ -117,7 +117,7 @@ export function UserLogs() {
                     <ScrollArea className="h-full">
                         {Object.entries(grouped).map(([date, logs]) => (
                             <div key={date}>
-                                <p className="text-center text-xs font-semibold text-gray-500 pb-1">
+                                <p className="text-center text-xs font-semibold text-gray-500 pb-0">
                                     {formatDateLabel(date)}
                                 </p>
                                 <Table className="w-full">
@@ -137,7 +137,7 @@ export function UserLogs() {
                                                                 </span>{" "}
                                                                 {n.title.split(" ").slice(2, 3).join(" ")}{" "}
 
-                                                                <span className="text-[#768b6c] font-semibold">
+                                                                <span className="text-(--secondary) font-semibold">
                                                                     {n.title.split(" ").slice(3).join(" ")}
                                                                 </span>
                                                             </div>

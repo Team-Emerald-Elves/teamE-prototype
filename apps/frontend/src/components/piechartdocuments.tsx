@@ -21,18 +21,6 @@ import {
 
 export const description = "A pie chart with stacked sections";
 
-const statusData = [
-    { Status: "Not Started", Count: 186, fill: "#C4C4C4FF" },
-    { Status: "In Progress", Count: 305, fill: "#f8d785" },
-    { Status: "Needs Review", Count: 237, fill: "#f8b364" },
-    { Status: "Done", Count: 173, fill: "#6db460" },
-    { Status: "Expired", Count: 209, fill: "#da716b" },
-];
-
-const docData = [
-    { Doc: "Workflow", Count: 80, fill: "#a0cbcb" },
-    { Doc: "Reference", Count: 200, fill: "#7db0b6" },
-];
 
 const chartConfig = {
     visitors: {
@@ -165,16 +153,16 @@ export function ChartPieStacked() {
                             data={statusData}
                             dataKey="Count"
                             nameKey="Status"
-                            strokeWidth={3}
-                            stroke="White"
+                            strokeWidth={2}
+                            stroke= "none"
                             outerRadius={60}
                         />
                         <Pie
                             data={docData}
                             dataKey="Count"
                             nameKey="Doc"
-                            strokeWidth={3}
-                            stroke="White"
+                            strokeWidth={2}
+                            stroke= "none"
                             innerRadius={70}
                             outerRadius={90}
                         />

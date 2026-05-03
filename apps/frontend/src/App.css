@@ -1,7 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
+
 .main {
     flex-grow: 1;
+    min-height: 95vh;
+}
+
+html {
+    scrollbar-color: var(--ring) transparent;
 }
 
 
@@ -75,4 +81,8 @@
     background-color: #ff8989 !important;
     opacity: 0.8;
     border-radius: 15px;
+}
+
+.react-resizable-handle::after {
+    border-color: var(--table-text) !important;
 }

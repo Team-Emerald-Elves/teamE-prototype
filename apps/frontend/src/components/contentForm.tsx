@@ -101,7 +101,7 @@ function ContentForm(props: contentFormProps) {
             formData.name &&
             formData.url &&
             formData.contentOwner &&
-            formData.role &&
+            (formData.role || !isAdmin) &&
             formData.document_type &&
             formData.document_status &&
             formData.expirationDate &&
@@ -481,7 +481,6 @@ function ContentForm(props: contentFormProps) {
                         onUpload={uploadHandler}
                     />
 
-                    <p>Last Modified: {formattedDate}</p>
                     <DialogFooter>
                         <DialogClose
                             render={

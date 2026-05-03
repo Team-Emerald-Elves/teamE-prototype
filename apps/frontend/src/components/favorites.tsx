@@ -72,7 +72,7 @@ export default function Favorites() {
     return (
         <>
             <div className="max-w-10xl mx-auto relative">
-                <div className="flex items-center justify-between mb-1 pt-2">
+                <div className="flex items-center justify-between mb-1 pt-0">
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon
                             icon={solidStar}

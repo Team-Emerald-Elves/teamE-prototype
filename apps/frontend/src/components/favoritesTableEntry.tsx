@@ -155,7 +155,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             break;
     }
     return (
-        <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-12">
+        <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-14">
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
@@ -204,7 +204,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             </TableCell>
 
             <TableCell>
-                <div className="flex flex-wrap gap-1 mt-2 text-(--tab-text)">
+                <div className="flex flex-wrap gap-1 text-(--tab-text)">
                     <DocTag background={roleBackground}>{role}</DocTag>
                     <DocTag background={docBackground}>{type}</DocTag>
                     <DocTag background={statusBackground}>{status}</DocTag>

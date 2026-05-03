@@ -72,7 +72,7 @@ export default function Favorites() {
     return (
         <>
             <div className="max-w-10xl mx-auto relative">
-                <div className="flex items-center justify-between mb-4 pt-2">
+                <div className="flex items-center justify-between mb-1 pt-2">
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon
                             icon={solidStar}
@@ -101,7 +101,7 @@ export default function Favorites() {
                     <TabsTrigger value="links">Links</TabsTrigger>
                 </TabsList>
                 <TabsContent value="docs">
-                    <div className="bg-(--card) rounded-xl border-0 p-4 relative">
+                    <div className="bg-(--card) rounded-xl border-0 p-1 relative">
                         <Table className="border rounded-lg overflow-hidden">
                             <TableHeader className="bg-(--card-header) text-(--table-titles))">
                                 <TableRow>
@@ -281,11 +281,11 @@ export default function Favorites() {
                 </TabsContent>
 
                 <TabsContent value="links">
-                    <div className="bg-card rounded-xl shadow-none border-0 p-4 relative overflow-visible">
+                    <div className="bg-card rounded-xl shadow-none border-0 p-1 relative">
                         <Table className="border rounded-lg overflow-hidden ">
-                            <TableHeader className="bg-(--card-header) text-(--table-titles) rounded-bl-lg">
+                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 <TableRow>
-                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm">
+                                    <TableHead className="text-(--table-titles) text-center font-medium text-sm rounded-bl-lg">
                                         Favorite
                                     </TableHead>
                                     <TableHead className="text-(--table-titles) font-medium text-sm">

@@ -15,7 +15,7 @@ import type {documentContent, Links as linksData} from "@repo/database";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 import * as React from "react";
-import DateAndTime from "./date.tsx";
+import FileUpload from "./fileUpload.tsx";
 
 interface Message{
     role: "user" | "model",
@@ -192,6 +192,29 @@ export default function ChatBot(){
             ]
         }
     ]
+    const [filePayload, setFilePayload] = React.useState<string | undefined>(undefined);
+    const [fileName, setFileName] = React.useState<string | undefined>(undefined);
+
+    const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () =>
+                resolve((reader.result as string).split(",")[1]); // strip data URL prefix
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+    const uploadHandler = (files: File[]) => {
+        if (!files || files.length < 1) return;
+        toBase64(files[0]).then(
+            (data) => {
+                setFilePayload(data);
+                setFileName(files[0].name);
+            },
+            (err) => console.error(err),
+        );
+    };
+
     async function createNotifDoc(doc: documentContent, action: string) {
         const token = await getToken();
 
@@ -494,9 +517,13 @@ export default function ChatBot(){
                             document_status: args.document_status,
                             document_type: args.document_type || "Reference",
                             favorite: args.favorite,
+                            filePayload: args.filePayload,
+                            fileName: args.fileName,
                         }
                     };
                     const editDocument = await createDocument(newDoc as any, token, () => {});
+                    setFileName(undefined);
+                    setFilePayload(undefined);
                     functionResult = `Successfully updated document: ${editDocument.name}`;
                 } else if (name === "findDocumentByName") {
                     try {
@@ -641,6 +668,11 @@ export default function ChatBot(){
                 </div>
                 <div className="flex w-full items-center gap-2 border-t p-2">
                     <Input id="chatBar" value={input} onKeyDown={(e) => e.key === 'Enter' && handleSend()} onChange={(e) => setInput(e.target.value)} placeholder="Enter chat" />
+                    <FileUpload
+                        dnd={true}
+                        show={true}
+                        onUpload={uploadHandler}
+                    />
                     <Button variant="ghost" onClick={handleSend} ><Send /></Button>
                 </div>
 

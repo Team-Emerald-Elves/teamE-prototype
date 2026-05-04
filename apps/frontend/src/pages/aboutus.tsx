@@ -7,14 +7,14 @@ const teamMembers = [
         name: "Brycen Pina",
         role: "Lead Software Engineer",
         image: "/brycenprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/brycen-pina/",
         quote: "Always bear in mind that your own resolution to succeed, is more important than any other one thing. — Abraham Lincoln",
     },
     {
         name: "Anastasia Kelnik",
         role: "Assistant Lead Software Engineer",
         image: "/anastasiaprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/anastasia-kelnik-4773a8265/",
         quote: "How lucky I am  to have something that makes saying goodbye so hard. - Winnie the Pooh",
     },
     {
@@ -35,7 +35,7 @@ const teamMembers = [
         name: "Zara Jaferi",
         role: "Full-Time Software Engineer",
         image: "/zaraprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/zara-jaferi-841473251/",
         quote: "Stop trying. Take long walks. Look at scenery. Doze off at noon. Don't even think about flying. And then, pretty soon, you'll be flying again. - Ursula, Kiki's Delivery Service",
     },
     {
@@ -56,14 +56,14 @@ const teamMembers = [
         name: "Elliot Ghidall",
         role: "Product Owner",
         image: "/elliotprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/elliot-ghidali-482132260/",
         quote: "We are trying to prove ourselves wrong as quickly as possible, because only in that way can we find progress. ― Richard P. Feynman",
     },
     {
         name: "Sylvia Jacobs",
         role: "Project Manager",
         image: "/sylviajprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/sylvia-jacobs-a6157a355/",
         quote: "One day we'll look back at where we started and be amazed by how far we've come - Technoblade",
     },
     {

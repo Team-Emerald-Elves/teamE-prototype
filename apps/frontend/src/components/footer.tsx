@@ -44,11 +44,7 @@ function Footer() {
                                 Company
                             </h3>
                             <ul className="space-y-2 text-sm text-white">
-                                <li>
-                                    <FooterLink to="/aboutus">
-                                        About Us
-                                    </FooterLink>
-                                </li>
+
                                 <li>
                                     <a href="#">440 Lincoln St</a>
                                 </li>

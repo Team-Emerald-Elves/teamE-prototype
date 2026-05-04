@@ -240,12 +240,12 @@ function Navbar(props: NavbarProps) {
 
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-10">
-                        <NavigationMenuItem>
-                            <button className="mt-1" onClick={toggleTheme}>
+                        <NavigationMenuItem className="transition-transform hover:scale-110 active:scale-90 duration-100">
+                            <button className="px-2 py-1 flex items-center" onClick={toggleTheme}>
                                 {theme === "light" ? (
-                                    <HugeiconsIcon icon={Moon02Icon} />
+                                    <HugeiconsIcon icon={Moon02Icon}/>
                                 ) : (
-                                    <HugeiconsIcon icon={Sun03Icon} />
+                                    <HugeiconsIcon icon={Sun03Icon}/>
                                 )}
                             </button>
                         </NavigationMenuItem>

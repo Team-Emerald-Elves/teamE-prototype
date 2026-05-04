@@ -1,6 +1,6 @@
 import { Button } from "./ui/button.tsx";
 import { MessageCircle, Send  } from 'lucide-react';
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea";
 
 import {
     Popover,
@@ -15,7 +15,7 @@ import type {documentContent, Links as linksData} from "@repo/database";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 import * as React from "react";
-import FileUpload from "./fileUpload.tsx";
+import FileUploadChatBot from "./fileUploadChatBot.tsx";
 
 interface Message{
     role: "user" | "model",
@@ -683,7 +683,7 @@ export default function ChatBot(){
                         <MessageCircle className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                        <p className="text-white font-semibold text-sm leading-tight">CMS Assistant</p>
+                        <p className="text-white font-semibold text-sm leading-tight">Chat Assistant</p>
                         <p className="text-green-100 text-xs">Always here to help</p>
                     </div>
                     <div className="ml-auto flex items-center gap-1.5">
@@ -696,10 +696,6 @@ export default function ChatBot(){
                 <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50/50">
                     {messages.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-full gap-2 text-center">
-                            <div className="w-12 h-12 rounded-full flex items-center justify-center mb-1"
-                                 style={{ background: "linear-gradient(135deg, #5f935a22, #3d6b3911)" }}>
-                                <MessageCircle className="w-5 h-5" style={{ color: "#5f935a" }} />
-                            </div>
                             <p className="text-sm font-medium text-gray-600">How can I help you today?</p>
                             <p className="text-xs text-gray-400">Ask me about documents, links, or navigation.</p>
                         </div>
@@ -742,15 +738,21 @@ export default function ChatBot(){
                 </div>
 
                 <div className="flex items-center gap-2 px-3 py-3 border-t border-gray-100 bg-white">
-                    <FileUpload dnd={true} show={true} onUpload={uploadHandler} />
-                    <Input
+                    <FileUploadChatBot dnd={true} show={true} onUpload={uploadHandler} />
+                    <Textarea
                         id="chatBar"
                         value={input}
                         disabled={!currentRole}
-                        onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={currentRole ? "Type a message..." : "Loading..."}
-                        className="flex-1 rounded-full border-gray-200 bg-gray-50 text-sm px-4 focus-visible:ring-1 focus-visible:ring-green-500"
+                        className="flex-1 rounded-2xl border-gray-200 bg-gray-50 text-sm px-4 py-2 min-h-[40px] max-h-[120px] overflow-y-auto resize-none focus-visible:ring-1 focus-visible:ring-green-500"
+                        rows={1}
                     />
                     <Button
                         onClick={handleSend}

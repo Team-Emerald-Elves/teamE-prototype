@@ -240,19 +240,23 @@ function Navbar(props: NavbarProps) {
 
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-10">
-                        <NavigationMenuItem className="transition-transform hover:scale-110 active:scale-90 duration-100">
-                            <button className="px-2 py-1 flex items-center" onClick={toggleTheme}>
+                        <NavigationMenuItem>
+                            <button className="flex items-center transition-transform hover:scale-110 active:scale-95 duration-100 ease-in-out" onClick={toggleTheme}>
                                 {theme === "light" ? (
-                                    <HugeiconsIcon icon={Moon02Icon}/>
+                                    <HugeiconsIcon icon={Moon02Icon }
+                                                   className= {navigationMenuTriggerStyle() }
+                                    />
                                 ) : (
-                                    <HugeiconsIcon icon={Sun03Icon}/>
+                                    <HugeiconsIcon icon={Sun03Icon}
+                                                   className= {navigationMenuTriggerStyle() }
+                                    />
                                 )}
                             </button>
                         </NavigationMenuItem>
 
-                        <NavigationMenuItem className="relative">
+                        <NavigationMenuItem className="relative flex items-center transition-transform">
                             <button
-                                className="relative mt-1"
+                                className="relative hover:scale-110 active:scale-95 duration-100 ease-in-out"
                                 onClick={async () => {
                                     setShowNotification((prev) => !prev);
 
@@ -270,13 +274,13 @@ function Navbar(props: NavbarProps) {
                                     }
                                 }}
                             >
-                                {unread && (
-                                    <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-orange-500 z-10" />
-                                )}
+                                <span className="absolute right-2 top-1 h-2.5 w-2.5 rounded-full bg-red-500 z-10" />
+
 
                                 <Bell
-                                    size={18}
-                                    className={navigationMenuTriggerStyle()}
+
+                                    size={20}
+                                    className= {navigationMenuTriggerStyle() }
                                 />
                             </button>
 

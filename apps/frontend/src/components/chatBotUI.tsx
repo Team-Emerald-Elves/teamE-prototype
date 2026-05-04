@@ -1,6 +1,6 @@
 import { Button } from "./ui/button.tsx";
 import { MessageCircle, Send  } from 'lucide-react';
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea";
 
 import {
     Popover,
@@ -15,7 +15,7 @@ import type {documentContent, Links as linksData} from "@repo/database";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 import * as React from "react";
-import FileUpload from "./fileUpload.tsx";
+import FileUploadChatBot from "./fileUploadChatBot.tsx";
 
 interface Message{
     role: "user" | "model",
@@ -94,7 +94,12 @@ export default function ChatBot(){
       Accessible only to admin users. Displays all employees in the company.
     
     -Adding documents:
-        Name, fileName,and document type are required, if document type is not specified assume the document type is Reference, the filename is uploaded by the user 
+        Name, fileName, and document type are required.
+        NEVER ask the user for the fileName — it is ALWAYS automatically provided by the file upload button in the UI.
+        When a user wants to add a document, call addDoc immediately using "SYSTEM_FILE" as the fileName value.
+        The real file is always already uploaded by the user via the UI before they send their message.
+        If document type is not specified, assume "Reference".
+        If name is not explicitly specified, use the fileName without its extension as the name.
     -editing documents:
         ALWAYS call findDocumentByName first to get the document's real ID before calling editDoc.
         Only change the fields the user specifies, keep all other fields exactly as returned by findDocumentByName.
@@ -102,6 +107,7 @@ export default function ChatBot(){
         NEVER ask the user "What is the filename?" or "Please upload the file." 
         If a user says "Update this document with my new file," assume the file is already handled by the system and call editDoc immediately.
         Leave fileName and filePayload as undefined in your function call unless the user explicitly mentions a NEW filename in their text.
+        DO NOT let users who do not have the same role as the the assigned_role of the document edit the document unless their role is administrator
     -Adding links:
         Link Name and url are required
     -editing documents:
@@ -112,6 +118,7 @@ export default function ChatBot(){
     - Provide clear navigation guidance based on user requests.
     - Reference specific pages and features when helping users.
     - Be concise and helpful.
+    -Before editing documents or links always ask if the user is sure before updating the document or link if they say no do not update
     `;
     const operations = [
         {
@@ -443,7 +450,6 @@ export default function ChatBot(){
     const generateResponse = async (initialHistory: any[]) => {
         let history = initialHistory;
 
-        // Loop instead of recurse — avoids multiple finally blocks firing
         while (true) {
             const formattedContents = history.map(msg => {
                 if (msg.parts) {
@@ -557,7 +563,6 @@ export default function ChatBot(){
                         );
 
                         if (match) {
-                            // Return the full document so Gemini can preserve unchanged fields in editDoc
                             functionResult = JSON.stringify({
                                 id: match.id,
                                 name: match.name,
@@ -638,8 +643,6 @@ export default function ChatBot(){
                 console.error(err);
             }
 
-            // Update history and loop back for Gemini's natural language reply
-            // 500ms delay to respect rate limits
             await new Promise(resolve => setTimeout(resolve, 500));
 
             history = [
@@ -655,43 +658,112 @@ export default function ChatBot(){
                     }]
                 }
             ];
-            // Loop continues — next iteration sends updated history
         }
     };
-    return(
+    return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button className="fixed bottom-6 right-6 w-12 h-12 rounded-full p-0 flex bg-[#5f935a] text-color-white items-center justify-center shadow-lg">
-                    <MessageCircle /></Button>
+                <Button className="fixed z-50 bottom-6 right-6 w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-xl border-2 border-white/20 transition-transform hover:scale-105 active:scale-95"
+                        style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}>
+                    <MessageCircle className="w-6 h-6 text-white" />
+                </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 h-96 p-0 flex flex-col">
-                <div className="flex-1 overflow-y-auto p-3">
-                    <p className="text-sm text-gray-500">Start chatting...</p>
-                </div>
-                <div className="flex flex-col overflow-y-auto p-3 space-y-2 items-end">
-                    {messages.map((message,index) => (
-                        <div key={index} className={`p-2 rounded-md text-sm w-fit max-w-[85%] ${
-                            message.role === "user"
-                                ? "bg-[#5f935a] text-white ml-auto"
-                                : "bg-gray-200 text-gray-800 mr-auto"
-                        }`} >
-                            <ReactMarkdown>
-                                {message.text}
-                            </ReactMarkdown>
-                        </div>
-                    ))}
-                {isLoading && <div className="text-xs text-gray-400 animate-pulse">Thinking...</div>}
-                </div>
-                <div className="flex w-full items-center gap-2 border-t p-2">
-                    <Input id="chatBar" value={input} onKeyDown={(e) => e.key === 'Enter' && handleSend()} onChange={(e) => setInput(e.target.value)} placeholder="Enter chat" />
-                    <FileUpload
-                        dnd={true}
-                        show={true}
-                        onUpload={uploadHandler}
-                    />
-                    <Button variant="ghost" onClick={handleSend} ><Send /></Button>
+
+            <PopoverContent
+                className="p-0 flex flex-col overflow-hidden rounded-2xl border border-gray-200/80"
+                style={{
+                    width: "360px",
+                    height: "520px",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08)",
+                }}
+            >
+                {/* Header */}
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100"
+                     style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}>
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                        <p className="text-white font-semibold text-sm leading-tight">Chat Assistant</p>
+                        <p className="text-green-100 text-xs">Always here to help</p>
+                    </div>
+                    <div className="ml-auto flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+                        <span className="text-green-100 text-xs">Online</span>
+                    </div>
                 </div>
 
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-gray-50/50">
+                    {messages.length === 0 && (
+                        <div className="flex flex-col items-center justify-center h-full gap-2 text-center">
+                            <p className="text-sm font-medium text-gray-600">How can I help you today?</p>
+                            <p className="text-xs text-gray-400">Ask me about documents, links, or navigation.</p>
+                        </div>
+                    )}
+
+                    {messages.map((message, index) => (
+                        <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                            {message.role === "model" && (
+                                <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center mr-2 mt-1"
+                                     style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}>
+                                    <MessageCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
+                            <div className={`px-3 py-2 rounded-2xl text-sm max-w-[75%] leading-relaxed ${
+                                message.role === "user"
+                                    ? "text-white rounded-br-sm"
+                                    : "bg-white text-gray-800 rounded-bl-sm shadow-sm border border-gray-100"
+                            }`}
+                                 style={message.role === "user" ? {
+                                     background: "linear-gradient(135deg, #5f935a, #3d6b39)",
+                                 } : {}}>
+                                <ReactMarkdown>{message.text}</ReactMarkdown>
+                            </div>
+                        </div>
+                    ))}
+
+                    {isLoading && (
+                        <div className="flex justify-start items-center gap-2">
+                            <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center"
+                                 style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}>
+                                <MessageCircle className="w-3 h-3 text-white" />
+                            </div>
+                            <div className="bg-white border border-gray-100 shadow-sm px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1 items-center">
+                                <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                                <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                                <span className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2 px-3 py-3 border-t border-gray-100 bg-white">
+                    <FileUploadChatBot dnd={true} show={true} onUpload={uploadHandler} />
+                    <Textarea
+                        id="chatBar"
+                        value={input}
+                        disabled={!currentRole}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder={currentRole ? "Type a message..." : "Loading..."}
+                        className="flex-1 rounded-2xl border-gray-200 bg-gray-50 text-sm px-4 py-2 min-h-[40px] max-h-[120px] overflow-y-auto resize-none focus-visible:ring-1 focus-visible:ring-green-500"
+                        rows={1}
+                    />
+                    <Button
+                        onClick={handleSend}
+                        disabled={!input.trim() || isLoading}
+                        className="w-9 h-9 rounded-full p-0 flex items-center justify-center flex-shrink-0 transition-transform hover:scale-105 active:scale-95 disabled:opacity-40"
+                        style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}
+                    >
+                        <Send className="w-4 h-4 text-white" />
+                    </Button>
+                </div>
             </PopoverContent>
         </Popover>
     )

@@ -59,7 +59,9 @@ console.log(
 app.use(cors(corsOptions));
 
 // Middleware.
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    limit: parseInt(process.env.FILE_UPLOAD_LIMIT ?? "1000000")
+}));
 app.use(clerkMiddleware());
 
 // Router-level middleware.

@@ -1,6 +1,6 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Plus} from "lucide-react";
+import { ArrowUpDown, Plus ,Tag} from "lucide-react";
 
 import { Button } from "./ui/button.tsx";
 import DocTag from "@/components/docTag.tsx";
@@ -81,28 +81,6 @@ async function updateTags(lId: string, tags: string[]) {
 
     return res.json();
 }
-async function removeTag(lId: string, tag: string) {
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/delete-link-tag`,
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: lId,
-                meta_tag: tag,
-            }),
-        },
-    );
-
-    if (!res.ok) {
-        throw new Error("Failed to update tags");
-    }
-
-    return res.json();
-}
-
 async function createNotif(link: Links, action: string) {
     qmgr.wait(() => {
         qmgr.getMe(async (res1) => {
@@ -306,9 +284,12 @@ export const columns: ColumnDef<Links>[] = [
                 new Set(
                     table
                         .getCoreRowModel()
-                        .rows.flatMap(
-                            (r) => (r.original as Links).meta_tags??[],
-                        ),
+                        .rows.flatMap((r) => {
+                            const other = r.original as Links;
+                            return other.id === link.id
+                                ? tagList
+                                : (other.meta_tags ?? []);
+                        }),
                 ),
             ).sort();
             const suggestions = allTags.filter(
@@ -323,9 +304,9 @@ export const columns: ColumnDef<Links>[] = [
             };
 
             return (
-                <div className="flex flex-wrap items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1 w-full">
                     {tagList.map((item) => (
-                        <div className="text-center" key={item}>
+                        <div className="text-center shrink-0" key={item}>
                             <DocTag background="bg-gray-200">{item}</DocTag>
                         </div>
                     ))}
@@ -333,9 +314,9 @@ export const columns: ColumnDef<Links>[] = [
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-4 w-4 ml-1 p-0 leading-none flex items-center justify-center text-center"
+                                className="h-5 w-5 ml-1 p-0 leading-none flex items-center justify-center text-center"
                             >
-                                <Plus className="h-3 w-3" />
+                                <Tag className="h-3 w-3" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">
@@ -351,9 +332,7 @@ export const columns: ColumnDef<Links>[] = [
                                         newTags as string[],
                                     ).catch(console.error);
                                 }}
-                                remove={async (tagToRemove: string) => {
-                                    await removeTag(link.id, tagToRemove);
-                                }}
+                                remove={() => {}}
                                 placeholder="Add tag..."
                                 onInputChange={setFilter}
                             />
@@ -366,7 +345,7 @@ export const columns: ColumnDef<Links>[] = [
                                             addTag(tag);
                                             setFilter("");
                                         }}
-                                        className="border bg-gray-200 hover:bg-gray-300 text-xs px-2 h-5 rounded-sm"
+                                        className="border bg-gray-200 hover:bg-gray-500 text-xs px-2 h-5 rounded-sm"
                                     >
                                         {tag}
                                     </button>

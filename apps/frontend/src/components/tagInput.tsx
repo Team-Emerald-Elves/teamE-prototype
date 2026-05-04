@@ -56,7 +56,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
                             <Button
                                 type="button"
                                 variant="ghost"
-                                onClick={() => removeTag(tag, remove)}
+                                onClick={() => removeTag(tag)}
                                 className={cn(
                                     "py-1 px-3 h-full hover:bg-transparent",
                                 )}

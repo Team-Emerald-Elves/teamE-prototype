@@ -468,7 +468,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                     onClick={() =>
                                         setIsDropdownOpen((prev) => !prev)
                                     }
-                                    className="flex px-4 py-1 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 bg-primary text-white hover:bg-primary/80 rounded-md"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon

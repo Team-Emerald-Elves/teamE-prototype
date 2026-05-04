@@ -46,6 +46,7 @@ type contentFormProps = {
     currentExpirationTime: string;
     currentStatus: string;
     currentID: number;
+    currentDocType: string;
     size: boolean;
     lock: string;
     refresh?: (any: any) => void;
@@ -69,7 +70,6 @@ type FormDataType = {
 function ContentForm(props: contentFormProps) {
     const { getToken } = useAuth();
     const now = new Date();
-    const formattedDate = now.toLocaleString();
     const ROLE_LABELS: Record<string, string> = {
         administrator: "Administrator",
         businessanalyst: "BusinessAnalyst",
@@ -78,7 +78,7 @@ function ContentForm(props: contentFormProps) {
         exceloperator: "ExcelOperator",
         actuarialanalyst: "ActuarialAnalyst",
     };
-    const currentRole = ROLE_LABELS[props.roles.at(0) as string];
+
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
@@ -88,8 +88,8 @@ function ContentForm(props: contentFormProps) {
         name: props.currentName ?? "",
         url: props.currentURL ?? "",
         contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46",
-        role: props.currentRole === "Select Role" ? props.currentRole : ROLE_LABELS[props.currentRole],
-        document_type: "",
+        role: props.currentRole === "Select Role" ? props.currentRole : (props.type === "Create" ? ROLE_LABELS[props.currentRole] : props.currentRole),
+        document_type: props.currentDocType,
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
         document_status: props.currentStatus ?? "",
@@ -318,7 +318,7 @@ function ContentForm(props: contentFormProps) {
                                         Select Role For Content
                                     </Label>
                                     <Select
-                                        value={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
+                                        value={props.currentRole === "Select Role" ? props.currentRole : (props.type === "Create" ? ROLE_LABELS[props.currentRole] : props.currentRole)}
                                         onValueChange={(value) =>
                                             setFormData((prev) => ({
                                                 ...prev,
@@ -376,22 +376,22 @@ function ContentForm(props: contentFormProps) {
                             >
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem
-                                        value="workflow"
-                                        id="workflow"
+                                        value="Workflow"
+                                        id="Workflow"
                                     ></RadioGroupItem>
                                     <FieldContent>
-                                        <FieldLabel htmlFor="workflow">
+                                        <FieldLabel htmlFor="Workflow">
                                             Workflow
                                         </FieldLabel>
                                     </FieldContent>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <RadioGroupItem
-                                        value="reference"
-                                        id="reference"
+                                        value="Reference"
+                                        id="Reference"
                                     ></RadioGroupItem>
                                     <FieldContent>
-                                        <FieldLabel htmlFor="reference">
+                                        <FieldLabel htmlFor="Reference">
                                             Reference
                                         </FieldLabel>
                                     </FieldContent>

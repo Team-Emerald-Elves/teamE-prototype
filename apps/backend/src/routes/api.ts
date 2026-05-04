@@ -10,6 +10,7 @@ import prisma, { Prisma, type Employee } from "@repo/database";
 import { Resend } from "resend";
 import AiRouter from "./ai.routes.ts";
 import { clerkCache } from "../lib/ecache.ts";
+import {type Employee} from "@repo/database/types";
 
 const APIRouter = Router();
 
@@ -69,7 +70,7 @@ APIRouter.get("/me", async (req, res) => {
 
 async function updateLock(req: Request, res: Response) {
     try {
-        let { id, status } = req.body ?? {};
+        const { id, status } = req.body ?? {};
 
         const { userId, isAuthenticated } = getAuth(req);
 
@@ -134,14 +135,14 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
-export async function invite(email: string, password: string) {
+export async function invite(employee: Employee, password: string, ) {
     const resend = new Resend(process.env.RESEND_KEY!);
 
     const eRes = await resend.emails.send({
         from: `Hanover <${process.env.INVITE_EMAIL}>`,
-        to: email,
+        to: employee.email as string,
         subject: "Invited",
-        html: `<p>Congrats on sending your <strong>Email test!<br></strong> Your password:${password}</p>`,
+        html: `<p>Hello ${employee.first_name} ${employee.last_name}!<br> Please use the following credentials to login to iBank: <br> Username - ${employee.uname} <br> Temp Password - ${password} <br> Make sure to change your password right away!</p>`,
     });
     if (eRes.error) {
         console.log("Email invite error: ", JSON.stringify(eRes));

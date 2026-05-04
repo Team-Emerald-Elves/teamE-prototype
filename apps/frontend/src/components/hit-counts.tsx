@@ -304,6 +304,11 @@ export function HitCounts() {
                             size="icon"
                             variant="ghost"
                             className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                            style={{
+                                backgroundColor: 'var(--icon-bg)',
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--icon-hover)'}
+                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--icon-bg)'}
                         >
                             <Info className="h-4 w-4" />
                         </Button>

@@ -7,18 +7,21 @@ const teamMembers = [
         name: "Brycen Pina",
         role: "Lead Software Engineer",
         image: "/brycenprofile.png",
+        linkedin: "",
         quote: "Always bear in mind that your own resolution to succeed, is more important than any other one thing. — Abraham Lincoln",
     },
     {
         name: "Anastasia Kelnik",
         role: "Assistant Lead Software Engineer",
         image: "/anastasiaprofile.png",
+        linkedin: "",
         quote: "How lucky I am  to have something that makes saying goodbye so hard. - Winnie the Pooh",
     },
     {
         name: "Colin Teahan",
         role: "Assistant Lead Software Engineer",
         image: "/colinprofile.png",
+        linkedin: "",
         quote: "To doubt everything or to believe everything are two equally convenient solutions; both dispense with the necessity of reflection. -Jules Henri Poincaré",
     },
     {
@@ -32,6 +35,7 @@ const teamMembers = [
         name: "Zara Jaferi",
         role: "Full-Time Software Engineer",
         image: "/zaraprofile.png",
+        linkedin: "",
         quote: "Stop trying. Take long walks. Look at scenery. Doze off at noon. Don't even think about flying. And then, pretty soon, you'll be flying again. - Ursula, Kiki's Delivery Service",
     },
     {
@@ -52,18 +56,21 @@ const teamMembers = [
         name: "Elliot Ghidall",
         role: "Product Owner",
         image: "/elliotprofile.png",
+        linkedin: "",
         quote: "We are trying to prove ourselves wrong as quickly as possible, because only in that way can we find progress. ― Richard P. Feynman",
     },
     {
         name: "Sylvia Jacobs",
         role: "Project Manager",
         image: "/sylviajprofile.png",
+        linkedin: "",
         quote: "One day we'll look back at where we started and be amazed by how far we've come - Technoblade",
     },
     {
         name: "Sylvia Strayer",
         role: "Document Analyst",
         image: "/sylviasprofile.png",
+        linkedin: "",
         quote: "The law, in its majestic equality, forbids rich and poor alike to sleep under bridges, to beg in the streets, and to steal their bread. ― Anatole France",
     },
 ];

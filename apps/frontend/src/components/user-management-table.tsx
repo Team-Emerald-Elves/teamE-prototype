@@ -163,6 +163,40 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
         },
     });
 
+    const currentPage = table.getState().pagination.pageIndex;
+    const pageCount = table.getPageCount();
+
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = [];
+
+        if (pageCount <= 7) {
+            return Array.from({ length: pageCount }, (_, index) => index);
+        }
+
+        pages.push(0);
+
+        if (currentPage > 2) {
+            pages.push("...");
+        }
+
+        const start = Math.max(1, currentPage - 1);
+        const end = Math.min(pageCount - 2, currentPage + 1);
+
+        for (let page = start; page <= end; page++) {
+            if (!pages.includes(page)) {
+                pages.push(page);
+            }
+        }
+
+        if (currentPage < pageCount - 3) {
+            pages.push("...");
+        }
+
+        pages.push(pageCount - 1);
+
+        return pages;
+    };
+
     const handleCheckbox = (
         e: React.ChangeEvent<HTMLInputElement>,
         option: RoleFilter,
@@ -196,9 +230,9 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
 
     return (
         <div className="max-w-10xl mx-auto px-10 py-10">
-            <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible">
+            <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible ">
                 <div className="flex items-center mb-4">
-                    <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
+                    <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-(--color-primary-foreground)">
                         <InputGroupInput
                             placeholder="Search"
                             value={
@@ -211,20 +245,20 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                                     .getColumn("full_name")
                                     ?.setFilterValue(event.target.value)
                             }
-                            className="w-full"
+                            className="w-full placeholder:text-accent-foreground"
                         />
                         <InputGroupAddon>
-                            <Search />
+                            <Search color="var(--accent-foreground)"/>
                         </InputGroupAddon>
                     </InputGroup>
 
                     <div className="relative inline-block text-left">
                         <button
                             onClick={() => setIsRoleOpen((open) => !open)}
-                            className="flex px-4 py-1 ml-2 bg-primary text-white hover:bg-primary/80 rounded-md"
+                            className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
                         >
                             <div className="pr-1">
-                                <HugeiconsIcon icon={SlidersHorizontalIcon} />
+                                <HugeiconsIcon icon={SlidersHorizontalIcon} size={16} />
                             </div>
                             Filter
                         </button>
@@ -293,7 +327,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <TableHead
-                                        className="text-(--table-titles) text-center"
+                                        className="text-(--table-titles) text-center px-5"
                                         key={header.id}
                                     >
                                         {header.isPlaceholder
@@ -306,7 +340,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                                     </TableHead>
                                 ))}
 
-                                <TableHead className="text-(--table-titles) text-center px-1">
+                                <TableHead className="text-(--table-titles) text-center px-5">
                                     Actions
                                 </TableHead>
                             </TableRow>
@@ -323,7 +357,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell
                                                 key={cell.id}
-                                                className="px-1 py-0.5 text-center"
+                                                className="px-5 py-2 text-center"
                                             >
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
@@ -332,7 +366,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                                             </TableCell>
                                         ))}
 
-                                        <TableCell className="px-1 py-0.5">
+                                        <TableCell className="px-5 py-0.5">
                                             <div className="flex gap-2 justify-center">
                                                 <EmployeeForm
                                                     employee={{
@@ -365,26 +399,6 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                         )}
                     </TableBody>
                 </Table>
-
-                <div className="flex items-center justify-end space-x-2 py-4">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
-                </div>
 
                 <div className="absolute bottom-3 left-3">
                     <Popover>
@@ -443,6 +457,48 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     </Popover>
                 </div>
             </div>
+            <div className="flex items-center justify-center gap-1 py-4">
+                <Button
+                    disabled={!table.getCanPreviousPage()}
+                    onClick={() => table.previousPage()}
+                    size="sm"
+                    variant="outline"
+                >
+                    Previous
+                </Button>
+
+                {getPageNumbers().map((page, index) =>
+                    typeof page === "number" ? (
+                        <Button
+                            className="h-8 w-8 p-0"
+                            key={`${page}-${index}`}
+                            onClick={() => table.setPageIndex(page)}
+                            size="sm"
+                            variant={
+                                currentPage === page
+                                    ? "default"
+                                    : "outline"
+                            }
+                        >
+                            {page + 1}
+                        </Button>
+                    ) : (
+                        <span className="px-2" key={`${page}-${index}`}>
+                                    {page}
+                                </span>
+                    ),
+                )}
+
+                <Button
+                    disabled={!table.getCanNextPage()}
+                    onClick={() => table.nextPage()}
+                    size="sm"
+                    variant="outline"
+                >
+                    Next
+                </Button>
+            </div>
+
         </div>
     );
 }

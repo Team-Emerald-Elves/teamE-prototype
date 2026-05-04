@@ -73,7 +73,6 @@ notifyRouter.get(
             }
         })
 
-        const user = await clerkClient.users.getUser(
         const user = await clerkCache.getUser(
             employee?.clerkUserId as string,
         );

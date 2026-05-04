@@ -35,6 +35,7 @@ function Footer() {
                                 src="/hanoverfooter.png"
                                 alt="Hanover Insurance"
                                 className="w-48 h-auto"
+                                draggable={false}
                             />
                         </div>
 

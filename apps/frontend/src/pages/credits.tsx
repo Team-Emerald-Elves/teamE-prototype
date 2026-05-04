@@ -104,6 +104,7 @@ function CreditCard({
                         src={image}
                         alt={title}
                         className="max-h-full max-w-full object-contain"
+                        draggable={false}
                     />
                 ) : (
                     <div className="h-16 w-16 rounded-full bg-gray-100" />

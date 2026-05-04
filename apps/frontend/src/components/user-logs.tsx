@@ -132,6 +132,7 @@ export function UserLogs() {
                                                                 src={
                                                                     n.profileIcon
                                                                 }
+                                                                draggable={false}
                                                             />
                                                             <div className="flex-1 min-w-0 pl-5 truncate whitespace-nowrap overflow-hidden">
                                                                 <span className="font-semibold">

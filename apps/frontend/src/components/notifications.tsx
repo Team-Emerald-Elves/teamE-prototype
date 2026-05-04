@@ -102,6 +102,7 @@ export function NotifScroll() {
                                         <img
                                             className="size-8 rounded-full"
                                             src={n.profileIcon}
+                                            draggable={false}
                                         />
                                     ) : (
                                         <FileText

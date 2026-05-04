@@ -87,6 +87,7 @@ export default function AboutUs() {
                             src={selected.image}
                             alt={selected.name}
                             className="w-24 h-24 rounded-full object-cover border border-gray-200"
+                            draggable={false}
                         />
                         <div className="text-center">
                             <p className="font-semibold text-gray-900 text-lg">{selected.name}</p>
@@ -122,6 +123,7 @@ export default function AboutUs() {
                                     src={member.image}
                                     alt={member.name}
                                     className="w-35 h-35 rounded-lg object-cover border border-gray-200 shrink-0 bg-gray-100"
+                                    draggable={false}
                                 />
                                 <div className="text-center min-w-0 w-full">
                                     <p className="text-sm font-semibold text-gray-900 truncate">

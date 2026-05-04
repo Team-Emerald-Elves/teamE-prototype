@@ -22,6 +22,7 @@ function DisclaimerPopup() {
                         src="/warning-icon.png"
                         alt="Warning Icon"
                         className="w-2/3 rounded-md"
+                        draggable={false}
                     />
                 </div>
                 <div className="flex justify-center text-center">

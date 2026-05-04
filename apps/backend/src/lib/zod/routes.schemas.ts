@@ -30,7 +30,7 @@ export const EmployeeDataModel = z.object({
 });
 
 export const DocumentContentModel = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     name: z.string(),
     url: z.union([z.url().optional(), z.string().optional()]),
     content_owner: z.string(),

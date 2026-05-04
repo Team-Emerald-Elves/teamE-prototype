@@ -9,6 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
     Select,
     SelectContent,
@@ -55,7 +56,7 @@ type contentFormProps = {
 
 type FormDataType = {
     name: string;
-    url: string;
+    url?: string;
     contentOwner: string;
     role: string;
     document_type: string;
@@ -65,8 +66,8 @@ type FormDataType = {
     id: number;
     filePayload?: string;
     fileName?: string;
+    inputType: "url" | "file";
 };
-
 function ContentForm(props: contentFormProps) {
     const { getToken } = useAuth();
     const ROLE_LABELS: Record<string, string> = {
@@ -96,21 +97,25 @@ function ContentForm(props: contentFormProps) {
         document_type: props.currentDocType,
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
-        document_status: props.currentStatus ?? "",
+        document_status: props.currentStatus === "Select Status" ? "" : props.currentStatus,
         id: props.currentID,
+        inputType: props.type === "Create" ? "file" : "url",
     });
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
     useEffect(() => {
+        const hasUrl = !!formData.url;
+        const hasFile = !!formData.filePayload;
+
         if (
             formData.name &&
-            formData.url &&
             formData.contentOwner &&
             (formData.role || !isAdmin) &&
             formData.document_type &&
             formData.document_status &&
             formData.expirationDate &&
-            formData.expirationTime
+            formData.expirationTime &&
+            (hasUrl || hasFile)
         ) {
             setIsFilled(true);
         } else {
@@ -187,7 +192,6 @@ function ContentForm(props: contentFormProps) {
                                     className="px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground"
                                 >
                                     <HugeiconsIcon icon={PlusSignIcon} />{" "}
-                                    {props.type}
                                 </Button>
                             }
                         />
@@ -241,23 +245,47 @@ function ContentForm(props: contentFormProps) {
                                 </Field>
                                 <Field>
                                     <Label
-                                        htmlFor="url"
+                                        htmlFor="role"
                                         className="text-xs font-bold"
                                     >
-                                        URL
+                                        Select Role For Content
                                     </Label>
-                                    <Input
-                                        id="url"
-                                        name="url"
-                                        placeholder="https://www.example.com"
-                                        value={formData.url}
-                                        onChange={(e) =>
+                                    <Select
+                                        value={formData.role}
+                                        onValueChange={(value) =>
                                             setFormData((prev) => ({
                                                 ...prev,
-                                                url: e.target.value,
+                                                role: value!,
                                             }))
                                         }
-                                    />
+                                        disabled={!isAdmin}
+                                    >
+                                        <SelectTrigger className="w-full max-w-48">
+                                            <SelectValue
+                                                placeholder={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Roles</SelectLabel>
+                                                <SelectItem value="UnderWriter">
+                                                    Underwriter
+                                                </SelectItem>
+                                                <SelectItem value="BusinessAnalyst">
+                                                    BusinessAnalyst
+                                                </SelectItem>
+                                                <SelectItem value="BusinessOperator">
+                                                    BusinessOperator
+                                                </SelectItem>
+                                                <SelectItem value="ActuarialAnalyst">
+                                                    ActuarialAnalyst
+                                                </SelectItem>
+                                                <SelectItem value="ExcelOperator">
+                                                    ExcelOperator
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </Field>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -321,56 +349,57 @@ function ContentForm(props: contentFormProps) {
                                         </SelectContent>
                                     </Select>
                                 </Field>
+                                <Field>
+                                    <Label
+                                        htmlFor="status"
+                                        className="text-xs font-bold"
+                                    >
+                                        Select Current Status
+                                    </Label>
+                                    <Select
+                                        value={formData.document_status
+                                            .split("_")
+                                            .map(
+                                                (w) =>
+                                                    w.charAt(0).toUpperCase() +
+                                                    w.slice(1),
+                                            )
+                                            .join(" ")}
+                                        onValueChange={(value) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                document_status: value!,
+                                            }))
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full max-w-48">
+                                            <SelectValue
+                                                placeholder={props.currentStatus}
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Status</SelectLabel>
+                                                <SelectItem value="not_started">
+                                                    Not Started
+                                                </SelectItem>
+                                                <SelectItem value="in_progress">
+                                                    In Progress
+                                                </SelectItem>
+                                                <SelectItem value="needs_review">
+                                                    Needs Review
+                                                </SelectItem>
+                                                <SelectItem value="done">
+                                                    Done
+                                                </SelectItem>
+                                                <SelectItem value="expired">
+                                                    Expired
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </Field>
 
-                                {isAdmin ? (
-                                    <Field>
-                                        <Label
-                                            htmlFor="role"
-                                            className="text-xs font-bold"
-                                        >
-                                            Select Role For Content
-                                        </Label>
-                                        <Select
-                                            value={formData.role}
-                                            onValueChange={(value) =>
-                                                setFormData((prev) => ({
-                                                    ...prev,
-                                                    role: value!,
-                                                }))
-                                            }
-                                        >
-                                            <SelectTrigger className="w-full max-w-48">
-                                                <SelectValue
-                                                    placeholder={
-                                                        props.currentRole
-                                                    }
-                                                />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>
-                                                        Roles
-                                                    </SelectLabel>
-                                                    <SelectItem value="UnderWriter">
-                                                        Underwriter
-                                                    </SelectItem>
-                                                    <SelectItem value="BusinessAnalyst">
-                                                        BusinessAnalyst
-                                                    </SelectItem>
-                                                    <SelectItem value="BusinessOperator">
-                                                        BusinessOperator
-                                                    </SelectItem>
-                                                    <SelectItem value="ActuarialAnalyst">
-                                                        ActuarialAnalyst
-                                                    </SelectItem>
-                                                    <SelectItem value="ExcelOperator">
-                                                        ExcelOperator
-                                                    </SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </Field>
-                                ) : null}
                             </div>
                             <Field>
                                 <Label
@@ -439,63 +468,54 @@ function ContentForm(props: contentFormProps) {
                                     }
                                 />
                             </Field>
-                            <Field>
-                                <Label
-                                    htmlFor="status"
-                                    className="text-xs font-bold"
-                                >
-                                    Select Current Status
-                                </Label>
-                                <Select
-                                    value={formData.document_status
-                                        .split("_")
-                                        .map(
-                                            (w) =>
-                                                w.charAt(0).toUpperCase() +
-                                                w.slice(1),
-                                        )
-                                        .join(" ")}
-                                    onValueChange={(value) =>
+                        </FieldGroup>
+                        <Tabs
+                            value={formData.inputType}
+                            onValueChange={(value: "url" | "file") =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    inputType: value,
+                                }))
+                            }
+                        >
+                            <TabsList >
+                                <TabsTrigger value="url" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">URL</TabsTrigger>
+                                <TabsTrigger value="file" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">Upload</TabsTrigger>
+                            </TabsList>
+
+                            <TabsContent value="url">
+                                <Field>
+                                    <Label htmlFor="url" className="text-xs font-bold">
+                                        URL
+                                    </Label>
+                                    <Input
+                                        id="url"
+                                        name="url"
+                                        placeholder="https://www.example.com"
+                                        value={formData.url}
+                                        onChange={(e) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                url: e.target.value,
+                                            }))
+                                        }
+                                    />
+                                </Field>
+                            </TabsContent>
+
+                            <TabsContent value="file">
+                                <FileUpload
+                                    dnd={true}
+                                    show={true}
+                                    onUpload={(files) => {
+                                        uploadHandler(files);
                                         setFormData((prev) => ({
                                             ...prev,
-                                            document_status: value!,
-                                        }))
-                                    }
-                                >
-                                    <SelectTrigger className="w-full max-w-48">
-                                        <SelectValue
-                                            placeholder={props.currentStatus}
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectLabel>Status</SelectLabel>
-                                            <SelectItem value="not_started">
-                                                Not Started
-                                            </SelectItem>
-                                            <SelectItem value="in_progress">
-                                                In Progress
-                                            </SelectItem>
-                                            <SelectItem value="needs_review">
-                                                Needs Review
-                                            </SelectItem>
-                                            <SelectItem value="done">
-                                                Done
-                                            </SelectItem>
-                                            <SelectItem value="expired">
-                                                Expired
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </Field>
-                        </FieldGroup>
-
-                        <FileUpload
-                            dnd={true}
-                            show={true}
-                            onUpload={uploadHandler}
-                        />
+                                        }));
+                                    }}
+                                />
+                            </TabsContent>
+                        </Tabs>
 
                         <DialogFooter>
                             <DialogClose

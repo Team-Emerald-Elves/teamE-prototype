@@ -25,6 +25,7 @@ const teamMembers = [
         name: "Alex Law",
         role: "Full-Time Software Engineer",
         image: "/alexprofile.png",
+        linkedin: "https://www.linkedin.com/in/alexandra-m-law-1bb533377/",
         quote: "Be 1% better than you were yesterday.",
     },
     {
@@ -44,7 +45,8 @@ const teamMembers = [
         name: "Andi Kurtiqi",
         role: "Scrum Master",
         image: "/andiprofile.png",
-        quote: "Comparison is the theft of joy. -Theodore Roosevelt",
+        linkedin: "https://www.linkedin.com/in/kurtiqi-andi",
+        quote: "Comparison is the theif of joy. -Theodore Roosevelt",
     },
     {
         name: "Elliot Ghidall",

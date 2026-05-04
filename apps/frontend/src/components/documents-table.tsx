@@ -428,11 +428,14 @@ function CreateDocumentButton({
             currentName=""
             currentURL=""
             currentContentOwner="Select Content Owner"
-            currentRole="Select Role"
+            currentRole={roles.includes("administrator") ? "Select Role" : roles.at(0) as string}
             currentExpirationDate={new Date()}
             currentExpirationTime="10:30:00"
             currentStatus="Select Status"
             size
+            currentDocType={
+                "Reference"
+            }
             lock="none"
             refresh={refresh}
             roles={roles}
@@ -838,7 +841,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                     onClick={() =>
                                         setIsDropdownOpen((current) => !current)
                                     }
-                                    className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 ml-2 bg-primary text-white hover:bg-primary/80 rounded-md"
                                 >
                                     <span className="pr-1">
                                         <HugeiconsIcon
@@ -1021,6 +1024,9 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                         currentExpirationTime="10:30:00"
                                                                         currentStatus={
                                                                             doc.document_status
+                                                                        }
+                                                                        currentDocType={
+                                                                             doc.document_type
                                                                         }
                                                                         size={
                                                                             false

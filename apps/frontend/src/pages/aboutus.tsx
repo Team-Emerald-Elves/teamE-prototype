@@ -89,11 +89,11 @@ export default function AboutUs() {
             {/* popup */}
             {selected && (
                 <div
+                    key={selected.name}
                     className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
                     onClick={() => setSelected(null)}
                 >
                     <div
-                        key={selected.name}
                         className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 flex flex-col items-center gap-4 shadow-xl"
                         onClick={(e) => e.stopPropagation()}
                     >

@@ -37,6 +37,7 @@ const teamMembers = [
         name: "Jenelia Leo",
         role: "Full-Time Software Engineer",
         image: "/jeneliaprofile.png",
+        linkedin: "https://www.linkedin.com/in/jenelialeo",
         quote: "How you spend your days is how you spend your life. - Annie Dillard",
     },
     {
@@ -83,6 +84,7 @@ export default function AboutUs() {
                     onClick={() => setSelected(null)}
                 >
                     <div
+                        key={selected.name}
                         className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 flex flex-col items-center gap-4 shadow-xl"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -100,9 +102,26 @@ export default function AboutUs() {
                                 {selected.role}
                             </span>
                         </div>
+
                         <p className="text-gray-600 text-center italic">
                             "{selected.quote}"
                         </p>
+
+                        {selected.linkedin && (
+
+                            <a href={selected.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-[#0A66C2] text-white text-sm font-medium rounded-lg hover:bg-[#004182] transition-colors"
+                            >
+                            <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                            <path d="M20.45 20.45h-3.554v-5.569c0-1.328-.026-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.354V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.284zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            LinkedIn
+                            </a>
+                            )}
+
+
                         <button
                             onClick={() => setSelected(null)}
                             className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors"

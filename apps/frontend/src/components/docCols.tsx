@@ -287,23 +287,41 @@ export const columns: ColumnDef<documentContent>[] = [
                     break;
             }
 
+            const allTags = [ //array of tags to calculate overflow
+                { label: mime.getExtension(type) ?? "file", background: typeBackground },
+                { label: roles, background: roleBackground },
+                { label: docType, background: docBackground },
+                { label: status, background: statusBackground },
+                ...(doc.meta_tags ?? []).map((tag) => ({
+                    label: tag,
+                    background: customBackground,
+                })),
+            ];
+
+            const MAX_VISIBLE = 3; //max tags to show before overflowing
+            const visibleTags = allTags.slice(0, MAX_VISIBLE);
+            const overflowCount = allTags.length - MAX_VISIBLE;
+
+
             return (
                 <div className="flex flex-wrap gap-1 text-(--tab-text)">
-                    <DocTag background={typeBackground}>
-                        {mime.getExtension(type) ?? "file"}
-                    </DocTag>
-
-                    <DocTag background={roleBackground}>{roles}</DocTag>
-
-                    <DocTag background={docBackground}>{docType}</DocTag>
-
-                    <DocTag background={statusBackground}>{status}</DocTag>
-
-                    {(doc.meta_tags ?? []).map((tag) => (
-                        <DocTag key={tag} background={customBackground}>
-                            {tag}
+                    {visibleTags.map((tag, index) => (
+                        <DocTag key={index} background={tag.background}>
+                            {tag.label}
                         </DocTag>
                     ))}
+
+                    {overflowCount > 0 && (
+                        <div className="relative group">
+                            <div className="rounded px-1.5 py-0.5 text-xs text-(--table-text) whitespace-nowrap cursor-default">
+                                +{overflowCount}
+                            </div>
+
+                            <div className="absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-muted px-3 py-1 text-xs text-foreground shadow-sm opacity-0 scale-95 pointer-events-none transition-all duration-150 group-hover:opacity-100 group-hover:scale-100">
+                                Open document to view additional tags
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         },

@@ -982,7 +982,6 @@ export function DocumentsTable({ columns }: DocProps) {
                                                         </div>
 
                                                         <Button
-
                                                             onClick={() =>
                                                                 downloadDocument(
                                                                     doc,

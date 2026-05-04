@@ -98,6 +98,10 @@ export default function ChatBot(){
     -editing documents:
         ALWAYS call findDocumentByName first to get the document's real ID before calling editDoc.
         Only change the fields the user specifies, keep all other fields exactly as returned by findDocumentByName.
+        Users upload files via a separate UI button.
+        NEVER ask the user "What is the filename?" or "Please upload the file." 
+        If a user says "Update this document with my new file," assume the file is already handled by the system and call editDoc immediately.
+        Leave fileName and filePayload as undefined in your function call unless the user explicitly mentions a NEW filename in their text.
     -Adding links:
         Link Name and url are required
     -editing documents:
@@ -134,6 +138,7 @@ export default function ChatBot(){
                             id:{type: "number", description: "The internal ID (do not ask user for this, use findDocumentByName)"},
                             name: {type: "string", description: "The name/title of the document"},
                             url: {type: "string", description: "The url of the document"},
+                            fileName: {type: "string", description: "INTERNAL USE ONLY. Do not ask user for this. If the user provides a new file, the system will inject this value automatically."},
                             document_type:{type: "string", description: "The document type"},
                             expirationDate: {type: "string", description: "The expiration date"},
                             document_status:{type: "string", description: "The document status"},
@@ -466,20 +471,18 @@ export default function ChatBot(){
                     setMessages(prev => [...prev, { role: "model", text: "Something went wrong. Please try again." }]);
                 }
                 console.error(error);
-                return; // exit the loop
+                return;
             }
 
             const candidate = response.data.candidates[0].content;
             const part = candidate.parts[0];
 
             if (!part.functionCall) {
-                // No function call — just a text reply, we're done
                 const botText = part.text || "No response received.";
                 setMessages(prev => [...prev, { role: "model", text: botText }]);
                 return;
             }
 
-            // Handle function call
             const { name, args } = part.functionCall;
             let functionResult = "";
 
@@ -504,9 +507,12 @@ export default function ChatBot(){
                     };
                     console.log(newDoc);
                     const addDocument = await createDocument(newDoc as any, token, () => {});
+                    fileName.current =undefined;
+                    filePayload.current =undefined;
                     functionResult = `Successfully created document: ${addDocument.name}`;
 
                 } else if (name === "editDoc") {
+                    console.log(fileName.current);
                     const newDoc = {
                         type: "Update",
                         formData: {
@@ -528,11 +534,19 @@ export default function ChatBot(){
                     filePayload.current =undefined;
                     functionResult = `Successfully updated document: ${editDocument.name}`;
                 } else if (name === "findDocumentByName") {
+                    console.log(fileName.current);
                     try {
                         const token = await getToken();
                         const res = await fetch(
-                            `${import.meta.env.VITE_BACKEND_URL}/api/supabase/get-documents`,
-                            { headers: { Authorization: `Bearer ${token}` } }
+                            `${import.meta.env.VITE_BACKEND_URL}/api/supabase/list-documents`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({}),
+                            }
                         );
 
                         if (!res.ok) throw new Error("Failed to fetch documents");
@@ -552,8 +566,6 @@ export default function ChatBot(){
                                 document_status: match.document_status,
                                 assigned_role: match.assigned_role,
                                 expiration_date: match.expiration_date,
-                                filePayload: match.filePayload,
-                                fileName: match.fileName,
                             });
                         } else {
                             functionResult = JSON.stringify({ error: `No document found matching "${args.name}"` });

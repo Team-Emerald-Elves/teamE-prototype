@@ -24,8 +24,8 @@ type SubmitConfirmationPopupProps = {
         document_status: string;
         filePayload?: string;
         fileName?: string;
-    };
-    refresh: (any) => void;
+    }[];
+    refresh?: (any: any) => void;
     open: (arg: boolean) => void;
     confirmOpen: boolean;
     setConfirmOpen: (val: boolean) => void;
@@ -101,61 +101,63 @@ function buildExpirationDate(
 async function createDocument(
     fileData: SubmitConfirmationPopupProps,
     token: string,
-    refresh: (any: any) => void,
+    refresh?: (any: any) => void,
 ) {
-    const data: IFile = {
-        id: fileData.formData.id,
-        name: fileData.formData.name,
-        url: fileData.formData.url || "Local upload",
-        content_owner: fileData.formData.contentOwner,
-        expiration_date: buildExpirationDate(
-            fileData.formData.expirationDate,
-            fileData.formData.expirationTime,
-        ),
-        document_type: fileData.formData.document_type,
-        document_status: fileData.formData.document_status,
-        assigned_role: fileData.formData.role,
-        filePayload: fileData.formData.filePayload,
-        fileName: fileData.formData.fileName,
-    };
-    console.log(data.assigned_role);
+    fileData.formData.forEach(async (fd) => {
+        const data: IFile = {
+            id: fd.id,
+            name: fd.name,
+            url: fd.url || "Local upload",
+            content_owner: fd.contentOwner,
+            expiration_date: buildExpirationDate(
+                fd.expirationDate,
+                fd.expirationTime,
+            ),
+            document_type: fd.document_type,
+            document_status: fd.document_status,
+            assigned_role: fd.role,
+            filePayload: fd.filePayload,
+            fileName: fd.fileName,
+        };
+        console.log(data.assigned_role);
 
-    const endpoint =
-        fileData.type === "Create"
-            ? "/api/supabase/create-document"
-            : "/api/supabase/update-document";
+        const endpoint =
+            fileData.type === "Create"
+                ? "/api/supabase/create-document"
+                : "/api/supabase/update-document";
 
-    const method = fileData.type === "Create" ? "POST" : "PUT";
-    const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}${endpoint}`,
-        {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+        const method = fileData.type === "Create" ? "POST" : "PUT";
+        const response = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}${endpoint}`,
+            {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
             },
-            body: JSON.stringify(data),
-        },
-    );
+        );
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(errorText);
-        throw new Error(errorText || "Network response was not ok");
-    }
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error(errorText || "Network response was not ok");
+        }
 
-    const newDoc = await response.json();
-    console.log(newDoc);
+        const newDoc = await response.json();
+        console.log(newDoc);
 
-    if (fileData.type === "Create") {
-        createNotif(newDoc, "created");
-    } else {
-        createNotif(newDoc, "updated");
-    }
+        if (fileData.type === "Create") {
+            createNotif(newDoc, "created");
+        } else {
+            createNotif(newDoc, "updated");
+        }
 
-    refresh((prev: any) => !prev);
-
-    return newDoc;
+        if (refresh) {
+            refresh!((prev: any) => !prev);
+        }
+    });
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {

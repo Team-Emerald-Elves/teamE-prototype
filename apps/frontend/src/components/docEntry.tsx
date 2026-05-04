@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
-import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation";
 import type { documentContent } from "@repo/database/types";
+import DocPopup from "./createDocPopup";
 
 type favoriteProps = {
     d: documentContent;
@@ -45,20 +45,7 @@ export default function DocTableEntry(props: favoriteProps) {
 
             <TableCell>
                 <div className="flex items-center gap-2">
-                    <ContentForm
-                        type="Edit"
-                        currentID={props.d.id}
-                        roles={[props.d.assigned_role as string]}
-                        lock={props.d.lock as string}
-                        currentName={props.d.name}
-                        currentURL={props.d.url as string}
-                        currentContentOwner={props.d.content_owner as string}
-                        currentRole={props.d.assigned_role as string}
-                        currentExpirationDate={new Date(Date.now() + 8.64e7)}
-                        currentExpirationTime="10:30:00"
-                        currentStatus={props.d.document_status}
-                        size={false}
-                    />
+                    <DocPopup defaults={props.d} type="Edit" size={false} />
 
                     <DeleteConfirmationPopup target={props.d} />
                 </div>

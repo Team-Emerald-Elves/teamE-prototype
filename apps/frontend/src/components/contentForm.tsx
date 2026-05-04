@@ -1,16 +1,6 @@
 import { Button } from "./ui/button.tsx";
 import { useEffect, useState } from "react";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
     Select,
     SelectContent,
     SelectGroup,
@@ -68,7 +58,8 @@ type FormDataType = {
     fileName?: string;
     inputType: "url" | "file";
 };
-function ContentForm(props: contentFormProps) {
+
+function ContentForm(props: Partial<contentFormProps>) {
     const { getToken } = useAuth();
     const ROLE_LABELS: Record<string, string> = {
         administrator: "Administrator",
@@ -80,7 +71,6 @@ function ContentForm(props: contentFormProps) {
     };
 
     const [employees, setEmployees] = useState<Employee[]>([]);
-    const [open, setOpen] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
     console.log();
 
@@ -92,13 +82,13 @@ function ContentForm(props: contentFormProps) {
             props.currentRole === "Select Role"
                 ? props.currentRole
                 : props.type === "Create"
-                  ? ROLE_LABELS[props.currentRole]
-                  : props.currentRole,
-        document_type: props.currentDocType,
-        expirationDate: props.currentExpirationDate ?? "",
+                  ? ROLE_LABELS[props.currentRole!]
+                  : props.currentRole!,
+        document_type: props.currentDocType!,
+        expirationDate: props.currentExpirationDate ?? new Date(),
         expirationTime: props.currentExpirationTime ?? "",
-        document_status: props.currentStatus === "Select Status" ? "" : props.currentStatus,
-        id: props.currentID,
+        document_status: props.currentStatus === "Select Status" ? "" : props.currentStatus ?? "",
+        id: props.currentID!,
         inputType: props.type === "Create" ? "file" : "url",
     });
     const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
@@ -168,7 +158,7 @@ function ContentForm(props: contentFormProps) {
         getToken().then((t) => setSessionToken(t ?? ""));
     }, [getToken]);
 
-    const isAdmin = props.roles.some((role) =>
+    const isAdmin = props.roles?.some((role) =>
         role.toLowerCase().includes("administrator"),
     );
     //console.log(isAdmin);
@@ -182,373 +172,262 @@ function ContentForm(props: contentFormProps) {
 
     return (
         <>
-            <Dialog open={open} onOpenChange={setOpen}>
-                <form>
-                    {props.size ? (
-                        <DialogTrigger
-                            render={
-                                <Button
-                                    variant="outline"
-                                    className="px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground"
-                                >
-                                    <HugeiconsIcon icon={PlusSignIcon} />{" "}
-                                </Button>
-                            }
-                        />
-                    ) : (
-                        <DialogTrigger
-                            render={
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    className="px-3 py-3 text-base bg-gray-300 text-black"
-                                >
-                                    <HugeiconsIcon
-                                        icon={Edit03Icon}
-                                        size={20}
-                                        color="var(--accent-foreground"
-                                    />
-                                </Button>
-                            }
-                        />
-                    )}
+            <form>
+                <FieldGroup>
+                    <div className="grid grid-cols-2 gap-4">
+                        <Field>
+                            <Label htmlFor="name" className="text-xs font-bold">
+                                Name of Link or Document
+                            </Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                placeholder="Name..."
+                                value={formData.name}
+                                onChange={(e) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        name: e.target.value,
+                                    }))
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <Label htmlFor="url" className="text-xs font-bold">
+                                URL
+                            </Label>
+                            <Input
+                                id="url"
+                                name="url"
+                                placeholder="https://www.example.com"
+                                value={formData.url}
+                                onChange={(e) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        url: e.target.value,
+                                    }))
+                                }
+                            />
+                        </Field>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <Field>
+                            <Label
+                                htmlFor="contentOwner"
+                                className="text-xs font-bold"
+                            >
+                                Select Content Owner
+                            </Label>
+                            <Select
+                                value={
+                                    employees.find(
+                                        (u) => u.id === formData.contentOwner,
+                                    )
+                                        ? employees.find(
+                                              (u) =>
+                                                  u.id ===
+                                                  formData.contentOwner,
+                                          )!.first_name +
+                                          " " +
+                                          employees.find(
+                                              (u) =>
+                                                  u.id ===
+                                                  formData.contentOwner,
+                                          )!.last_name
+                                        : "Select"
+                                }
+                                onValueChange={(value) => {
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        contentOwner: value!,
+                                    }));
+                                    console.log(
+                                        "content owner: " +
+                                            formData.contentOwner,
+                                    );
+                                    console.log("value: " + value);
+                                }}
+                            >
+                                <SelectTrigger className="w-full max-w-48">
+                                    <SelectValue placeholder="5c129c4b-658f-47c1-9afb-e28734f66e46" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Employees</SelectLabel>
+                                        {employees.map((emp) => (
+                                            <SelectItem
+                                                key={emp.id}
+                                                value={String(emp.id)}
+                                            >
+                                                {emp.first_name} {emp.last_name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </Field>
 
-                    <DialogContent className="lg:max-w-lg bg-(--filter-background)">
-                        <DialogHeader>
-                            <div className="flex items-center justify-between p-2">
-                                <DialogTitle className="text-2xl text-foreground font-sans font-bold">
-                                    {props.type} Content
-                                </DialogTitle>
-                            </div>
-                        </DialogHeader>
-                        <FieldGroup className="text-foreground">
-                            <div className="grid grid-cols-2 gap-4">
-                                <Field>
-                                    <Label
-                                        htmlFor="name"
-                                        className="text-xs font-bold"
-                                    >
-                                        Name of Link or Document
-                                    </Label>
-                                    <Input
-                                        id="name"
-                                        name="name"
-                                        placeholder="Name..."
-                                        value={formData.name}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                name: e.target.value,
-                                            }))
-                                        }
-                                    />
-                                </Field>
-                                <Field>
-                                    <Label
-                                        htmlFor="role"
-                                        className="text-xs font-bold"
-                                    >
-                                        Select Role For Content
-                                    </Label>
-                                    <Select
-                                        value={formData.role}
-                                        onValueChange={(value) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                role: value!,
-                                            }))
-                                        }
-                                        disabled={!isAdmin}
-                                    >
-                                        <SelectTrigger className="w-full max-w-48">
-                                            <SelectValue
-                                                placeholder={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
-                                            />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Roles</SelectLabel>
-                                                <SelectItem value="UnderWriter">
-                                                    Underwriter
-                                                </SelectItem>
-                                                <SelectItem value="BusinessAnalyst">
-                                                    BusinessAnalyst
-                                                </SelectItem>
-                                                <SelectItem value="BusinessOperator">
-                                                    BusinessOperator
-                                                </SelectItem>
-                                                <SelectItem value="ActuarialAnalyst">
-                                                    ActuarialAnalyst
-                                                </SelectItem>
-                                                <SelectItem value="ExcelOperator">
-                                                    ExcelOperator
-                                                </SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </Field>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <Field>
-                                    <Label
-                                        htmlFor="contentOwner"
-                                        className="text-xs font-bold"
-                                    >
-                                        Select Content Owner
-                                    </Label>
-                                    <Select
-                                        value={
-                                            employees.find(
-                                                (u) =>
-                                                    u.id ===
-                                                    formData.contentOwner,
-                                            )
-                                                ? employees.find(
-                                                      (u) =>
-                                                          u.id ===
-                                                          formData.contentOwner,
-                                                  )!.first_name +
-                                                  " " +
-                                                  employees.find(
-                                                      (u) =>
-                                                          u.id ===
-                                                          formData.contentOwner,
-                                                  )!.last_name
-                                                : "Select"
-                                        }
-                                        onValueChange={(value) => {
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                contentOwner: value!,
-                                            }));
-                                            console.log(
-                                                "content owner: " +
-                                                    formData.contentOwner,
-                                            );
-                                            console.log("value: " + value);
-                                        }}
-                                    >
-                                        <SelectTrigger className="w-full max-w-48">
-                                            <SelectValue placeholder="5c129c4b-658f-47c1-9afb-e28734f66e46" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>
-                                                    Employees
-                                                </SelectLabel>
-                                                {employees.map((emp) => (
-                                                    <SelectItem
-                                                        key={emp.id}
-                                                        value={String(emp.id)}
-                                                    >
-                                                        {emp.first_name}{" "}
-                                                        {emp.last_name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </Field>
-                                <Field>
-                                    <Label
-                                        htmlFor="status"
-                                        className="text-xs font-bold"
-                                    >
-                                        Select Current Status
-                                    </Label>
-                                    <Select
-                                        value={formData.document_status
-                                            .split("_")
-                                            .map(
-                                                (w) =>
-                                                    w.charAt(0).toUpperCase() +
-                                                    w.slice(1),
-                                            )
-                                            .join(" ")}
-                                        onValueChange={(value) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                document_status: value!,
-                                            }))
-                                        }
-                                    >
-                                        <SelectTrigger className="w-full max-w-48">
-                                            <SelectValue
-                                                placeholder={props.currentStatus}
-                                            />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Status</SelectLabel>
-                                                <SelectItem value="not_started">
-                                                    Not Started
-                                                </SelectItem>
-                                                <SelectItem value="in_progress">
-                                                    In Progress
-                                                </SelectItem>
-                                                <SelectItem value="needs_review">
-                                                    Needs Review
-                                                </SelectItem>
-                                                <SelectItem value="done">
-                                                    Done
-                                                </SelectItem>
-                                                <SelectItem value="expired">
-                                                    Expired
-                                                </SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </Field>
-
-                            </div>
+                        {isAdmin ? (
                             <Field>
                                 <Label
-                                    htmlFor="contentType"
+                                    htmlFor="role"
                                     className="text-xs font-bold"
                                 >
-                                    Select Content Type
+                                    Select Role For Content
                                 </Label>
-                                <RadioGroup
-                                    className="w-full max-w-48 flex items-center gap-7"
-                                    id="contentType"
-                                    value={formData.document_type}
+                                <Select
+                                    value={formData.role}
                                     onValueChange={(value) =>
                                         setFormData((prev) => ({
                                             ...prev,
-                                            document_type: value,
+                                            role: value!,
                                         }))
                                     }
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <RadioGroupItem
-                                            value="workflow"
-                                            id="workflow"
-                                        ></RadioGroupItem>
-                                        <FieldContent>
-                                            <FieldLabel htmlFor="workflow">
-                                                Workflow
-                                            </FieldLabel>
-                                        </FieldContent>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <RadioGroupItem
-                                            value="reference"
-                                            id="reference"
-                                        ></RadioGroupItem>
-                                        <FieldContent>
-                                            <FieldLabel htmlFor="reference">
-                                                Reference
-                                            </FieldLabel>
-                                        </FieldContent>
-                                    </div>
-                                </RadioGroup>
+                                    <SelectTrigger className="w-full max-w-48">
+                                        <SelectValue
+                                            placeholder={props.currentRole}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Roles</SelectLabel>
+                                            <SelectItem value="UnderWriter">
+                                                Underwriter
+                                            </SelectItem>
+                                            <SelectItem value="BusinessAnalyst">
+                                                BusinessAnalyst
+                                            </SelectItem>
+                                            <SelectItem value="BusinessOperator">
+                                                BusinessOperator
+                                            </SelectItem>
+                                            <SelectItem value="ActuarialAnalyst">
+                                                ActuarialAnalyst
+                                            </SelectItem>
+                                            <SelectItem value="ExcelOperator">
+                                                ExcelOperator
+                                            </SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </Field>
-                            <Field>
-                                <Label
-                                    htmlFor="expiration"
-                                    className="text-xs font-bold"
-                                >
-                                    Choose Expiration Date
-                                </Label>
-                                <DateAndTime
-                                    id="expiration"
-                                    date={formData.expirationDate}
-                                    time={formData.expirationTime}
-                                    setDate={(date) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            expirationDate: date,
-                                        }))
-                                    }
-                                    setTime={(time) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            expirationTime: time,
-                                        }))
-                                    }
-                                />
-                            </Field>
-                        </FieldGroup>
-                        <Tabs
-                            value={formData.inputType}
-                            onValueChange={(value: "url" | "file") =>
+                        ) : null}
+                    </div>
+                    <Field>
+                        <Label
+                            htmlFor="contentType"
+                            className="text-xs font-bold"
+                        >
+                            Select Content Type
+                        </Label>
+                        <RadioGroup
+                            className="w-full max-w-48 flex items-center gap-7"
+                            id="contentType"
+                            value={formData.document_type}
+                            onValueChange={(value) =>
                                 setFormData((prev) => ({
                                     ...prev,
-                                    inputType: value,
+                                    document_type: value,
                                 }))
                             }
                         >
-                            <TabsList >
-                                <TabsTrigger value="url" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">URL</TabsTrigger>
-                                <TabsTrigger value="file" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">Upload</TabsTrigger>
-                            </TabsList>
-
-                            <TabsContent value="url">
-                                <Field>
-                                    <Label htmlFor="url" className="text-xs font-bold">
-                                        URL
-                                    </Label>
-                                    <Input
-                                        id="url"
-                                        name="url"
-                                        placeholder="https://www.example.com"
-                                        value={formData.url}
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                url: e.target.value,
-                                            }))
-                                        }
-                                    />
-                                </Field>
-                            </TabsContent>
-
-                            <TabsContent value="file">
-                                <FileUpload
-                                    dnd={true}
-                                    show={true}
-                                    onUpload={(files) => {
-                                        uploadHandler(files);
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                        }));
-                                    }}
+                            <div className="flex items-center gap-3">
+                                <RadioGroupItem
+                                    value="workflow"
+                                    id="workflow"
+                                ></RadioGroupItem>
+                                <FieldContent>
+                                    <FieldLabel htmlFor="workflow">
+                                        Workflow
+                                    </FieldLabel>
+                                </FieldContent>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <RadioGroupItem
+                                    value="reference"
+                                    id="reference"
+                                ></RadioGroupItem>
+                                <FieldContent>
+                                    <FieldLabel htmlFor="reference">
+                                        Reference
+                                    </FieldLabel>
+                                </FieldContent>
+                            </div>
+                        </RadioGroup>
+                    </Field>
+                    <Field>
+                        <Label
+                            htmlFor="expiration"
+                            className="text-xs font-bold"
+                        >
+                            Choose Expiration Date
+                        </Label>
+                        <DateAndTime
+                            id="expiration"
+                            date={formData.expirationDate}
+                            time={formData.expirationTime}
+                            setDate={(date) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    expirationDate: date,
+                                }))
+                            }
+                            setTime={(time) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    expirationTime: time,
+                                }))
+                            }
+                        />
+                    </Field>
+                    <Field>
+                        <Label htmlFor="status" className="text-xs font-bold">
+                            Select Current Status
+                        </Label>
+                        <Select
+                            value={formData.document_status
+                                .split("_")
+                                .map(
+                                    (w) =>
+                                        w.charAt(0).toUpperCase() + w.slice(1),
+                                )
+                                .join(" ")}
+                            onValueChange={(value) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    document_status: value!,
+                                }))
+                            }
+                        >
+                            <SelectTrigger className="w-full max-w-48">
+                                <SelectValue
+                                    placeholder={props.currentStatus}
                                 />
-                            </TabsContent>
-                        </Tabs>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Status</SelectLabel>
+                                    <SelectItem value="not_started">
+                                        Not Started
+                                    </SelectItem>
+                                    <SelectItem value="in_progress">
+                                        In Progress
+                                    </SelectItem>
+                                    <SelectItem value="needs_review">
+                                        Needs Review
+                                    </SelectItem>
+                                    <SelectItem value="done">Done</SelectItem>
+                                    <SelectItem value="expired">
+                                        Expired
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </Field>
+                </FieldGroup>
 
-                        <DialogFooter>
-                            <DialogClose
-                                render={
-                                    <Button variant="outline" size="lg">
-                                        Cancel
-                                    </Button>
-                                }
-                            />
-                            <Button
-                                type="button"
-                                size="lg"
-                                className="bg-secondary text-secondary-foreground"
-                                disabled={!isFilled}
-                                onClick={() => setConfirmOpen(true)}
-                            >
-                                Submit
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </form>
-            </Dialog>
-            {open && (
-                <SubmitConfirmationPopup
-                    formData={formData}
-                    type={props.type}
-                    refresh={props.refresh!}
-                    open={setOpen}
-                    confirmOpen={confirmOpen}
-                    setConfirmOpen={setConfirmOpen}
-                    disabled={!isFilled}
-                />
-            )}
+                <FileUpload dnd={true} show={true} onUpload={uploadHandler} />
+            </form>
         </>
     );
 }

@@ -26,8 +26,6 @@ import {
     X,
 } from "@hugeicons/core-free-icons";
 import { useAuth } from "@clerk/react";
-
-import ContentForm from "@/components/contentForm.tsx";
 import DeleteConfirmationPopup from "@/components/deletePopupConfirmation.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
 import { Button } from "./ui/button.tsx";
@@ -50,7 +48,8 @@ import {
     TableRow,
 } from "@/components/ui/table.tsx";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { documentContent } from "@repo/database/types";
+import type { documentContent, UserRoles } from "@repo/database/types";
+import DocPopup from "./createDocPopup.tsx";
 
 type FilterKey =
     | "document_type"
@@ -422,25 +421,22 @@ function CreateDocumentButton({
     refresh: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     return (
-        <ContentForm
+        <DocPopup
             type="Create"
-            currentID={Math.trunc((Math.random() * 10000) % 10000)}
-            currentName=""
-            currentURL=""
-            currentContentOwner="Select Content Owner"
-            currentRole={
-                roles.includes("administrator")
-                    ? "Select Role"
-                    : (roles.at(0) as string)
-            }
-            currentExpirationDate={new Date()}
-            currentExpirationTime="10:30:00"
-            currentStatus="Select Status"
+            defaults={{
+                id: Math.trunc((Math.random() * 10000) % 10000),
+                url: "",
+                name: "",
+                content_owner: "Select Content Owner",
+                assigned_role: roles.includes("administrator")
+                    ? null
+                    : (roles.at(0) as UserRoles),
+                expiration_date: new Date(),
+                document_status: "not_started",
+                document_type: "Reference",
+                lock: "none",
+            }}
             size
-            currentDocType={"Reference"}
-            lock="none"
-            refresh={refresh}
-            roles={roles}
         />
     );
 }
@@ -1001,47 +997,13 @@ export function DocumentsTable({ columns }: DocProps) {
                                                         {canEdit &&
                                                             isLockedByMe && (
                                                                 <>
-                                                                    <ContentForm
+                                                                    <DocPopup
                                                                         type="Edit"
-                                                                        currentID={
-                                                                            doc.id
-                                                                        }
-                                                                        currentName={
-                                                                            doc.name
-                                                                        }
-                                                                        currentURL={
-                                                                            doc.url ??
-                                                                            ""
-                                                                        }
-                                                                        currentContentOwner={
-                                                                            doc.content_owner ??
-                                                                            ""
-                                                                        }
-                                                                        currentRole={
-                                                                            doc.assigned_role ??
-                                                                            ""
-                                                                        }
-                                                                        currentExpirationDate={
-                                                                            doc.expiration_date
-                                                                        }
-                                                                        currentExpirationTime="10:30:00"
-                                                                        currentStatus={
-                                                                            doc.document_status
-                                                                        }
-                                                                        currentDocType={
-                                                                            doc.document_type
+                                                                        defaults={
+                                                                            doc
                                                                         }
                                                                         size={
                                                                             false
-                                                                        }
-                                                                        lock={
-                                                                            doc.lock as string
-                                                                        }
-                                                                        refresh={
-                                                                            setReload
-                                                                        }
-                                                                        roles={
-                                                                            roles
                                                                         }
                                                                     />
 

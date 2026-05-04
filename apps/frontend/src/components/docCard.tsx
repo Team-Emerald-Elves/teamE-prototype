@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
-import ContentForm from "./contentForm.tsx";
 import DeleteConfirmationPopup from "./deletePopupConfirmation.tsx";
 import type { documentContent } from "@repo/database/types";
+import DocPopup from "./createDocPopup.tsx";
 
 type documentCardProps = {
     document: documentContent;
@@ -29,21 +29,31 @@ function DocumentCard(props: documentCardProps) {
                     </div>
 
                     <div className="flex justify-end">
-                        <ContentForm
+                        {/*
+                        (alias) type Document = {
+                            name: string;
+                            id: number;
+                            url: string | null;
+                            bucketId: string;
+                            last_modified: Date;
+                            expiration_date: Date;
+                            mime_type: string;
+                            document_status: Status;
+                            document_type: string | null;
+                            assigned_role: UserRoles | null;
+                            content_owner: string | null;
+                            favorite: boolean | null;
+                            lock: string | null;
+                            lock_name: string | null;
+                            meta_tags: string[];
+                            created_at: Date;
+                            expiration_warn: boolean;
+                        }
+                        */}
+                        <DocPopup
                             type="Edit"
-                            roles={[props.document.assigned_role as string]}
-                            lock={props.document.lock as string}
-                            currentName={props.document.name}
-                            currentURL={props.document.url as string}
-                            currentContentOwner="Bobby Tanner"
-                            currentRole="Underwriter"
-                            currentExpirationDate={
-                                props.document.expiration_date
-                            }
-                            currentExpirationTime="07:30:00"
-                            currentStatus="In Progress"
-                            currentID={props.document.id}
                             size={false}
+                            defaults={props.document}
                         />
 
                         <DeleteConfirmationPopup target={props.document} />

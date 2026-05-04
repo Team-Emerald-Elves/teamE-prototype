@@ -1,16 +1,21 @@
-import {TableCell, TableRow} from "@/components/ui/table.tsx";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import FavoriteStar from "@/components/favoriteStar.tsx";
-import {Dialog, DialogClose, DialogContent, DialogTrigger} from "@/components/ui/dialog.tsx";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog.tsx";
 import DocumentViewer from "@/components/docViewer.tsx";
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon} from "@hugeicons/core-free-icons";
-import * as React from "react";
-import {Button} from "@/components/ui/button.tsx";
-import {getToken} from "@clerk/react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Download01Icon } from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/button.tsx";
+import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr";
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts";
+import type { documentContent, Links as linksData } from "@repo/database/types";
+import DocTag from "@/components/docTag.tsx";
 
-const handleDownload = async (doc: Document) => {
+const handleDownload = async (doc: documentContent) => {
     try {
         addHitCount(doc);
         createNotif(doc, "downloaded");
@@ -36,34 +41,36 @@ const handleDownload = async (doc: Document) => {
     }
 };
 
-
 type FavoriteProps = {
-    d: Document;
-    onToggleOff: (doc: Document) => void;
-    onToggleOn: (doc: Document) => void;
+    d: documentContent;
+    onToggleOff: (doc: documentContent | linksData) => void;
+    onToggleOn: (doc: documentContent | linksData) => void;
 };
 
-async function addHitCount (doc: Document) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
-        headers: {
-            "Content-Type": "application/json"
+async function addHitCount(doc: documentContent) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                id: doc.id,
+                type: "DOCUMENT",
+            }),
         },
-        method: "POST",
-        body: JSON.stringify({
-            id: doc.id,
-            type: "DOCUMENT"
-        })
-    })
+    );
     if (!res.ok) {
-        throw new Error("failed to add doc hit count")
+        throw new Error("failed to add doc hit count");
     }
 }
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
@@ -71,51 +78,105 @@ async function createNotif(doc: Document, action: string) {
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [doc.assigned_role, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
-    })
+        });
+    });
 }
 
-export default function FavoritesTableEntry(props: FavoriteProps)  {
+export default function FavoritesTableEntry(props: FavoriteProps) {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
-    const created = new Date(props.d.created_at);
+    const type = props.d.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");;
+    const status = props.d.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");;
+    const role = props.d.assigned_role;
+    let statusBackground = "bg-slate-400"
+    let roleBackground = "bg-gray-200"
+    let docBackground = "bg-gray-200"
+
+    switch (type) {
+        case 'Reference':
+            docBackground = "bg-sky-200"
+            break;
+        case 'Workflow':
+            docBackground = "bg-indigo-200"
+            break;
+    }
+    switch (status) {
+        case 'Not Started':
+            statusBackground = "bg-red-200";
+            break;
+        case 'In Progress':
+            statusBackground = "bg-yellow-300";
+            break;
+        case 'Needs Review':
+            statusBackground = "bg-orange-300";
+            break;
+        case 'Done':
+            statusBackground = "bg-green-300";
+            break;
+    }
+    switch (role) {
+        case 'Administrator':
+            roleBackground = "bg-purple-700";
+            break;
+        case 'BusinessAnalyst':
+            roleBackground = "bg-blue-300";
+            break;
+        case 'UnderWriter':
+            roleBackground = "bg-pink-300";
+            break;
+        case 'ExcelOperator':
+            roleBackground = "bg-teal-400";
+            break;
+        case 'BusinessOperator':
+            roleBackground = "bg-violet-300";
+            break;
+        case 'ActuarialAnalyst':
+            roleBackground = "bg-fuchsia-300";
+            break;
+    }
     return (
-        <TableRow
-            key={props.d.id}
-            className="hover:bg-gray-50 transition h-12"
-        >
+        <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-14">
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
                 onToggleOn={props.onToggleOn}
             />
 
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button onClick={async () => {createNotif(props.d, "accessed"); addHitCount(props.d) }} className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left">
+                        <button
+                            onClick={async () => {
+                                createNotif(props.d, "accessed");
+                                addHitCount(props.d);
+                            }}
+                            className="max-w-[180px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
+                        >
                             {props.d.name}
                         </button>
                     </DialogTrigger>
 
-                    <DialogContent className="2xl:max-w-2xl h-[90vh] flex flex-col overflow-hidden">
+                    <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
                         <DialogClose className="absolute right-4 top-4 text-xl z-10">
                             ✕
                         </DialogClose>
@@ -129,41 +190,33 @@ export default function FavoritesTableEntry(props: FavoriteProps)  {
                 </Dialog>
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
-                {created.toLocaleString()}
-            </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
-                {props.d.document_type}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {exp.toLocaleString()}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
-                {props.d.document_status}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {props.d.content_owner}
             </TableCell>
 
-            <TableCell className="text-[14px] font-small text-gray-700">
-                {props.d.assigned_role}
-            </TableCell>
-
-            <TableCell className="text-[14px] font-small text-gray-700">
+            <TableCell className="text-[14px] font-small text-(--table-text)">
                 {mod.toLocaleString()}
             </TableCell>
-            <TableCell className="text-[14px] font-small text-gray-700">
-                <Button onClick={async () => await handleDownload(props.d)}>
-                    <HugeiconsIcon icon={Download01Icon} />
-                </Button>
 
+            <TableCell>
+                <div className="flex flex-wrap gap-1 text-(--tab-text)">
+                    <DocTag background={roleBackground}>{role}</DocTag>
+                    <DocTag background={docBackground}>{type}</DocTag>
+                    <DocTag background={statusBackground}>{status}</DocTag>
+                </div>
             </TableCell>
-
-
+            <TableCell>
+                <div className="flex justify-center">
+                    <Button onClick={async () => await handleDownload(props.d)}>
+                        <HugeiconsIcon icon={Download01Icon} color = "white"  />
+                    </Button>
+                </div>
+            </TableCell>
         </TableRow>
-    )
+    );
 }

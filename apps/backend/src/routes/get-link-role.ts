@@ -11,8 +11,8 @@ async function linkRoleRoute(req: express.Request, res: express.Response) {
 
         const links = await prisma.links.findMany({
             where: {
-                owner: data.owner
-            }
+                owner: data.owner,
+            },
         });
 
         return res.json(links);
@@ -23,4 +23,3 @@ async function linkRoleRoute(req: express.Request, res: express.Response) {
 }
 
 export default linkRoleRoute;
-

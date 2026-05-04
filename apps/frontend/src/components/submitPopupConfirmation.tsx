@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -7,8 +7,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import qmgr from "@/lib/querymgr";
-import { getToken } from "@clerk/react"
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts";
+import { getToken } from "@clerk/react";
+import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
     type: string
@@ -33,71 +33,76 @@ type SubmitConfirmationPopupProps = {
 }
 
 export type IFile = {
-    id: number
-    name: string
-    url?: string
-    content_owner: string
-    expiration_date?: string
-    mime_type?: string
-    assigned_role: string
-    document_type: string
-    document_status: string
-    filePayload?: string
-    fileName?: string
-}
+    id: number;
+    name: string;
+    url?: string;
+    content_owner: string;
+    expiration_date?: string;
+    mime_type?: string;
+    assigned_role: string;
+    document_type: string;
+    document_status: string;
+    filePayload?: string;
+    fileName?: string;
+};
 
-async function createNotif(doc: Document, action: string) {
+async function createNotif(doc: documentContent, action: string) {
     const token = await getToken();
 
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [doc.assigned_role, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [doc.assigned_role, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${doc.name.substring(0, 12) + (doc.name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
-    })
+        });
+    });
 }
-
-
 
 function buildExpirationDate(
     expirationDate?: Date,
-    expirationTime?: string
+    expirationTime?: string,
 ): string | undefined {
-    if (!expirationDate) return undefined
+    if (!expirationDate) return undefined;
 
-    const date = new Date(expirationDate)
+    const date = new Date(expirationDate);
 
     if (expirationTime) {
-        const [hours = "0", minutes = "0", seconds = "0"] = expirationTime.split(":")
-        date.setHours(Number(hours), Number(minutes), Number(seconds), 0)
+        const [hours = "0", minutes = "0", seconds = "0"] =
+            expirationTime.split(":");
+        date.setHours(Number(hours), Number(minutes), Number(seconds), 0);
     }
 
-    return date.toISOString()
+    return date.toISOString();
 }
 
-async function createDocument(fileData: SubmitConfirmationPopupProps, token: string, refresh: (any: any) => void) {
-
+async function createDocument(
+    fileData: SubmitConfirmationPopupProps,
+    token: string,
+    refresh: (any: any) => void,
+) {
     const data: IFile = {
         id: fileData.formData.id,
         name: fileData.formData.name,
@@ -105,48 +110,52 @@ async function createDocument(fileData: SubmitConfirmationPopupProps, token: str
         content_owner: fileData.formData.contentOwner,
         expiration_date: buildExpirationDate(
             fileData.formData.expirationDate,
-            fileData.formData.expirationTime
+            fileData.formData.expirationTime,
         ),
         document_type: fileData.formData.document_type,
         document_status: fileData.formData.document_status,
         assigned_role: fileData.formData.role,
         filePayload: fileData.formData.filePayload,
-        fileName: fileData.formData.fileName
-    }
+        fileName: fileData.formData.fileName,
+    };
     console.log(data.assigned_role);
 
     const endpoint =
         fileData.type === "Create"
             ? "/api/supabase/create-document"
-            : "/api/supabase/update-document"
+            : "/api/supabase/update-document";
 
-    const method = fileData.type === "Create" ? "POST" : "PUT"
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
-        method,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+    const method = fileData.type === "Create" ? "POST" : "PUT";
+    const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}${endpoint}`,
+        {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
         },
-        body: JSON.stringify(data)
-    })
+    );
 
     if (!response.ok) {
-        const errorText = await response.text()
-        console.error(errorText)
-        throw new Error(errorText || "Network response was not ok")
+        const errorText = await response.text();
+        console.error(errorText);
+        throw new Error(errorText || "Network response was not ok");
     }
 
     const newDoc = await response.json();
-    console.log(newDoc)
+    console.log(newDoc);
 
     if (fileData.type === "Create") {
-        createNotif(newDoc, "created")
+        createNotif(newDoc, "created");
     } else {
-        createNotif(newDoc, "updated")
+        createNotif(newDoc, "updated");
     }
 
-    refresh(prev => !prev)
-    return newDoc
+    refresh((prev: any) => !prev);
+
+    return newDoc;
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
@@ -192,4 +201,4 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
     )
 }
 
-export default SubmitConfirmationPopup
+export default SubmitConfirmationPopup;

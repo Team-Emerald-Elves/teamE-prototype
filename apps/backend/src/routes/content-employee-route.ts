@@ -1,4 +1,4 @@
-import express, {type Express} from "express";
+import express, { type Express } from "express";
 import prisma from "@repo/database";
 
 interface IEmployeeID {
@@ -20,22 +20,25 @@ function contentEmployeeRoute(req: express.Request, res: express.Response) {
     //     }
     // })
 
-    prisma.employee.findFirst({
-        where: {
-            id: employee.id
-        },
-        select: {
-            bucket: true
-        }
-    }).then(async (data) => {
-        const documents = await prisma.documentContent.findMany({
+    prisma.employee
+        .findFirst({
             where: {
-                bucketId: data?.bucket?.id
-            }
+                id: employee.id,
+            },
+            select: {
+                bucket: true,
+            },
         })
-        res.status(200).json(documents)
-    }).catch((err) => {
-        console.log("Error: ", err)
-    });
+        .then(async (data) => {
+            const documents = await prisma.documentContent.findMany({
+                where: {
+                    bucketId: data?.bucket?.id,
+                },
+            });
+            res.status(200).json(documents);
+        })
+        .catch((err) => {
+            console.log("Error: ", err);
+        });
 }
 export default contentEmployeeRoute;

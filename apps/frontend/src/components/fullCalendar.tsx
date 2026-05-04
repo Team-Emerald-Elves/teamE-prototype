@@ -1,8 +1,11 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useEffect, useState } from "react";
-import {getToken, useAuth} from "@clerk/react"
+import { useEffect, useRef, useState } from "react";
+import { getToken } from "@clerk/react";
+
+type CalendarView = "dayGridMonth" | "timeGridWeek";
 
 type FullCalendarComponentProps = {
     setOpen: (open: boolean) => void;
@@ -10,67 +13,91 @@ type FullCalendarComponentProps = {
     setSelectedEvent: (event: any) => void;
     reload: boolean;
     setReload: (reload: any) => void;
+    view: CalendarView;
+    calendarRef: React.RefObject<any>;
 };
 
 export default function FullCalendarComponent({
                                                   setOpen,
-                                                  setSelectedEvent, reload, setOpenAdd
+                                                  setOpenAdd,
+                                                  setSelectedEvent,
+                                                  reload,
+                                                  view,
+                                                  calendarRef,
                                               }: FullCalendarComponentProps) {
-
     const [events, setEvents] = useState<any[]>([]);
 
     useEffect(() => {
         async function fetchEvents() {
             const token = await getToken();
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/get-events`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/get-events`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 },
-            });
+            );
 
             if (!res.ok) {
                 throw new Error("Error fetching events.");
             }
 
             const data = await res.json();
-            console.log(data);
             setEvents(data);
         }
 
         fetchEvents();
-    }, [getToken, reload]);
+    }, [reload]);
+
+    useEffect(() => {
+        const api = calendarRef.current?.getApi();
+        if (api) api.changeView(view);
+    }, [view]);
 
     return (
-        <div className="h-full w-full">
-        <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
+        <div className="h-full w-full ">
+            <FullCalendar
+                ref={calendarRef}
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView={view}
+                events={events}
+                height="100%"
+                contentHeight="auto"
+                navLinks={true}
+                navLinkDayClick={() => setOpenAdd(true)}
+                eventClick={(info) => {
 
-            dateClick={() => setOpenAdd(true)}
 
-            eventClick={(info) => {
-                setSelectedEvent(info.event)
-                setOpen(true);
+                    setSelectedEvent(info.event);
+                    setOpen(true);
+                    document.querySelectorAll(".fc-popover").forEach(el => el.remove());
+                }}
 
-            }}
-            headerToolbar={
+                headerToolbar={
                 {
-                    start: 'title',
+                    start: '',
                     center: '',
-                    end: 'prev today next'
+                    end: '',
                 }
             }
-            dayHeaderClassNames={() => [
-                "bg-[#ecf4f9]",
-                "text-[#0b4461]",
-            ]}
 
-            events={events}
-            height="100%"
-            contentHeight="auto"
-            stickyHeaderDates={true}
-        />
+                eventClassNames={() => ["cursor-pointer"]}
+
+                eventDidMount={(info) => {
+                    info.el.title = info.event.title;
+                }}
+                dayHeaderClassNames={() => ["bg-(--calendar-bg)", "text-(--calendar-bg-foreground)"]}
+
+                stickyHeaderDates={true}
+
+                slotEventOverlap={false}
+
+                dayMaxEvents={4}
+                slotMinTime="08:00:00"
+                slotMaxTime="20:00:00"
+            />
         </div>
     );
 }

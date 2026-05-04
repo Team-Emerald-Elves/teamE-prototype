@@ -1,27 +1,24 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faStar as solidStar} from "@fortawesome/free-solid-svg-icons";
-import {faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
-import {TableCell} from "@/components/ui/table.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
+import { TableCell } from "@/components/ui/table.tsx";
 import { useState } from "react";
-import type { Document } from "@/../../packages/database/lib/prismadefs.ts";
-
-type Links = {
-    id: string;
-    link_name: string;
-    url: string;
-    owner: string;
-    favorite: boolean;
-};
+import type { documentContent, Links as linksData } from "@repo/database/types";
 
 type FavoriteStarProps = {
-    doc: Document | Links;
-    onToggleOn: (doc: Document | Links) => void;
-    onToggleOff: (doc: Document | Links) => void;
-    className?: string
+    doc: documentContent | linksData;
+    onToggleOn: (doc: documentContent | linksData) => void;
+    onToggleOff: (doc: documentContent | linksData) => void;
+    className?: string;
 };
 
-export default function FavoriteStar({ doc, onToggleOff, onToggleOn, className }: FavoriteStarProps) {
-    const [favorite, setFavorite] = useState(doc.favorite);
+export default function FavoriteStar({
+    doc,
+    onToggleOff,
+    onToggleOn,
+    className,
+}: FavoriteStarProps) {
+    const [favorite, setFavorite] = useState((doc as documentContent).favorite);
 
     return (
         <TableCell className="text-center">
@@ -29,15 +26,17 @@ export default function FavoriteStar({ doc, onToggleOff, onToggleOn, className }
                 icon={favorite ? solidStar : regularStar}
                 onClick={() => {
                     if (!favorite) {
-                        onToggleOff(doc)
-                    }
-                    else {
-                        onToggleOn(doc)
+                        onToggleOff(doc);
+                    } else {
+                        onToggleOn(doc);
                     }
 
-                    setFavorite(!favorite)
+                    setFavorite(!favorite);
                 }}
-                className={"text-yellow-400 cursor-pointer " + (className ? className : "")}
+                className={
+                    "text-yellow-400 cursor-pointer " +
+                    (className ? className : "")
+                }
             />
         </TableCell>
     );

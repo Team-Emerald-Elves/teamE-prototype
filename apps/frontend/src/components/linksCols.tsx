@@ -1,30 +1,17 @@
-"use client"
-import type {ColumnDef} from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react"
-import { Button } from './ui/button.tsx'
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import DocumentViewer from "@/components/docViewer.tsx";
-import {TableCell} from "@/components/ui/table.tsx";
-import DocTag from "@/components/doctag.tsx";
-import {HugeiconsIcon} from "@hugeicons/react";
-import {Download01Icon} from "@hugeicons/core-free-icons";
-import * as React from "react";
-import {TagInput} from "@/components/tagInput.tsx";
-import {useState} from "react";
+"use client";
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "./ui/button.tsx";
+import DocTag from "@/components/docTag.tsx";
+import { TagInput } from "@/components/tagInput.tsx";
+import { useState } from "react";
 import {
     Popover,
     PopoverContent,
-    PopoverDescription,
     PopoverHeader,
     PopoverTitle,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import {getToken} from "@clerk/react";
+} from "@/components/ui/popover";
 import qmgr from "@/lib/querymgr.ts";
 
 export type Document = {
@@ -53,34 +40,39 @@ export type Links = {
     updated_at: string;
 };
 
-async function addHitCount (link: Links) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`, {
-        headers: {
-            "Content-Type": "application/json"
+async function addHitCount(link: Links) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/add-hit-count`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                id: link.id,
+                type: "LINK",
+            }),
         },
-        method: "POST",
-        body: JSON.stringify({
-            id: link.id,
-            type: "LINK"
-        })
-    })
+    );
     if (!res.ok) {
-        throw new Error("failed to add doc hit count")
+        throw new Error("failed to add doc hit count");
     }
 }
 
-
 async function updateTags(lId: string, tags: string[]) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/update-link-tags`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/update-link-tags`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: lId,
+                meta_tags: tags,
+            }),
         },
-        body: JSON.stringify({
-            id: lId,
-            meta_tags: tags,
-        }),
-    });
+    );
 
     if (!res.ok) {
         throw new Error("Failed to update tags");
@@ -89,16 +81,19 @@ async function updateTags(lId: string, tags: string[]) {
     return res.json();
 }
 async function removeTag(lId: string, tag: string) {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/delete-link-tag`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/delete-link-tag`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: lId,
+                meta_tag: tag,
+            }),
         },
-        body: JSON.stringify({
-            id: lId,
-            meta_tag: tag,
-        }),
-    });
+    );
 
     if (!res.ok) {
         throw new Error("Failed to update tags");
@@ -109,32 +104,35 @@ async function removeTag(lId: string, tag: string) {
 
 async function createNotif(link: Links, action: string) {
     qmgr.wait(() => {
-        qmgr.getMe( async (res1) => {
+        qmgr.getMe(async (res1) => {
             if (!res1.success) {
                 throw new Error("Unable to get me");
             }
             const me = res1.data!;
             console.log(me);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${qmgr.getToken()}`
+            const res = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${qmgr.getToken()}`,
+                    },
+                    body: JSON.stringify({
+                        public: true,
+                        targetRoles: [link.owner, "Administrator"],
+                        title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+                    }),
                 },
-                body: JSON.stringify({
-                    public: true,
-                    targetRoles: [link.owner, "Administrator"],
-                    title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? '...' : '')}`,
-                })
-            })
+            );
 
             if (!res.ok) {
-                throw new Error("failed to create view notification")
+                throw new Error("failed to create view notification");
             }
             console.log(await res.json());
-        })
-    })
+        });
+    });
 }
 
 export const columns: ColumnDef<Links>[] = [
@@ -144,12 +142,14 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     Title
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
     },
 
@@ -159,12 +159,14 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     URL
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const link = row.original;
@@ -174,8 +176,11 @@ export const columns: ColumnDef<Links>[] = [
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline"
-                    onClick={async () => { createNotif(link, "opened");  addHitCount(link) }}
+                    className="hover:underline"
+                    onClick={async () => {
+                        createNotif(link, "opened");
+                        addHitCount(link);
+                    }}
                 >
                     {link.url}
                 </a>
@@ -188,34 +193,36 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     Role
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
-            const role = row.original.owner
-            let roleBackground = "bg-gray-200"
+            const role = row.original.owner;
+            let roleBackground = "bg-gray-200";
 
             switch (role) {
-                case 'Administrator':
-                    roleBackground = "bg-purple-700";
+                case "Administrator":
+                    roleBackground = "bg-purple-400";
                     break;
-                case 'BusinessAnalyst':
+                case "BusinessAnalyst":
                     roleBackground = "bg-blue-300";
                     break;
-                case 'UnderWriter':
+                case "UnderWriter":
                     roleBackground = "bg-pink-300";
                     break;
-                case 'ExcelOperator':
+                case "ExcelOperator":
                     roleBackground = "bg-teal-400";
                     break;
-                case 'BusinessOperator':
+                case "BusinessOperator":
                     roleBackground = "bg-violet-300";
                     break;
-                case 'ActuarialAnalyst':
+                case "ActuarialAnalyst":
                     roleBackground = "bg-fuchsia-300";
                     break;
             }
@@ -224,8 +231,8 @@ export const columns: ColumnDef<Links>[] = [
                 <div className="text-center justify-items-center">
                     <DocTag background={roleBackground}>{role}</DocTag>
                 </div>
-            )
-        }
+            );
+        },
     },
     {
         accessorKey: "created_at",
@@ -233,21 +240,21 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="justify-start px-0"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     Created
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const link = row.original;
             const date = new Date(link.created_at);
 
-            return (
-                <p>{date.toLocaleString()}</p>
-            );
+            return <p>{date.toLocaleString()}</p>;
         },
     },
     {
@@ -256,21 +263,21 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="justify-start px-0"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     Last Modified
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const link = row.original;
             const date = new Date(link.updated_at);
 
-            return (
-                <p>{date.toLocaleString()}</p>
-            );
+            return <p>{date.toLocaleString()}</p>;
         },
     },
     {
@@ -279,13 +286,15 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <Button
                     variant="ghost"
-                    className = "justify-start px-0"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="justify-start px-0"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
                 >
                     Tags
                     <ArrowUpDown className="ml-2 h-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const link = row.original;
@@ -295,22 +304,31 @@ export const columns: ColumnDef<Links>[] = [
             return (
                 <div className="flex items-center">
                     {tags.map((item) => (
-                        <div className="text-center" key={item}><DocTag background="bg-gray-200">{item}</DocTag></div>
+                        <div className="text-center" key={item}>
+                            <DocTag background="bg-gray-200">{item}</DocTag>
+                        </div>
                     ))}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" className="h-4 w-4 ml-1 flex items-center justify-center text-center">+</Button>
+                            <Button
+                                variant="outline"
+                                className="h-4 w-4 ml-1 flex items-center justify-center text-center"
+                            >
+                                +
+                            </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">
                             <PopoverHeader>
                                 <PopoverTitle>Add Tags</PopoverTitle>
-
                             </PopoverHeader>
                             <TagInput
                                 tags={tagList}
                                 setTags={async (newTags) => {
                                     setTagList(newTags);
-                                    await updateTags(link.id, newTags as string[]).catch(console.error);
+                                    await updateTags(
+                                        link.id,
+                                        newTags as string[],
+                                    ).catch(console.error);
                                 }}
                                 remove={async (tagToRemove: string) => {
                                     await removeTag(link.id, tagToRemove);
@@ -319,11 +337,8 @@ export const columns: ColumnDef<Links>[] = [
                             />
                         </PopoverContent>
                     </Popover>
-
                 </div>
-
             );
         },
     },
-
-]
+];

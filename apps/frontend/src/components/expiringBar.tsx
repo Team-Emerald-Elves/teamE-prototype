@@ -6,15 +6,14 @@ type ExpiringTimelineProps = {
 };
 
 export default function ExpiringTimeline({
-                                             createdAt,
-                                             expiresAt,
-                                         }: ExpiringTimelineProps) {
+    createdAt,
+    expiresAt,
+}: ExpiringTimelineProps) {
     const [percent, setPercent] = useState(0);
     const [nowLabel, setNowLabel] = useState("");
     const [isExpired, setIsExpired] = useState(false);
 
-    const format = (d: Date) =>
-        `${d.getMonth() + 1}/${d.getDate()}`;
+    const format = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
 
     useEffect(() => {
         const start = new Date(createdAt).getTime();
@@ -48,21 +47,17 @@ export default function ExpiringTimeline({
     const createdLabel = format(new Date(createdAt));
     const expiresLabel = format(new Date(expiresAt));
 
-
-
     const urgency =
         percent < 35
             ? "bg-green-400"
             : percent < 70
-                ? "bg-yellow-400"
-                : "bg-red-500";
+              ? "bg-yellow-400"
+              : "bg-red-500";
 
     return (
         <div className="w-full pt-8 pl-5 pr-5">
-
             {/* TRACK */}
             <div className="relative w-full h-3 bg-gray-200 rounded-full overflow-visible">
-
                 {/* fill */}
                 <div
                     className={`
@@ -80,7 +75,6 @@ export default function ExpiringTimeline({
                     `}
                     style={{ left: `${percent}%` }}
                 />
-
 
                 <div
                     className="absolute -top-10 z-20 flex flex-col items-center pointer-events-none"
@@ -104,26 +98,27 @@ export default function ExpiringTimeline({
                         "
                     />
                 </div>
-
             </div>
 
             {/* AXIS LABELS */}
             <div className="flex justify-between text-xs mt-2">
-
                 <span className="flex flex-col items-start leading-tight">
-                    <span className={`font-medium ${isExpired ? "text-red-600" : ""}`}>
+                    <span
+                        className={`font-medium ${isExpired ? "text-red-600" : ""}`}
+                    >
                         {createdLabel}
                     </span>
                     <span className="text-gray-500">Created</span>
                 </span>
 
                 <span className="flex flex-col items-end leading-tight">
-                    <span className={`font-medium ${isExpired ? "text-red-600" : ""}`}>
+                    <span
+                        className={`font-medium ${isExpired ? "text-red-600" : ""}`}
+                    >
                         {expiresLabel}
                     </span>
                     <span className="text-gray-500">Expires</span>
                 </span>
-
             </div>
         </div>
     );

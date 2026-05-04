@@ -13,7 +13,9 @@
     "db:studio": "pnpm --filter @repo/database db:studio",
     "db:push": "pnpm --filter @repo/database db:push",
     "db:pull": "pnpm --filter @repo/database db:pull",
-    "db:pull:gen": "pnpm --filter @repo/database db:pull:gen"
+    "db:pull:gen": "pnpm --filter @repo/database db:pull:gen",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -24,6 +26,7 @@
     "body-parser": "^2.2.2",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",
+    "jiti": "^2.6.1",
     "nodemon": "^3.1.14",
     "resend": "^6.12.2",
     "tsx": "^4.21.0",

@@ -12,6 +12,7 @@ function LoginSignup() {
                         className="h-full w-full object-cover object-center"
                         alt="Hanover Login"
                         src="/hanover-login-img.jpg"
+                        draggable={false}
                     />
                 </div>
                 <div className="w-1/2 h-screen text-left flex flex-col justify-center items-center bg-[url('/geometric-background.png')] bg-cover bg-no-repeat text-white p-2">

@@ -14,11 +14,11 @@ import Footer from "./components/footer.tsx";
 import FavoritesPage from "./pages/favoritespage.tsx";
 import StatisticsPage from "./pages/statisticsPage.tsx";
 import { Show, useAuth, UserButton } from "@clerk/react";
-//import CenterDiv from "./components/center-div.tsx";
 import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
 import qmgr from "./lib/querymgr.ts";
+import ChatBot from "@/components/chatBotUI.tsx"
 
 function App() {
     qmgr.auth(useAuth());
@@ -72,6 +72,7 @@ function App() {
                             <Route path="/aboutus" element={<AboutUs />} />
                             <Route path="/credits" element={<Credits />} />
                         </Routes>
+                        <ChatBot />
                     </main>
                     <Footer />
                 </div>

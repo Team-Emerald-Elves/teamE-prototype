@@ -111,8 +111,7 @@ export default function Favorites() {
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Title
                                     </TableHead>
-                                   
-                                  
+
                                     <TableHead className="text-(--table-titles) font-medium text-sm">
                                         Expiration Date
                                     </TableHead>
@@ -219,14 +218,14 @@ export default function Favorites() {
                                             className="text-center text-xs text-(--ring) py-5"
                                         >
                                             You've reached the end
-                                            <span className = "px-1">·</span>
-                                            {favoriteDocs.length} document{favoriteDocs.length !== 1 ? "s" : ""}
-
+                                            <span className="px-1">·</span>
+                                            {favoriteDocs.length} document
+                                            {favoriteDocs.length !== 1
+                                                ? "s"
+                                                : ""}
                                         </TableCell>
                                     </TableRow>
                                 )}
-
-
                             </TableBody>
                         </Table>
 
@@ -397,9 +396,11 @@ export default function Favorites() {
                                             className="text-center text-xs text-(--ring) py-5"
                                         >
                                             You've reached the end
-                                            <span className = "px-1">·</span>
-                                            {favoriteLinks.length} link{favoriteLinks.length !== 1 ? "s" : ""}
-
+                                            <span className="px-1">·</span>
+                                            {favoriteLinks.length} link
+                                            {favoriteLinks.length !== 1
+                                                ? "s"
+                                                : ""}
                                         </TableCell>
                                     </TableRow>
                                 )}

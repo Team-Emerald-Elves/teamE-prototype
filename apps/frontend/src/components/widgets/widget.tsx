@@ -15,7 +15,7 @@ export default function WidgetWrapper({
     isEditing,
     onRemove,
     children,
-    isDragging
+    isDragging,
 }: Props) {
     return (
         //AI GENERATED STYLING
@@ -24,9 +24,11 @@ export default function WidgetWrapper({
                 className={`
           flex items-center justify-between px-3 py-2 border-0 text-sm font-medium
           overflow-hidden transition-all duration-200 ease-in-out
-          ${isEditing 
-                    ? `max-h-16 widget-drag-handle ${isDragging ? "cursor-grabbing" : "cursor-grab"} opacity-100` 
-                    : "max-h-0 opacity-0 pointer-events-none"}`}
+          ${
+              isEditing
+                  ? `max-h-16 widget-drag-handle ${isDragging ? "cursor-grabbing" : "cursor-grab"} opacity-100`
+                  : "max-h-0 opacity-0 pointer-events-none"
+          }`}
             >
                 <div className="flex items-center gap-2 ">
                     {isEditing && (
@@ -45,8 +47,7 @@ export default function WidgetWrapper({
                         className="text-(--border-strong) hover:text-destructive"
                         title="Remove widget"
                     >
-                        <X size={14}
-                        />
+                        <X size={14} />
                     </button>
                 )}
             </div>

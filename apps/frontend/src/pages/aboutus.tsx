@@ -1,57 +1,73 @@
 import PageHeader from "../components/page-header.tsx";
 import { Card } from "@/components/ui/card.tsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const teamMembers = [
     {
         name: "Brycen Pina",
         role: "Lead Software Engineer",
         image: "/brycenprofile.png",
+        quote: "Always bear in mind that your own resolution to succeed, is more important than any other one thing. — Abraham Lincoln",
     },
     {
         name: "Anastasia Kelnik",
         role: "Assistant Lead Software Engineer",
         image: "/anastasiaprofile.png",
+        quote: "How lucky I am  to have something that makes saying goodbye so hard. - Winnie the Pooh",
     },
     {
         name: "Colin Teahan",
         role: "Assistant Lead Software Engineer",
         image: "/colinprofile.png",
+        quote: "To doubt everything or to believe everything are two equally convenient solutions; both dispense with the necessity of reflection. -Jules Henri Poincaré",
     },
     {
         name: "Alex Law",
         role: "Full-Time Software Engineer",
         image: "/alexprofile.png",
+        quote: "Be 1% better than you were yesterday.",
     },
     {
         name: "Zara Jaferi",
         role: "Full-Time Software Engineer",
         image: "/zaraprofile.png",
+        quote: "Stop trying. Take long walks. Look at scenery. Doze off at noon. Don't even think about flying. And then, pretty soon, you'll be flying again. - Ursula, Kiki's Delivery Service",
     },
     {
         name: "Jenelia Leo",
         role: "Full-Time Software Engineer",
         image: "/jeneliaprofile.png",
+        quote: "How you spend your days is how you spend your life. - Annie Dillard",
     },
-    { name: "Andi Kurtiqi", role: "Scrum Master", image: "/andiprofile.png" },
+    {
+        name: "Andi Kurtiqi",
+        role: "Scrum Master",
+        image: "/andiprofile.png",
+        quote: "Comparison is the theft of joy. -Theodore Roosevelt",
+    },
     {
         name: "Elliot Ghidall",
         role: "Product Owner",
         image: "/elliotprofile.png",
+        quote: "We are trying to prove ourselves wrong as quickly as possible, because only in that way can we find progress. ― Richard P. Feynman",
     },
     {
         name: "Sylvia Jacobs",
         role: "Project Manager",
         image: "/sylviajprofile.png",
+        quote: "One day we'll look back at where we started and be amazed by how far we've come - Technoblade",
     },
     {
         name: "Sylvia Strayer",
         role: "Document Analyst",
         image: "/sylviasprofile.png",
+        quote: "The law, in its majestic equality, forbids rich and poor alike to sleep under bridges, to beg in the streets, and to steal their bread. ― Anatole France",
     },
 ];
 
 export default function AboutUs() {
+    const [selected, setSelected] = useState(null);
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
     }, []);
@@ -60,6 +76,42 @@ export default function AboutUs() {
         <div className="space-y-8 max-w">
             <PageHeader title="About Us" />
 
+            {/* popup */}
+            {selected && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => setSelected(null)}
+                >
+                    <div
+                        className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 flex flex-col items-center gap-4 shadow-xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={selected.image}
+                            alt={selected.name}
+                            className="w-24 h-24 rounded-full object-cover border border-gray-200"
+                            draggable={false}
+                        />
+                        <div className="text-center">
+                            <p className="font-semibold text-gray-900 text-lg">
+                                {selected.name}
+                            </p>
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-medium">
+                                {selected.role}
+                            </span>
+                        </div>
+                        <p className="text-gray-600 text-center italic">
+                            "{selected.quote}"
+                        </p>
+                        <button
+                            onClick={() => setSelected(null)}
+                            className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
             <div className="flex flex-col lg:flex-row gap-10 px-6 items-start">
                 {/* Left Section */}
                 <div className="lg:w-2/3 pl-4">
@@ -72,11 +124,13 @@ export default function AboutUs() {
                             <Card
                                 key={member.name}
                                 className="flex flex-col items-center gap-3 !p-4 rounded-xl hover:shadow-md transition-shadow duration-200"
+                                onClick={() => setSelected(member)}
                             >
                                 <img
                                     src={member.image}
                                     alt={member.name}
-                                    className="w-35 h-35 rounded-lg object-cover border border-gray-200 shrink-0 bg-gray-100"
+                                    className="w-35 h-35 min-h-[140px] rounded-lg object-cover border border-gray-200 shrink-0 bg-gray-100"
+                                    draggable={false}
                                 />
                                 <div className="text-center min-w-0 w-full">
                                     <p className="text-sm font-semibold text-gray-900 truncate">

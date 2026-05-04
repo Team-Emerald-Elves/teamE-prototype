@@ -30,9 +30,19 @@ function Footer() {
                     {/* top grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
                         {/* Hanover */}
+                        <div className="-mt-1">
+                            <img
+                                src="/hanoverfooter.png"
+                                alt="Hanover Insurance"
+                                className="w-48 h-auto"
+                                draggable={false}
+                            />
+                        </div>
+
+                        {/* company */}
                         <div>
                             <h3 className="font-semibold text-[#E9A565] mb-4">
-                                Hanover Insurance
+                                Company
                             </h3>
                             <ul className="space-y-2 text-sm text-white">
                                 <li>
@@ -44,21 +54,34 @@ function Footer() {
                             </ul>
                         </div>
 
-                        {/* company */}
+                        {/* pages */}
                         <div>
                             <h3 className="font-semibold text-[#E9A565] mb-4">
-                                Company
+                                Pages
                             </h3>
                             <ul className="space-y-2 text-sm text-white">
                                 <li>
-                                    <FooterLink to="/aboutus">
-                                        About Us
+                                    <FooterLink to="/documents">
+                                        Documents
+                                    </FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/links">Links</FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/calendar">
+                                        Calendar
+                                    </FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/employee-management">
+                                        User Management
                                     </FooterLink>
                                 </li>
                             </ul>
                         </div>
 
-                        {/* legal */}
+                        {/* resource */}
                         <div>
                             <h3 className="font-semibold text-[#E9A565] mb-4">
                                 Resources
@@ -75,6 +98,11 @@ function Footer() {
                                 <li>
                                     <FooterLink to="/credits">
                                         Credits
+                                    </FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/aboutus">
+                                        About Us
                                     </FooterLink>
                                 </li>
                             </ul>

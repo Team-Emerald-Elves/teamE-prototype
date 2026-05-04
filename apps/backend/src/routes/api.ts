@@ -1,25 +1,27 @@
 import Router, { type Request, type Response } from "express";
+import { getAuth, type EmailAddress } from "@clerk/express";
 import {
-    requireAuth,
-    getAuth,
-    clerkClient,
-    type EmailAddress,
-} from "@clerk/express";
-import { UpdateLockBody, GetLockQuery } from "../lib/zod/routes.schemas.ts";
+    UpdateLockBody,
+    GetLockQuery,
+    AiRequestModel,
+} from "../lib/zod/routes.schemas.ts";
 import validate from "../lib/zod/middleware.ts";
 import prisma, { Prisma, type Employee } from "@repo/database";
 import { Resend } from "resend";
+import AiRouter from "./ai.routes.ts";
+import { clerkCache } from "../lib/ecache.ts";
 
 const APIRouter = Router();
 
-APIRouter.get("/me", requireAuth(), async (req, res) => {
+APIRouter.get("/me", async (req, res) => {
     // Use `getAuth()` to get the user's `userId`
     const { userId, isAuthenticated } = getAuth(req);
-    const clerkUser = await clerkClient.users.getUser(userId as string);
 
     if (!isAuthenticated) {
         return res.status(401).json({ error: "Not authenticated" });
     }
+
+    const clerkUser = await clerkCache.getUser(userId!);
 
     // id: string;
     // clerkUserId: string | null;
@@ -67,7 +69,6 @@ APIRouter.get("/me", requireAuth(), async (req, res) => {
 
 async function updateLock(req: Request, res: Response) {
     try {
-        
         let { id, status } = req.body ?? {};
 
         const { userId, isAuthenticated } = getAuth(req);
@@ -88,7 +89,7 @@ async function updateLock(req: Request, res: Response) {
             },
             data: {
                 lock: status ? employee.id : "none",
-                lock_name: employee.first_name + ' ' + employee.last_name
+                lock_name: employee.first_name + " " + employee.last_name,
             },
         });
 
@@ -151,5 +152,6 @@ export async function invite(email: string, password: string) {
 
 APIRouter.put("/update-lock", validate(UpdateLockBody), updateLock);
 APIRouter.get("/get-lock", validate(GetLockQuery), getLock);
+APIRouter.use("/ai", validate(AiRequestModel), AiRouter);
 
 export default APIRouter;

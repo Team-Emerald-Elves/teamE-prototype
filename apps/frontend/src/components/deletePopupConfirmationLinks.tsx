@@ -112,7 +112,7 @@ export function DeleteConfirmationPopupLink(
 
     return (
         <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button variant="destructive" size="icon">
                     <HugeiconsIcon icon={Delete02Icon} size={20} />
                 </Button>
@@ -122,10 +122,10 @@ export function DeleteConfirmationPopupLink(
                     <DialogTitle>Are you sure?</DialogTitle>
                 </DialogHeader>
                 <DialogFooter>
-                    <DialogClose>
+                    <DialogClose asChild>
                         <Button variant="outline">Cancel</Button>
                     </DialogClose>
-                    <DialogClose>
+                    <DialogClose asChild>
                         <Button
                             type="submit"
                             onClick={() => {

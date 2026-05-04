@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from "express";
 import prisma, { type Employee } from "@repo/database";
-import { getAuth, clerkClient } from "@clerk/express";
+import { getAuth } from "@clerk/express";
 
 import {
     ListEmployeesModel,
@@ -9,6 +9,7 @@ import {
 import validate from "../lib/zod/middleware.ts";
 
 import path from "path";
+import { clerkCache } from "../lib/ecache.ts";
 const employeeRoute = express();
 
 interface EmployeeRequest {
@@ -260,9 +261,7 @@ async function listEmployees(
                         };
                     }
 
-                    const user = await clerkClient.users.getUser(
-                        emp.clerkUserId,
-                    );
+                    const user = await clerkCache.getUser(emp.clerkUserId!);
 
                     return {
                         ...emp,

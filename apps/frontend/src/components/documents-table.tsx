@@ -355,7 +355,8 @@ function FilterMenu({
                                                 : group.key,
                                         )
                                     }
-                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && 'bg-(--filter-hover)'} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}>
+                                    className={`flex px-4 py-1 ml-2 justify-center items-center  ${activeGroup === group.key && "bg-(--filter-hover)"} text-(--table-text) rounded-md hover:bg-(--filter-hover) text-xs w-36`}
+                                >
                                     <span className="pr-1">
                                         <HugeiconsIcon
                                             size={16}
@@ -405,7 +406,7 @@ function SelectedFilters({
                         onClick={() => onRemove(filter)}
                         className=" pr-2 text-(--table-text)"
                     >
-                            <HugeiconsIcon size={16} icon={X} />
+                        <HugeiconsIcon size={16} icon={X} />
                     </button>
                 </div>
             ))}
@@ -427,11 +428,16 @@ function CreateDocumentButton({
             currentName=""
             currentURL=""
             currentContentOwner="Select Content Owner"
-            currentRole="Select Role"
+            currentRole={
+                roles.includes("administrator")
+                    ? "Select Role"
+                    : (roles.at(0) as string)
+            }
             currentExpirationDate={new Date()}
             currentExpirationTime="10:30:00"
             currentStatus="Select Status"
             size
+            currentDocType={"Reference"}
             lock="none"
             refresh={refresh}
             roles={roles}
@@ -1022,6 +1028,9 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                         currentExpirationTime="10:30:00"
                                                                         currentStatus={
                                                                             doc.document_status
+                                                                        }
+                                                                        currentDocType={
+                                                                            doc.document_type
                                                                         }
                                                                         size={
                                                                             false

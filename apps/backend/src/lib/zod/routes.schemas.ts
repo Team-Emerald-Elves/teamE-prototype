@@ -136,6 +136,10 @@ export const UpdateFavoriteModel = z.object({
     favorite: z.boolean(),
 });
 
+export const AiRequestModel = z.object({
+    prompt: z.string(),
+});
+
 //layouts.ts
 const LayoutDataModel = z.object({
     layout: z
@@ -157,4 +161,8 @@ const LayoutDataModel = z.object({
 export const LayoutRequestPostModel = z.object({
     action: ActionEnum.optional(),
     layoutData: LayoutDataModel.optional(),
+});
+
+export const DismissNotificationModel = z.object({
+    ids: z.array(z.string()),
 });

@@ -105,57 +105,66 @@ async function createNotif(doc: documentContent, action: string) {
 export default function FavoritesTableEntry(props: FavoriteProps) {
     const exp = new Date(props.d.expiration_date);
     const mod = new Date(props.d.last_modified);
-    const type = props.d.document_type.replaceAll("reference", "Reference").replaceAll("workflow", "Workflow");;
-    const status = props.d.document_status.replaceAll("not_started", "Not Started").replaceAll("done", "Done").replaceAll("in_progress", "In Progress").replaceAll("needs_review", "Needs Review");;
+    const type = props.d.document_type
+        .replaceAll("reference", "Reference")
+        .replaceAll("workflow", "Workflow");
+    const status = props.d.document_status
+        .replaceAll("not_started", "Not Started")
+        .replaceAll("done", "Done")
+        .replaceAll("in_progress", "In Progress")
+        .replaceAll("needs_review", "Needs Review");
     const role = props.d.assigned_role;
-    let statusBackground = "bg-slate-400"
-    let roleBackground = "bg-gray-200"
-    let docBackground = "bg-gray-200"
+    let statusBackground = "bg-slate-400";
+    let roleBackground = "bg-gray-200";
+    let docBackground = "bg-gray-200";
 
     switch (type) {
-        case 'Reference':
-            docBackground = "bg-sky-200"
+        case "Reference":
+            docBackground = "bg-sky-200";
             break;
-        case 'Workflow':
-            docBackground = "bg-indigo-200"
+        case "Workflow":
+            docBackground = "bg-indigo-200";
             break;
     }
     switch (status) {
-        case 'Not Started':
+        case "Not Started":
             statusBackground = "bg-red-200";
             break;
-        case 'In Progress':
+        case "In Progress":
             statusBackground = "bg-yellow-300";
             break;
-        case 'Needs Review':
+        case "Needs Review":
             statusBackground = "bg-orange-300";
             break;
-        case 'Done':
+        case "Done":
             statusBackground = "bg-green-300";
             break;
     }
     switch (role) {
-        case 'Administrator':
+        case "Administrator":
             roleBackground = "bg-purple-700";
             break;
-        case 'BusinessAnalyst':
+        case "BusinessAnalyst":
             roleBackground = "bg-blue-300";
             break;
-        case 'UnderWriter':
+        case "UnderWriter":
             roleBackground = "bg-pink-300";
             break;
-        case 'ExcelOperator':
+        case "ExcelOperator":
             roleBackground = "bg-teal-400";
             break;
-        case 'BusinessOperator':
+        case "BusinessOperator":
             roleBackground = "bg-violet-300";
             break;
-        case 'ActuarialAnalyst':
+        case "ActuarialAnalyst":
             roleBackground = "bg-fuchsia-300";
             break;
     }
     return (
-        <TableRow key={props.d.id} className="hover:bg-(--table-hover) transition h-14">
+        <TableRow
+            key={props.d.id}
+            className="hover:bg-(--table-hover) transition h-14"
+        >
             <FavoriteStar
                 doc={props.d}
                 onToggleOff={props.onToggleOff}
@@ -190,7 +199,6 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
                 </Dialog>
             </TableCell>
 
-
             <TableCell className="text-[14px] font-small text-(--table-text)">
                 {exp.toLocaleString()}
             </TableCell>
@@ -213,7 +221,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             <TableCell>
                 <div className="flex justify-center">
                     <Button onClick={async () => await handleDownload(props.d)}>
-                        <HugeiconsIcon icon={Download01Icon} color = "white"  />
+                        <HugeiconsIcon icon={Download01Icon} color="white" />
                     </Button>
                 </div>
             </TableCell>

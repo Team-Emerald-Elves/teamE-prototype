@@ -1,10 +1,5 @@
 import Router, { type Request, type Response } from "express";
-import {
-    requireAuth,
-    getAuth,
-    clerkClient,
-    type EmailAddress,
-} from "@clerk/express";
+import { getAuth, clerkClient, type EmailAddress } from "@clerk/express";
 import { UpdateLockBodyLink, GetLockQuery } from "../lib/zod/routes.schemas.ts";
 import validate from "../lib/zod/middleware.ts";
 import prisma from "@repo/database";
@@ -40,7 +35,7 @@ async function updateLinkLock(req: Request, res: Response) {
             },
             data: {
                 lock: status ? employee.id : "none",
-                lock_name: employee.first_name + ' ' + employee.last_name
+                lock_name: employee.first_name + " " + employee.last_name,
             },
         });
 

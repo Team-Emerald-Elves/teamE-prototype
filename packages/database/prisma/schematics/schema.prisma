@@ -17,30 +17,31 @@ model ServiceRequests {
 }
 
 model Employee {
-  id             String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  clerkUserId    String?        @unique
-  uname          String         @unique @default("uname")
-  first_name     String         @default("fname")
-  last_name      String         @default("lname")
-  email          String?        @unique
-  favorites      Int[]
-  favorite_links String[]
-  roles          UserRoles[]    @default([])
-  unreadNotif    Boolean?       @default(false)
-  newUser        Boolean?       @default(true)
-  bucket         BucketMeta?
-  Notifications  Notification[]
+  id              String         @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkUserId     String?        @unique
+  uname           String         @unique @default("uname")
+  first_name      String         @default("fname")
+  last_name       String         @default("lname")
+  email           String?        @unique
+  favorites       Int[]
+  favorite_links  String[]
+  roles           UserRoles[]    @default([])
+  unreadNotif     Boolean?       @default(false)
+  newUser         Boolean?       @default(true)
+  bucket          BucketMeta?
+  Notifications   Notification[]
+  DismissedNotifs String[]       @db.Uuid @default([])
 }
 
 model Notification {
-  id          String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt   DateTime    @default(now())
-  title       String
-  creatorId   String?
-  employeeId  String?     @db.Uuid
-  public      Boolean?    @default(false)
-  targetRoles UserRoles[] @default([])
-  employee    Employee?   @relation(fields: [employeeId], references: [id])
+  id              String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime    @default(now())
+  title           String
+  creatorId       String?
+  employeeId      String?     @db.Uuid
+  public          Boolean     @default(false)
+  targetRoles     UserRoles[] @default([])
+  employee        Employee?   @relation(fields: [employeeId], references: [id])
 }
 
 model BucketMeta {

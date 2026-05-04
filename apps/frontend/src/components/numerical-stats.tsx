@@ -23,7 +23,9 @@ function StatItem({ icon: Icon, value, label }) {
                 <Icon size={26} color="var(--table-titles)" />
             </div>
             <span className="text-xl font-bold">{value}</span>
-            <span className="text-s text-(--stats-label) font-semibold">{label}</span>
+            <span className="text-s text-(--stats-label) font-semibold">
+                {label}
+            </span>
         </div>
     );
 }

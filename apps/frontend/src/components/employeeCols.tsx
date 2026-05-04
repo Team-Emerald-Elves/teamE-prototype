@@ -2,7 +2,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "./ui/button.tsx";
-import DocTag from "@/components/doctag.tsx";
+import DocTag from "@/components/docTag.tsx";
 
 type Employee = {
     id: string;
@@ -36,7 +36,11 @@ export const columns: ColumnDef<Employee, unknown>[] = [
 
             return (
                 <div className="flex gap-3 text-center items-center">
-                    <img className="size-8 rounded-full" src={emp.imageUrl} />
+                    <img
+                        className="size-8 rounded-full"
+                        src={emp.imageUrl}
+                        draggable={false}
+                    />
                     {emp.first_name} {emp.last_name}
                 </div>
             );

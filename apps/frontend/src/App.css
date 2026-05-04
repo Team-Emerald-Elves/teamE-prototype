@@ -60,7 +60,7 @@ html {
     background-color: #0264b3;
 }
 
-.radio{
+.radio {
     float: right;
 }
 
@@ -77,7 +77,7 @@ html {
     color: #f5f5f5;
 }
 
-.react-grid-placeholder{
+.react-grid-placeholder {
     background-color: #ff8989 !important;
     opacity: 0.8;
     border-radius: 15px;

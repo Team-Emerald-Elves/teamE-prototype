@@ -45,9 +45,8 @@ function DocPopup(props: DocPopupProps): ReactElement {
         addForm();
     }, []);
 
-
     function addForm() {
-        setForms((prev) => prev.concat(<ContentForm type={props.type} />))
+        setForms((prev) => prev.concat(<ContentForm type={props.type} />));
     }
 
     return (

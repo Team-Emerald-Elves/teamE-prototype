@@ -1,15 +1,15 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+    - "apps/*"
+    - "packages/*"
 allowBuilds:
-  '@clerk/shared': true
-  '@iamjariwala/react-doc-viewer': true
-  '@prisma/engines': true
-  bun: true
-  canvas: true
-  esbuild: false
-  msw: false
-  prisma: true
+    "@clerk/shared": true
+    "@iamjariwala/react-doc-viewer": true
+    "@prisma/engines": true
+    bun: true
+    canvas: true
+    esbuild: false
+    msw: false
+    prisma: true
 catalogs:
-  prisma:
-    prisma: latest
+    prisma:
+        prisma: latest

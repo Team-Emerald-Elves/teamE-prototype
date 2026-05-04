@@ -84,44 +84,44 @@ Use `postgres` as the host inside pgAdmin because both containers are on the sam
 
 ```yaml
 services:
-  postgres:
-    image: postgres:15
-    restart: always
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=development
-      - POSTGRES_PASSWORD=W1yN4vhSQab2G5qp
-    ports:
-      - "5432:5432"
-    networks:
-      - prisma-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U development -d postgres"]
-      interval: 5s
-      timeout: 2s
-      retries: 20
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
+    postgres:
+        image: postgres:15
+        restart: always
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=development
+            - POSTGRES_PASSWORD=W1yN4vhSQab2G5qp
+        ports:
+            - "5432:5432"
+        networks:
+            - prisma-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U development -d postgres"]
+            interval: 5s
+            timeout: 2s
+            retries: 20
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
-    networks:
-      - prisma-network
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: admin
+        ports:
+            - "5050:80"
+        networks:
+            - prisma-network
 
 networks:
-  prisma-network:
+    prisma-network:
 
 volumes:
-  postgres_data:
+    postgres_data:
 ```
 
 ## When to use it

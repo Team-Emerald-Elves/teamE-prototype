@@ -11,7 +11,7 @@ import {useState} from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import type {IFile} from "@/components/submitPopupConfirmation.tsx";
-import type {documentContent} from "@repo/database";
+import type {documentContent, Links as linksData} from "@repo/database";
 import {getToken} from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 import * as React from "react";
@@ -21,6 +21,11 @@ interface Message{
     role: "user" | "model",
     text: string,
 }
+
+type editlinksRequest = {
+    action: string;
+    linkData: Partial<linksData>;
+};
 type SubmitConfirmationPopupProps = {
     type: string;
     formData: {
@@ -93,6 +98,11 @@ export default function ChatBot(){
     -editing documents:
         ALWAYS call findDocumentByName first to get the document's real ID before calling editDoc.
         Only change the fields the user specifies, keep all other fields exactly as returned by findDocumentByName.
+    -Adding links:
+        Link Name and url are required
+    -editing documents:
+        ALWAYS call findLinkByName first to get the link's real ID before calling editLink.
+        Only change the fields the user specifies, keep all other fields exactly as returned by findLinkByName.
     
     Guidelines:
     - Provide clear navigation guidance based on user requests.
@@ -161,7 +171,7 @@ export default function ChatBot(){
                     parameters:{
                         type:"object",
                         properties:{
-                            id:{type: "number", description: "The internal ID (do not ask user for this, use findDocumentByName)"},
+                            id:{type: "string", description: "The UUID of the link (do not ask user for this, use findLinkByName)"},
                             link_name: {type: "string", description: "The name/title of the document"},
                             url: {type: "string", description: "The url of the document"},
                         },
@@ -182,7 +192,7 @@ export default function ChatBot(){
             ]
         }
     ]
-    async function createNotif(doc: documentContent, action: string) {
+    async function createNotifDoc(doc: documentContent, action: string) {
         const token = await getToken();
 
         qmgr.wait(() => {
@@ -320,14 +330,66 @@ export default function ChatBot(){
         console.log(newDoc);
 
         if (fileData.type === "Create") {
-            createNotif(newDoc, "created");
+            createNotifDoc(newDoc, "created");
         } else {
-            createNotif(newDoc, "updated");
+            createNotifDoc(newDoc, "updated");
         }
 
         refresh((prev: any) => !prev);
 
         return newDoc;
+    }
+    async function createNotifLink(link: linksData, action: string) {
+        const token = await getToken();
+
+        qmgr.wait(() => {
+            qmgr.getMe(async (res1) => {
+                if (!res1.success) {
+                    throw new Error("Unable to get me");
+                }
+                const me = res1.data!;
+
+                const res = await fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/api/notifs/create-notification`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            public: true,
+                            targetRoles: [link.owner, "Administrator"],
+                            title: `${me.first_name} ${me.last_name} ${action} ${link.link_name.substring(0, 12) + (link.link_name.length >= 12 ? "..." : "")}`,
+                        }),
+                    },
+                );
+
+                if (!res.ok) throw new Error("failed to create link notification");
+                console.log(await res.json());
+            });
+        });
+    }
+
+    async function addLinks(body: editlinksRequest, token: string | null) {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Failed to update link (status ${res.status}): ${errorText}`);
+        }
+
+        const newLink = await res.json();
+        createNotifLink(newLink, body.action === "create" ? "created" : "updated");
+        return newLink;
     }
 
     const isProcessing = React.useRef(false);
@@ -470,9 +532,67 @@ export default function ChatBot(){
                         functionResult = JSON.stringify({ error: "Failed to search for document" });
                     }
                 }
-            } catch (err) {
+                else if (name === "addLink") {
+                    const newLink = {
+                        action: "create",
+                        linkData: {
+                            link_name: args.link_name,
+                            url: args.url,
+                            owner: currentRole,
+                        }
+                    };
+                    console.log(newLink);
+                    const addLink = await addLinks(newLink as any, token);
+                    functionResult = `Successfully created link: ${addLink.link_name}`;
+
+                } else if (name === "editLink") {
+                    const newLink = {
+                        action: "edit",
+                        linkData: {
+                            id: args.id,
+                            link_name: args.link_name,
+                            url: args.url,
+                            owner: currentRole,
+                        }
+                    };
+                    const editLink = await addLinks(newLink as any, token);
+                    functionResult = `Successfully updated document: ${editLink.link_name}`;
+                } else if (name === "findLinkByName") {
+                    try {
+                        const token = await getToken();
+                        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ action: "list", linkData: {} }),
+                        });
+
+                        if (!res.ok) throw new Error("Failed to fetch links");
+
+                        const links = await res.json();
+                        const match = links.find((l: any) =>
+                            l.link_name.toLowerCase().includes(args.name.toLowerCase())
+                        );
+
+                        if (match) {
+                            functionResult = JSON.stringify({
+                                id: match.id,
+                                link_name: match.link_name,
+                                url: match.url,
+                                role: match.role,
+                            });
+                        } else {
+                            functionResult = JSON.stringify({ error: `No link found matching "${args.name}"` });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        functionResult = JSON.stringify({ error: "Failed to search for link" });
+                    }
+                }
+            } catch(err){
                 console.error(err);
-                functionResult = `Error executing ${name}`;
             }
 
             // Update history and loop back for Gemini's natural language reply

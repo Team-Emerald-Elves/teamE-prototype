@@ -9,6 +9,7 @@ import {
 import qmgr from "@/lib/querymgr";
 import { getToken } from "@clerk/react";
 import type { documentContent } from "@repo/database/types";
+import mime from "mime";
 
 type SubmitConfirmationPopupProps = {
     type: string;
@@ -33,7 +34,7 @@ type SubmitConfirmationPopupProps = {
 };
 
 export type IFile = {
-    id: number;
+    id?: number;
     name: string;
     url?: string;
     content_owner: string;
@@ -105,7 +106,7 @@ async function createDocument(
 ) {
     fileData.formData.forEach(async (fd) => {
         const data: IFile = {
-            id: fd.id,
+            id: undefined,
             name: fd.name,
             url: fd.url || "Local upload",
             content_owner: fd.contentOwner,
@@ -118,6 +119,7 @@ async function createDocument(
             assigned_role: fd.role,
             filePayload: fd.filePayload,
             fileName: fd.fileName,
+            mime_type: mime.getType(fd.name!)!
         };
         console.log(data.assigned_role);
 

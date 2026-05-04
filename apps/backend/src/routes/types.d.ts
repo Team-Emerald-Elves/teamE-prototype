@@ -6,7 +6,7 @@ export {
 } from "@repo/database";
 
 export type IDocumentContent = DocumentContent & {
-    documentID: number;
+    documentID?: number;
     filePayload?: string;
     fileName?: string;
 };

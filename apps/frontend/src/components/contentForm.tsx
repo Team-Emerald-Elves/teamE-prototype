@@ -1,4 +1,3 @@
-import { Button } from "./ui/button.tsx";
 import { useEffect, useState } from "react";
 import {
     Select,
@@ -19,25 +18,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import DateAndTime from "./date.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import SubmitConfirmationPopup from "@/components/submitPopupConfirmation.tsx";
 import { useAuth } from "@clerk/react";
-import { Edit03Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import FileUpload from "./fileUpload.tsx";
 import qmgr from "@/lib/querymgr.ts";
 import type { Employee } from "@/../../packages/database/lib/prismadefs.ts";
 
 type contentFormProps = {
     type: string;
-    currentName: string;
-    currentURL: string;
-    currentContentOwner: string;
-    currentRole: string;
-    currentExpirationDate: Date;
-    currentExpirationTime: string;
-    currentStatus: string;
-    currentID: number;
-    currentDocType: string;
+    formData: FormDataType;
+    onChange: (data: FormDataType) => void;
     size: boolean;
     lock: string;
     refresh?: (any: any) => void;
@@ -74,24 +62,7 @@ function ContentForm(props: Partial<contentFormProps>) {
     const [isFilled, setIsFilled] = useState<boolean>(false);
     console.log();
 
-    const [formData, setFormData] = useState<FormDataType>({
-        name: props.currentName ?? "",
-        url: props.currentURL ?? "",
-        contentOwner: "5c129c4b-658f-47c1-9afb-e28734f66e46",
-        role:
-            props.currentRole === "Select Role"
-                ? props.currentRole
-                : props.type === "Create"
-                  ? ROLE_LABELS[props.currentRole!]
-                  : props.currentRole!,
-        document_type: props.currentDocType!,
-        expirationDate: props.currentExpirationDate ?? new Date(),
-        expirationTime: props.currentExpirationTime ?? "",
-        document_status: props.currentStatus === "Select Status" ? "" : props.currentStatus ?? "",
-        id: props.currentID!,
-        inputType: props.type === "Create" ? "file" : "url",
-    });
-    const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+    const [formData, setFormData] = useState<FormDataType>(props.formData!);
 
     useEffect(() => {
         const hasUrl = !!formData.url;
@@ -113,34 +84,7 @@ function ContentForm(props: Partial<contentFormProps>) {
         }
     }, [formData]);
 
-    const toBase64 = (file: File): Promise<string> =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () =>
-                resolve((reader.result as string).split(",")[1]); // strip data URL prefix
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-
-    const uploadHandler = (files: File[]) => {
-        if (!files || files.length < 1) {
-            console.error("Invalid file input");
-            return;
-        }
-        toBase64(files[0]).then(
-            (data) => {
-                setFormData((prev) => ({
-                    ...prev,
-                    filePayload: data,
-                    fileName: files[0].name,
-                }));
-            },
-            (err) => {
-                console.error(err);
-            },
-        );
-    };
-
+    
     useEffect(() => {
         qmgr.wait(async () => {
             qmgr.getEmployees(async (res) => {
@@ -286,7 +230,7 @@ function ContentForm(props: Partial<contentFormProps>) {
                                 >
                                     <SelectTrigger className="w-full max-w-48">
                                         <SelectValue
-                                            placeholder={props.currentRole}
+                                            placeholder={props.formData?.role}
                                         />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -401,7 +345,7 @@ function ContentForm(props: Partial<contentFormProps>) {
                         >
                             <SelectTrigger className="w-full max-w-48">
                                 <SelectValue
-                                    placeholder={props.currentStatus}
+                                    placeholder={props.formData?.document_status}
                                 />
                             </SelectTrigger>
                             <SelectContent>
@@ -425,8 +369,6 @@ function ContentForm(props: Partial<contentFormProps>) {
                         </Select>
                     </Field>
                 </FieldGroup>
-
-                <FileUpload dnd={true} show={true} onUpload={uploadHandler} />
             </form>
         </>
     );

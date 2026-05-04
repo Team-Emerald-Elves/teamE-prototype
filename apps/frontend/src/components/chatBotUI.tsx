@@ -118,6 +118,7 @@ export default function ChatBot(){
     - Provide clear navigation guidance based on user requests.
     - Reference specific pages and features when helping users.
     - Be concise and helpful.
+    -Before editing documents or links always ask if the user is sure before updating the document or link if they say no do not update
     `;
     const operations = [
         {
@@ -662,7 +663,7 @@ export default function ChatBot(){
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button className="fixed bottom-6 right-6 w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-xl border-2 border-white/20 transition-transform hover:scale-105 active:scale-95"
+                <Button className="fixed z-50 bottom-6 right-6 w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-xl border-2 border-white/20 transition-transform hover:scale-105 active:scale-95"
                         style={{ background: "linear-gradient(135deg, #5f935a, #3d6b39)" }}>
                     <MessageCircle className="w-6 h-6 text-white" />
                 </Button>

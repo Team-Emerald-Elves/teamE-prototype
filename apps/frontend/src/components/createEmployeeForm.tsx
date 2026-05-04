@@ -101,8 +101,7 @@ function CreateEmployeeForm(props: Props) {
                     <DialogTrigger
                         render={
                             <Button variant="outline" className="ml-auto px-4 py-4 text-base bg-[#5f935a] text-secondary-foreground">
-                                <HugeiconsIcon icon={PlusSignIcon} /> Create
-                                Employee
+                                <HugeiconsIcon icon={PlusSignIcon} />
                             </Button>
                         }
                     />

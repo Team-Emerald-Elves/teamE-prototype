@@ -187,7 +187,6 @@ function ContentForm(props: contentFormProps) {
                                     className="px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground"
                                 >
                                     <HugeiconsIcon icon={PlusSignIcon} />{" "}
-                                    {props.type}
                                 </Button>
                             }
                         />

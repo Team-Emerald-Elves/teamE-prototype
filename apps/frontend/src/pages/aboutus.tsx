@@ -7,6 +7,7 @@ const teamMembers = [
         name: "Brycen Pina",
         role: "Lead Software Engineer",
         image: "/brycenprofile.png",
+        quote: "Always bear in mind that your own resolution to succeed, is more important than any other one thing. — Abraham Lincoln"
     },
     {
         name: "Anastasia Kelnik",
@@ -48,6 +49,7 @@ const teamMembers = [
         name: "Elliot Ghidall",
         role: "Product Owner",
         image: "/elliotprofile.png",
+        quote: "We are trying to prove ourselves wrong as quickly as possible, because only in that way can we find progress. ― Richard P. Feynman"
     },
     {
         name: "Sylvia Jacobs",
@@ -122,7 +124,7 @@ export default function AboutUs() {
                                 <img
                                     src={member.image}
                                     alt={member.name}
-                                    className="w-35 h-35 rounded-lg object-cover border border-gray-200 shrink-0 bg-gray-100"
+                                    className="w-35 h-35 min-h-[140px] rounded-lg object-cover border border-gray-200 shrink-0 bg-gray-100"
                                     draggable={false}
                                 />
                                 <div className="text-center min-w-0 w-full">

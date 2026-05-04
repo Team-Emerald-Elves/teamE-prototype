@@ -4,7 +4,7 @@ import { useState } from "react";
 import UserManagementTable from "../components/user-management-table";
 import PageHeader from "@/components/page-header.tsx";
 import { columns } from "../components/employeeCols.tsx";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 const helpSections = [
     {
@@ -32,7 +32,6 @@ const helpSections = [
 function UserManagementPage() {
     const [helpOpen, setHelpOpen] = useState(false);
 
-
     return (
         <>
             {helpOpen && (
@@ -44,11 +43,17 @@ function UserManagementPage() {
                         className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 flex flex-col gap-5 shadow-xl"
                         onClick={(e) => e.stopPropagation()} // stops click from closing when clicking inside
                     >
-                        <h2 className="text-xl font-bold text-gray-900">How to Use User Management</h2>
+                        <h2 className="text-xl font-bold text-gray-900">
+                            How to Use User Management
+                        </h2>
                         {helpSections.map((section) => (
                             <div key={section.title}>
-                                <p className="font-semibold text-gray-800 mb-1">{section.title}</p>
-                                <p className="text-gray-600 text-sm">{section.body}</p>
+                                <p className="font-semibold text-gray-800 mb-1">
+                                    {section.title}
+                                </p>
+                                <p className="text-gray-600 text-sm">
+                                    {section.body}
+                                </p>
                             </div>
                         ))}
                         <button
@@ -65,7 +70,10 @@ function UserManagementPage() {
                 <h1 className="text-left pb-2">User Management</h1>
                 <div className="bg-[#F4A258] w-30 h-[3px]" />
                 <div className="flex items-center gap-1 pt-3">
-                    <p className="header-subtext-color">View users, add new users, delete existing users, and update current user accounts. Admin access only.</p>
+                    <p className="header-subtext-color">
+                        View users, add new users, delete existing users, and
+                        update current user accounts. Admin access only.
+                    </p>
                     <button
                         onClick={() => setHelpOpen(true)}
                         className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs font-bold hover:bg-blue-200 transition-colors"

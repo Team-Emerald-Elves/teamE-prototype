@@ -198,34 +198,41 @@ export default function LinksTable<TData extends Links, TValue>({
         return pages;
     }, [currentPage, pageCount]);
 
-
     function filterLinks(ls: Links[]) {
-        const ownerFilters = filters.filter((item) => item.key === "owner").map((i) => i.value);
-        const tagFilters = filters.filter((item) => item.key === "meta_tags").map((i) => i.value);
-        console.log(`[${ls.length}][${tagFilters.length}, ${ownerFilters.length}]`)
-        const filtered = ls.filter((l: Links) => {
-            if (tagFilters.length == 0) {
-                return true;
-            }
-            if (tagFilters.length > 0) {
-                for (const mt of l.meta_tags) {
-                    if (tagFilters.includes(mt)) {
+        const ownerFilters = filters
+            .filter((item) => item.key === "owner")
+            .map((i) => i.value);
+        const tagFilters = filters
+            .filter((item) => item.key === "meta_tags")
+            .map((i) => i.value);
+        console.log(
+            `[${ls.length}][${tagFilters.length}, ${ownerFilters.length}]`,
+        );
+        const filtered = ls
+            .filter((l: Links) => {
+                if (tagFilters.length == 0) {
+                    return true;
+                }
+                if (tagFilters.length > 0) {
+                    for (const mt of l.meta_tags) {
+                        if (tagFilters.includes(mt)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            })
+            .filter((l: Links) => {
+                if (ownerFilters.length == 0) {
+                    return true;
+                }
+                if (ownerFilters.length > 0) {
+                    if (ownerFilters.includes(l.owner)) {
                         return true;
                     }
+                    return false;
                 }
-                return false;
-            }
-        }).filter((l: Links) => {
-            if (ownerFilters.length == 0) {
-                return true;
-            }
-            if (ownerFilters.length > 0) {
-                if (ownerFilters.includes(l.owner)) {
-                    return true
-                }
-                return false;
-            }
-        });
+            });
         return filtered;
     }
 
@@ -240,9 +247,7 @@ export default function LinksTable<TData extends Links, TValue>({
             },
             body: JSON.stringify({
                 action: "list",
-                linkData: {
-                    
-                },
+                linkData: {},
             }),
         });
 
@@ -252,7 +257,7 @@ export default function LinksTable<TData extends Links, TValue>({
         const retLinks: Links[] = await res.json();
 
         setFilteredLinks(filterLinks(retLinks));
-        
+
         return retLinks;
     }
 
@@ -433,9 +438,9 @@ export default function LinksTable<TData extends Links, TValue>({
                         />
 
                         <DeletePopupConfirmationLinks
-                                link={link}
-                                reload={setReload}
-                            />
+                            link={link}
+                            reload={setReload}
+                        />
 
                         <Button
                             variant="outline"

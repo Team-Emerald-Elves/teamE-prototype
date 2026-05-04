@@ -221,7 +221,7 @@ export default function FavoritesTableEntry(props: FavoriteProps) {
             <TableCell>
                 <div className="flex justify-center">
                     <Button onClick={async () => await handleDownload(props.d)}>
-                        <HugeiconsIcon icon={Download01Icon} color = "white"  />
+                        <HugeiconsIcon icon={Download01Icon} color="white" />
                     </Button>
                 </div>
             </TableCell>

@@ -21,7 +21,6 @@ import {
 
 export const description = "A pie chart with stacked sections";
 
-
 const chartConfig = {
     visitors: {
         label: "Visitors",
@@ -154,7 +153,7 @@ export function ChartPieStacked() {
                             dataKey="Count"
                             nameKey="Status"
                             strokeWidth={2}
-                            stroke= "none"
+                            stroke="none"
                             outerRadius={60}
                         />
                         <Pie
@@ -162,7 +161,7 @@ export function ChartPieStacked() {
                             dataKey="Count"
                             nameKey="Doc"
                             strokeWidth={2}
-                            stroke= "none"
+                            stroke="none"
                             innerRadius={70}
                             outerRadius={90}
                         />

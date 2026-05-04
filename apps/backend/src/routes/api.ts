@@ -1,9 +1,10 @@
 import Router, { type Request, type Response } from "express";
+import { getAuth, type EmailAddress } from "@clerk/express";
 import {
-    getAuth,
-    type EmailAddress,
-} from "@clerk/express";
-import { UpdateLockBody, GetLockQuery, AiRequestModel } from "../lib/zod/routes.schemas.ts";
+    UpdateLockBody,
+    GetLockQuery,
+    AiRequestModel,
+} from "../lib/zod/routes.schemas.ts";
 import validate from "../lib/zod/middleware.ts";
 import prisma, { Prisma, type Employee } from "@repo/database";
 import { Resend } from "resend";
@@ -68,7 +69,6 @@ APIRouter.get("/me", async (req, res) => {
 
 async function updateLock(req: Request, res: Response) {
     try {
-        
         let { id, status } = req.body ?? {};
 
         const { userId, isAuthenticated } = getAuth(req);
@@ -89,7 +89,7 @@ async function updateLock(req: Request, res: Response) {
             },
             data: {
                 lock: status ? employee.id : "none",
-                lock_name: employee.first_name + ' ' + employee.last_name
+                lock_name: employee.first_name + " " + employee.last_name,
             },
         });
 
@@ -152,6 +152,6 @@ export async function invite(email: string, password: string) {
 
 APIRouter.put("/update-lock", validate(UpdateLockBody), updateLock);
 APIRouter.get("/get-lock", validate(GetLockQuery), getLock);
-APIRouter.use("/ai", validate(AiRequestModel), AiRouter)
+APIRouter.use("/ai", validate(AiRequestModel), AiRouter);
 
 export default APIRouter;

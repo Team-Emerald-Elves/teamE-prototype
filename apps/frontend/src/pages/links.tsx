@@ -53,8 +53,6 @@ function LinksPage() {
         });
     }, []);
 
-
-
     return (
         <>
             {helpOpen && (
@@ -66,11 +64,17 @@ function LinksPage() {
                         className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 flex flex-col gap-5 shadow-xl"
                         onClick={(e) => e.stopPropagation()} // stops click from closing when clicking inside
                     >
-                        <h2 className="text-xl font-bold text-gray-900">How to Use Links</h2>
+                        <h2 className="text-xl font-bold text-gray-900">
+                            How to Use Links
+                        </h2>
                         {helpSections.map((section) => (
                             <div key={section.title}>
-                                <p className="font-semibold text-gray-800 mb-1">{section.title}</p>
-                                <p className="text-gray-600 text-sm">{section.body}</p>
+                                <p className="font-semibold text-gray-800 mb-1">
+                                    {section.title}
+                                </p>
+                                <p className="text-gray-600 text-sm">
+                                    {section.body}
+                                </p>
                             </div>
                         ))}
                         <button
@@ -87,7 +91,10 @@ function LinksPage() {
                 <h1 className="text-left pb-2">Links</h1>
                 <div className="bg-[#F4A258] w-30 h-[3px]" />
                 <div className="flex items-center gap-1 pt-3">
-                    <p className="header-subtext-color">View your links or modify them by adding, deleting, or updating existing ones.</p>
+                    <p className="header-subtext-color">
+                        View your links or modify them by adding, deleting, or
+                        updating existing ones.
+                    </p>
                     <button
                         onClick={() => setHelpOpen(true)}
                         className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs font-bold hover:bg-blue-200 transition-colors"

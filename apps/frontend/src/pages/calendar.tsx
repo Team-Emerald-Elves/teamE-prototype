@@ -111,11 +111,17 @@ export default function CalendarPage() {
                         className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 flex flex-col gap-5 shadow-xl"
                         onClick={(e) => e.stopPropagation()} // stops click from closing when clicking inside
                     >
-                        <h2 className="text-xl font-bold text-gray-900">How to Use Calendar</h2>
+                        <h2 className="text-xl font-bold text-gray-900">
+                            How to Use Calendar
+                        </h2>
                         {helpSections.map((section) => (
                             <div key={section.title}>
-                                <p className="font-semibold text-gray-800 mb-1">{section.title}</p>
-                                <p className="text-gray-600 text-sm">{section.body}</p>
+                                <p className="font-semibold text-gray-800 mb-1">
+                                    {section.title}
+                                </p>
+                                <p className="text-gray-600 text-sm">
+                                    {section.body}
+                                </p>
                             </div>
                         ))}
                         <button
@@ -138,7 +144,9 @@ export default function CalendarPage() {
                         </h1>
                         <div className="bg-[#F4A258] w-30 h-[3px]" />
                         <div className="flex items-center gap-1 pt-3">
-                            <p className="header-subtext-color">Keep track of important events here.</p>
+                            <p className="header-subtext-color">
+                                Keep track of important events here.
+                            </p>
 
                             <button
                                 onClick={() => setHelpOpen(true)}

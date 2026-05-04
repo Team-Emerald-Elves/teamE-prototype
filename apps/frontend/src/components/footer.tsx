@@ -45,7 +45,6 @@ function Footer() {
                                 Company
                             </h3>
                             <ul className="space-y-2 text-sm text-white">
-
                                 <li>
                                     <a href="#">440 Lincoln St</a>
                                 </li>
@@ -57,15 +56,30 @@ function Footer() {
 
                         {/* pages */}
                         <div>
-                            <h3 className="font-semibold text-[#E9A565] mb-4">Pages</h3>
+                            <h3 className="font-semibold text-[#E9A565] mb-4">
+                                Pages
+                            </h3>
                             <ul className="space-y-2 text-sm text-white">
-                                <li><FooterLink to="/documents">Documents</FooterLink></li>
-                                <li><FooterLink to="/links">Links</FooterLink></li>
-                                <li><FooterLink to="/calendar">Calendar</FooterLink></li>
-                                <li><FooterLink to="/employee-management">User Management</FooterLink></li>
+                                <li>
+                                    <FooterLink to="/documents">
+                                        Documents
+                                    </FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/links">Links</FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/calendar">
+                                        Calendar
+                                    </FooterLink>
+                                </li>
+                                <li>
+                                    <FooterLink to="/employee-management">
+                                        User Management
+                                    </FooterLink>
+                                </li>
                             </ul>
                         </div>
-
 
                         {/* resource */}
                         <div>

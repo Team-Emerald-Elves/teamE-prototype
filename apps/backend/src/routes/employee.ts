@@ -261,9 +261,7 @@ async function listEmployees(
                         };
                     }
 
-                    const user = await clerkCache.getUser(
-                        emp.clerkUserId!,
-                    );
+                    const user = await clerkCache.getUser(emp.clerkUserId!);
 
                     return {
                         ...emp,

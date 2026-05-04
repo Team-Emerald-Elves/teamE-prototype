@@ -5,32 +5,32 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import qmgr from "@/lib/querymgr";
 import { getToken } from "@clerk/react";
 import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
-    type: string
+    type: string;
     formData: {
-        id: number
-        name: string
-        url: string
-        contentOwner: string
-        role: string
-        document_type: string
-        expirationDate?: Date
-        expirationTime: string
-        document_status: string
-        filePayload?: string
-        fileName?: string
-    }
-    refresh: (any) => void
-    open: (arg:boolean) => void
-    confirmOpen: boolean
-    setConfirmOpen: (val: boolean) => void
-    disabled: boolean
-}
+        id: number;
+        name: string;
+        url: string;
+        contentOwner: string;
+        role: string;
+        document_type: string;
+        expirationDate?: Date;
+        expirationTime: string;
+        document_status: string;
+        filePayload?: string;
+        fileName?: string;
+    };
+    refresh: (any) => void;
+    open: (arg: boolean) => void;
+    confirmOpen: boolean;
+    setConfirmOpen: (val: boolean) => void;
+    disabled: boolean;
+};
 
 export type IFile = {
     id: number;
@@ -159,7 +159,6 @@ async function createDocument(
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
-
     // const [sessionToken, setSessionToken] = useState("")
     //
     // useEffect(() => {
@@ -173,23 +172,24 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                     <DialogTitle>Are you sure?</DialogTitle>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant="outline"
-                    onClick={() => info.setConfirmOpen(false)}>
-                    Cancel
-                </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => info.setConfirmOpen(false)}
+                    >
+                        Cancel
+                    </Button>
                     <Button
                         type="button"
                         onClick={async () => {
                             try {
-                                const token = await getToken() ?? ""
+                                const token = (await getToken()) ?? "";
                                 await createDocument(info, token, info.refresh);
                                 console.log("submitted successfully!");
                                 info.setConfirmOpen(false);
-                                info.open(false)
+                                info.open(false);
                                 console.log("closed ready for refresh");
-
                             } catch (error) {
-                                console.error("broke at", error)
+                                console.error("broke at", error);
                             }
                         }}
                     >
@@ -198,7 +198,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
 
 export default SubmitConfirmationPopup;

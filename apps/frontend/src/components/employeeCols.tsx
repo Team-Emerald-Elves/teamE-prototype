@@ -36,7 +36,11 @@ export const columns: ColumnDef<Employee, unknown>[] = [
 
             return (
                 <div className="flex gap-3 text-center items-center">
-                    <img className="size-8 rounded-full" src={emp.imageUrl} draggable={false}/>
+                    <img
+                        className="size-8 rounded-full"
+                        src={emp.imageUrl}
+                        draggable={false}
+                    />
                     {emp.first_name} {emp.last_name}
                 </div>
             );

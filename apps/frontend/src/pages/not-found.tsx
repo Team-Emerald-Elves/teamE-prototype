@@ -29,7 +29,7 @@ function NotFound() {
                 <div id="not-found">Page not found</div>
             </CenterDiv>
             <CenterDiv>
-                <img src={frown} alt="frown" width="80vw" draggable={false}/>
+                <img src={frown} alt="frown" width="80vw" draggable={false} />
             </CenterDiv>
         </>
     );

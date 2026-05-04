@@ -47,8 +47,7 @@ export default function WidgetWrapper({
                         className="text-(--border-strong) hover:text-destructive"
                         title="Remove widget"
                     >
-                        <X size={14}
-                        />
+                        <X size={14} />
                     </button>
                 )}
             </div>

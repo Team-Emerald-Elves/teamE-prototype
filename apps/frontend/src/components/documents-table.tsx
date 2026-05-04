@@ -428,14 +428,16 @@ function CreateDocumentButton({
             currentName=""
             currentURL=""
             currentContentOwner="Select Content Owner"
-            currentRole={roles.includes("administrator") ? "Select Role" : roles.at(0) as string}
+            currentRole={
+                roles.includes("administrator")
+                    ? "Select Role"
+                    : (roles.at(0) as string)
+            }
             currentExpirationDate={new Date()}
             currentExpirationTime="10:30:00"
             currentStatus="Select Status"
             size
-            currentDocType={
-                "Reference"
-            }
+            currentDocType={"Reference"}
             lock="none"
             refresh={refresh}
             roles={roles}
@@ -1026,7 +1028,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                             doc.document_status
                                                                         }
                                                                         currentDocType={
-                                                                             doc.document_type
+                                                                            doc.document_type
                                                                         }
                                                                         size={
                                                                             false

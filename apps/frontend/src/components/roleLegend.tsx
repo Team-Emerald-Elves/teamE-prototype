@@ -25,12 +25,8 @@ export default function RoleLegend({
         <div className="flex items-center gap-x-4 flex-wrap gap-y-2">
             {/* Info popover - top right of card */}
 
-
             {Object.entries(roleColors).map(([color, role]) => (
-                <div
-                    key={role}
-                    className="flex items-center gap-1.5"
-                >
+                <div key={role} className="flex items-center gap-1.5">
                     <span
                         className="h-2.5 w-2.5 rounded-full flex-shrink-0"
                         style={{ backgroundColor: color }}
@@ -49,7 +45,7 @@ export default function RoleLegend({
                     >
                         <Info className="h-3 w-3" />
                     </Button>
-                    </PopoverTrigger>
+                </PopoverTrigger>
                 <PopoverContent side="bottom" align="end" className="w-72">
                     <p className="font-medium text-sm mb-2">Calendar</p>
                     <p className="text-xs text-muted-foreground mb-3">
@@ -61,9 +57,7 @@ export default function RoleLegend({
                         </p>
                         <ul className="text-xs text-muted-foreground space-y-1">
                             <li>Click any date to create a new event</li>
-                            <li>
-                                Click an existing event to view or edit it
-                            </li>
+                            <li>Click an existing event to view or edit it</li>
                             <li>Delete events you no longer need</li>
                             <li>Events are color coded by role</li>
                             <li>Navigate months with the arrows</li>
@@ -71,7 +65,6 @@ export default function RoleLegend({
                     </div>
                 </PopoverContent>
             </Popover>
-</div>
-
+        </div>
     );
 }

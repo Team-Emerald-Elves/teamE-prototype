@@ -27,10 +27,9 @@ import {
 } from "@/components/ui/popover";
 import type { Notification as Notif } from "@repo/database/types";
 
-
 type Notification = Omit<Notif, "createdAt"> & {
-  createdAt: string;
-  profileIcon?: string;
+    createdAt: string;
+    profileIcon?: string;
 };
 
 // const activity: ActivityLog[] = [
@@ -89,7 +88,7 @@ export function UserLogs() {
                 },
             );
 
-            const data: { Notifications: Notification[]} = await res.json();
+            const data: { Notifications: Notification[] } = await res.json();
             setGrouped(groupByDate(data.Notifications ?? []));
         }
 
@@ -128,7 +127,9 @@ export function UserLogs() {
                                                                 src={
                                                                     n.profileIcon
                                                                 }
-                                                                draggable={false}
+                                                                draggable={
+                                                                    false
+                                                                }
                                                             />
                                                             <div className="flex-1 min-w-0 pl-5 truncate whitespace-nowrap overflow-hidden">
                                                                 <span className="font-semibold">

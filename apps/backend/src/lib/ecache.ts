@@ -1,6 +1,5 @@
 import { clerkClient, type User } from "@clerk/express";
 
-
 const ClerkPollRate: number = parseInt(process.env.CLERK_POLL_RATE ?? "1000");
 
 class ECache<T extends object> {
@@ -18,21 +17,24 @@ class ECache<T extends object> {
         return async (): Promise<T> => {
             const res = await fetch(fetchUrl, {
                 method: method,
-            })
+            });
             if (!res.ok || !res.body) {
-                throw new Error(`Error: Unable to fetch cachable data [Code: ${res.status}]: ${res.statusText}\nBody:${res.body}`)
+                throw new Error(
+                    `Error: Unable to fetch cachable data [Code: ${res.status}]: ${res.statusText}\nBody:${res.body}`,
+                );
             }
             // @ts-ignore
-            return res.body!.json()
-        }
+            return res.body!.json();
+        };
     }
 
     public get data(): Promise<T> {
         if (this._data === undefined) {
-            throw new Error("Error: Ecache attempt to retrieve undefined data from ECache")
+            throw new Error(
+                "Error: Ecache attempt to retrieve undefined data from ECache",
+            );
         }
         return this._data!;
-
     }
 
     private set data(nData: Promise<T> | undefined) {
@@ -43,10 +45,10 @@ class ECache<T extends object> {
     }
 
     private async upate(): Promise<void> {
-        const d = Date.now()
+        const d = Date.now();
         if (d - this.last >= ClerkPollRate) {
             this.last = d;
-            this.data = this.fetchCb()
+            this.data = this.fetchCb();
         }
     }
 }
@@ -55,10 +57,10 @@ class ClerkCache extends ECache<User[]> {
     constructor() {
         super(async (): Promise<User[]> => {
             const ul = await clerkClient.users.getUserList({
-                limit: 500
+                limit: 500,
             });
-            return ul.data
-        })
+            return ul.data;
+        });
     }
 
     public async getUser(uid: string): Promise<User> {
@@ -69,7 +71,7 @@ class ClerkCache extends ECache<User[]> {
                 return u;
             }
         }
-        throw new Error(`Invalid userid in ClerkCache getUser(${uid})`) 
+        throw new Error(`Invalid userid in ClerkCache getUser(${uid})`);
     }
 }
 

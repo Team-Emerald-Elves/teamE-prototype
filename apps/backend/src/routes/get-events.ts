@@ -111,7 +111,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
             g = Math.min(255, Math.max(0, avg + (g - avg) * factor));
             b = Math.min(255, Math.max(0, avg + (b - avg) * factor));
 
-            return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, "0")}`;
+            return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
         }
 
         const COLOR_TO_ROLE: Record<string, string> = {
@@ -150,7 +150,7 @@ async function eventsRoute(req: express.Request, res: express.Response) {
                             : "none",
                     contentOwner: contentOwnerName,
                     doc_id: event.doc_id,
-                    role: COLOR_TO_ROLE[event.color] ?? null
+                    role: COLOR_TO_ROLE[event.color] ?? null,
                 },
             };
         });

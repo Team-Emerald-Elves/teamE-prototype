@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/popover";
 export const description = "A pie chart with no separator";
 
-
 const chartConfig = {
     visitors: {
         label: "Visitors",

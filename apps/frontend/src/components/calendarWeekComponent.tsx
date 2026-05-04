@@ -61,7 +61,6 @@ export default function CalendarWeek() {
 
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
-
             <div className="bg-(--card) rounded-xl shadow-none border-0 p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold text-(--card-title)">

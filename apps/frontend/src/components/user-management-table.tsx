@@ -221,7 +221,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     <div className="relative inline-block text-left">
                         <button
                             onClick={() => setIsRoleOpen((open) => !open)}
-                            className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
+                            className="flex px-4 py-1 ml-2 bg-primary text-white hover:bg-primary/80 rounded-md"
                         >
                             <div className="pr-1">
                                 <HugeiconsIcon icon={SlidersHorizontalIcon} />

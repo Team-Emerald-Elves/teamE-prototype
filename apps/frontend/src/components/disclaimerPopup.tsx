@@ -13,11 +13,11 @@ function DisclaimerPopup() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-m">
+            <DialogContent className="sm:max-w-m text-white">
                 <DialogHeader>
-                    <DialogTitle className="text-xl">Disclaimer</DialogTitle>
+                    <DialogTitle className="text-xl text-white">Disclaimer</DialogTitle>
                 </DialogHeader>
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center">
                     <img
                         src="/warning-icon.png"
                         alt="Warning Icon"
@@ -26,7 +26,7 @@ function DisclaimerPopup() {
                     />
                 </div>
                 <div className="flex justify-center text-center">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-white">
                         This website has been created for WPI’s CS 3733 Software
                         Engineering as a class project and is not in use by
                         Hanover Insurance.

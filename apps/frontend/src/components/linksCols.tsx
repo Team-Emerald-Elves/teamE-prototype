@@ -1,6 +1,7 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Plus} from "lucide-react";
+
 import { Button } from "./ui/button.tsx";
 import DocTag from "@/components/docTag.tsx";
 import { TagInput } from "@/components/tagInput.tsx";
@@ -254,7 +255,7 @@ export const columns: ColumnDef<Links>[] = [
             const link = row.original;
             const date = new Date(link.created_at);
 
-            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
+            return <p>{date.toLocaleString()}</p>;
         },
     },
     {
@@ -277,7 +278,7 @@ export const columns: ColumnDef<Links>[] = [
             const link = row.original;
             const date = new Date(link.updated_at);
 
-            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
+            return <p>{date.toLocaleString()}</p>;
         },
     },
     {
@@ -296,14 +297,34 @@ export const columns: ColumnDef<Links>[] = [
                 </Button>
             );
         },
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
             const link = row.original;
-            const tags = link.meta_tags;
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
+            const [filter, setFilter] = useState("");
+
+            const allTags = Array.from(
+                new Set(
+                    table
+                        .getCoreRowModel()
+                        .rows.flatMap(
+                            (r) => (r.original as Links).meta_tags??[],
+                        ),
+                ),
+            ).sort();
+            const suggestions = allTags.filter(
+                (t) => !tagList.includes(t) && t.toLowerCase().includes(filter.toLowerCase()),
+            );
+
+            const addTag = async (tag: string) => {
+                if (!tag || tagList.includes(tag)) return;
+                const newTags = [...tagList, tag];
+                setTagList(newTags);
+                await updateTags(link.id, newTags).catch(console.error);
+            };
 
             return (
-                <div className="flex items-center justify-center">
-                    {tags.map((item) => (
+                <div className="flex flex-wrap items-center gap-1">
+                    {tagList.map((item) => (
                         <div className="text-center" key={item}>
                             <DocTag background="bg-gray-200">{item}</DocTag>
                         </div>
@@ -312,9 +333,9 @@ export const columns: ColumnDef<Links>[] = [
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-4 w-4 ml-1 flex items-center justify-center text-center p-0"
+                                className="h-4 w-4 ml-1 p-0 leading-none flex items-center justify-center text-center"
                             >
-                                +
+                                <Plus className="h-3 w-3" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">
@@ -334,7 +355,23 @@ export const columns: ColumnDef<Links>[] = [
                                     await removeTag(link.id, tagToRemove);
                                 }}
                                 placeholder="Add tag..."
+                                onInputChange={setFilter}
                             />
+                            <div className="mt-2 flex flex-wrap gap-1">
+                                {suggestions.map((tag) => (
+                                    <button
+                                        key={tag}
+                                        type="button"
+                                        onClick={() => {
+                                            addTag(tag);
+                                            setFilter("");
+                                        }}
+                                        className="border bg-gray-200 hover:bg-gray-300 text-xs px-2 h-5 rounded-sm"
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
                         </PopoverContent>
                     </Popover>
                 </div>

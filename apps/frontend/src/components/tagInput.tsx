@@ -9,17 +9,20 @@ interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     tags: string[];
     setTags: React.Dispatch<React.SetStateAction<string[]>>;
     remove: (string) => void;
+    onInputChange?: (value: string) => void;
 }
 
 const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     (props, ref) => {
-        const { placeholder, tags, setTags, className, remove } = props;
+        const { placeholder, tags, setTags, className, remove, onInputChange } =
+            props;
 
         const [inputValue, setInputValue] = React.useState("");
         const inputRef = React.useRef<HTMLInputElement>(null);
 
         const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             setInputValue(e.target.value);
+            onInputChange?.(e.target.value);
         };
 
         const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,6 +33,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
                     setTags([...tags, newTag]);
                 }
                 setInputValue("");
+                onInputChange?.("");
             }
         };
 

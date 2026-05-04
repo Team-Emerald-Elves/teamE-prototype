@@ -27,7 +27,7 @@ export function ConfirmationPopup({
                     render={
                         <Button
                             disabled={true}
-                            className="bg-secondary text-background p-3"
+                            className="bg-secondary text-white p-3"
                         >
                             {triggerLabel}
                         </Button>

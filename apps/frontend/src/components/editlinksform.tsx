@@ -177,16 +177,16 @@ function EditLinksForm(props: linkProp) {
                     }
                 />
 
-                <DialogContent className="lg:max-w-lg">
+                <DialogContent className="lg:max-w-lg bg-(--filter-background)">
                     <DialogHeader>
                         <div className="flex items-center justify-between p-2">
-                            <DialogTitle className="text-2xl text-primary font-mono font-bold">
+                            <DialogTitle className="text-2xl text-foreground font-mono font-bold">
                                 Edit Content
                             </DialogTitle>
                         </div>
                     </DialogHeader>
 
-                    <FieldGroup>
+                    <FieldGroup className="text-foreground">
                         <Field>
                             <Label className="text-base">Name</Label>
                             <Input

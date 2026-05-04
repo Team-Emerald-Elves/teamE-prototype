@@ -100,7 +100,7 @@ function CreateEmployeeForm(props: Props) {
                 <div className="flex justify-end w-full">
                     <DialogTrigger
                         render={
-                            <Button className="ml-auto px-4 py-4 text-base bg-[#5f935a] text-secondary-foreground">
+                            <Button variant="outline" className="ml-auto px-4 py-4 text-base bg-[#5f935a] text-secondary-foreground">
                                 <HugeiconsIcon icon={PlusSignIcon} /> Create
                                 Employee
                             </Button>
@@ -108,9 +108,9 @@ function CreateEmployeeForm(props: Props) {
                     />
                 </div>
 
-                <DialogContent className="lg:max-w-lg">
+                <DialogContent className="lg:max-w-lg bg-(--filter-background) text-foreground">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-mono font-bold">
+                        <DialogTitle className="text-2xl text-foreground font-mono font-bold">
                             Create Employee
                         </DialogTitle>
                     </DialogHeader>

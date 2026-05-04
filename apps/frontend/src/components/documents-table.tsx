@@ -15,6 +15,8 @@ import {
 } from "@tanstack/react-table";
 import { Info, Lock, LockOpen, Search } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import {
     DocumentValidationIcon,
     Download01Icon,
@@ -865,7 +867,10 @@ export function DocumentsTable({ columns }: DocProps) {
                                 )}
                             </div>
 
-                            <div className="flex justify-center ml-auto py-1">
+                            <div className="flex justify-center ml-auto py-1 gap-2">
+                                <div className="relative inline-block text-left">
+                                    <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                                </div>
                                 <CreateDocumentButton
                                     roles={roles}
                                     refresh={setReload}
@@ -931,7 +936,7 @@ export function DocumentsTable({ columns }: DocProps) {
 
                                     return (
                                         <TableRow
-                                            key={row.id}
+                                            key={doc.id}
                                             className={
                                                 isLockedByOther
                                                     ? "bg-(--tab-bg)"
@@ -952,6 +957,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                         true,
                                                     )
                                                 }
+                                                onClick={() => {}}
                                             />
 
                                             {row

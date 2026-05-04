@@ -49,17 +49,6 @@ export default function ChatBot(){
     const [isLoading, setIsLoading] = useState(false);
     const [roles, setRoles] = React.useState<string[]>([]);
     const [empID, setEmpID] = React.useState("");
-    const handleSend = async() => {
-        if (!input.trim() || isLoading) return;
-
-        const userInput: Message = {role: "user", text: input};
-        const newHistory = [...messages, userInput];
-        setMessages(newHistory);
-        setIsLoading(true);
-        setInput("");
-
-        await generateResponse(newHistory);
-    };
     const navInstructions = `
     You are an assistant for a content management system (CMS). Your role is to help users navigate and understand the software.
     
@@ -99,6 +88,12 @@ export default function ChatBot(){
     - User Management Page:
       Accessible only to admin users. Displays all employees in the company.
     
+    -Adding documents:
+        Name, url,and document type are required, if document type is not specified assume the document type is Reference
+    -editing documents:
+        ALWAYS call findDocumentByName first to get the document's real ID before calling editDoc.
+        Only change the fields the user specifies, keep all other fields exactly as returned by findDocumentByName.
+    
     Guidelines:
     - Provide clear navigation guidance based on user requests.
     - Reference specific pages and features when helping users.
@@ -106,7 +101,7 @@ export default function ChatBot(){
     `;
     const operations = [
         {
-            function_declarations:[
+            functionDeclarations:[
                 {
                     name: "addDoc",
                     description: "adds a document to the database",
@@ -115,8 +110,73 @@ export default function ChatBot(){
                         properties:{
                             name: {type: "string", description: "The name/title of the document"},
                             url: {type: "string", description: "The url of the document"},
+                            document_type:{type: "string", description: "The document type"},
                         },
-                        required: ["name", "url"]
+                        required: ["name", "url", "document_type"],
+                    }
+                },
+                {
+                    name: "editDoc",
+                    description: "edit a document",
+                    parameters:{
+                        type:"object",
+                        properties:{
+                            id:{type: "number", description: "The internal ID (do not ask user for this, use findDocumentByName)"},
+                            name: {type: "string", description: "The name/title of the document"},
+                            url: {type: "string", description: "The url of the document"},
+                            document_type:{type: "string", description: "The document type"},
+                            expirationDate: {type: "string", description: "The expiration date"},
+                            document_status:{type: "string", description: "The document status"},
+                            favorite: {type: "boolean", description: "If a document is favorite or not if it is favorited it is true if it is not it is false"},
+                        },
+                        required: ["name"],
+                    }
+                },
+                {
+                    name: "findDocumentByName",
+                    description: "Finds a document by name and returns its ID and full details. ALWAYS call this before editDoc to get the document's real ID.",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            name: { type: "string", description: "The name/title of the document to search for" }
+                        },
+                        required: ["name"]
+                    }
+                },
+                {
+                    name: "addLink",
+                    description: "adds a link to the database",
+                    parameters:{
+                        type: "object",
+                        properties:{
+                            link_name: {type: "string", description: "The name/title of the link"},
+                            url: {type: "string", description: "The url of the link"},
+                        },
+                        required: ["link_name", "url"],
+                    }
+                },
+                {
+                    name: "editLink",
+                    description: "edit a link",
+                    parameters:{
+                        type:"object",
+                        properties:{
+                            id:{type: "number", description: "The internal ID (do not ask user for this, use findDocumentByName)"},
+                            link_name: {type: "string", description: "The name/title of the document"},
+                            url: {type: "string", description: "The url of the document"},
+                        },
+                        required: ["link_name", "url"],
+                    }
+                },
+                {
+                    name: "findLinkByName",
+                    description: "Finds a link by name and returns its ID and full details. ALWAYS call this before editLink to get the document's real ID.",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            name: { type: "string", description: "The name/title of the link to search for" }
+                        },
+                        required: ["name"]
                     }
                 },
             ]
@@ -180,6 +240,15 @@ export default function ChatBot(){
             (data.roles as string[]).map((role) => role.toLowerCase()),
         );
     }
+    const ROLE_LABELS: Record<string, string> = {
+        administrator: "Administrator",
+        businessanalyst: "BusinessAnalyst",
+        underwriter: "UnderWriter",
+        businessoperator: "BusinessOperator",
+        exceloperator: "ExcelOperator",
+        actuarialanalyst: "ActuarialAnalyst",
+    };
+    const currentRole = ROLE_LABELS[roles.at(0) as string];
 
     React.useEffect(() => {
         loadUser();
@@ -261,75 +330,171 @@ export default function ChatBot(){
         return newDoc;
     }
 
-    const generateResponse = async (history: Message[]) => {
-            try{
-                const formattedContents = history.map(msg => ({
+    const isProcessing = React.useRef(false);
+
+    const handleSend = async () => {
+        if (!input.trim() || isLoading || isProcessing.current) return;
+
+        const userInput: Message = { role: "user", text: input };
+        const newHistory = [...messages, userInput];
+        setMessages(newHistory);
+        setIsLoading(true);
+        setInput("");
+        isProcessing.current = true;
+
+        try {
+            await generateResponse(newHistory);
+        } finally {
+            setIsLoading(false);
+            isProcessing.current = false;
+        }
+    };
+
+    const generateResponse = async (initialHistory: any[]) => {
+        let history = initialHistory;
+
+        // Loop instead of recurse — avoids multiple finally blocks firing
+        while (true) {
+            const formattedContents = history.map(msg => {
+                if (msg.parts) {
+                    return { role: msg.role, parts: msg.parts };
+                }
+                return {
                     role: msg.role === "user" ? "user" : "model",
                     parts: [{ text: msg.text }]
-                }));
-                console.log("Sending to Gemini:", JSON.stringify({ contents: formattedContents }, null, 2));
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-                const response = await axios.post(
-                    url,
-                    {
-                        systemInstruction:{
-                            parts:[{text: navInstructions}]
-                        },
-                        contents: formattedContents,
-                        tools: operations,
-                    },
-                    { headers: { "Content-Type": "application/json" } }
-                );
-                const candidate = response.data.candidates[0].content;
-                const part = candidate.parts[0];
+                };
+            });
 
-                if(part.functionCall){
-                    const {name,args} = part.functionCall;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-                    if(name === "addDoc"){
-                        try{
-                            const token = await getToken();
-                            const newDoc = {
-                                type: "Create",
-                                formData: {
-                                    id:1,
-                                    name: args.name,
-                                    url: args.url,
-                                    contentOwner: empID,
-                                    role: "UnderWriter",
-                                    expirationDate: undefined,
-                                    document_status: "not_started",
-                                    document_type: "reference"
-                                }
-                            }
-                            const addDocument = await createDocument(newDoc as any, token, ()=>{})
-                             const functionResponse = {
-                                role: "function",
-                                 parts: [{
-                                    functionResponse: {
-                                        name: "addDoc",
-                                        response: {content: `Successfully created document: ${addDocument.name}`},
-                                    }
-                                 }]
-                             };
-                            await generateResponse([...history, candidate, functionResponse]);
-                            return;
+            let response;
+            try {
+                response = await axios.post(url, {
+                    systemInstruction: { parts: [{ text: navInstructions }] },
+                    contents: formattedContents,
+                    tools: operations,
+                }, { headers: { "Content-Type": "application/json" } });
+            } catch (error: any) {
+                if (error?.response?.status === 429) {
+                    setMessages(prev => [...prev, { role: "model", text: "⚠️ Too many requests. Please wait a moment and try again." }]);
+                } else {
+                    setMessages(prev => [...prev, { role: "model", text: "Something went wrong. Please try again." }]);
+                }
+                console.error(error);
+                return; // exit the loop
+            }
+
+            const candidate = response.data.candidates[0].content;
+            const part = candidate.parts[0];
+
+            if (!part.functionCall) {
+                // No function call — just a text reply, we're done
+                const botText = part.text || "No response received.";
+                setMessages(prev => [...prev, { role: "model", text: botText }]);
+                return;
+            }
+
+            // Handle function call
+            const { name, args } = part.functionCall;
+            let functionResult = "";
+
+            try {
+                const token = await getToken();
+
+                if (name === "addDoc") {
+                    const newDoc = {
+                        type: "Create",
+                        formData: {
+                            id: Math.trunc((Math.random() * 10000) % 10000),
+                            name: args.name,
+                            url: args.url,
+                            contentOwner: empID,
+                            role: currentRole,
+                            expirationDate: undefined,
+                            document_status: "not_started",
+                            document_type: args.document_type,
                         }
-                        catch(err) {
-                            console.error(err);
+                    };
+                    console.log(newDoc);
+                    const addDocument = await createDocument(newDoc as any, token, () => {});
+                    functionResult = `Successfully created document: ${addDocument.name}`;
+
+                } else if (name === "editDoc") {
+                    const newDoc = {
+                        type: "Update",
+                        formData: {
+                            id: Number(args.id) || 0,
+                            name: args.name,
+                            url: args.url,
+                            contentOwner: empID,
+                            role: currentRole,
+                            expirationDate: args.expirationDate,
+                            document_status: args.document_status,
+                            document_type: args.document_type || "Reference",
+                            favorite: args.favorite,
                         }
+                    };
+                    const editDocument = await createDocument(newDoc as any, token, () => {});
+                    functionResult = `Successfully updated document: ${editDocument.name}`;
+                } else if (name === "findDocumentByName") {
+                    try {
+                        const token = await getToken();
+                        const res = await fetch(
+                            `${import.meta.env.VITE_BACKEND_URL}/api/supabase/get-documents`,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+
+                        if (!res.ok) throw new Error("Failed to fetch documents");
+
+                        const docs = await res.json();
+                        const match = docs.find((d: any) =>
+                            d.name.toLowerCase().includes(args.name.toLowerCase())
+                        );
+
+                        if (match) {
+                            // Return the full document so Gemini can preserve unchanged fields in editDoc
+                            functionResult = JSON.stringify({
+                                id: match.id,
+                                name: match.name,
+                                url: match.url,
+                                document_type: match.document_type,
+                                document_status: match.document_status,
+                                assigned_role: match.assigned_role,
+                                expiration_date: match.expiration_date,
+                            });
+                        } else {
+                            functionResult = JSON.stringify({ error: `No document found matching "${args.name}"` });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        functionResult = JSON.stringify({ error: "Failed to search for document" });
                     }
                 }
-
-                const botText = response.data.candidates[0]?.content?.parts[0]?.text || "No response received.";
-
-                setMessages((prev) => [...prev, { role: "model", text: botText }]);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
+            } catch (err) {
+                console.error(err);
+                functionResult = `Error executing ${name}`;
             }
-    }
+
+            // Update history and loop back for Gemini's natural language reply
+            // 500ms delay to respect rate limits
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            history = [
+                ...history,
+                { role: "model", parts: candidate.parts },
+                {
+                    role: "user",
+                    parts: [{
+                        functionResponse: {
+                            name,
+                            response: { content: functionResult }
+                        }
+                    }]
+                }
+            ];
+            // Loop continues — next iteration sends updated history
+        }
+    };
     return(
         <Popover>
             <PopoverTrigger asChild>

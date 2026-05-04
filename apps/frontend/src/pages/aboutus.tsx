@@ -21,7 +21,7 @@ const teamMembers = [
         name: "Colin Teahan",
         role: "Assistant Lead Software Engineer",
         image: "/colinprofile.png",
-        linkedin: "",
+        linkedin: "https://www.linkedin.com/in/colin-j-teahan/",
         quote: "To doubt everything or to believe everything are two equally convenient solutions; both dispense with the necessity of reflection. -Jules Henri Poincaré",
     },
     {

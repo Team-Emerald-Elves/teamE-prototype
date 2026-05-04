@@ -208,15 +208,15 @@ function ContentForm(props: contentFormProps) {
                         />
                     )}
 
-                    <DialogContent className="lg:max-w-lg">
+                    <DialogContent className="lg:max-w-lg bg-(--filter-background)">
                         <DialogHeader>
                             <div className="flex items-center justify-between p-2">
-                                <DialogTitle className="text-2xl text-primary font-sans font-bold">
+                                <DialogTitle className="text-2xl text-foreground font-sans font-bold">
                                     {props.type} Content
                                 </DialogTitle>
                             </div>
                         </DialogHeader>
-                        <FieldGroup>
+                        <FieldGroup className="text-foreground">
                             <div className="grid grid-cols-2 gap-4">
                                 <Field>
                                     <Label

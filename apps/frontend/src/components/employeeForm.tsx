@@ -123,9 +123,9 @@ function EmployeeForm(props: empProps): JSX.Element {
                         </Button>
                     </DialogTrigger>
                 </div>
-                <DialogContent className="lg:max-w-lg">
+                <DialogContent className="lg:max-w-lg bg-(--filter-background) text-foreground">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl text-primary font-sans font-bold">
+                        <DialogTitle className="text-2xl text-foreground font-sans font-bold">
                             Edit Employee
                         </DialogTitle>
                     </DialogHeader>

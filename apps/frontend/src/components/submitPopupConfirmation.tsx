@@ -167,9 +167,9 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
 
     return (
         <Dialog open={info.confirmOpen} onOpenChange={info.setConfirmOpen}>
-            <DialogContent className="sm:max-w-sm">
+            <DialogContent className="sm:max-w-sm bg-(--filter-background)">
                 <DialogHeader>
-                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogTitle className="text-foreground">Are you sure?</DialogTitle>
                 </DialogHeader>
                 <DialogFooter>
                     <Button
@@ -180,6 +180,7 @@ export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
                     </Button>
                     <Button
                         type="button"
+                        className="text-white"
                         onClick={async () => {
                             try {
                                 const token = (await getToken()) ?? "";

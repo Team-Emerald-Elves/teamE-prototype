@@ -127,7 +127,7 @@ export const columns: ColumnDef<documentContent>[] = [
                                 <DocumentViewer doc={doc} />
                             </div>
 
-                            <DocSidePanel doc={doc} />
+                            <DocSidePanel className="ml-2" doc={doc} />
                         </div>
                     </DialogContent>
                 </Dialog>

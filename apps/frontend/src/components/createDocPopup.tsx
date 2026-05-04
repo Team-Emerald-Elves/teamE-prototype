@@ -103,6 +103,7 @@ function DocPopup(props: DocPopupProps): ReactElement {
         const newForm: FormDataType = {
             id: 0,
             name: name,
+            fileName: name,
             filePayload: payload,
             url: "Local upload",
             contentOwner: me?.id ?? "",

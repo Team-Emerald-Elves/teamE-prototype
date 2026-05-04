@@ -38,7 +38,12 @@ const teamMembers = [
         image: "/jeneliaprofile.png",
         quote: "How you spend your days is how you spend your life. - Annie Dillard"
     },
-    { name: "Andi Kurtiqi", role: "Scrum Master", image: "/andiprofile.png" },
+    {
+        name: "Andi Kurtiqi",
+        role: "Scrum Master",
+        image: "/andiprofile.png",
+        quote: "Comparison is the theft of joy. -Theodore Roosevelt"
+    },
     {
         name: "Elliot Ghidall",
         role: "Product Owner",

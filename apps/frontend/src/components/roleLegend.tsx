@@ -22,58 +22,56 @@ export default function RoleLegend({
     roleColors = DEFAULT_ROLE_COLORS,
 }: RoleLegendProps) {
     return (
-        <div className="relative">
+        <div className="flex items-center gap-x-4 flex-wrap gap-y-2">
             {/* Info popover - top right of card */}
-            <div className="absolute top-2 right-2 z-10">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-5 w-5 text-muted-foreground hover:text-foreground"
-                        >
-                            <Info className="h-3 w-3" />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent side="bottom" align="end" className="w-72">
-                        <p className="font-medium text-sm mb-2">Calendar</p>
-                        <p className="text-xs text-muted-foreground mb-3">
-                            Keep track of important events and deadlines.
-                        </p>
-                        <div className="space-y-2">
-                            <p className="text-xs font-medium text-foreground">
-                                Features
-                            </p>
-                            <ul className="text-xs text-muted-foreground space-y-1">
-                                <li>Click any date to create a new event</li>
-                                <li>
-                                    Click an existing event to view or edit it
-                                </li>
-                                <li>Delete events you no longer need</li>
-                                <li>Events are color coded by role</li>
-                                <li>Navigate months with the arrows</li>
-                            </ul>
-                        </div>
-                    </PopoverContent>
-                </Popover>
-            </div>
-                    <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        {Object.entries(roleColors).map(([color, role]) => (
-                            <div
-                                key={role}
-                                className="flex items-center gap-1.5"
-                            >
-                                <span
-                                    className="h-2.5 w-2.5 rounded-full flex-shrink-0"
-                                    style={{ backgroundColor: color }}
-                                />
-                                <span className="text-[11px] text(--table-text) truncate">
-                                    {role}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
 
-        </div>
+
+            {Object.entries(roleColors).map(([color, role]) => (
+                <div
+                    key={role}
+                    className="flex items-center gap-1.5"
+                >
+                    <span
+                        className="h-2.5 w-2.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: color }}
+                    />
+                    <span className="text-[11px] text(--table-text) truncate">
+                        {role}
+                    </span>
+                </div>
+            ))}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-5 w-5 text-muted-foreground hover:text-foreground"
+                    >
+                        <Info className="h-3 w-3" />
+                    </Button>
+                    </PopoverTrigger>
+                <PopoverContent side="bottom" align="end" className="w-72">
+                    <p className="font-medium text-sm mb-2">Calendar</p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                        Keep track of important events and deadlines.
+                    </p>
+                    <div className="space-y-2">
+                        <p className="text-xs font-medium text-foreground">
+                            Features
+                        </p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                            <li>Click any date to create a new event</li>
+                            <li>
+                                Click an existing event to view or edit it
+                            </li>
+                            <li>Delete events you no longer need</li>
+                            <li>Events are color coded by role</li>
+                            <li>Navigate months with the arrows</li>
+                        </ul>
+                    </div>
+                </PopoverContent>
+            </Popover>
+</div>
+
     );
 }

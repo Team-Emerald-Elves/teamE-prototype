@@ -136,6 +136,10 @@ export const UpdateFavoriteModel = z.object({
     favorite: z.boolean(),
 });
 
+export const AiRequestModel = z.object({
+    prompt: z.string()
+})
+
 //layouts.ts
 const LayoutDataModel = z.object({
     layout: z

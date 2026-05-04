@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import validate from "../lib/zod/middleware.ts";
 import { notificationModel } from "../lib/zod/routes.schemas.ts";
-import { getAuth, clerkClient, requireAuth } from "@clerk/express";
+import { getAuth } from "@clerk/express";
 import prisma, {
     Prisma,
     type Employee,
@@ -12,6 +12,7 @@ import {
     DismissNotificationModel
 } from '../lib/zod/routes.schemas.ts'
 import { useResponsiveLayout } from "react-grid-layout";
+import { clerkCache } from "../lib/ecache.ts";
 
 const notifyRouter: Router = Router();
 
@@ -72,7 +73,7 @@ notifyRouter.get(
             }
         })
 
-        const user = await clerkClient.users.getUser(
+        const user = await clerkCache.getUser(
             employee?.clerkUserId as string,
         );
 
@@ -82,7 +83,7 @@ notifyRouter.get(
                     return n;
                 }
 
-                const creator = await clerkClient.users.getUser(n.creatorId);
+                const creator = await clerkCache.getUser(n.creatorId);
 
                 return {
                     ...n,

@@ -117,14 +117,10 @@ export default function Dashboard({
         wasEditing.current = isEditing;
     }, [isEditing, layout, isSignedIn, activeWidgets, loaded, getToken]);
 
-
-
     const handleRemove = (id: string) => {
         setActiveWidgets((w) => w.filter((x) => x !== id));
         setLayout((l) => l.filter((item) => item.i !== id));
     };
-
-
 
     const constrainedLayout = useMemo(
         () =>

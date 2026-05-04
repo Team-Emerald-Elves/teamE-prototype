@@ -25,16 +25,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import type { Notification as Notif } from "@repo/database/types";
 
-type Notification = {
-    createdAt: string;
-    creatorId?: string;
-    employeeId?: string;
-    id: string;
-    public: boolean;
-    targetRoles: string[];
-    title: string;
-    profileIcon?: string;
+
+type Notification = Omit<Notif, "createdAt"> & {
+  createdAt: string;
+  profileIcon?: string;
 };
 
 // const activity: ActivityLog[] = [
@@ -80,7 +76,7 @@ export function UserLogs() {
     const [grouped, setGrouped] = useState<Record<string, Notification[]>>({});
 
     useEffect(() => {
-        async function fetchNotifs() {
+        async function fetchNotifications() {
             const token = await getToken();
 
             const res = await fetch(
@@ -93,11 +89,11 @@ export function UserLogs() {
                 },
             );
 
-            const data: Notification[] = await res.json();
-            setGrouped(groupByDate(data));
+            const data: { Notifications: Notification[]} = await res.json();
+            setGrouped(groupByDate(data.Notifications ?? []));
         }
 
-        fetchNotifs();
+        fetchNotifications();
     }, []);
     return (
         <>

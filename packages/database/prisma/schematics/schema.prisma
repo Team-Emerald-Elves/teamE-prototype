@@ -39,7 +39,7 @@ model Notification {
   title           String
   creatorId       String?
   employeeId      String?     @db.Uuid
-  public          Boolean?    @default(false)
+  public          Boolean     @default(false)
   targetRoles     UserRoles[] @default([])
   employee        Employee?   @relation(fields: [employeeId], references: [id])
 }

@@ -6,7 +6,6 @@ import {
     LinkRequestPostModel,
 } from "../lib/zod/routes.schemas.ts";
 import validate from "../lib/zod/middleware.ts";
-import { buildWhereClause } from "../lib/filters.ts";
 
 const linkRoute = express();
 
@@ -19,7 +18,6 @@ linkRoute.post(
     "/",
     validate(LinkRequestPostModel),
     (req: express.Request, res: express.Response) => {
-        console.log("BODY: ", req.body);
         const lReq: LinkRequest = req.body as LinkRequest;
 
         if (!lReq) {
@@ -45,7 +43,7 @@ linkRoute.post(
                 {
                     link_name: lReq.linkData.link_name!,
                     url: lReq.linkData.url!,
-                    owner: lReq.linkData.owner,
+                    owner: lReq.linkData.owner!,
                 },
                 res,
             );

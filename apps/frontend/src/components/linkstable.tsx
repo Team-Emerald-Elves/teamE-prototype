@@ -134,6 +134,7 @@ export default function LinksTable<TData extends Links, TValue>({
     const { getToken, isSignedIn } = useAuth();
 
     const [links, setLinks] = useState<Links[]>([]);
+    const [filteredLinks, setFilteredLinks] = useState<Links[]>([]);
     const [roles, setRoles] = useState<string[]>([]);
     const [empID, setEmpID] = useState("");
     const [reload, setReload] = useState(false);
@@ -151,7 +152,7 @@ export default function LinksTable<TData extends Links, TValue>({
     const isAdmin = roles.includes("Administrator");
 
     const table = useReactTable({
-        data: links as TData[],
+        data: filteredLinks as TData[],
         columns,
         state: {
             sorting,
@@ -197,11 +198,39 @@ export default function LinksTable<TData extends Links, TValue>({
         return pages;
     }, [currentPage, pageCount]);
 
+
+    function filterLinks(ls: Links[]) {
+        const ownerFilters = filters.filter((item) => item.key === "owner").map((i) => i.value);
+        const tagFilters = filters.filter((item) => item.key === "meta_tags").map((i) => i.value);
+        console.log(`[${ls.length}][${tagFilters.length}, ${ownerFilters.length}]`)
+        const filtered = ls.filter((l: Links) => {
+            if (tagFilters.length == 0) {
+                return true;
+            }
+            if (tagFilters.length > 0) {
+                for (const mt of l.meta_tags) {
+                    if (tagFilters.includes(mt)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }).filter((l: Links) => {
+            if (ownerFilters.length == 0) {
+                return true;
+            }
+            if (ownerFilters.length > 0) {
+                if (ownerFilters.includes(l.owner)) {
+                    return true
+                }
+                return false;
+            }
+        });
+        return filtered;
+    }
+
     async function getLinks() {
         const token = await getToken();
-
-        const ownerFilters = filters.filter((item) => item.key === "owner");
-        const tagFilters = filters.filter((item) => item.key === "meta_tags");
 
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/links`, {
             method: "POST",
@@ -212,8 +241,7 @@ export default function LinksTable<TData extends Links, TValue>({
             body: JSON.stringify({
                 action: "list",
                 linkData: {
-                    owner: ownerFilters.map((item) => item.value)[0],
-                    meta_tags: tagFilters.map((item) => item.value),
+                    
                 },
             }),
         });
@@ -221,16 +249,19 @@ export default function LinksTable<TData extends Links, TValue>({
         if (!res.ok) {
             throw new Error("Failed to fetch links");
         }
+        const retLinks: Links[] = await res.json();
 
-        return res.json();
+        setFilteredLinks(filterLinks(retLinks));
+        
+        return retLinks;
     }
 
     useEffect(() => {
         qmgr.wait(() => {
             getLinks()
                 .then((data: Links[]) => {
-                    setLinks(data);
                     setTagFilters(getTagFilters(data));
+                    setLinks(data);
                 })
                 .catch(console.error);
         });
@@ -401,12 +432,10 @@ export default function LinksTable<TData extends Links, TValue>({
                             reload={setReload}
                         />
 
-                        <Button variant="destructive" size="icon">
-                            <DeletePopupConfirmationLinks
+                        <DeletePopupConfirmationLinks
                                 link={link}
                                 reload={setReload}
                             />
-                        </Button>
 
                         <Button
                             variant="outline"

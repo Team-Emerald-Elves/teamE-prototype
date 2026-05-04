@@ -254,7 +254,7 @@ export const columns: ColumnDef<Links>[] = [
             const link = row.original;
             const date = new Date(link.created_at);
 
-            return <p>{date.toLocaleString()}</p>;
+            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
         },
     },
     {
@@ -277,7 +277,7 @@ export const columns: ColumnDef<Links>[] = [
             const link = row.original;
             const date = new Date(link.updated_at);
 
-            return <p>{date.toLocaleString()}</p>;
+            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
         },
     },
     {
@@ -302,7 +302,7 @@ export const columns: ColumnDef<Links>[] = [
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                     {tags.map((item) => (
                         <div className="text-center" key={item}>
                             <DocTag background="bg-gray-200">{item}</DocTag>
@@ -312,7 +312,7 @@ export const columns: ColumnDef<Links>[] = [
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-4 w-4 ml-1 flex items-center justify-center text-center"
+                                className="h-4 w-4 ml-1 flex items-center justify-center text-center p-0"
                             >
                                 +
                             </Button>

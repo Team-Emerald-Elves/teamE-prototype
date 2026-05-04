@@ -102,7 +102,7 @@ html.light {
     --internal-link-color: var(--color-blue-900);
     --header-subtext-color: oklch(0.3388 0.0755 238.86);
     --subheader-color: var(--color-gray-800);
-    --tab-bg: #e6e6e6;
+    --tab-bg: #f3f3f3;
     --calendar-bg: #e5e7eb;
     --calendar-bg-foreground: #374151;
     --second-button-cal: #e5e7eb;

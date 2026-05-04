@@ -168,12 +168,14 @@ export default function LinksTable<TData extends Links, TValue>({
     const currentPage = table.getState().pagination.pageIndex;
     const pageCount = table.getPageCount();
 
-    const pageNumbers = useMemo(() => {
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = [];
+
         if (pageCount <= 7) {
-            return Array.from({ length: pageCount }, (_, i) => i);
+            return Array.from({ length: pageCount }, (_, index) => index);
         }
 
-        const pages: (number | string)[] = [0];
+        pages.push(0);
 
         if (currentPage > 2) {
             pages.push("...");
@@ -182,9 +184,9 @@ export default function LinksTable<TData extends Links, TValue>({
         const start = Math.max(1, currentPage - 1);
         const end = Math.min(pageCount - 2, currentPage + 1);
 
-        for (let i = start; i <= end; i++) {
-            if (!pages.includes(i)) {
-                pages.push(i);
+        for (let page = start; page <= end; page++) {
+            if (!pages.includes(page)) {
+                pages.push(page);
             }
         }
 
@@ -195,7 +197,7 @@ export default function LinksTable<TData extends Links, TValue>({
         pages.push(pageCount - 1);
 
         return pages;
-    }, [currentPage, pageCount]);
+    };
 
     async function getLinks() {
         const token = await getToken();
@@ -354,8 +356,8 @@ export default function LinksTable<TData extends Links, TValue>({
                 <TableCell>
                     {isUnlocked ? null : (
                         <div className="flex flex-col text-right">
-                            <p className="text-xs">Checked out by:</p>
-                            <p className="text-sm font-medium">{link.lock_name}</p>
+                            <p className="text-[10px]">Checked out by:</p>
+                            <p className="text-[10px] font-medium">{link.lock_name}</p>
                         </div>
                     )}
                 </TableCell>
@@ -364,12 +366,12 @@ export default function LinksTable<TData extends Links, TValue>({
 
         if (isUnlocked) {
             return (
-                <TableCell className="px-1 py-0.5">
-                    <div className="flex justify-end">
+                <TableCell className="px-5 py-0.5">
+                    <div className="flex justify-center">
                         <Button
                             variant="outline"
                             size="icon"
-                            className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                            className="px-3 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                             onClick={async () => {
                                 const token = await getToken();
                                 await setLinkLock(
@@ -390,7 +392,7 @@ export default function LinksTable<TData extends Links, TValue>({
         if (isLockedByMe) {
             return (
                 <TableCell className="px-1 py-0.5 text-center">
-                    <div className="flex gap-2 justify-end">
+                    <div className="flex gap-2 justify-center">
                         <Editlinksform
                             id={link.id}
                             link_name={link.link_name}
@@ -409,7 +411,7 @@ export default function LinksTable<TData extends Links, TValue>({
                         <Button
                             variant="outline"
                             size="icon"
-                            className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground"
+                            className="px-3 py-3 text-base bg-[#6d89a3] text-secondary-foreground"
                             onClick={async () => {
                                 const token = await getToken();
                                 await setLinkLock(
@@ -430,8 +432,8 @@ export default function LinksTable<TData extends Links, TValue>({
         return (
             <TableCell>
                 <div className="flex flex-col text-right">
-                    <p className="text-xs">Checked out by:</p>
-                    <p className="text-sm font-medium">{link.lock_name}</p>
+                    <p className="text-[10px]">Checked out by:</p>
+                    <p className="text-[10px] font-medium">{link.lock_name}</p>
                 </div>
             </TableCell>
         );
@@ -440,7 +442,7 @@ export default function LinksTable<TData extends Links, TValue>({
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden h-[70vh]">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
@@ -456,10 +458,10 @@ export default function LinksTable<TData extends Links, TValue>({
                                             .getColumn("link_name")
                                             ?.setFilterValue(event.target.value)
                                     }
-                                    className="w-full"
+                                    className="w-full placeholder:text-accent-foreground"
                                 />
                                 <InputGroupAddon>
-                                    <Search />
+                                    <Search color="var(--accent-foreground)"/>
                                 </InputGroupAddon>
                             </InputGroup>
 
@@ -468,14 +470,14 @@ export default function LinksTable<TData extends Links, TValue>({
                                     onClick={() =>
                                         setIsDropdownOpen((prev) => !prev)
                                     }
-                                    className="flex px-4 py-1 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
                                 >
                                     <div className="pr-1">
                                         <HugeiconsIcon
-                                            icon={SlidersHorizontalIcon}
+                                            icon={SlidersHorizontalIcon} size={16}
                                         />
                                     </div>
-                                    Filter Tags
+                                    Filter tags
                                 </button>
 
                                 {isDropdownOpen && (
@@ -574,13 +576,13 @@ export default function LinksTable<TData extends Links, TValue>({
                             <TableHeader className="bg-(--card-header) text-(--table-titles)">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
-                                        <TableHead className="xt-(--table-titles) text-center">
+                                        <TableHead className="text-(--table-titles) text-center">
                                             Favorite
                                         </TableHead>
 
                                         {headerGroup.headers.map((header) => (
                                             <TableHead
-                                                className="xt-(--table-titles) text-center"
+                                                className="text-(--table-titles) text-center"
                                                 key={header.id}
                                             >
                                                 {header.isPlaceholder
@@ -632,7 +634,7 @@ export default function LinksTable<TData extends Links, TValue>({
                                                 .map((cell) => (
                                                     <TableCell
                                                         key={cell.id}
-                                                        className="px-5 py-0.5 text-left whitespace-normal"
+                                                        className="px-5 py-3 text-left whitespace-normal"
                                                     >
                                                         {flexRender(
                                                             cell.column
@@ -649,6 +651,8 @@ export default function LinksTable<TData extends Links, TValue>({
                             </TableBody>
                         </Table>
                     </div>
+
+
 
                     <div className="absolute bottom-3 left-3">
                         <Popover>
@@ -708,7 +712,6 @@ export default function LinksTable<TData extends Links, TValue>({
                         </Popover>
                     </div>
                 </div>
-
                 <div className="flex items-center justify-center gap-1 py-4">
                     <Button
                         disabled={!table.getCanPreviousPage()}
@@ -719,23 +722,25 @@ export default function LinksTable<TData extends Links, TValue>({
                         Previous
                     </Button>
 
-                    {pageNumbers.map((page, index) =>
+                    {getPageNumbers().map((page, index) =>
                         typeof page === "number" ? (
                             <Button
                                 className="h-8 w-8 p-0"
-                                key={index}
+                                key={`${page}-${index}`}
                                 onClick={() => table.setPageIndex(page)}
                                 size="sm"
                                 variant={
-                                    currentPage === page ? "default" : "outline"
+                                    currentPage === page
+                                        ? "default"
+                                        : "outline"
                                 }
                             >
                                 {page + 1}
                             </Button>
                         ) : (
-                            <span className="px-2" key={index}>
-                                {page}
-                            </span>
+                            <span className="px-2" key={`${page}-${index}`}>
+                                    {page}
+                                </span>
                         ),
                     )}
 
@@ -748,6 +753,8 @@ export default function LinksTable<TData extends Links, TValue>({
                         Next
                     </Button>
                 </div>
+
+
             </div>
         </Tabs>
     );

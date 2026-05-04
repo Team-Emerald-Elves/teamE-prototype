@@ -808,10 +808,10 @@ export function DocumentsTable({ columns }: DocProps) {
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto px-10 w-full py-10">
-                <div className="bg-(--card) rounded-xl shadow-sm border p-4 relative overflow-visible">
+                <div className="bg-(--card) rounded-xl shadow-sm border p-4 relative overflow-hidden h-[70vh]">
                     <div className="flex flex-col">
                         <div className="flex items-center mb-4">
-                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-input">
+                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-(--color-primary-foreground) ">
                                 <InputGroupInput
                                     placeholder="Search"
                                     value={
@@ -824,11 +824,11 @@ export function DocumentsTable({ columns }: DocProps) {
                                             .getColumn("name")
                                             ?.setFilterValue(event.target.value)
                                     }
-                                    className="w-full"
+                                    className="w-full placeholder:text-accent-foreground"
                                 />
 
                                 <InputGroupAddon>
-                                    <Search />
+                                    <Search color="var(--accent-foreground)"/>
                                 </InputGroupAddon>
                             </InputGroup>
 
@@ -837,11 +837,11 @@ export function DocumentsTable({ columns }: DocProps) {
                                     onClick={() =>
                                         setIsDropdownOpen((current) => !current)
                                     }
-                                    className="flex px-4 py-1 ml-2 bg-primary text-(--table-text) hover:bg-primary/80 rounded-md"
+                                    className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
                                 >
-                                    <span className="pr-1">
+                                    <span className="pr-1 ">
                                         <HugeiconsIcon
-                                            icon={SlidersHorizontalIcon}
+                                            icon={SlidersHorizontalIcon} size={16}
                                         />
                                     </span>
                                     Filter
@@ -859,7 +859,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                 )}
                             </div>
 
-                            <div className="flex justify-end ml-auto py-1">
+                            <div className="flex justify-center ml-auto py-1">
                                 <CreateDocumentButton
                                     roles={roles}
                                     refresh={setReload}
@@ -883,7 +883,7 @@ export function DocumentsTable({ columns }: DocProps) {
                         onRemove={removeFilter}
                     />
 
-                    <Table className="border rounded-lg overflow-hidden mt-6">
+                    <Table className="border rounded-lg overflow-hidden mt-4">
                         <TableHeader className="bg-(--card-header) text-(--table-titles)">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
@@ -906,7 +906,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                         </TableHead>
                                     ))}
 
-                                    <TableHead className="text-(--table-titles) px-5 text-right">
+                                    <TableHead className="text-(--table-titles) px-5 text-center">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -953,7 +953,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                 .map((cell) => (
                                                     <TableCell
                                                         key={cell.id}
-                                                        className="px-5 py-0.5 text-left whitespace-normal"
+                                                        className="px-5 py-2 text-left whitespace-normal"
                                                     >
                                                         {flexRender(
                                                             cell.column
@@ -965,17 +965,18 @@ export function DocumentsTable({ columns }: DocProps) {
 
                                             <TableCell>
                                                 {isLockedByOther ? (
-                                                    <div className="flex items-center justify-end gap-3">
+                                                    <div className="flex items-center justify-center gap-2">
                                                         <div className="flex flex-col text-right">
-                                                            <p className="text-xs">
+                                                            <p className="text-[10px]">
                                                                 Checked out by:
                                                             </p>
-                                                            <p className="text-sm font-medium">
+                                                            <p className="text-[10px] font-medium">
                                                                 {doc.lock_name}
                                                             </p>
                                                         </div>
 
                                                         <Button
+
                                                             onClick={() =>
                                                                 downloadDocument(
                                                                     doc,
@@ -986,11 +987,12 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                 icon={
                                                                     Download01Icon
                                                                 }
+                                                                color="white"
                                                             />
                                                         </Button>
                                                     </div>
                                                 ) : (
-                                                    <div className="flex items-center gap-2 justify-end">
+                                                    <div className="flex items-center gap-2 justify-center">
                                                         {canEdit &&
                                                             isLockedByMe && (
                                                                 <>
@@ -1057,6 +1059,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                 icon={
                                                                     Download01Icon
                                                                 }
+                                                                color="white"
                                                             />
                                                         </Button>
 
@@ -1065,7 +1068,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                 <Button
                                                                     variant="outline"
                                                                     size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
+                                                                    className="px-3 py-3 text-base bg-[#c5e6e8] text-secondary-foreground"
                                                                     onClick={() =>
                                                                         lockDocument(
                                                                             doc,
@@ -1082,7 +1085,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                                                 <Button
                                                                     variant="outline"
                                                                     size="icon"
-                                                                    className="px-4 py-3 text-base bg-[#6d89a3] text-secondary-foreground"
+                                                                    className="px-3 py-3 text-base bg-[#6d89a3] text-secondary-foreground"
                                                                     onClick={() =>
                                                                         lockDocument(
                                                                             doc,
@@ -1112,50 +1115,51 @@ export function DocumentsTable({ columns }: DocProps) {
                         </TableBody>
                     </Table>
 
-                    <div className="flex items-center justify-center gap-1 py-4">
-                        <Button
-                            disabled={!table.getCanPreviousPage()}
-                            onClick={() => table.previousPage()}
-                            size="sm"
-                            variant="outline"
-                        >
-                            Previous
-                        </Button>
-
-                        {getPageNumbers().map((page, index) =>
-                            typeof page === "number" ? (
-                                <Button
-                                    className="h-8 w-8 p-0"
-                                    key={`${page}-${index}`}
-                                    onClick={() => table.setPageIndex(page)}
-                                    size="sm"
-                                    variant={
-                                        currentPage === page
-                                            ? "default"
-                                            : "outline"
-                                    }
-                                >
-                                    {page + 1}
-                                </Button>
-                            ) : (
-                                <span className="px-2" key={`${page}-${index}`}>
-                                    {page}
-                                </span>
-                            ),
-                        )}
-
-                        <Button
-                            disabled={!table.getCanNextPage()}
-                            onClick={() => table.nextPage()}
-                            size="sm"
-                            variant="outline"
-                        >
-                            Next
-                        </Button>
-                    </div>
-
                     <InfoPopover totalDocuments={docs.length} />
                 </div>
+
+                <div className="flex items-center justify-center gap-1 py-4">
+                    <Button
+                        disabled={!table.getCanPreviousPage()}
+                        onClick={() => table.previousPage()}
+                        size="sm"
+                        variant="outline"
+                    >
+                        Previous
+                    </Button>
+
+                    {getPageNumbers().map((page, index) =>
+                        typeof page === "number" ? (
+                            <Button
+                                className="h-8 w-8 p-0"
+                                key={`${page}-${index}`}
+                                onClick={() => table.setPageIndex(page)}
+                                size="sm"
+                                variant={
+                                    currentPage === page
+                                        ? "default"
+                                        : "outline"
+                                }
+                            >
+                                {page + 1}
+                            </Button>
+                        ) : (
+                            <span className="px-2" key={`${page}-${index}`}>
+                                    {page}
+                                </span>
+                        ),
+                    )}
+
+                    <Button
+                        disabled={!table.getCanNextPage()}
+                        onClick={() => table.nextPage()}
+                        size="sm"
+                        variant="outline"
+                    >
+                        Next
+                    </Button>
+                </div>
+
             </div>
         </Tabs>
     );

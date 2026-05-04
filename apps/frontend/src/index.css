@@ -53,11 +53,12 @@
 html.light {
     /*light-mode theme*/
     --blue-primary: #013C5A;
+    --border-strong: oklch(0.75 0 0);
     --yellow-primary: #FFC107;
     --background: #f5f5f5;
     --foreground: oklch(0.1356 0.0255 246.59);
     --card: oklch(1 0 0);
-    --card-header: #ecf4f9;
+    --card-header: #e3eff6;
     --card-title: #12324b;
     --table-titles: #0b4461;
     --table-hover: var(--color-gray-50);
@@ -76,6 +77,7 @@ html.light {
     --muted: oklch(0.97 0 0);
     --light-muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
+    --edit-dash: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
@@ -87,6 +89,7 @@ html.light {
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
+    --stats-label: oklch(0.556 0 0);
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
@@ -100,8 +103,11 @@ html.light {
     --header-subtext-color: oklch(0.3388 0.0755 238.86);
     --subheader-color: var(--color-gray-800);
     --tab-bg: #e6e6e6;
-    --calendar-bg: #ecf4f9;
-    --lock-color: #c5e6e8;
+    --calendar-bg: #e5e7eb;
+    --calendar-bg-foreground: #374151;
+    --second-button-cal: #e5e7eb;
+    --week-cal-text: black;
+    --lock-color: var(--color-gray-200);
     --input-text: var(--color-gray-500);
     --filter-background: var(--color-gray-50);
     --filter-hover: var(--color-gray-300);
@@ -112,11 +118,12 @@ html.dark {
     --blue-primary: #013C5A;
     --yellow-primary: #FFC107;
     --background: oklch(0.145 0 0);
+    --border-strong: oklch(0.75 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
-    --card-header: oklch(0.19 0 0);
-    --card-title: #1f5681;
-    --table-titles: #136693;
+    --card-header: oklch(0.164 0 0);
+    --card-title: #589ed6;
+    --table-titles: #589ed6;
     --table-hover: var(--color-gray-900);
     --table-text: var(--color-gray-50);
     --tab-text: var(--color-gray-950);
@@ -127,7 +134,7 @@ html.dark {
     --popover-foreground: oklch(0.145 0 0);
     --primary: var(--blue-primary);
     --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.922 0 0);
+    --secondary: oklch(0.682 0.147 127.538);
     --delete: oklch(0.583 0.154 23.134);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
@@ -144,6 +151,7 @@ html.dark {
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
+    --stats-label: oklch(0.748 0 0);
     --radius: 0.625rem;
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
@@ -158,6 +166,9 @@ html.dark {
     --subheader-color: var(--color-gray-300);
     --tab-bg: #2b2a2a;
     --calendar-bg: #222525;
+    --calendar-bg-foreground: #e5e7eb;
+    --second-button-cal: #222525;
+    --week-cal-text: white;
     --lock-color: #c5e6e8;
     --input-text: var(--color-gray-300);
     --filter-background: var(--color-gray-800);
@@ -181,4 +192,40 @@ html, body, #root {
     button:not([disabled]), [role="button"]:not([disabled]) {
         cursor: pointer;
     }
+    .fc {
+        --fc-border-color: var(--border-strong);
+    }
+    .fc .fc-event-title,
+    .fc .fc-event-time {
+        color: var(--foreground) !important;
+    }
+    .fc .fc-event-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        padding: 2px
+    }
+    .fc .fc-day-today {
+        background-color: #ecf4f9; /* light blue example */
+    }
+
+    .fc .fc-timegrid-axis {
+        background-color: var(--background);
+        color: black;
+    }
+
+    .dark .fc .fc-timegrid-axis {
+        background-color: black;
+        color: white;
+    }
+
+    .fc .fc-day-today {
+        background-color: #e0f2fe !important; /* light blue (similar intensity) */
+    }
+
+    .dark .fc .fc-day-today {
+        background-color: #172554 !important;
+    }
 }
+

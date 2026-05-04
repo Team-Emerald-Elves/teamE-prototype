@@ -1,9 +1,11 @@
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/react";
 import { useEffect, useState } from "react";
+import RoleLegend from "@/components/roleLegend.tsx";
 
 function getCurrentWeekLabel() {
     const now = new Date();
@@ -60,11 +62,13 @@ export default function CalendarWeek() {
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
 
-            <div className="bg-(--card) rounded-xl shadow-sm border p-4">
+            <div className="bg-(--card) rounded-xl shadow-none border-0 p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold text-(--card-title)">
                         {getCurrentWeekLabel()}
                     </h4>
+
+                        <RoleLegend />
                     <Link
                         to="/calendar"
                         className="text-sm text-(--internal-link-color) hover:underline"
@@ -73,15 +77,22 @@ export default function CalendarWeek() {
                     </Link>
                 </div>
                 <FullCalendar
-                    plugins={[dayGridPlugin, interactionPlugin]}
-                    initialView="dayGridWeek"
+                    plugins={[timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
                     headerToolbar={false}
+
                     dayHeaderClassNames={() => [
                         "bg-(--calendar-bg)",
-                        "text-(--table-titles)",
+                        "text-(--calendar-bg-foreground)",
                     ]}
+
+                    slotMinTime="08:00:00"
+                    slotMaxTime="20:00:00"
+
                     contentHeight="auto"
                     events={events}
+
+                    slotEventOverlap={false}
                 />
             </div>
         </div>

@@ -158,3 +158,7 @@ export const LayoutRequestPostModel = z.object({
     action: ActionEnum.optional(),
     layoutData: LayoutDataModel.optional(),
 });
+
+export const DismissNotificationModel = z.object({
+    ids: z.array(z.string())
+});

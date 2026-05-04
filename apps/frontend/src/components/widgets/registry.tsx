@@ -91,8 +91,9 @@ export const widgetRegistry: WidgetRegistry = {
         description: "Weekly calendar view",
         // defaultW: 12,
         // defaultH: 8,
-        minW: 12,
-        minH: 4,
+        minW: 6,
+        minH: 6,
+        maxH: 12,
         icon: Calendar,
     },
 };

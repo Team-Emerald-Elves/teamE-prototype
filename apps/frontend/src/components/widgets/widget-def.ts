@@ -13,6 +13,7 @@ export interface WidgetDefinition {
     minH?: number;
     maxW?: number;
     maxH?: number;
+    isResizable?: boolean;
     icon?: React.ComponentType<{ size?: number }>;
     allowedRoles?: string[];
 }

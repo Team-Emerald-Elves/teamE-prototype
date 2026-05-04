@@ -37,20 +37,11 @@ export default function EventDetails(props: EventDetailsProps) {
 
     const [open, setOpen] = useState(false);
 
-    const ROLE_COLORS: Record<string, string> = {
-        "#6D28D9": "Administrator",
-        "#93C5FD": "BusinessAnalyst",
-        "#F9A8D4": "UnderWriter",
-        "#2DD4BF": "ExcelOperator",
-        "#C4B5FD": "BusinessOperator",
-        "#F0ABFC": "ActuarialAnalyst",
-    };
-
     let eventEmpId = null;
     let role;
     if (props.selectedEvent) {
         eventEmpId = props.selectedEvent.extendedProps.lock;
-        role = ROLE_COLORS[props.selectedEvent.backgroundColor];
+        role = props.selectedEvent.extendedProps.role;
         console.log(props.selectedEvent.extendedProps.contentOwner);
     }
 
@@ -68,7 +59,7 @@ export default function EventDetails(props: EventDetailsProps) {
             >
                 <DialogContent className="overflow-visible max-w-3xl">
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-xl font-bold">
+                        <h3 className="text-xl font-bold pr-4">
                             {props.selectedEvent?.title}
                         </h3>
                         {props.selectedEvent?.extendedProps.doc_id !== -1 ? (

@@ -42,6 +42,8 @@ import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmplo
 import EmployeeForm from "@/components/employeeForm.tsx";
 import qmgr from "@/lib/querymgr.ts";
 import { type Employee } from "@repo/database/types";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
 
 interface EmployeeProps {
     columns: ColumnDef<Employee, unknown>[];
@@ -294,7 +296,10 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                         )}
                     </div>
 
-                    <div className="flex justify-end ml-auto">
+                    <div className="flex justify-end ml-auto gap-2">
+                        <div className="relative inline-block text-left">
+                            <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                        </div>
                         <CreateEmployeeForm reload={setReload} />
                     </div>
                 </div>

@@ -1,37 +1,36 @@
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import qmgr from "@/lib/querymgr";
 import { getToken } from "@clerk/react";
-import { useEffect, useState } from "react";
 import type { documentContent } from "@repo/database/types";
 
 type SubmitConfirmationPopupProps = {
-    type: string;
+    type: string
     formData: {
-        id: number;
-        name: string;
-        url: string;
-        contentOwner: string;
-        role: string;
-        document_type: string;
-        expirationDate?: Date;
-        expirationTime: string;
-        document_status: string;
-        filePayload?: string;
-        fileName?: string;
-    };
-    refresh: (any: any) => void;
-    open: (arg: boolean) => void;
-    disabled: boolean;
-};
+        id: number
+        name: string
+        url: string
+        contentOwner: string
+        role: string
+        document_type: string
+        expirationDate?: Date
+        expirationTime: string
+        document_status: string
+        filePayload?: string
+        fileName?: string
+    }
+    refresh: (any) => void
+    open: (arg:boolean) => void
+    confirmOpen: boolean
+    setConfirmOpen: (val: boolean) => void
+    disabled: boolean
+}
 
 export type IFile = {
     id: number;
@@ -160,78 +159,46 @@ async function createDocument(
 }
 
 export function SubmitConfirmationPopup(info: SubmitConfirmationPopupProps) {
-    const [sessionToken, setSessionToken] = useState("");
-    const [open, setOpen] = useState(false);
-    useEffect(() => {
-        getToken().then((t) => setSessionToken(t ?? ""));
-    }, []);
+
+    // const [sessionToken, setSessionToken] = useState("")
+    //
+    // useEffect(() => {
+    //     getToken().then(t => setSessionToken(t ?? ""))
+    // }, [])
 
     return (
-        <>
-            {info.disabled ? (
-                <Button
-                    type="submit"
-                    disabled={true}
-                    className=" bg-secondary text-secondary-foreground"
-                    size="lg"
-                >
-                    Submit
+        <Dialog open={info.confirmOpen} onOpenChange={info.setConfirmOpen}>
+            <DialogContent className="sm:max-w-sm">
+                <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button variant="outline"
+                    onClick={() => info.setConfirmOpen(false)}>
+                    Cancel
                 </Button>
-            ) : (
-                <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger>
-                        <Button
-                            type="submit"
-                            className=" bg-secondary text-secondary-foreground"
-                            size="lg"
-                        >
-                            Submit
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-sm">
-                        <DialogHeader>
-                            <DialogTitle>Are you sure?</DialogTitle>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <DialogClose>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => setOpen(false)}
-                                >
-                                    Cancel
-                                </Button>
-                            </DialogClose>
-                            <DialogClose>
-                                <Button
-                                    type="button"
-                                    onClick={() => {
-                                        try {
-                                            createDocument(
-                                                info,
-                                                sessionToken,
-                                                info.refresh,
-                                            );
-                                            console.log(
-                                                "submitted sucsessfully!",
-                                            );
-                                            info.open(false);
-                                            console.log(
-                                                "closed ready for refresh",
-                                            );
-                                        } catch (error) {
-                                            console.error("broke at", error);
-                                        }
-                                    }}
-                                >
-                                    Confirm
-                                </Button>
-                            </DialogClose>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            )}
-        </>
-    );
+                    <Button
+                        type="button"
+                        onClick={async () => {
+                            try {
+                                const token = await getToken() ?? ""
+                                await createDocument(info, token, info.refresh);
+                                console.log("submitted successfully!");
+                                info.setConfirmOpen(false);
+                                info.open(false)
+                                console.log("closed ready for refresh");
+
+                            } catch (error) {
+                                console.error("broke at", error)
+                            }
+                        }}
+                    >
+                        Confirm
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 export default SubmitConfirmationPopup;

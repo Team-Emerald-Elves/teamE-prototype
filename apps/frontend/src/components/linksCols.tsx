@@ -302,7 +302,7 @@ export const columns: ColumnDef<Links>[] = [
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
 
             return (
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center gap-1">
                     {tags.map((item) => (
                         <div className="text-center" key={item}>
                             <DocTag background="bg-gray-200">{item}</DocTag>

@@ -121,13 +121,12 @@ export const columns: ColumnDef<documentContent>[] = [
                         </button>
                     </DialogTrigger>
 
-                    <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
-                        <div className="flex-1 overflow-auto flex justify-center">
+                    <DialogContent className="lg:max-w-6xl w-[95vw] h-[95vh] flex flex-col overflow-hidden p-6">
+                        <div className="flex-1 overflow-auto flex justify-center gap-6">
                             <div className="w-full max-w-[min(1400px,80%)] h-full">
                                 <DocumentViewer doc={doc} />
                             </div>
-
-                            <DocSidePanel className="ml-2" doc={doc} />
+                            <DocSidePanel doc={doc} />
                         </div>
                     </DialogContent>
                 </Dialog>

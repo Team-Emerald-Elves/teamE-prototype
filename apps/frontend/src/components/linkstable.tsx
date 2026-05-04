@@ -476,7 +476,7 @@ export default function LinksTable<TData extends Links, TValue>({
     return (
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden h-[70vh]">
+                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">

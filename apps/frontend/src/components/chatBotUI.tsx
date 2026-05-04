@@ -94,7 +94,7 @@ export default function ChatBot(){
       Accessible only to admin users. Displays all employees in the company.
     
     -Adding documents:
-        Name, url,and document type are required, if document type is not specified assume the document type is Reference
+        Name, fileName,and document type are required, if document type is not specified assume the document type is Reference, the filename is uploaded by the user 
     -editing documents:
         ALWAYS call findDocumentByName first to get the document's real ID before calling editDoc.
         Only change the fields the user specifies, keep all other fields exactly as returned by findDocumentByName.
@@ -119,10 +119,10 @@ export default function ChatBot(){
                         type: "object",
                         properties:{
                             name: {type: "string", description: "The name/title of the document"},
-                            url: {type: "string", description: "The url of the document"},
+                            fileName: {type: "string", description: "The filename of the document this will be uploaded by the user"},
                             document_type:{type: "string", description: "The document type"},
                         },
-                        required: ["name", "url", "document_type"],
+                        required: ["name", "fileName", "document_type"],
                     }
                 },
                 {
@@ -192,8 +192,8 @@ export default function ChatBot(){
             ]
         }
     ]
-    const [filePayload, setFilePayload] = React.useState<string | undefined>(undefined);
-    const [fileName, setFileName] = React.useState<string | undefined>(undefined);
+    const filePayload = React.useRef<string | undefined>(undefined);
+    const fileName = React.useRef<string | undefined>(undefined);
 
     const toBase64 = (file: File): Promise<string> =>
         new Promise((resolve, reject) => {
@@ -208,8 +208,8 @@ export default function ChatBot(){
         if (!files || files.length < 1) return;
         toBase64(files[0]).then(
             (data) => {
-                setFilePayload(data);
-                setFileName(files[0].name);
+                filePayload.current = data;
+                fileName.current = files[0].name;
             },
             (err) => console.error(err),
         );
@@ -498,6 +498,8 @@ export default function ChatBot(){
                             expirationDate: undefined,
                             document_status: "not_started",
                             document_type: args.document_type,
+                            filePayload: filePayload.current,
+                            fileName: fileName.current,
                         }
                     };
                     console.log(newDoc);
@@ -517,13 +519,13 @@ export default function ChatBot(){
                             document_status: args.document_status,
                             document_type: args.document_type || "Reference",
                             favorite: args.favorite,
-                            filePayload: args.filePayload,
-                            fileName: args.fileName,
+                            filePayload: filePayload.current,
+                            fileName: fileName.current,
                         }
                     };
                     const editDocument = await createDocument(newDoc as any, token, () => {});
-                    setFileName(undefined);
-                    setFilePayload(undefined);
+                    fileName.current =undefined;
+                    filePayload.current =undefined;
                     functionResult = `Successfully updated document: ${editDocument.name}`;
                 } else if (name === "findDocumentByName") {
                     try {
@@ -550,6 +552,8 @@ export default function ChatBot(){
                                 document_status: match.document_status,
                                 assigned_role: match.assigned_role,
                                 expiration_date: match.expiration_date,
+                                filePayload: match.filePayload,
+                                fileName: match.fileName,
                             });
                         } else {
                             functionResult = JSON.stringify({ error: `No document found matching "${args.name}"` });

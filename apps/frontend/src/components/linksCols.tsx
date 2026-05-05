@@ -5,7 +5,8 @@ import { ArrowUpDown, Plus ,Tag} from "lucide-react";
 import { Button } from "./ui/button.tsx";
 import DocTag from "@/components/docTag.tsx";
 import { TagInput } from "@/components/tagInput.tsx";
-import { useState } from "react";
+import { tagColor } from "@/lib/tagColor.ts";
+import { useEffect, useState } from "react";
 import {
     Popover,
     PopoverContent,
@@ -280,6 +281,13 @@ export const columns: ColumnDef<Links>[] = [
             const [tagList, setTagList] = useState<string[]>(link.meta_tags);
             const [filter, setFilter] = useState("");
 
+            // TanStack reuses cell instances across data changes, so sync
+            // local state when the row's underlying tags change (e.g. after
+            // a filter refetch swaps the link in this row position).
+            useEffect(() => {
+                setTagList(link.meta_tags ?? []);
+            }, [link.id, link.meta_tags]);
+
             const allTags = Array.from(
                 new Set(
                     table
@@ -307,7 +315,7 @@ export const columns: ColumnDef<Links>[] = [
                 <div className="flex flex-wrap items-center gap-1 w-full">
                     {tagList.map((item) => (
                         <div className="text-center shrink-0" key={item}>
-                            <DocTag background="bg-gray-200">{item}</DocTag>
+                            <DocTag background={tagColor(item)}>{item}</DocTag>
                         </div>
                     ))}
                     <Popover>
@@ -345,7 +353,7 @@ export const columns: ColumnDef<Links>[] = [
                                             addTag(tag);
                                             setFilter("");
                                         }}
-                                        className="border bg-gray-200 hover:bg-gray-500 text-xs px-2 h-5 rounded-sm"
+                                        className={`border text-xs px-2 h-5 rounded-sm cursor-pointer hover:opacity-80 ${tagColor(tag)}`}
                                     >
                                         {tag}
                                     </button>

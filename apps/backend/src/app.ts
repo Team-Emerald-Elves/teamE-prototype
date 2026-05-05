@@ -26,7 +26,6 @@ import {
     CheckoutLinks,
     deleteEventRoute,
     linkTagUpdate,
-    linkTagDelete,
     notifyRouter,
     employeeRoute,
     linkRoute,
@@ -112,7 +111,6 @@ app.post("/update-event", /* requireAuth(),*/ updateEventRoute);
 app.post("/set-read", /* requireAuth(),*/ setReadRoute);
 app.put("/update-link-tags", /* requireAuth(),*/ linkTagUpdate);
 
-app.delete("/delete-link-tag", /* requireAuth(),*/ linkTagDelete);
 app.delete("/delete-event", /* requireAuth(),*/ deleteEventRoute);
 
 app.listen(PORT, () => {

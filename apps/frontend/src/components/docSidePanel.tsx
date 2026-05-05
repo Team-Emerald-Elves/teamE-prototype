@@ -1,10 +1,22 @@
 import { type ReactElement, useEffect, useState } from "react";
+import { Tag } from "lucide-react";
 import { TagInput } from "@/components/tagInput.tsx";
+import DocTag from "@/components/docTag.tsx";
+import { Button } from "@/components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover.tsx";
+import { tagColor } from "@/lib/tagColor.ts";
 import type { documentContent } from "@repo/database/types";
 
 type DocSidePanelProps = {
     className?: string;
     doc?: documentContent;
+    allTags?: string[];
 };
 
 async function updateTags(docId: number, tags: string[]) {
@@ -28,30 +40,9 @@ async function updateTags(docId: number, tags: string[]) {
 
     return res.json();
 }
-async function removeTag(docId: number, tag: string) {
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/remove-document-tag`,
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: docId,
-                meta_tag: tag,
-            }),
-        },
-    );
-
-    if (!res.ok) {
-        throw new Error("Failed to update tags");
-    }
-
-    return res.json();
-}
-
 function DocSidePanel(props: DocSidePanelProps): ReactElement {
     const [tagList, setTagList] = useState<string[]>([]);
+    const [filter, setFilter] = useState("");
     const [currDoc, setCurrDoc] = useState<documentContent>({
         ...props.doc!,
     });
@@ -78,6 +69,21 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
         );
     }
 
+    const suggestions = (props.allTags ?? [])
+        .filter(
+            (t) =>
+                !tagList.includes(t) &&
+                t.toLowerCase().includes(filter.toLowerCase()),
+        )
+        .sort();
+
+    const addTag = async (tag: string) => {
+        if (!tag || tagList.includes(tag)) return;
+        const newTags = [...tagList, tag];
+        setTagList(newTags);
+        await updateTags(currDoc.id, newTags).catch(console.error);
+    };
+
     return (
         <>
             <div
@@ -88,21 +94,56 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
             >
                 <div>
                     Tags
-                    <br />
-                    <TagInput
-                        tags={tagList}
-                        setTags={async (newTags) => {
-                            setTagList(newTags);
-                            await updateTags(
-                                currDoc.id,
-                                newTags as string[],
-                            ).catch(console.error);
-                        }}
-                        remove={async (tagToRemove: string) => {
-                            await removeTag(currDoc.id, tagToRemove);
-                        }}
-                        placeholder="Add tag..."
-                    />
+                    <div className="mt-1 flex flex-wrap gap-1 text-(--tab-text)">
+                        {tagList.map((tag) => (
+                            <DocTag key={tag} background={tagColor(tag)}>
+                                {tag}
+                            </DocTag>
+                        ))}
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="h-5 ml-1 px-1.5 py-0 gap-1 leading-none flex items-center justify-center text-[11px] rounded-sm text-muted-foreground hover:text-foreground"
+                                >
+                                    <Tag className="h-3 w-3" />
+                                    <span>Tag</span>
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start">
+                                <PopoverHeader>
+                                    <PopoverTitle>Add Tags</PopoverTitle>
+                                </PopoverHeader>
+                                <TagInput
+                                    tags={tagList}
+                                    setTags={async (newTags) => {
+                                        setTagList(newTags);
+                                        await updateTags(
+                                            currDoc.id,
+                                            newTags as string[],
+                                        ).catch(console.error);
+                                    }}
+                                    placeholder="Add tag..."
+                                    onInputChange={setFilter}
+                                />
+                                <div className="mt-2 flex flex-wrap gap-1">
+                                    {suggestions.map((tag) => (
+                                        <button
+                                            key={tag}
+                                            type="button"
+                                            onClick={() => {
+                                                addTag(tag);
+                                                setFilter("");
+                                            }}
+                                            className={`border text-xs px-2 h-5 rounded-sm cursor-pointer hover:opacity-80 ${tagColor(tag)}`}
+                                        >
+                                            {tag}
+                                        </button>
+                                    ))}
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
                 </div>
                 <br />
                 <div>
@@ -142,9 +183,6 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                 )}
                 <div className="float-left"></div>
                 <br />
-                {/*<CenterDiv>*/}
-                {/*    <Button disabled={!allowSave}>Save</Button>*/}
-                {/*</CenterDiv>*/}
             </div>
         </>
     );

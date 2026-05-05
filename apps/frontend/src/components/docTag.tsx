@@ -9,7 +9,7 @@ function DocTag(props: DocTagProps) {
     return (
         <>
             <div
-                className={`max-w-[130px] ${props.background} rounded px-1.5 py-0.5 whitespace-normal text-(--tab-text) text-[11px] break-words`}
+                className={`max-w-[130px] ${props.background} rounded px-1.5 py-0.5 whitespace-normal text-(--tab-text) text-[11px] break-words select-none cursor-default`}
             >
                 {props.children}
             </div>

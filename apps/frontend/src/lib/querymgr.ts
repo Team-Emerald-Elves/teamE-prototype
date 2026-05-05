@@ -128,13 +128,13 @@ class QueryMgr {
             callBack(new ApiRes(true, await this.me));
             return;
         }
-        const res = getRequest("/api/tests/me", this.token);
+        const res = await getRequest("/api/tests/me", this.token);
         if (!res) {
             callBack(new ApiRes(false));
             return;
         }
-        this.me = res as Promise<Backend.Employee>;
-        callBack(new ApiRes(true, await this.me));
+        this.me = Promise.resolve(res as Backend.Employee);
+        callBack(new ApiRes(true, res as Backend.Employee));
     }
 
     async getEmployees(
@@ -156,32 +156,37 @@ class QueryMgr {
     }
 
     async auth(authData: UseAuthReturn) {
-        authData.getToken().then((tkn) => {
-            console.log("QMGR unable to auth.");
-            this.token = tkn!;
-        });
-        this.loggedIn = authData.isSignedIn ? true : false;
-        if (this.loggedIn) {
-            this.doneWait();
+        if (!authData.isSignedIn) {
+            this.loggedIn = false;
+            return;
         }
+        const tkn = await authData.getToken();
+        if (!tkn) {
+            console.error("QMGR unable to auth: no token returned.");
+            return;
+        }
+        this.token = tkn;
+        this.loggedIn = true;
+        this.doneWait();
     }
     deauth() {
         this.loggedIn = false;
         this.wait = (then: () => void) => {
-            this.waitList.concat(then);
+            this.waitList.push(then);
         };
     }
     private async doneWait() {
         this.wait = (then: () => void) => {
             then();
         };
-        for (const cb of this.waitList) {
+        const pending = this.waitList;
+        this.waitList = [];
+        for (const cb of pending) {
             cb();
         }
-        console.log("Qmgr Ready");
     }
     wait = (then: () => void) => {
-        this.waitList.concat(then);
+        this.waitList.push(then);
     };
 }
 

@@ -43,11 +43,7 @@ export default function EventForm({
     const [allDay, setAllDay] = useState(false);
     const [title, setTitle] = useState("");
 
-    const [endDate, setEndDate] = useState(() => {
-        const d = new Date();
-        d.setHours(d.getHours() + 1);
-        return d;
-    });
+    const [endDate, setEndDate] = useState(() => new Date());
 
     async function handleSubmit(event: any) {
         event.preventDefault();
@@ -132,6 +128,23 @@ export default function EventForm({
     }
 
     useEffect(() => {
+        setEndDate((prev) => {
+            const updated = new Date(startDate);
+            updated.setHours(
+                prev.getHours(),
+                prev.getMinutes(),
+                0,
+                0,
+            );
+            return updated;
+        });
+    }, [
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+    ]);
+
+    useEffect(() => {
         if (selectedEvent) {
             setTitle(selectedEvent.title);
 
@@ -147,11 +160,9 @@ export default function EventForm({
             // reset for "Add"
             setTitle("");
             const now = new Date();
-            const later = new Date(now);
-            later.setHours(now.getHours() + 1);
 
             setStartDate(now);
-            setEndDate(later);
+            setEndDate(new Date(now));
             setAllDay(false);
         }
     }, [selectedEvent]);
@@ -162,11 +173,9 @@ export default function EventForm({
             setTitle("");
 
             const now = new Date();
-            const later = new Date(now);
-            later.setHours(now.getHours() + 1);
 
             setStartDate(now);
-            setEndDate(later);
+            setEndDate(new Date(now));
             setAllDay(false);
         }
     }, [open]);
@@ -235,22 +244,41 @@ export default function EventForm({
                             </Field>
                         </div>
                     </Field>
-                    <Field className="mt-2">
-                        <Label
-                            htmlFor="endDate"
-                            className="w-24 text-right text-xs font-bold"
-                        >
-                            Choose End Date
-                        </Label>
-                        <div className="grid grid-cols-2">
-                            <DateAndTime
-                                id="endDate"
-                                date={endDate}
-                                disableTime={allDay}
-                                onDateChange={setEndDate}
-                            />
-                        </div>
-                    </Field>
+                    {!allDay && (
+                        <Field className="mt-2">
+                            <Label
+                                htmlFor="endTime"
+                                className="w-24 text-right text-xs font-bold"
+                            >
+                                End Time
+                            </Label>
+                            <div className="flex">
+                                <Input
+                                    id="endTime"
+                                    type="time"
+                                    value={endDate
+                                        .toTimeString()
+                                        .slice(0, 5)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (!value.includes(":")) return;
+                                        const [h, m] = value
+                                            .split(":")
+                                            .map(Number);
+                                        if (
+                                            Number.isNaN(h) ||
+                                            Number.isNaN(m)
+                                        )
+                                            return;
+                                        const updated = new Date(startDate);
+                                        updated.setHours(h, m, 0, 0);
+                                        setEndDate(updated);
+                                    }}
+                                    className="w-32 h-9 appearance-none bg-background text-sm"
+                                />
+                            </div>
+                        </Field>
+                    )}
                     <Button className="mt-5" type="submit">
                         {selectedEvent ? "Save Changes" : "Add"}
                     </Button>

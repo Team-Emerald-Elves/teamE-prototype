@@ -3,12 +3,13 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { tagColor } from "@/lib/tagColor.ts";
 
 interface TagInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     placeholder?: string;
     tags: string[];
     setTags: React.Dispatch<React.SetStateAction<string[]>>;
-    remove: (string) => void;
+    remove?: (tag: string) => void;
     onInputChange?: (value: string) => void;
 }
 
@@ -38,7 +39,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
         };
 
         const removeTag = (tagToRemove: string) => {
-            remove(tagToRemove);
+            remove?.(tagToRemove);
             setTags(tags.filter((tag) => tag !== tagToRemove));
         };
 
@@ -50,7 +51,10 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
                     {tags.map((tag, index) => (
                         <span
                             key={index}
-                            className="transition-all border bg-gray-200 text-black hover:bg-gray-300 inline-flex h-5 items-center text-xs pl-2 rounded-sm"
+                            className={cn(
+                                "transition-all border text-black inline-flex h-5 items-center text-xs pl-2 rounded-sm select-none",
+                                tagColor(tag),
+                            )}
                         >
                             {tag}
                             <Button
@@ -58,7 +62,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
                                 variant="ghost"
                                 onClick={() => removeTag(tag)}
                                 className={cn(
-                                    "py-1 px-3 h-full hover:bg-transparent",
+                                    "py-1 px-3 h-full hover:bg-transparent cursor-pointer",
                                 )}
                             >
                                 <X size={14} />

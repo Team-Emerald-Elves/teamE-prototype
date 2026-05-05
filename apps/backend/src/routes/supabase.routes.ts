@@ -394,54 +394,6 @@ supaBaseRouter.put(
         }
     },
 );
-interface IDocTagContentRemove {
-    id: number;
-    tag: string;
-}
-supaBaseRouter.delete(
-    "/remove-document-tag",
-    // requireAuth(),
-    async (req: Request, res: Response) => {
-        const document: IDocTagContentRemove = req.body;
-
-        try {
-            // Update contents for document.
-            const doc = await prisma.documentContent.findFirstOrThrow({
-                where: {
-                    id: document.id,
-                },
-            });
-
-            const updatedTags = (doc.meta_tags || []).filter(
-                (t: string) => t !== document.tag,
-            );
-
-            const newDoc = await prisma.documentContent.update({
-                where: {
-                    id: document.id,
-                },
-                data: {
-                    meta_tags: updatedTags,
-                },
-            });
-
-            console.log("New doc created: ", newDoc);
-
-            if (!newDoc) {
-                throw new Error(`Failed to update tags.`);
-            }
-            res.sendStatus(200);
-        } catch (error) {
-            console.error("Update document error:", error);
-
-            res.status(500).json({
-                message: "Error modifying document",
-                error: String(error),
-            });
-        }
-    },
-);
-
 supaBaseRouter.post("/list-documents", async (req: Request, res: Response) => {
     const { userId, isAuthenticated } = getAuth(req);
 

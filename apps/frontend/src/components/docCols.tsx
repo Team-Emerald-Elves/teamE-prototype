@@ -1,16 +1,48 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Tag } from "lucide-react";
 import { Button } from "./ui/button.tsx";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Popover,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTitle,
+    PopoverTrigger,
+} from "@/components/ui/popover.tsx";
 import mime from "mime";
 import DocumentViewer from "@/components/docViewer.tsx";
 import DocTag from "@/components/docTag.tsx";
 import DocSidePanel from "@/components/docSidePanel.tsx";
+import { TagInput } from "@/components/tagInput.tsx";
+import { tagColor } from "@/lib/tagColor.ts";
 import { getToken } from "@clerk/react";
 import qmgr from "@/lib/querymgr.ts";
 import type { documentContent } from "@repo/database/types";
+
+async function updateDocumentTags(docId: number, tags: string[]) {
+    const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/supabase/update-document-tags`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: docId,
+                meta_tags: tags,
+            }),
+        },
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to update tags");
+    }
+
+    return res.json();
+}
 
 async function addHitCount(doc: documentContent) {
     const res = await fetch(
@@ -97,8 +129,19 @@ export const columns: ColumnDef<documentContent>[] = [
                 </Button>
             );
         },
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
             const doc = row.original;
+            const allTags = Array.from(
+                new Set(
+                    table
+                        .getCoreRowModel()
+                        .rows.flatMap(
+                            (r) =>
+                                (r.original as documentContent).meta_tags ??
+                                [],
+                        ),
+                ),
+            );
 
             return (
                 <Dialog>
@@ -127,7 +170,11 @@ export const columns: ColumnDef<documentContent>[] = [
                                 <DocumentViewer doc={doc} />
                             </div>
 
-                            <DocSidePanel className="ml-2" doc={doc} />
+                            <DocSidePanel
+                                className="ml-2"
+                                doc={doc}
+                                allTags={allTags}
+                            />
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -236,8 +283,42 @@ export const columns: ColumnDef<documentContent>[] = [
                 </Button>
             );
         },
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
             const doc = row.original;
+            const [tagList, setTagList] = useState<string[]>(
+                doc.meta_tags ?? [],
+            );
+            const [filter, setFilter] = useState("");
+
+            // TanStack reuses cell instances across data changes, so sync
+            // local state when the row's underlying tags change (e.g. after
+            // a filter refetch swaps the doc in this row position).
+            useEffect(() => {
+                setTagList(doc.meta_tags ?? []);
+            }, [doc.id, doc.meta_tags]);
+
+            const allTags = Array.from(
+                new Set(
+                    table.getCoreRowModel().rows.flatMap((r) => {
+                        const other = r.original as documentContent;
+                        return other.id === doc.id
+                            ? tagList
+                            : (other.meta_tags ?? []);
+                    }),
+                ),
+            ).sort();
+            const suggestions = allTags.filter(
+                (t) =>
+                    !tagList.includes(t) &&
+                    t.toLowerCase().includes(filter.toLowerCase()),
+            );
+
+            const addTag = async (tag: string) => {
+                if (!tag || tagList.includes(tag)) return;
+                const newTags = [...tagList, tag];
+                setTagList(newTags);
+                await updateDocumentTags(doc.id, newTags).catch(console.error);
+            };
 
             const type = doc.mime_type;
             const roles = doc.assigned_role ?? "No Role";
@@ -246,7 +327,6 @@ export const columns: ColumnDef<documentContent>[] = [
 
             const typeBackground = "bg-neutral-200";
             const docBackground = "bg-cyan-200";
-            const customBackground = "bg-indigo-300";
 
             let statusBackground = "bg-slate-400";
             let roleBackground = "bg-gray-200";
@@ -299,11 +379,55 @@ export const columns: ColumnDef<documentContent>[] = [
 
                     <DocTag background={statusBackground}>{status}</DocTag>
 
-                    {(doc.meta_tags ?? []).map((tag) => (
-                        <DocTag key={tag} background={customBackground}>
+                    {tagList.map((tag) => (
+                        <DocTag key={tag} background={tagColor(tag)}>
                             {tag}
                         </DocTag>
                     ))}
+
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="h-5 ml-1 px-1.5 py-0 gap-1 leading-none flex items-center justify-center text-[11px] rounded-sm text-muted-foreground hover:text-foreground"
+                            >
+                                <Tag className="h-3 w-3" />
+                                <span>Tag</span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                            <PopoverHeader>
+                                <PopoverTitle>Add Tags</PopoverTitle>
+                            </PopoverHeader>
+                            <TagInput
+                                tags={tagList}
+                                setTags={async (newTags) => {
+                                    setTagList(newTags);
+                                    await updateDocumentTags(
+                                        doc.id,
+                                        newTags as string[],
+                                    ).catch(console.error);
+                                }}
+                                placeholder="Add tag..."
+                                onInputChange={setFilter}
+                            />
+                            <div className="mt-2 flex flex-wrap gap-1">
+                                {suggestions.map((tag) => (
+                                    <button
+                                        key={tag}
+                                        type="button"
+                                        onClick={() => {
+                                            addTag(tag);
+                                            setFilter("");
+                                        }}
+                                        className={`border text-xs px-2 h-5 rounded-sm cursor-pointer hover:opacity-80 ${tagColor(tag)}`}
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             );
         },

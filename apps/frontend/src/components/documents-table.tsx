@@ -663,7 +663,15 @@ export function DocumentsTable({ columns }: DocProps) {
         const data: documentContent[] = await res.json();
 
         setDocs(data);
-        setTagFilters(buildTagFilters(data));
+        // Only refresh the tag-filter universe when no tag filter is currently
+        // applied — otherwise the server returns a tag-narrowed subset and the
+        // filter menu collapses, making it impossible to add a second tag.
+        const hasTagFilter = selectedFilters.some(
+            (filter) => filter.key === "meta_tags",
+        );
+        if (!hasTagFilter) {
+            setTagFilters(buildTagFilters(data));
+        }
     }, [getToken, isSignedIn, selectedFilters, tab]);
 
     React.useEffect(() => {

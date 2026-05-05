@@ -11,7 +11,6 @@ export { default as updateEventRoute } from "./update-event.ts";
 export { default as CheckoutLinks } from "./checkin-checkout-links.ts";
 export { default as deleteEventRoute } from "./delete-event.ts";
 export { default as linkTagUpdate } from "./update-link-tags.ts";
-export { default as linkTagDelete } from "./link-tag-delete.ts";
 export { default as notifyRouter } from "./notifications.routes.ts";
 export { default as employeeRoute } from "./employee.ts";
 export { default as linkRoute } from "./links.ts";

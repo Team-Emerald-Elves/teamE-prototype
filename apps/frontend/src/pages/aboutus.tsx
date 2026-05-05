@@ -89,6 +89,7 @@ export default function AboutUs() {
             {/* popup */}
             {selected && (
                 <div
+                    key={selected.name}
                     className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
                     onClick={() => setSelected(null)}
                 >

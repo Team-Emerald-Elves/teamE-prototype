@@ -1,5 +1,12 @@
-# CS3733-D26 Team E
+# CS3733-D26 Team E - Emerald Elves
 
+## Special Features
+- Dark Mode
+- AI Chatbot
+- Owned by Me filtering
+- Bulk Upload
+- Email to Set Up Account
+  
 A class project website created for the CS3733 Software Engineering course.
 
 > **Disclaimer:** This project was created for educational purposes only and is not in use by The Hanover Insurance Group.

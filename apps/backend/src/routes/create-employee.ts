@@ -28,7 +28,7 @@ async function createEmployeeRoute(
         return;
     }
 
-    const iRes = await invite(employee.email!, tempPwd);
+    const iRes = await invite(employee, tempPwd);
 
     if (!iRes) {
         await clerkClient.users.deleteUser(user.id);

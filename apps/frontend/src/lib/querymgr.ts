@@ -33,7 +33,7 @@ async function postRequest(
                 `Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`,
             );
         }
-        return rBody as Object;
+        return rBody as object;
     } catch (err) {
         console.error(`Fetcher Error: ${err}`);
         return undefined;
@@ -57,7 +57,7 @@ async function getRequest(endpoint: string, token: string) {
                 `Invalid fetch response:\nCode(${res.status}): ${res.statusText},\nError Message: ${err}`,
             );
         }
-        return body as Object;
+        return body as object;
     } catch (err) {
         console.error(`Fetcher Error: ${err}`);
         return undefined;
@@ -93,6 +93,7 @@ class QueryMgr {
     private waitList: (() => void)[];
     private me: Promise<Backend.Employee> | undefined;
     private employees: Promise<Backend.Employee[]> | undefined;
+    private lastEmployee: number = 0;
 
     constructor() {
         this.waitList = [];
@@ -140,6 +141,10 @@ class QueryMgr {
     async getEmployees(
         callBack: (res: ApiRes<Backend.Employee[]>) => void,
     ): Promise<void> {
+        if (Date.now() - this.lastEmployee >= 3000) {
+            this.lastEmployee = Date.now();
+            this.employees = undefined;
+        }
         if (this.employees) {
             callBack(new ApiRes(true, await this.employees));
             return;

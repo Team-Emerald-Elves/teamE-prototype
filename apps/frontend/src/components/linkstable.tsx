@@ -46,6 +46,8 @@ import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
 import qmgr from "@/lib/querymgr.ts";
 import { type Links } from "@repo/database/types";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
 
 type LinksTableCtx = {
     empID: string;
@@ -561,7 +563,10 @@ export default function LinksTable<TData extends Links, TValue>({
                                 )}
                             </div>
 
-                            <div className="ml-auto">
+                            <div className="ml-auto flex justify-center gap-2">
+                                <div className="relative inline-block text-left">
+                                    <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                                </div>
                                 <AddLinksForm
                                     id={""}
                                     link_name={""}
@@ -661,7 +666,7 @@ export default function LinksTable<TData extends Links, TValue>({
 
                                     return (
                                         <TableRow
-                                            key={row.id}
+                                            key={link.id}
                                             className={
                                                 isLockedByOther
                                                     ? "bg-(--tab-bg)"

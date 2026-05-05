@@ -168,7 +168,7 @@ function AddLinksForm(props: Partial<linksDataExt>) {
                     render={
                         <Button
                             variant="outline"
-                            className="px-5 py-3.5 text-md bg-[#5f935a] text-secondary-foreground"
+                            className="px-3 py-3 text-md bg-[#5f935a] text-secondary-foreground"
                         >
                             <HugeiconsIcon icon={PlusSignIcon} /> {props.type}
                         </Button>

@@ -49,7 +49,6 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
 
     useEffect(() => {
         if (props.doc) {
-            setCurrDoc(props.doc);
             setTagList(props.doc.meta_tags || []);
         }
     }, [props.doc]);
@@ -58,10 +57,8 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
         return (
             <div
                 className={
-                    "float-right inline w-60 mt-6 bg-(--dark-blue)" +
-                    props.className
-                        ? props.className
-                        : ""
+                    "float-right inline w-60 mt-6 bg-(--dark-blue) " +
+                    (props.className ? props.className : "")
                 }
             >
                 No Data
@@ -88,7 +85,7 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
         <>
             <div
                 className={
-                    "float-right inline w-60 mt-6 rounded-xs " +
+                    "float-right inline w-64 mt-2 rounded-xs text-sm " +
                     (props.className ? props.className : "")
                 }
             >
@@ -145,41 +142,40 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                         </Popover>
                     </div>
                 </div>
-                <br />
-                <div>
-                    Content Owner
-                    <p>{currDoc.content_owner}</p>
+                <div className="mt-4">
+                    <p className="font-semibold text-base mb-1">Content Owner</p>
+                    <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-medium shrink-0">
+                            {initials}
+                        </div>
+                        <p>{doc.content_owner}</p>
+                    </div>
                 </div>
-                <br />
-                {currDoc.expiration_date ? (
-                    <>
-                        <br />
-                        <div>
-                            Expires
-                            <p>
-                                {new Date(
-                                    currDoc.expiration_date!,
-                                ).toLocaleString()}
+                {doc.expiration_date && (
+                    <div className="mt-3">
+                        <p className="font-semibold text-base mb-1">Expires</p>
+                        <div className="flex items-center gap-2">
+                            <p className={isExpired ? "text-red-600 font-medium" : isExpiringSoon ? "text-amber-600 font-medium" : ""}>
+                                {new Date(doc.expiration_date).toLocaleString()}
                             </p>
+                            {isExpired && (
+                                <span className="text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5 font-medium">
+                    Expired
+                </span>
+                            )}
+                            {isExpiringSoon && (
+                                <span className="text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 font-medium">
+                    Soon
+                </span>
+                            )}
                         </div>
-                    </>
-                ) : (
-                    ""
+                    </div>
                 )}
-                {currDoc.last_modified ? (
-                    <>
-                        <br />
-                        <div>
-                            Last Edited
-                            <p>
-                                {new Date(
-                                    currDoc.last_modified!,
-                                ).toLocaleString()}
-                            </p>
-                        </div>
-                    </>
-                ) : (
-                    ""
+                {doc.last_modified && (
+                    <div className="mt-3">
+                        <p className="font-semibold text-base mb-1">Last Edited</p>
+                        <p>{new Date(doc.last_modified).toLocaleString()}</p>
+                    </div>
                 )}
                 <div className="float-left"></div>
                 <br />

@@ -47,6 +47,20 @@ import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLi
 import qmgr from "@/lib/querymgr.ts";
 import { type Links } from "@repo/database/types";
 
+type LinksTableCtx = {
+    empID: string;
+    roles: string[];
+    setReload: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const LinksTableContext = React.createContext<LinksTableCtx | null>(
+    null,
+);
+
+export function useLinksTableCtx(): LinksTableCtx | null {
+    return React.useContext(LinksTableContext);
+}
+
 type FilterItem = {
     key: "owner" | "meta_tags";
     value: string;
@@ -474,6 +488,7 @@ export default function LinksTable<TData extends Links, TValue>({
     }
 
     return (
+        <LinksTableContext.Provider value={{ empID, roles, setReload }}>
         <Tabs value={tab} onValueChange={setTab}>
             <div className="max-w-10xl mx-auto w-full px-10 py-10">
                 <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden">
@@ -791,5 +806,6 @@ export default function LinksTable<TData extends Links, TValue>({
 
             </div>
         </Tabs>
+        </LinksTableContext.Provider>
     );
 }

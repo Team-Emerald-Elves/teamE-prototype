@@ -368,7 +368,7 @@ export const columns: ColumnDef<documentContent>[] = [
             }
 
             return (
-                <div className="flex flex-wrap gap-1 text-(--tab-text)">
+                <div className="flex flex-wrap items-center gap-1 text-(--tab-text)">
                     <DocTag background={typeBackground}>
                         {mime.getExtension(type) ?? "file"}
                     </DocTag>
@@ -389,10 +389,9 @@ export const columns: ColumnDef<documentContent>[] = [
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-5 ml-1 px-1.5 py-0 gap-1 leading-none flex items-center justify-center text-[11px] rounded-sm text-muted-foreground hover:text-foreground"
+                                className="h-6 w-6 ml-1 p-0 leading-none flex items-center justify-center rounded-sm text-muted-foreground hover:text-foreground shrink-0"
                             >
-                                <Tag className="h-3 w-3" />
-                                <span>Tag</span>
+                                <Tag className="h-4 w-4" strokeWidth={2.25} />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">

@@ -14,6 +14,8 @@ import {
     PopoverTitle,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import LinkSidePanel from "@/components/linkSidePanel.tsx";
 import qmgr from "@/lib/querymgr.ts";
 
 export type Document = {
@@ -129,6 +131,75 @@ export const columns: ColumnDef<Links>[] = [
                     Title
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
+            );
+        },
+        cell: ({ row, table }) => {
+            const link = row.original;
+            const allTags = Array.from(
+                new Set(
+                    table
+                        .getCoreRowModel()
+                        .rows.flatMap(
+                            (r) => (r.original as Links).meta_tags ?? [],
+                        ),
+                ),
+            );
+
+            return (
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <button
+                            type="button"
+                            onClick={async () => {
+                                try {
+                                    await Promise.all([
+                                        createNotif(link, "viewed"),
+                                        addHitCount(link),
+                                    ]);
+                                } catch (err) {
+                                    console.error(err);
+                                }
+                            }}
+                            className="max-w-[250px] truncate whitespace-nowrap overflow-hidden hover:underline text-left"
+                        >
+                            {link.link_name}
+                        </button>
+                    </DialogTrigger>
+
+                    <DialogContent className="lg:max-w-5xl h-[90vh] flex flex-col overflow-hidden">
+                        <div className="flex-1 overflow-auto flex justify-center">
+                            <div className="w-full max-w-[min(1400px,80%)] h-full flex flex-col">
+                                <h3 className="text-xl font-bold pb-3 pr-4">
+                                    {link.link_name}
+                                </h3>
+                                <iframe
+                                    src={link.url}
+                                    title={link.link_name}
+                                    className="w-full flex-1 rounded border"
+                                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                />
+                                <p className="text-xs text-muted-foreground pt-2">
+                                    Some sites may block embedding —{" "}
+                                    <a
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-(--internal-link-color) hover:underline"
+                                    >
+                                        open in a new tab
+                                    </a>
+                                    .
+                                </p>
+                            </div>
+
+                            <LinkSidePanel
+                                className="ml-2"
+                                link={link as any}
+                                allTags={allTags}
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
             );
         },
     },
@@ -322,9 +393,9 @@ export const columns: ColumnDef<Links>[] = [
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
-                                className="h-5 w-5 ml-1 p-0 leading-none flex items-center justify-center text-center"
+                                className="h-6 w-6 ml-1 p-0 leading-none flex items-center justify-center text-center rounded-sm shrink-0"
                             >
-                                <Tag className="h-3 w-3" />
+                                <Tag className="h-4 w-4" strokeWidth={2.25} />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start">

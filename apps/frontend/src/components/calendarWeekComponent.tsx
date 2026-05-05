@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/react";
 import { useEffect, useState } from "react";
 import RoleLegend from "@/components/roleLegend.tsx";
+import EventDetails from "@/components/eventDetailsPopup.tsx";
 
 function getCurrentWeekLabel() {
     const now = new Date();
@@ -33,6 +34,9 @@ function getCurrentWeekLabel() {
 export default function CalendarWeek() {
     const { getToken } = useAuth();
     const [events, setEvents] = useState<any[]>([]);
+    const [open, setOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         async function fetchEvents() {
@@ -52,12 +56,11 @@ export default function CalendarWeek() {
             }
 
             const data = await res.json();
-            console.log(data);
             setEvents(data);
         }
 
         fetchEvents();
-    }, [getToken]);
+    }, [getToken, reload]);
 
     return (
         <div className="max-w-10xl mx-auto px-6 py-6">
@@ -88,8 +91,23 @@ export default function CalendarWeek() {
                     contentHeight="auto"
                     events={events}
                     slotEventOverlap={false}
+                    eventClassNames={() => ["cursor-pointer"]}
+                    eventDidMount={(info) => {
+                        info.el.title = info.event.title;
+                    }}
+                    eventClick={(info) => {
+                        setSelectedEvent(info.event);
+                        setOpen(true);
+                    }}
                 />
             </div>
+            <EventDetails
+                openEvent={open}
+                selectedEvent={selectedEvent}
+                setReload={setReload}
+                setSelectedEvent={setSelectedEvent}
+                setOpenEvent={setOpen}
+            />
         </div>
     );
 }

@@ -42,8 +42,8 @@ import EmployeeConfirmationPopup from "@/components/deletePopupConfirmationEmplo
 import EmployeeForm from "@/components/employeeForm.tsx";
 import qmgr from "@/lib/querymgr.ts";
 import { type Employee } from "@repo/database/types";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 interface EmployeeProps {
     columns: ColumnDef<Employee, unknown>[];
@@ -250,7 +250,7 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                             className="w-full placeholder:text-accent-foreground"
                         />
                         <InputGroupAddon>
-                            <Search color="var(--accent-foreground)"/>
+                            <Search color="var(--accent-foreground)" />
                         </InputGroupAddon>
                     </InputGroup>
 
@@ -260,7 +260,10 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                             className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
                         >
                             <div className="pr-1">
-                                <HugeiconsIcon icon={SlidersHorizontalIcon} size={16} />
+                                <HugeiconsIcon
+                                    icon={SlidersHorizontalIcon}
+                                    size={16}
+                                />
                             </div>
                             Filter
                         </button>
@@ -298,7 +301,13 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
 
                     <div className="flex justify-end ml-auto gap-2">
                         <div className="relative inline-block text-left">
-                            <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                            <Button
+                                type="button"
+                                onClick={() => setReload((prev) => !prev)}
+                                className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "
+                            >
+                                <FontAwesomeIcon icon={faRotateRight} />
+                            </Button>
                         </div>
                         <CreateEmployeeForm reload={setReload} />
                     </div>
@@ -480,17 +489,15 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                             onClick={() => table.setPageIndex(page)}
                             size="sm"
                             variant={
-                                currentPage === page
-                                    ? "default"
-                                    : "outline"
+                                currentPage === page ? "default" : "outline"
                             }
                         >
                             {page + 1}
                         </Button>
                     ) : (
                         <span className="px-2" key={`${page}-${index}`}>
-                                    {page}
-                                </span>
+                            {page}
+                        </span>
                     ),
                 )}
 
@@ -503,7 +510,6 @@ export default function EmployeeTable({ columns }: EmployeeProps) {
                     Next
                 </Button>
             </div>
-
         </div>
     );
 }

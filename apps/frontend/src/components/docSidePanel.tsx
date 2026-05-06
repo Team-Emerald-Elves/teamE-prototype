@@ -81,6 +81,22 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
         await updateTags(currDoc.id, newTags).catch(console.error);
     };
 
+    const doc = props.doc;
+    const isExpired =
+        !!doc.expiration_date &&
+        new Date(doc.expiration_date).getTime() < Date.now();
+    const isExpiringSoon =
+        !isExpired &&
+        !!doc.expiration_date &&
+        new Date(doc.expiration_date).getTime() - Date.now() <
+            30 * 24 * 60 * 60 * 1000;
+    const initials = doc.content_owner
+        ?.split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
     return (
         <>
             <div
@@ -143,7 +159,9 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                     </div>
                 </div>
                 <div className="mt-4">
-                    <p className="font-semibold text-base mb-1">Content Owner</p>
+                    <p className="font-semibold text-base mb-1">
+                        Content Owner
+                    </p>
                     <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-xs font-medium shrink-0">
                             {initials}
@@ -155,25 +173,35 @@ function DocSidePanel(props: DocSidePanelProps): ReactElement {
                     <div className="mt-3">
                         <p className="font-semibold text-base mb-1">Expires</p>
                         <div className="flex items-center gap-2">
-                            <p className={isExpired ? "text-red-600 font-medium" : isExpiringSoon ? "text-amber-600 font-medium" : ""}>
+                            <p
+                                className={
+                                    isExpired
+                                        ? "text-red-600 font-medium"
+                                        : isExpiringSoon
+                                          ? "text-amber-600 font-medium"
+                                          : ""
+                                }
+                            >
                                 {new Date(doc.expiration_date).toLocaleString()}
                             </p>
                             {isExpired && (
                                 <span className="text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5 font-medium">
-                    Expired
-                </span>
+                                    Expired
+                                </span>
                             )}
                             {isExpiringSoon && (
                                 <span className="text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 font-medium">
-                    Soon
-                </span>
+                                    Soon
+                                </span>
                             )}
                         </div>
                     </div>
                 )}
                 {doc.last_modified && (
                     <div className="mt-3">
-                        <p className="font-semibold text-base mb-1">Last Edited</p>
+                        <p className="font-semibold text-base mb-1">
+                            Last Edited
+                        </p>
                         <p>{new Date(doc.last_modified).toLocaleString()}</p>
                     </div>
                 )}

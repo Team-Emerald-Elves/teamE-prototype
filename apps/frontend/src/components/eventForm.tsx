@@ -130,19 +130,10 @@ export default function EventForm({
     useEffect(() => {
         setEndDate((prev) => {
             const updated = new Date(startDate);
-            updated.setHours(
-                prev.getHours(),
-                prev.getMinutes(),
-                0,
-                0,
-            );
+            updated.setHours(prev.getHours(), prev.getMinutes(), 0, 0);
             return updated;
         });
-    }, [
-        startDate.getFullYear(),
-        startDate.getMonth(),
-        startDate.getDate(),
-    ]);
+    }, [startDate.getFullYear(), startDate.getMonth(), startDate.getDate()]);
 
     useEffect(() => {
         if (selectedEvent) {
@@ -256,19 +247,14 @@ export default function EventForm({
                                 <Input
                                     id="endTime"
                                     type="time"
-                                    value={endDate
-                                        .toTimeString()
-                                        .slice(0, 5)}
+                                    value={endDate.toTimeString().slice(0, 5)}
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         if (!value.includes(":")) return;
                                         const [h, m] = value
                                             .split(":")
                                             .map(Number);
-                                        if (
-                                            Number.isNaN(h) ||
-                                            Number.isNaN(m)
-                                        )
+                                        if (Number.isNaN(h) || Number.isNaN(m))
                                             return;
                                         const updated = new Date(startDate);
                                         updated.setHours(h, m, 0, 0);

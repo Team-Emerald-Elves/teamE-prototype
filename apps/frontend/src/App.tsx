@@ -18,7 +18,7 @@ import CalendarPage from "@/pages/calendar.tsx";
 import AboutUs from "@/pages/aboutus.tsx";
 import Credits from "@/pages/credits.tsx";
 import qmgr from "./lib/querymgr.ts";
-import ChatBot from "@/components/chatBotUI.tsx"
+import ChatBot from "@/components/chatBotUI.tsx";
 
 function App() {
     qmgr.auth(useAuth());

@@ -1,6 +1,6 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Plus ,Tag} from "lucide-react";
+import { ArrowUpDown, Plus, Tag } from "lucide-react";
 
 import { Button } from "./ui/button.tsx";
 import DocTag from "@/components/docTag.tsx";
@@ -361,18 +361,18 @@ export const columns: ColumnDef<Links>[] = [
 
             const allTags = Array.from(
                 new Set(
-                    table
-                        .getCoreRowModel()
-                        .rows.flatMap((r) => {
-                            const other = r.original as Links;
-                            return other.id === link.id
-                                ? tagList
-                                : (other.meta_tags ?? []);
-                        }),
+                    table.getCoreRowModel().rows.flatMap((r) => {
+                        const other = r.original as Links;
+                        return other.id === link.id
+                            ? tagList
+                            : (other.meta_tags ?? []);
+                    }),
                 ),
             ).sort();
             const suggestions = allTags.filter(
-                (t) => !tagList.includes(t) && t.toLowerCase().includes(filter.toLowerCase()),
+                (t) =>
+                    !tagList.includes(t) &&
+                    t.toLowerCase().includes(filter.toLowerCase()),
             );
 
             const addTag = async (tag: string) => {

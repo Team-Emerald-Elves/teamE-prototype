@@ -46,8 +46,8 @@ import Editlinksform from "@/components/editlinksform.tsx";
 import DeletePopupConfirmationLinks from "@/components/deletePopupConfirmationLinks.tsx";
 import qmgr from "@/lib/querymgr.ts";
 import { type Links } from "@repo/database/types";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 type LinksTableCtx = {
     empID: string;
@@ -409,7 +409,9 @@ export default function LinksTable<TData extends Links, TValue>({
                     {isUnlocked ? null : (
                         <div className="flex flex-col text-right">
                             <p className="text-[10px]">Checked out by:</p>
-                            <p className="text-[10px] font-medium">{link.lock_name}</p>
+                            <p className="text-[10px] font-medium">
+                                {link.lock_name}
+                            </p>
                         </div>
                     )}
                 </TableCell>
@@ -491,326 +493,361 @@ export default function LinksTable<TData extends Links, TValue>({
 
     return (
         <LinksTableContext.Provider value={{ empID, roles, setReload }}>
-        <Tabs value={tab} onValueChange={setTab}>
-            <div className="max-w-10xl mx-auto w-full px-10 py-10">
-                <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-2">
-                            <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
-                                <InputGroupInput
-                                    placeholder="Search"
-                                    value={
-                                        (table
-                                            .getColumn("link_name")
-                                            ?.getFilterValue() as string) ?? ""
-                                    }
-                                    onChange={(event) =>
-                                        table
-                                            .getColumn("link_name")
-                                            ?.setFilterValue(event.target.value)
-                                    }
-                                    className="w-full placeholder:text-accent-foreground"
-                                />
-                                <InputGroupAddon>
-                                    <Search color="var(--accent-foreground)"/>
-                                </InputGroupAddon>
-                            </InputGroup>
+            <Tabs value={tab} onValueChange={setTab}>
+                <div className="max-w-10xl mx-auto w-full px-10 py-10">
+                    <div className="bg-card rounded-xl shadow-sm border p-4 relative overflow-hidden">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex items-center gap-2">
+                                <InputGroup className="flex-1 max-w-sm h-8 border-2 shadow-md hover:shadow-xl transition-all duration-100 bg-white">
+                                    <InputGroupInput
+                                        placeholder="Search"
+                                        value={
+                                            (table
+                                                .getColumn("link_name")
+                                                ?.getFilterValue() as string) ??
+                                            ""
+                                        }
+                                        onChange={(event) =>
+                                            table
+                                                .getColumn("link_name")
+                                                ?.setFilterValue(
+                                                    event.target.value,
+                                                )
+                                        }
+                                        className="w-full placeholder:text-accent-foreground"
+                                    />
+                                    <InputGroupAddon>
+                                        <Search color="var(--accent-foreground)" />
+                                    </InputGroupAddon>
+                                </InputGroup>
 
-                            <div className="relative inline-block text-left">
-                                <button
-                                    onClick={() =>
-                                        setIsDropdownOpen((prev) => !prev)
-                                    }
-                                    className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
-                                >
-                                    <div className="pr-1">
-                                        <HugeiconsIcon
-                                            icon={SlidersHorizontalIcon} size={16}
-                                        />
-                                    </div>
-                                    Filter tags
-                                </button>
+                                <div className="relative inline-block text-left">
+                                    <button
+                                        onClick={() =>
+                                            setIsDropdownOpen((prev) => !prev)
+                                        }
+                                        className="flex px-4 py-1 ml-2 items-center bg-primary text-white text-sm hover:bg-primary/80 rounded-md duration-200"
+                                    >
+                                        <div className="pr-1">
+                                            <HugeiconsIcon
+                                                icon={SlidersHorizontalIcon}
+                                                size={16}
+                                            />
+                                        </div>
+                                        Filter tags
+                                    </button>
 
-                                {isDropdownOpen && (
-                                    <div className="absolute right-0 z-10 mt-2 w-48 bg-(--filter-background) rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                        <div className="py-2 px-3">
-                                            <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
-                                                {tagFilters.map((option) => (
-                                                    <label
-                                                        key={option.id}
-                                                        className="flex justify-between items-center text-sm"
-                                                    >
-                                                        {option.id}
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={filters.some(
-                                                                (item) =>
-                                                                    item.id ===
-                                                                    option.id,
-                                                            )}
-                                                            onChange={(e) =>
-                                                                handleCheckbox(
-                                                                    e,
-                                                                    option,
-                                                                )
-                                                            }
-                                                        />
-                                                    </label>
-                                                ))}
+                                    {isDropdownOpen && (
+                                        <div className="absolute right-0 z-10 mt-2 w-48 bg-(--filter-background) rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                            <div className="py-2 px-3">
+                                                <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
+                                                    {tagFilters.map(
+                                                        (option) => (
+                                                            <label
+                                                                key={option.id}
+                                                                className="flex justify-between items-center text-sm"
+                                                            >
+                                                                {option.id}
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={filters.some(
+                                                                        (
+                                                                            item,
+                                                                        ) =>
+                                                                            item.id ===
+                                                                            option.id,
+                                                                    )}
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        handleCheckbox(
+                                                                            e,
+                                                                            option,
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </label>
+                                                        ),
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
+                                    )}
+                                </div>
+
+                                <div className="ml-auto flex justify-center gap-2">
+                                    <div className="relative inline-block text-left">
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                setReload((prev) => !prev)
+                                            }
+                                            className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faRotateRight}
+                                            />
+                                        </Button>
                                     </div>
-                                )}
+                                    <AddLinksForm
+                                        id={""}
+                                        link_name={""}
+                                        url={""}
+                                        owner={roles.at(0) as string}
+                                        reload={setReload}
+                                    />
+                                </div>
                             </div>
 
-                            <div className="ml-auto flex justify-center gap-2">
-                                <div className="relative inline-block text-left">
-                                    <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                            {isAdmin && (
+                                <TabsList>
+                                    <TabsTrigger value="administrator">
+                                        All
+                                    </TabsTrigger>
+                                    <TabsTrigger value="ActuarialAnalyst">
+                                        Actuarial Analyst
+                                    </TabsTrigger>
+                                    <TabsTrigger value="BusinessAnalyst">
+                                        Business Analyst
+                                    </TabsTrigger>
+                                    <TabsTrigger value="BusinessOperator">
+                                        Business Operator
+                                    </TabsTrigger>
+                                    <TabsTrigger value="ExcelOperator">
+                                        Excel Operator
+                                    </TabsTrigger>
+                                    <TabsTrigger value="UnderWriter">
+                                        Underwriter
+                                    </TabsTrigger>
+                                </TabsList>
+                            )}
+
+                            {filters.length > 0 && (
+                                <div className="py-1 flex flex-row flex-wrap gap-2">
+                                    {filters.map((option) => (
+                                        <div
+                                            key={option.id}
+                                            className="flex rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5"
+                                        >
+                                            <p className="px-2 py-1 text-(--table-text) rounded-md text-xs">
+                                                {option.id}
+                                            </p>
+                                            <button
+                                                onClick={() =>
+                                                    removeFilter(option)
+                                                }
+                                                className="text-black pr-2"
+                                            >
+                                                <div className="ml-1 text-(--table-text)">
+                                                    <HugeiconsIcon
+                                                        size={16}
+                                                        icon={X}
+                                                    />
+                                                </div>
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
-                                <AddLinksForm
-                                    id={""}
-                                    link_name={""}
-                                    url={""}
-                                    owner={roles.at(0) as string}
-                                    reload={setReload}
-                                />
-                            </div>
+                            )}
+
+                            <Table className="border rounded-lg overflow-hidden">
+                                <TableHeader className="bg-(--card-header) text-(--table-titles)">
+                                    {table
+                                        .getHeaderGroups()
+                                        .map((headerGroup) => (
+                                            <TableRow key={headerGroup.id}>
+                                                <TableHead className="text-(--table-titles) text-center">
+                                                    Favorite
+                                                </TableHead>
+
+                                                {headerGroup.headers.map(
+                                                    (header) => (
+                                                        <TableHead
+                                                            className="text-(--table-titles) text-center"
+                                                            key={header.id}
+                                                        >
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(
+                                                                      header
+                                                                          .column
+                                                                          .columnDef
+                                                                          .header,
+                                                                      header.getContext(),
+                                                                  )}
+                                                        </TableHead>
+                                                    ),
+                                                )}
+
+                                                <TableHead className="text-(--table-titles) text-center">
+                                                    Actions
+                                                </TableHead>
+                                            </TableRow>
+                                        ))}
+                                </TableHeader>
+
+                                <TableBody>
+                                    {table.getRowModel().rows.map((row) => {
+                                        const link = row.original as Links;
+                                        const isLockedByOther =
+                                            link.lock !== "none" &&
+                                            link.lock !== null &&
+                                            link.lock !== empID;
+
+                                        return (
+                                            <TableRow
+                                                key={link.id}
+                                                className={
+                                                    isLockedByOther
+                                                        ? "bg-(--tab-bg)"
+                                                        : ""
+                                                }
+                                            >
+                                                <FavoriteStar
+                                                    doc={link}
+                                                    onToggleOn={() =>
+                                                        toggleFavorite(
+                                                            link,
+                                                            false,
+                                                        )
+                                                    }
+                                                    onToggleOff={() =>
+                                                        toggleFavorite(
+                                                            link,
+                                                            true,
+                                                        )
+                                                    }
+                                                />
+
+                                                {row
+                                                    .getVisibleCells()
+                                                    .map((cell) => (
+                                                        <TableCell
+                                                            key={cell.id}
+                                                            className="px-5 py-3 text-left whitespace-normal"
+                                                        >
+                                                            {flexRender(
+                                                                cell.column
+                                                                    .columnDef
+                                                                    .cell,
+                                                                cell.getContext(),
+                                                            )}
+                                                        </TableCell>
+                                                    ))}
+
+                                                {renderActions(link)}
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
                         </div>
 
-                        {isAdmin && (
-                            <TabsList>
-                                <TabsTrigger value="administrator">
-                                    All
-                                </TabsTrigger>
-                                <TabsTrigger value="ActuarialAnalyst">
-                                    Actuarial Analyst
-                                </TabsTrigger>
-                                <TabsTrigger value="BusinessAnalyst">
-                                    Business Analyst
-                                </TabsTrigger>
-                                <TabsTrigger value="BusinessOperator">
-                                    Business Operator
-                                </TabsTrigger>
-                                <TabsTrigger value="ExcelOperator">
-                                    Excel Operator
-                                </TabsTrigger>
-                                <TabsTrigger value="UnderWriter">
-                                    Underwriter
-                                </TabsTrigger>
-                            </TabsList>
-                        )}
-
-                        {filters.length > 0 && (
-                            <div className="py-1 flex flex-row flex-wrap gap-2">
-                                {filters.map((option) => (
-                                    <div
-                                        key={option.id}
-                                        className="flex rounded-md bg-muted shadow-lg ring-1 ring-black ring-opacity-5"
+                        <div className="absolute bottom-3 left-3">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
                                     >
-                                        <p className="px-2 py-1 text-(--table-text) rounded-md text-xs">
-                                            {option.id}
-                                        </p>
-                                        <button
-                                            onClick={() => removeFilter(option)}
-                                            className="text-black pr-2"
-                                        >
-                                            <div className="ml-1 text-(--table-text)">
-                                                <HugeiconsIcon
-                                                    size={16}
-                                                    icon={X}
-                                                />
-                                            </div>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                        <Info className="h-4 w-4" />
+                                    </Button>
+                                </PopoverTrigger>
 
-                        <Table className="border rounded-lg overflow-hidden">
-                            <TableHeader className="bg-(--card-header) text-(--table-titles)">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        <TableHead className="text-(--table-titles) text-center">
-                                            Favorite
-                                        </TableHead>
-
-                                        {headerGroup.headers.map((header) => (
-                                            <TableHead
-                                                className="text-(--table-titles) text-center"
-                                                key={header.id}
-                                            >
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                          header.column
-                                                              .columnDef.header,
-                                                          header.getContext(),
-                                                      )}
-                                            </TableHead>
-                                        ))}
-
-                                        <TableHead className="text-(--table-titles) text-center">
-                                            Actions
-                                        </TableHead>
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
-
-                            <TableBody>
-                                {table.getRowModel().rows.map((row) => {
-                                    const link = row.original as Links;
-                                    const isLockedByOther =
-                                        link.lock !== "none" &&
-                                        link.lock !== null &&
-                                        link.lock !== empID;
-
-                                    return (
-                                        <TableRow
-                                            key={link.id}
-                                            className={
-                                                isLockedByOther
-                                                    ? "bg-(--tab-bg)"
-                                                    : ""
-                                            }
-                                        >
-                                            <FavoriteStar
-                                                doc={link}
-                                                onToggleOn={() =>
-                                                    toggleFavorite(link, false)
-                                                }
-                                                onToggleOff={() =>
-                                                    toggleFavorite(link, true)
-                                                }
-                                            />
-
-                                            {row
-                                                .getVisibleCells()
-                                                .map((cell) => (
-                                                    <TableCell
-                                                        key={cell.id}
-                                                        className="px-5 py-3 text-left whitespace-normal"
-                                                    >
-                                                        {flexRender(
-                                                            cell.column
-                                                                .columnDef.cell,
-                                                            cell.getContext(),
-                                                        )}
-                                                    </TableCell>
-                                                ))}
-
-                                            {renderActions(link)}
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </div>
-
-
-
-                    <div className="absolute bottom-3 left-3">
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                                <PopoverContent
+                                    side="top"
+                                    align="start"
+                                    className="w-72"
                                 >
-                                    <Info className="h-4 w-4" />
-                                </Button>
-                            </PopoverTrigger>
-
-                            <PopoverContent
-                                side="top"
-                                align="start"
-                                className="w-72"
-                            >
-                                <p className="font-medium text-sm mb-2">
-                                    Links
-                                </p>
-                                <p className="text-xs text-muted-foreground mb-3">
-                                    Manage and organize all your links in one
-                                    place.
-                                </p>
-
-                                <div className="space-y-2 mb-3">
-                                    <p className="text-xs font-medium text-foreground">
-                                        Stats
+                                    <p className="font-medium text-sm mb-2">
+                                        Links
                                     </p>
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-muted-foreground">
-                                            Total links
-                                        </span>
-                                        <span className="font-medium">
-                                            {links.length}
-                                        </span>
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        Manage and organize all your links in
+                                        one place.
+                                    </p>
+
+                                    <div className="space-y-2 mb-3">
+                                        <p className="text-xs font-medium text-foreground">
+                                            Stats
+                                        </p>
+                                        <div className="flex justify-between text-xs">
+                                            <span className="text-muted-foreground">
+                                                Total links
+                                            </span>
+                                            <span className="font-medium">
+                                                {links.length}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <p className="text-xs font-medium text-foreground">
-                                        Features
-                                    </p>
-                                    <ul className="text-xs text-muted-foreground space-y-1">
-                                        <li>Favorite links for quick access</li>
-                                        <li>
-                                            Search and filter by tag or role
-                                        </li>
-                                        <li>Edit link name and URL</li>
-                                        <li>Delete links you no longer need</li>
-                                        <li>Lock links to prevent edits</li>
-                                        <li>Sort by any column header</li>
-                                    </ul>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-medium text-foreground">
+                                            Features
+                                        </p>
+                                        <ul className="text-xs text-muted-foreground space-y-1">
+                                            <li>
+                                                Favorite links for quick access
+                                            </li>
+                                            <li>
+                                                Search and filter by tag or role
+                                            </li>
+                                            <li>Edit link name and URL</li>
+                                            <li>
+                                                Delete links you no longer need
+                                            </li>
+                                            <li>Lock links to prevent edits</li>
+                                            <li>Sort by any column header</li>
+                                        </ul>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                     </div>
-                </div>
-                <div className="flex items-center justify-center gap-1 py-4">
-                    <Button
-                        disabled={!table.getCanPreviousPage()}
-                        onClick={() => table.previousPage()}
-                        size="sm"
-                        variant="outline"
-                    >
-                        Previous
-                    </Button>
+                    <div className="flex items-center justify-center gap-1 py-4">
+                        <Button
+                            disabled={!table.getCanPreviousPage()}
+                            onClick={() => table.previousPage()}
+                            size="sm"
+                            variant="outline"
+                        >
+                            Previous
+                        </Button>
 
-                    {getPageNumbers().map((page, index) =>
-                        typeof page === "number" ? (
-                            <Button
-                                className="h-8 w-8 p-0"
-                                key={`${page}-${index}`}
-                                onClick={() => table.setPageIndex(page)}
-                                size="sm"
-                                variant={
-                                    currentPage === page
-                                        ? "default"
-                                        : "outline"
-                                }
-                            >
-                                {page + 1}
-                            </Button>
-                        ) : (
-                            <span className="px-2" key={`${page}-${index}`}>
+                        {getPageNumbers().map((page, index) =>
+                            typeof page === "number" ? (
+                                <Button
+                                    className="h-8 w-8 p-0"
+                                    key={`${page}-${index}`}
+                                    onClick={() => table.setPageIndex(page)}
+                                    size="sm"
+                                    variant={
+                                        currentPage === page
+                                            ? "default"
+                                            : "outline"
+                                    }
+                                >
+                                    {page + 1}
+                                </Button>
+                            ) : (
+                                <span className="px-2" key={`${page}-${index}`}>
                                     {page}
                                 </span>
-                        ),
-                    )}
+                            ),
+                        )}
 
-                    <Button
-                        disabled={!table.getCanNextPage()}
-                        onClick={() => table.nextPage()}
-                        size="sm"
-                        variant="outline"
-                    >
-                        Next
-                    </Button>
+                        <Button
+                            disabled={!table.getCanNextPage()}
+                            onClick={() => table.nextPage()}
+                            size="sm"
+                            variant="outline"
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
-
-
-            </div>
-        </Tabs>
+            </Tabs>
         </LinksTableContext.Provider>
     );
 }

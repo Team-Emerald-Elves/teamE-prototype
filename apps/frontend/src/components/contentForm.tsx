@@ -97,7 +97,8 @@ function ContentForm(props: contentFormProps) {
         document_type: props.currentDocType,
         expirationDate: props.currentExpirationDate ?? "",
         expirationTime: props.currentExpirationTime ?? "",
-        document_status: props.currentStatus === "Select Status" ? "" : props.currentStatus,
+        document_status:
+            props.currentStatus === "Select Status" ? "" : props.currentStatus,
         id: props.currentID,
         inputType: props.type === "Create" ? "file" : "url",
     });
@@ -262,7 +263,14 @@ function ContentForm(props: contentFormProps) {
                                     >
                                         <SelectTrigger className="w-full max-w-48">
                                             <SelectValue
-                                                placeholder={props.currentRole === "Select Role" ? "Select Role" : ROLE_LABELS[props.currentRole]}
+                                                placeholder={
+                                                    props.currentRole ===
+                                                    "Select Role"
+                                                        ? "Select Role"
+                                                        : ROLE_LABELS[
+                                                              props.currentRole
+                                                          ]
+                                                }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -374,12 +382,16 @@ function ContentForm(props: contentFormProps) {
                                     >
                                         <SelectTrigger className="w-full max-w-48">
                                             <SelectValue
-                                                placeholder={props.currentStatus}
+                                                placeholder={
+                                                    props.currentStatus
+                                                }
                                             />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>Status</SelectLabel>
+                                                <SelectLabel>
+                                                    Status
+                                                </SelectLabel>
                                                 <SelectItem value="not_started">
                                                     Not Started
                                                 </SelectItem>
@@ -399,7 +411,6 @@ function ContentForm(props: contentFormProps) {
                                         </SelectContent>
                                     </Select>
                                 </Field>
-
                             </div>
                             <Field>
                                 <Label
@@ -478,14 +489,27 @@ function ContentForm(props: contentFormProps) {
                                 }))
                             }
                         >
-                            <TabsList >
-                                <TabsTrigger value="url" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">URL</TabsTrigger>
-                                <TabsTrigger value="file" className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground ">Upload</TabsTrigger>
+                            <TabsList>
+                                <TabsTrigger
+                                    value="url"
+                                    className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground "
+                                >
+                                    URL
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="file"
+                                    className="data-[state=active]:bg-[color:var(--tab-bg)] data-[state=active]:text-foreground "
+                                >
+                                    Upload
+                                </TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="url">
                                 <Field>
-                                    <Label htmlFor="url" className="text-xs font-bold">
+                                    <Label
+                                        htmlFor="url"
+                                        className="text-xs font-bold"
+                                    >
                                         URL
                                     </Label>
                                     <Input

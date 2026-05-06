@@ -1,5 +1,6 @@
 import { PrismaClient } from "./prisma/generated/client.ts";
 import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 import dotenv from "dotenv";
 import { enviroments } from "./lib/env.ts";
 import path from "path";
@@ -31,17 +32,39 @@ if (!(process.env.NODE_ENV! in enviroments)) {
     throw new Error("Environment not found: " + process.env.NODE_ENV);
 }
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const globalForPrisma = global as unknown as {
+    prisma: PrismaClient;
+    pgPool: pg.Pool;
+};
+
+const pool =
+    globalForPrisma.pgPool ||
+    new pg.Pool({
+        connectionString: dataBaseURL,
+        keepAlive: true,
+        keepAliveInitialDelayMillis: 10_000,
+        idleTimeoutMillis: 30_000,
+        connectionTimeoutMillis: 10_000,
+        max: 10,
+    });
+
+// Supabase's pooler closes idle TCP connections silently. Without an `error`
+// listener, a dropped pool client crashes the process; with it, pg just
+// removes the bad client and the next query opens a fresh one.
+pool.on("error", (err) => {
+    console.error("pg pool client error (will be discarded):", err.message);
+});
 
 const prisma =
     globalForPrisma.prisma ||
     new PrismaClient({
-        adapter: new PrismaPg({
-            connectionString: dataBaseURL, // Ensure this isn't undefined
-        }),
+        adapter: new PrismaPg(pool),
     });
 
 export default prisma;
 export * from "./prisma/generated/client.ts";
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = prisma;
+    globalForPrisma.pgPool = pool;
+}

@@ -844,7 +844,7 @@ export function DocumentsTable({ columns }: DocProps) {
                                 />
 
                                 <InputGroupAddon>
-                                    <Search color="var(--accent-foreground)"/>
+                                    <Search color="var(--accent-foreground)" />
                                 </InputGroupAddon>
                             </InputGroup>
 
@@ -857,7 +857,8 @@ export function DocumentsTable({ columns }: DocProps) {
                                 >
                                     <span className="pr-1 ">
                                         <HugeiconsIcon
-                                            icon={SlidersHorizontalIcon} size={16}
+                                            icon={SlidersHorizontalIcon}
+                                            size={16}
                                         />
                                     </span>
                                     Filter
@@ -877,7 +878,15 @@ export function DocumentsTable({ columns }: DocProps) {
 
                             <div className="flex justify-center ml-auto py-1 gap-2">
                                 <div className="relative inline-block text-left">
-                                    <Button type="button" onClick={() => setReload(prev => !prev)} className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "><FontAwesomeIcon icon={faRotateRight} /></Button>
+                                    <Button
+                                        type="button"
+                                        onClick={() =>
+                                            setReload((prev) => !prev)
+                                        }
+                                        className="flex px-3 py-3 ml-2 bg-(--second-button-cal) text-(--foreground) "
+                                    >
+                                        <FontAwesomeIcon icon={faRotateRight} />
+                                    </Button>
                                 </div>
                                 <CreateDocumentButton
                                     roles={roles}
@@ -1158,17 +1167,15 @@ export function DocumentsTable({ columns }: DocProps) {
                                 onClick={() => table.setPageIndex(page)}
                                 size="sm"
                                 variant={
-                                    currentPage === page
-                                        ? "default"
-                                        : "outline"
+                                    currentPage === page ? "default" : "outline"
                                 }
                             >
                                 {page + 1}
                             </Button>
                         ) : (
                             <span className="px-2" key={`${page}-${index}`}>
-                                    {page}
-                                </span>
+                                {page}
+                            </span>
                         ),
                     )}
 
@@ -1181,7 +1188,6 @@ export function DocumentsTable({ columns }: DocProps) {
                         Next
                     </Button>
                 </div>
-
             </div>
         </Tabs>
     );

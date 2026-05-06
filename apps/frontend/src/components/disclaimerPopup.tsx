@@ -15,7 +15,9 @@ function DisclaimerPopup() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="sm:max-w-m text-white">
                 <DialogHeader>
-                    <DialogTitle className="text-xl text-white">Disclaimer</DialogTitle>
+                    <DialogTitle className="text-xl text-white">
+                        Disclaimer
+                    </DialogTitle>
                 </DialogHeader>
                 <div className="flex justify-center items-center">
                     <img

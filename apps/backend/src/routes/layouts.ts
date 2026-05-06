@@ -1,12 +1,23 @@
 import express from "express";
 import prisma, { Prisma } from "@repo/database";
 import { getAuth } from "@clerk/express";
-import type { Layout } from "react-grid-layout";
 
 import { LayoutRequestPostModel } from "../lib/zod/routes.schemas.ts";
 import validate from "../lib/zod/middleware.ts";
 
 const layoutRoute = express();
+
+// Mirrors the shape produced by react-grid-layout on the frontend; kept
+// inline so the backend does not depend on a UI-only package. Treated as
+// opaque JSON when persisted (see layoutJson cast below).
+interface Layout {
+    i: string;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    [key: string]: unknown;
+}
 
 interface LayoutData {
     layout?: Layout[];

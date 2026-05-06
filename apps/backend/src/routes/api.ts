@@ -10,7 +10,7 @@ import prisma, { Prisma, type Employee } from "@repo/database";
 import { Resend } from "resend";
 import AiRouter from "./ai.routes.ts";
 import { clerkCache } from "../lib/ecache.ts";
-import {type Employee} from "@repo/database/types";
+import { type Employee } from "@repo/database/types";
 
 const APIRouter = Router();
 
@@ -135,7 +135,7 @@ async function getLock(req: Request, res: Response) {
     }
 }
 
-export async function invite(employee: Employee, password: string, ) {
+export async function invite(employee: Employee, password: string) {
     const resend = new Resend(process.env.RESEND_KEY!);
 
     const eRes = await resend.emails.send({

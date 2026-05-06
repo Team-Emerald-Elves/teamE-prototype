@@ -137,8 +137,7 @@ export const columns: ColumnDef<documentContent>[] = [
                         .getCoreRowModel()
                         .rows.flatMap(
                             (r) =>
-                                (r.original as documentContent).meta_tags ??
-                                [],
+                                (r.original as documentContent).meta_tags ?? [],
                         ),
                 ),
             );
@@ -201,7 +200,14 @@ export const columns: ColumnDef<documentContent>[] = [
             const doc = row.original;
             const date = new Date(doc.created_at);
 
-            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
+            return (
+                <p>
+                    {date.toLocaleString(undefined, {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                    })}
+                </p>
+            );
         },
     },
     {
@@ -224,7 +230,14 @@ export const columns: ColumnDef<documentContent>[] = [
             const doc = row.original;
             const date = new Date(doc.expiration_date);
 
-            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
+            return (
+                <p>
+                    {date.toLocaleString(undefined, {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                    })}
+                </p>
+            );
         },
     },
     {
@@ -264,7 +277,14 @@ export const columns: ColumnDef<documentContent>[] = [
             const doc = row.original;
             const date = new Date(doc.last_modified);
 
-            return <p>{date.toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}</p>;
+            return (
+                <p>
+                    {date.toLocaleString(undefined, {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                    })}
+                </p>
+            );
         },
     },
     {

@@ -43,10 +43,16 @@ export default function RoleLegend({
                         variant="ghost"
                         className="h-5 w-5 text-muted-foreground hover:text-foreground"
                         style={{
-                            backgroundColor: 'var(--icon-bg)',
+                            backgroundColor: "var(--icon-bg)",
                         }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--icon-hover)'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--icon-bg)'}
+                        onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                                "var(--icon-hover)")
+                        }
+                        onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                                "var(--icon-bg)")
+                        }
                     >
                         <Info className="h-3 w-3" />
                     </Button>

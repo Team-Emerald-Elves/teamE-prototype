@@ -96,7 +96,6 @@ function FileUploadChatBot(props: FileUploadProps): ReactElement {
     return props.show ? (
         <>
             <div className="flex items-center justify-center flex-col">
-
                 <div className="fupload">
                     {fileInput}
                     <img
@@ -107,7 +106,13 @@ function FileUploadChatBot(props: FileUploadProps): ReactElement {
                     />
                 </div>
                 <p>Files:</p>
-                <p>{fileNames.map(n => n.length > 10 ? n.slice(0, 10) + "..." : n).join(", ")}</p>
+                <p>
+                    {fileNames
+                        .map((n) =>
+                            n.length > 10 ? n.slice(0, 10) + "..." : n,
+                        )
+                        .join(", ")}
+                </p>
                 <br />
             </div>
         </>

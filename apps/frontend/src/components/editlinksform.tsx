@@ -172,7 +172,11 @@ function EditLinksForm(props: linkProp) {
                             size="icon"
                             className="px-3 py-3 text-base bg-gray-300 text-black"
                         >
-                            <HugeiconsIcon icon={Edit03Icon} size={20} color="var(--accent-foreground)" />
+                            <HugeiconsIcon
+                                icon={Edit03Icon}
+                                size={20}
+                                color="var(--accent-foreground)"
+                            />
                         </Button>
                     }
                 />
